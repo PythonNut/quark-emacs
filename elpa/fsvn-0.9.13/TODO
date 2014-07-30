@@ -1,0 +1,240 @@
+# -*- mode: org; -*-
+* General
+** risky-local-variable problem
+
+check illegal eval.
+
+** piki and html
+add updated date and time
+** annoying fsvn-result buffer.
+
+** `merge' can use ediff-merge
+
+** fsvn-xml-*-dtd-alist check original dtd.
+
+** what is scheduled commit? `status' forth column.
+
+** mode-line and easymenu
+
+** some help mode (command brief description)
+
+** file-select, message-edit can kill-buffer when committing.
+
+** Bugreport
+
+** about SVN_SSH
+** Activate only magic name.
+
+Disable all fsvn feature but only magic access.
+
+** font-lock not works fine in some cases.
+consider `font-lock-fontify' call or not
+
+buffer name start with ` ' (space)
+
+** tool-bar
+
+
+** search log diff and message
+
+Sometime want to grep svn history.
+Search full of repository is bad idea. that is too heavy.
+Cache repository? or cache diff output that between 1- revision?
+
+
+** describe document about process-list 
+enable send password
+freezing processes.
+
+** complete args fsvn-browse-* interactive
+
+inhibit path completion.
+
+
+** Consider using uuid string as message id directory
+fsvn-message-edit-get-message-directory
+
+** fsvn-*-default-args
+
+Too complicated!
+
+** global command
+C-c v N command when git repository duplicated... switch like vc??
+
+** create vc new backend?
+fsvn-vc
+
+** svn-auto-commit-mode
+
+new minor mode commit when save-buffer
+
+** distribute with mw32script.el
+
+fix DOC/*
+fix INSTALL
+
+* magic
+** `fsvn-magic-directory-files' accept svn:externals
+
+** async drawing in dired.
+
+
+
+* browse-mode
+** Enable Move file (in a repository)
+
+** move case wrong file by svn `move'
+
+on windows 
+fsvn-browse.*move-in-repository
+
+** fsvn-browse-svn:externals-selected
+
+from other repository
+
+** async drawing
+
+** colorize filename
+
+modified status, conflict status
+
+
+* select-file-mode
+** TODO when commit file-select buffer has svn:external file.
+** An instant viewer that for modified file or changed directory hierarchy.
+  currently `*' mark is display committed files, not manipulated file.
+
+** enable resolved
+
+* message-edit-mode
+** parasite-*-execute command accept optional argument
+
+* completion
+** fsvn-completing-url to parse a previous segment
+** fsvn-completing-read-url behavior different general Emacs one.
+** completing read implementation cleaning.
+** fsvn-file-select hide/show non selected files.
+
+
+* General (refactor)
+** fsvn-command-args-canonicalize move to more critical point.
+** fsvn-url-encode-string more critical point.
+** case-sensitive when windows file-system only. (ex: fsvn-url-belongings-p)
+** fsvn-magic-* inspect how to implements.
+
+** fsvn-prop* code clean.
+
+** libxml-parse-xml-region
+
+
+* logview-mode
+** fsvn-log-message-buffer-name, fsvn-log-sibling-buffer-name contains first space then fontify is not work.
+
+** tortoise like log cache.
+
+cache log xml file to ~/.fsvn/cache/logs/{md5}
+each file contains one revision
+revision range and log base url
+
+** fsvn-log-list-mode GUI viewer.
+ call tortoise viewer (Windows)
+
+
+** patch
+When property is changed, created patch wrong??
+
+
+** async revert buffer
+
+default range is current-revision 
+1. target-path is /path/to/hoge@1234 range is 1000 - 1234
+ this case failed if specify range 1000 - HEAD
+ 1000 - 1235 were succeed if rev.1235 is exists
+2. target-path is /path/to/foo
+ MINIMUM REVISION to HEAD is more specific. 
+
+** revert buffer
+
+when svn:log or svn:date was changed
+   
+* prop-mode
+** prop-recursive-mode
+
+proplist --recursive
+
+** propedit and not changed value but want to apply recursively
+
+
+* diff
+** diff binary file invoke filter program. (Like OpenOffice file)
+
+** ediff different coding-system
+
+** create diff minor-mode?
+C-c C-k kill diff process
+
+* Other
+** improve the UI about read arguments (ex --targets like argument not necessary in completion)
+
+
+** fsvn-blae-minor-mode highlight specific revisions.
+
+    fsvn-blame-minor-highlight-specific-revisions
+    fsvn-blame-minor-highlight-log-regexp
+
+** tsvn:lockmsgminsize, tsvn:logsummary, tsvn:projectlanguage
+
+   http://tortoisesvn.net/docs/nightly/TortoiseSVN_ja/tsvn-dug-propertypage.html
+
+
+
+
+** git
+
+
+*** like `git stash'
+
+
+stash id is stash date {yyyyMMddHHmmss}
+
+md5 is directory by directory-file-name.
+
+~/.fsvn/stash/{md5 of directory name}/{yyyyMMddHHmmss}
+
+
+*** cherry pick
+
+pick patch and apply changes to any file.
+with log message?
+
+* svk
+
+** Not familiar interface
+
+** depotmap --init
+
+not works on windows
+
+
+* popup-result-mode
+
+** `update' `merge' output
+
+Currently buffer's point is not moved from (point-min)
+Sometime prompt stop process, so cannot notice the prompt without scrolling.
+Move to point-max? only update or merge (switch?)
+
+
+
+* 1.7.x
+
+** new subcommand
+relocate
+
+** new command
+svnrdump
+
+** --split
+new subcommand
+
+** test tortoise property

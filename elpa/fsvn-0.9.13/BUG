@@ -1,0 +1,94 @@
+# -*- mode: org; -*-
+
+* Doc
+** funny english (all documentation).
+
+* General
+
+* browse-mode
+** sometime happens apply: Wrong number of arguments: max, 0
+   or async process?
+
+** browse to directory that contains many files.
+
+** when revert browse buffer that indicate deleted directory.
+
+** Sometimes happens "Creating pipe: no error"
+windows only?
+deadlock something?
+a lot of process makes this error?
+
+
+** Sometimes repeat revret-buffer destroy buffer format.
+
+** switch with --relocate arg
+
+
+** wrong status
+when add executable file
+
+AM     script -> x
+A      script -> o
+
+property is changed(?) by `svn' command but `status' subcommand insist that 2nd column is NULL.
+
+
+* select-file-mode
+
+** freezing several minutes when commit a lot of files.
+
+tortoise implements makes slow
+freeze? deadlock?
+
+
+* logview-mode
+** fsvn-open-logview-mode previous window setting makes odd.
+
+** fsvn-log-view-mode after C-c C-k then return previous buffer, but previous fsvn-log-message-mode shown.
+
+** restore window when another urlrev target
+
+** fsvn-log-sibling-ediff-previous
+for directory
+
+
+** fsvn-log-list-revert-to-revision
+
+cannot revert directory
+
+
+** when electric log
+suppress C-c C-k like C-c prefixed key.
+
+* popup-result-mode
+
+** sometime running process exists but hide mode-line process running
+
+tortoise implements delete this?
+
+
+* General (Windows)
+** i don't know how to occur.
+   apply: Spawning child process: exec format error
+
+** cygwin multi byte filename problem.
+
+** cannot treat win svk's prompt.
+in the first place not works
+
+
+** in windows "dir." like filename wrong state?
+
+** fsvn-make not works for NTEmacs
+
+** fsvn-authenticate-repository not works.
+
+Google code problem
+can access to read-only, but cannot have commit access.
+
+* Other
+
+** fsvn-svk-browse-create
+in windows fsvn-async-let not works.
+** advice problems
+I didn't know well about ad-activate and ad-deactivate. ad-update ????

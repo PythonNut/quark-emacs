@@ -1,0 +1,654 @@
+2012-01-07  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.13
+
+2012-01-04  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: emacs trunk elint error.
+
+2012-01-03  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: new customize variables (immitate magit)
+		`fsvn-diff-highlight-trailing-whitespace',
+	        `fsvn-diff-highlight-added-whitespace'
+
+2011-12-18  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Check file-system ignore the case or not.
+
+2011-12-02  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: `fsvn-log-list-save-this' cannot save file.
+
+2011-11-30  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: misunderstand for "/home/user/.svn-working-copy" like directory. (-;
+
+	* Change: hide all fsvn-meta-* functions.
+
+2011-11-26  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: wrong mode menu.
+
+2011-11-23  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: suppress cl warnings
+
+	* Fix: for svn 1.7 after save hook.
+
+	* Fix: for svn 1.7 Magic dired problem.
+
+2011-10-30  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Windows7 reg.exe parsing problem.
+
+	* Fix: WOW64 cygwin(1.7).
+
+2011-10-28  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: `fsvn-browse-patch-path' bound to `C-c C-v C-p'
+
+2011-10-27  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: `fsvn-upgrade' (from svn 1.7.x)
+
+	* Fix: prepare to support svn 1.7.x
+
+2011-09-23  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: move to wrong filename when executing `move'.
+
+2011-09-16  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: crash when `mode-line-format' is not a list.
+
+2011-09-15  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improve: colorize status.
+
+2011-09-03  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: `ignore-errors' -> condition-case
+
+	* Fix: remove `remove-if' warning
+
+	* Improvement: async repository browser.
+
+	* Release: 0.9.12
+
+2011-08-18  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: `fsvn-magic-get-file-buffer' problem
+
+	* Change: Open file with async from repository browser.
+
+2011-08-17  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: wrong buffer name when `fsvn-browse-open-repository'.
+
+	* Change: disable `fsvn-browse-toggle-sort' when in repository buffer.
+
+	* Fix: Check file is under versioned when opening log.
+
+	* Change: cleanup `file-name-history' after ediff.
+
+	* Fix: fsvn-svk.el `fsvn-svk-browse-draw-mirrored-url' suppress in remote directory.
+
+	* Fix: browse repository sorting problem.
+
+	* Fix: follow the svn trivial specification changing. (about exporting filename)
+
+2011-07-01  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Implements magic `directory-file-name' and `file-name-directory' at repository root.
+
+2011-06-22  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fix bug when modifing about `libxml-parse-xml-region'
+
+2011-06-16  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: log view buffer name.
+
+2011-04-26  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: fsvn-log-list-fetch-all bound to `z F'
+
+2011-04-24  Masahiro Hayashi (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: Use `libxml-parse-xml-region' if exists.
+
+2011-03-31  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: advice problem.
+
+2011-03-30  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: Create `uninstall' target
+
+2011-03-29  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: More elegant fancy mode-line.
+
+2011-03-19  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.11
+
+2011-03-08  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: fsvn-log-list-mark-searched -> fsvn-log-list-mark-regexp
+
+	* Change: fsvn-log-list-isarch-history -> fsvn-log-list-sarch-history
+
+	* Change: fsvn-log-list-isearch-text -> fsvn-log-list-search-regexp
+
+2011-03-02  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Illegal key conventions.
+
+	* Improvement: diff colorized local file.
+
+2011-03-01  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: Set default file name, when reading patch filename.
+
+2011-02-25  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: Read url with revision.
+
+	* Fix: fsvn-browse-goto-first-file
+
+	* Add: fsvn-pkg.el and reconstruct install process for package.el (But Not works yet)
+
+2011-02-24  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: error to `quit' signal. If canceled by user.
+
+	* Change: Suppress illegal conventions command message.
+
+2011-02-20  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: Diff with current directory in browse buffer (bound to `= D')
+
+2011-02-19  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.10
+
+2011-02-18  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: set UUID in all buffers.
+
+	* Fix: Remove calling font-lock function as long as i can.
+
+2011-02-17  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: Move all run-mode-hooks to switching major-mode function.
+
+	* Add: Instead of that, all fsvn major-mode have MAJOR-MODE-prepared-hook
+	       that run after set buffer-local-variable and displayed buffer contents.
+
+	   New features are followings
+		fsvn-browse-mode-prepared-hook
+		fsvn-log-list-mode-prepared-hook
+		fsvn-log-message-mode-prepared-hook
+		fsvn-log-sibling-mode-prepared-hook
+		fsvn-message-edit-mode-prepared-hook
+		fsvn-process-list-mode-prepared-hook
+		fsvn-proplist-mode-prepared-hook
+		fsvn-select-file-mode-prepared-hook
+
+	* Fix: misunderstand url that contains `@'.
+
+2011-02-14  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Refactor: Highlighting sibling use overlay.
+	            Devide to functions drawing list.
+
+2011-02-13  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improve: Asynchronous log list.
+
+	* Fix: Violate conventions. `post-command-hook' to local variable.
+
+	* Change: Only guessed coding-system in local file system.
+
+	* Change: diff buffer to read-only
+
+	* Add: Bit colorize diff
+
+2011-02-12  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Cleanup window error.
+
+2011-02-10  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: `fsvn-browse-diff-local' sequence is wrong.
+
+	* Fix: Save mark activated status in log list mode
+
+2011-02-09  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improve: Cleanup window when `fsvn-global-cleanup-buffer'
+
+2011-02-08  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: redraw fancy status when committing
+
+2011-02-04  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fsvn-merged-import-with-log DEST-URL is file, cannot import.
+
+2011-01-28  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Diff between region respect order between region begin and end in log list mode.
+
+2011-01-23  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Again misunderstanding of url @
+
+	* Fix: misunderstanding of url @
+
+	* Release: 0.9.9
+
+2011-01-22  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: ediff temp file problem.
+
+2011-01-21  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fsvn-blame-minor-mode destroy isearch overlay.
+
+	* Fix: default-directory is wrong in browse mode confirmer.
+
+	* Fix: respect to `dired-deletion-confirmer'
+
+	* Add: `fsvn-blame-minor-mode-with-range' bind to nothing.
+
+2011-01-16  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: easymenu (file-select)
+
+	* Fix: Display symlink arrow.
+
+2011-01-13  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: setting font lock keywords by `setq'
+
+2011-01-03  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: Blame minor mode accept changings.
+
+2010-12-31  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: a lot of commit buffer problem
+
+2010-12-30  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Delete: Unsupport Emacs 22 officially.
+
+2010-12-17  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: fsvn-vc-commit-non-query-message
+
+2010-11-21  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.8
+
+2010-11-13  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: fsvn-vc-commit-non-query
+
+2010-10-19  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: fsvn-browse-smart-move-this bound to `C-c C-b C-m'
+	* Add: fsvn-browse-smart-copy-this bound to `C-c C-b C-c'
+
+2010-10-13  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: @ stated filename.
+
+	* Fix: speed up windows process.
+
+2010-10-11  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: check unsaved buffer in interactive read
+
+	* Change: message-edit-mode and file-select-mode can create multiple buffers.
+
+	* Change: fsvn-flatten-command-args -> fsvn-command-args-canonicalize
+
+2010-10-09  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.7
+
+2010-10-08  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: expire temp files 2 days -> 5 days
+
+	* Change: expire ediff files
+
+2010-10-07  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: fsvn-svnsync-command-internal
+
+	* Improvement: fsvn-merged-import-with-log accept local destination.
+
+	* Add: easymenu (message-edit, popup, process-list)
+
+2010-10-06  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fsvn-command-error promote to error-condition
+
+	* Change: fsvn-file-name-as-repository -> fsvn-directory-name-as-repository
+
+2010-10-03  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: fsvn-popup-copy-process-sentinel -> fsvn-popup-copy/move-process-sentinel
+
+	* Add: fsvn-log-list-ediff-local bound to `= l' in log-list-mode
+
+	* Add: fsvn-browse-ediff-path bound to `= E' in browse-mode
+
+	* Change: fsvn-log-list-ediff-with-wc -> fsvn-log-list-ediff-with-base
+
+	* Improvement: Enable can ediff directory in log-list-mode (But is not well designed)
+
+	* Improvement: enable save directory in log-list-mode
+
+2010-10-02  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: complete url and complete argument.
+
+	* Add: Show CopyFrom path in log-sibling-mode.
+
+	* Add: fsvn-log-list-propview-this bound to `z p'
+
+	* Add: fsvn-log-sibling-propview-this bound to `z p'
+
+	* Fix: completing-read-url
+
+	* Change: fsvn-open-log-view-mode -> fsvn-open-logview-mode
+
+2010-09-23  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Multiple Emacs process cleanup using files in temp directory.
+
+2010-09-18  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.6
+
+	* Add: fsvn-browse-create-patch-path bound to `= P'
+	       fsvn-browse-create-patch-selected bound to `= p'
+
+2010-09-15  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: fancy modeline (from psvn.el)
+
+2010-08-31  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: fsvn-open-repository
+
+2010-08-23  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: completing read command argument quoted string.
+
+	* Add: easymenu (proplist, propedit)
+
+	* Add: fsvn-log-list-revert-to-revision key is bound to `C-c C-t'
+
+	* Add: fsvn-log-list-create-patch-generic key is bound to `= p'
+
+	* Change: fsvn-browse-cmd-read-create-patch-path -> fsvn-cmd-read-patch-file
+
+2010-08-23  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.5
+
+2010-08-21  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: Some of NTEmacs compatibility with Meadow.
+
+2010-08-18  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: Use `quit' signal.
+
+2010-08-16  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Simplify NTEmacs install process.
+
+2010-08-10  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: obsolete fsvn-set-prop-value -> fsvn-set-propset
+	          obsolete fsvn-set-prop-delete -> fsvn-set-propdel
+	          fsvn-get-propget change arg order
+
+	* Fix: fsvn-svk some refactor
+
+2010-08-05  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: Drastic changes about svk implements.
+
+2010-08-04  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: Easy Menu (browse, log)
+
+	* Add: Can create patch.
+
+2010-08-03  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: Make `svn diff' asynchrounous.
+
+2010-08-01  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.4
+
+2010-07-22  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Unterminated message.
+
+	* Fix: Change mode-name.
+
+2010-07-10  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: Complete revision by `svn log'.
+
+	* Fix: Complete revision ignore-case.
+
+	* Add: Merged import.
+
+	* Add: fsvn-browse-paste-properties-to-this
+
+2010-07-09  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Wrong fontified in fsvn-log-list-mode
+
+	* Fix: popup to showing window
+
+2010-06-29  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Undo problems.
+	* Fix: Change keybind fsvn-process-list-toggle-show-all
+	      C-c C-h -> C-c C-t
+
+2010-06-25  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: Support tree-conflict showing.
+
+2010-06-19  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Release: 0.9.3
+
+2010-06-14  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: Support repository file `blame'
+
+	* Fix: fsvn-log-list-open-revision not works for file.
+
+2010-06-12  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: Fix, A lot of modified files make slow.
+
+	* fsvn-logview.el (fsvn-log-sibling-mode-map):
+			fsvn-log-sibling-log-this C-c l -> z l
+			(fsvn-log-message-mode-map):
+			fsvn-log-message-browse-this C-c j -> C-c C-m
+				and bugfix
+
+	* fsvn-parasite.el (fsvn-parasite-commit-mode-map):
+			fsvn-parasite-commit-toggle-no-unlock C-c N -> C-c M-n
+			fsvn-parasite-commit-toggle-keep-changelist C-c K -> C-c M-k
+
+	* fsvn-logview.el (fsvn-log-list-mode-map): fsvn-log-list-open-revision Bounded C-c o -> C-c C-m
+
+	* fsvn-win.el : tortoise keymap C-c s -> C-c C-t
+
+	* fsvn-svk.el : svk keymap C-c v -> C-c C-k
+
+	* fsvn-proclist.el: add new major-mode
+
+2010-06-10  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* fsvn-browse.el (fsvn-browse-prefix-map): fsvn-browse-update-path bound to C-c C-u
+	(fsvn-browse-mode-map): Make prefix map to `z'. Fix violating keymap conventions.
+
+2010-06-07  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* MAKE-TARGETS.mk (archive): Compress single-file
+
+2010-06-01  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: fsvn-log-list-mode about multibyte char.
+	* Change: Revision max length to 7
+
+2010-05-30  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: run-hooks -> run-mode-hooks
+
+2010-05-29  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fsvn-after-save-hook when svn:eol-style property is native
+	* Change: internal command variable (fsvn-svn*-command-internal) make have absolute path.
+	* Improvement: fix async process function
+	* Improvement: MAKE-TARGETS -> MAKE-TARGETS.mk
+	* Fix: Putting mark on no file point, mark to all files.
+
+2010-05-24  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Add: AutoCheck.sh
+
+2010-05-23  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Change: Unsupport 1.4.x
+
+	* Fix: remove obsoleted variable default-buffer-file-coding-system
+
+	* Fix: fsvn-log-sibling path is broken. Destructive `sort'.
+
+	* Fix: Accept 1.6.9-dev like svn version (svn --version --quiet)
+
+	* Change: fsvn-browse-mode
+	    show current directory status.
+
+2010-05-19  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fsvn-make.el
+	       Unable compile emacs current version.
+
+2010-05-15  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Refactor: fsvn-find-logs-entry -> fsvn-logs-find-logentry
+	* Refactor: fsvn-log-create-path-chain -> fsvn-logs-create-path-chain
+	* Refactor: fsvn-log-chain-find -> fsvn-logs-chain-find
+	* Refactor: fsvn-popup.el functions to fsvn-popup namespace.
+	* Change: revoke fsvn-svk from fsvn.el.
+	       That depends on user's choice.
+
+	* Improvement: Make distributable only a fsvn.el
+
+2010-05-11  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fsvn-browse-commit-path
+	    subcommand args missing.
+
+2010-05-10  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Fix: fsvn-log-sibling-save-this
+	       Unable save revisioned url.
+
+	* Refactor: fsvn-log-list-save -> fsvn-log-list-save-this
+
+	* Improvement: fsvn-log-sibling-mode sort all by path name.
+
+	* Change: fsvn-browse-log-path -> fsvn-browse-logview-path
+
+2010-05-09  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Improvement: svk support
+
+2010-05-08  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* Refactor: fsvn-browse-mode function name drastic change.
+	* Refactor: fsvn-magic-current-file -> fsvn-magic-point-file
+	* Refactor: fsvn-browse-log-this -> fsvn-browse-logview-this
+	* ADD: fsvn-browse-guessed-moved-parent-threshold
+	* FIX: fsvn-browse-info-selected, fsvn-browse-info-path
+	       Unable execute in repository.
+
+2010-05-05  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* ADD: `lock' with message (by universal-argument)
+
+	* CHANGE: fsvn-message-edit-before-commit-hook -> fsvn-minor-commit-before-commit-hook
+
+	* CHANGE: fsvn-message-edit-after-commit-hook -> fsvn-minor-commit-after-commit-hook
+
+	* ADD: create minor mode for editing message edit and file select
+
+	* ADD: fsvn-default-args-mkdir
+
+	* ADD: fsvn-default-args-import
+
+	* CHANGE: fsvn-log-view-* -> fsvn-log-list-*
+
+	* OBSOLETE: fsvn-buffer-target-file -> fsvn-propview-target-urlrev, fsvn-logview-target-urlrev
+	* OBSOLETE: fsvn-buffer-target-directory-p -> fsvn-propview-target-directory-p, fsvn-logview-target-directory-p
+	* OBSOLETE: fsvn-buffer-revision ->  fsvn-log-sibling-revision, fsvn-browse-revision
+
+2010-05-03  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* ADD: implements `mergeinfo'.
+
+	* CHANGE fsvn-browse-open-log-edit -> fsvn-browse-open-message-edit
+
+	* FIX: fsvn-browse-mkdir in repository.
+
+	* CHANGE: fsvn-log-message-file-encoding -> fsvn-message-edit-file-encoding
+
+	* ADD: implements `merge'.
+
+	* ADD: fsvn-log-view-copy-urlrev
+
+	* FIX: fsvn-completing-read-revision
+
+	* ADD: fsvn-browse-create-branch/fsvn-browse-create-tag
+
+2010-04-29  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* FIX: subversion 1.6.9 locale error.
+
+	* ADD: describe mode help.
+
+	* ADD: file select mode symlink support.
+
+2010-04-17  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* FIX: fsvn-authenticate-repository not works. (Windows)
+
+	* FIX: Filename case problem. (Windows)
+
+2010-03-31  Hayashi Masahiro (林 雅博)  <mhayashi1120@gmail.com>
+
+	* FIX: symlink problems.
+
+	* FIX: fsvn-log-sibling-open-this cannot accept interactive arg
+
