@@ -1,0 +1,72 @@
+# session backups
+/session*
+
+
+# ido cache
+/ido.last
+
+
+# project file cache
+/projectile*
+
+# M-x command history
+/smex-items
+/.smex-items
+/smex-save-file
+
+
+
+# save last place in files
+/saveplace
+
+
+# persistent registers
+/saveregisters.el
+
+
+# thumbnail cache from dired
+/image-dired
+
+# backup files are always redundant
+*~
+
+
+# eshell history and dirstack
+/eshell
+
+
+# auto-complete cache
+ac-comphist.dat
+
+
+# helm completion history
+/helm-adaptive-history
+
+
+# emacs multimedia system cache and history
+/emms
+
+
+# semantic parser cache
+/semanticdb
+
+
+# emacs browser cookies
+/url
+
+# UCS cache
+/var
+
+# personal files
+/data/backups/*
+/data/autosave/*
+/data/tramp-backups/*
+
+# misc
+*.undo.xz
+*#
+*.elc
+/.elisp-cache-stamp
+/kkrc
+/.python-environments
+
