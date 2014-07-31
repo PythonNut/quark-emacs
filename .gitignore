@@ -62,6 +62,11 @@ ac-comphist.dat
 /data/autosave/*
 /data/tramp-backups/*
 
+
+# tramp connection history
+/tramp
+
+
 # misc
 *.undo.xz
 *#

@@ -1,8 +1,0 @@
-;; -*- emacs-lisp -*- <13/10/28 21:15:53 /home/PythonNut/.emacs.d/tramp>
-;; Tramp connection history.  Don't change this file.
-;; You can delete it, forcing Tramp to reapply the checks.
-
-((["scpc" nil "ftp" nil nil]
-   nil)
-  (["scpc" nil "dav" nil nil]
-    nil))
