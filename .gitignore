@@ -70,3 +70,4 @@ ac-comphist.dat
 /kkrc
 /.python-environments
 /elpa/archives/marmalade/archive-contents
+/elpa/*.txt
