@@ -124,6 +124,7 @@
 
 ;;; Code:
 
+(require 'ansi-color)
 (require 'dabbrev)
 (require 'compile)
 (require 'flymake)
@@ -613,7 +614,12 @@ If nil, use the Hoogle web-site."
 
 ;;;###autoload
 (defun haskell-hoogle (query &optional info)
-  "Do a Hoogle search for QUERY."
+  "Do a Hoogle search for QUERY.
+When `haskell-hoogle-command' is non-nil, this command runs
+that.  Otherwise, it opens a hoogle search result in the browser.
+
+If prefix argument INFO is given, then `haskell-hoogle-command'
+is asked to show extra info for the items matching QUERY.."
   (interactive
    (let ((def (haskell-ident-at-point)))
      (if (and def (symbolp def)) (setq def (symbol-name def)))
@@ -624,17 +630,20 @@ If nil, use the Hoogle web-site."
            current-prefix-arg)))
   (if (null haskell-hoogle-command)
       (browse-url (format "http://haskell.org/hoogle/?q=%s" query))
-    (lexical-let ((temp-buffer (help-buffer)))
-      (with-output-to-temp-buffer temp-buffer
-        (with-current-buffer standard-output
-          (let ((hoogle-process
-                 (if info
-                     (start-process "hoogle" (current-buffer) haskell-hoogle-command "-i" query)
-                   (start-process "hoogle" (current-buffer) haskell-hoogle-command query)))
-                (scroll-to-top
-                 (lambda (process event)
-                   (set-window-start (get-buffer-window temp-buffer t) 1))))
-            (set-process-sentinel hoogle-process scroll-to-top)))))))
+    (let ((output-buffer (get-buffer-create "*hoogle*"))
+          (hoogle-args (append (when info '("-i"))
+                               (list "--color" (shell-quote-argument query)))))
+      (with-current-buffer output-buffer
+        (let ((buffer-read-only nil))
+          (delete-region (point-min) (point-max))
+          (insert (shell-command-to-string
+                   (concat haskell-hoogle-command
+                           (if info " -i " "")
+                           " --color " (shell-quote-argument query))))
+          (ansi-color-apply-on-region (point-min) (point-max)))
+        (goto-char (point-min))
+        (help-mode))
+      (display-buffer output-buffer))))
 
 ;;;###autoload
 (defalias 'hoogle 'haskell-hoogle)
