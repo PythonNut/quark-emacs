@@ -2856,7 +2856,9 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
 
 (eval-after-load 'magit
   '(progn
-     (raise-minor-mode-map-alist 'magit-status-mode-map) 
+     (raise-minor-mode-map-alist 'magit-status-mode-map)
+     (define-key magit-log-mode-map (kbd "k") 'previous-line)
+     (define-key magit-log-mode-map (kbd "j") 'next-line)
      (define-key magit-status-mode-map (kbd "k") 'previous-line)
      (define-key magit-status-mode-map (kbd "K") 'magit-discard-item)
      (define-key magit-status-mode-map (kbd "j") 'next-line)))
