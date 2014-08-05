@@ -3395,21 +3395,21 @@ The current directory is assumed to be the project's root otherwise."
 ;;; ====================================
 (defun emacsclient-setup (&rest args)
   (interactive)
-  (load-theme 'tango-dark)
-  (if (display-graphic-p)
-    (progn
-      (set-face-foreground 'font-lock-comment-face "#6a8057")
-      (set-face-foreground 'font-lock-comment-delimiter-face "#6a8057")
-      (menu-bar-mode +1)
-      (load-theme 'solarized-dark)
-      (linum-mode +1)
-      (highlight-current-line-set-bg-color "073642"))
-    (progn
-      (set-face-foreground 'font-lock-comment-face "#888")
-      (set-face-foreground 'font-lock-comment-delimiter-face "#888")
-      (menu-bar-mode -1)
-      (highlight-current-line-set-bg-color "grey25")
-      (load-theme 'tango-dark)))
+  ;; (load-theme 'tango-dark)
+  ;; (if (display-graphic-p)
+  ;;   (progn
+  ;;     (set-face-foreground 'font-lock-comment-face "#6a8057")
+  ;;     (set-face-foreground 'font-lock-comment-delimiter-face "#6a8057")
+  ;;     (menu-bar-mode +1)
+  ;;     (load-theme 'solarized-dark)
+  ;;     (linum-mode +1)
+  ;;     (highlight-current-line-set-bg-color "073642"))
+  ;;   (progn
+  ;;     (set-face-foreground 'font-lock-comment-face "#888")
+  ;;     (set-face-foreground 'font-lock-comment-delimiter-face "#888")
+  ;;     (menu-bar-mode -1)
+  ;;     (highlight-current-line-set-bg-color "grey25")
+  ;;     (load-theme 'tango-dark)))
 
   (global-set-key (kbd "<mouse-5>")
     '(lambda ()
@@ -4232,13 +4232,16 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
  '(vc-annotate-very-old-color nil)
  '(weechat-color-list (quote (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83"))))
 
-(if (display-graphic-p)
-  (progn
-    (require 'solarized)
-    (load-theme 'solarized-dark))
-  (progn
-    (load-theme 'tango-dark)
-    (linum-mode +1)))
+(require 'solarized)
+(load-theme 'solarized-dark)
+;; (if (display-graphic-p)
+;;   (progn
+;;     (require 'solarized)
+;;     (load-theme 'solarized-dark))
+;;   (progn
+;;     (load-theme 'tango-dark)
+;;     (linum-mode +1)))
+
 (scroll-bar-mode -1)
 (set-face-attribute 'show-paren-match-face nil :weight 'extra-bold)
 (set-face-background 'fringe "#022F3A")
@@ -4360,7 +4363,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
         ;; (set-face-foreground 'ediff-current-diff-face-A "#6c71c4")
         ;; (set-face-foreground 'ediff-current-diff-face-B "#cb4b16")
         ;; (set-face-foreground 'ediff-current-diff-face-C "#859900")
-
+        
         (setq ediff-saved-window-configuration (current-window-configuration))))
     
     (let ((restore-window-configuration
