@@ -500,7 +500,6 @@
      (undo-tree-mode . " μ")
      (flyspell-mode . " ⎂")
      (helm-mode . " ⛭")
-     (golden-ratio-mode . "")
      (emmet-mode . "")
      (hs-minor-mode . " ±")
      (auto-highlight-symbol-mode . "")
@@ -1527,16 +1526,12 @@ to replace the symbol under cursor"
 (global-set-key (kbd "C-r") 'phi-search-backward)
 (global-set-key (kbd "M-%") 'phi-replace-query)
 
-(defadvice phi-search (before kill-gratio activate)
-  (progn (golden-ratio-mode -1)))
 (defadvice phi-search (after kill-gratio activate)
   (progn
     (evil-insert-state)
     (define-key evil-insert-state-map (kbd "RET") 'phi-search-complete)
     (shrink-window (window-total-height))))
 
-(defadvice phi-replace--initialize (before kill-gratio activate)
-  (progn (golden-ratio-mode -1)))
 (defadvice phi-replace--initialize (after kill-gratio activate)
   (progn
     (evil-emacs-state)
@@ -1545,12 +1540,10 @@ to replace the symbol under cursor"
 
 (defadvice phi-search-complete (after restart-gratio activate)
   (progn
-    (golden-ratio-mode +1)
     (define-key evil-insert-state-map (kbd "RET") 'smart-newline)))
 
 (defadvice phi-replace-complete (after restart-gratio activate)
   (progn
-    (golden-ratio-mode +1)
     (define-key evil-insert-state-map (kbd "RET") 'smart-newline)))
 
 (eval-after-load 'phi-search
@@ -1696,13 +1689,6 @@ to replace the symbol under cursor"
 ;; (defadvice pop-global-mark (around ace-pop-mark activate)
 ;;   (ace-jump-mode-pop-mark))
 
-;; (add-hook 'ace-jump-mode-before-jump-hook
-;;   '(lambda ()
-;;     (golden-ratio-mode -1)))
-
-(add-hook 'ace-jump-mode-end-hook
-  '(lambda ()
-     (golden-ratio)))
 
 (defun realign-cursor ()
   (save-excursion
@@ -1716,23 +1702,14 @@ to replace the symbol under cursor"
     (call-interactively
       '(lambda ()
          (interactive)
-         (realign-cursor)
-         (golden-ratio)))))
+         (realign-cursor)))))
 
 (defadvice evil-ace-jump-char-mode (after cleanup activate)
   (progn
     (call-interactively
       '(lambda ()
          (interactive)
-         (realign-cursor)
-         (golden-ratio)))))
-
-(defadvice evil-ace-jump-line-mode (after cleanup activate)
-  (progn
-    (call-interactively
-      '(lambda ()
-         (interactive)
-         (golden-ratio)))))
+         (realign-cursor)))))
 
 (defadvice evil-ace-jump-line-mode (after realign activate)
   (progn
@@ -3074,17 +3051,7 @@ The current directory is assumed to be the project's root otherwise."
      ;; (add-hook 'helm-before-initialize-hook
      ;;   #'(lambda ()
      ;;       (helm-attrset 'follow 1 helm-source-buffers-list)))
-     ;; (add-hook 'helm-after-initialize-hook
-     ;;   #'(lambda ()
-     ;;       (golden-ratio-mode -1)))
-     ;; (add-hook 'helm-cleanup-hook
-     ;;   #'(lambda ()
-     ;;       (golden-ratio-mode +1)))
 
-     (add-hook 'helm-after-initialize-hook
-       #'(lambda ()
-           (golden-ratio)))
-     
      ;; (helm-mode +1)
      ;; (helm-adaptative-mode +1)
      (setq helm-locate-command "locate %s -r %s -be -l 999")
@@ -3315,13 +3282,7 @@ The current directory is assumed to be the project's root otherwise."
      (add-hook 'icicle-minibuffer-setup-hook
        '(lambda ()
           (interactive)
-          (setq icicle-Completions-window-max-height (/ (* (frame-height) 2) 3))
-          (golden-ratio-mode -1)))
-
-     (add-hook 'icicle-minibuffer-exit-hook
-       '(lambda ()
-          (interactive)
-          (golden-ratio-mode +1)))))
+          (setq icicle-Completions-window-max-height (/ (* (frame-height) 2) 3))))))
 
 (defun list-helm-icicle-commands ()
   (interactive)
@@ -3412,16 +3373,6 @@ The current directory is assumed to be the project's root otherwise."
 
 (global-set-key (kbd "C-'") 'switch-to-minibuffer-window)
 
-;;; =====================================================
-;;; golden ratio - auto resize frames by the golden ratio
-;;; =====================================================
-;; (autoload 'golden-ratio-mode "golden-ratio")
-;; (add-hook 'window-configuration-change-hook
-;;   '(lambda ()
-;;       (golden-ratio-mode +1)))
-;; (add-hook 'window-configuration-change-hook '(golden-ratio-mode))
-(require 'golden-ratio)
-(golden-ratio-mode +1)
 (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
 
 ;;; ====================================
@@ -3470,17 +3421,14 @@ The current directory is assumed to be the project's root otherwise."
   (set-face-foreground 'rainbow-delimiters-depth-9-face "#6a8057")
   (rainbow-delimiters-wash 1.5)
   
-  (set-face-background 'fringe "#022F3A")
-  
-  (golden-ratio-mode +1))
+  (set-face-background 'fringe "#022F3A"))
 
 (add-hook 'after-make-frame-functions
   '(lambda (&rest args)
      (message "make frame")
      (load-elscreen)
      (when (and (fboundp 'server-running-p) (server-running-p))
-       (run-at-time 0.0 'nil 'emacsclient-setup))
-     (golden-ratio-mode +1)))
+       (run-at-time 0.0 'nil 'emacsclient-setup))))
 
 (add-hook 'server-visit-hook
   '(lambda ()
