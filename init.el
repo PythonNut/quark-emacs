@@ -616,6 +616,7 @@
 (evil-set-initial-state 'diff-mode 'insert)
 (evil-set-initial-state 'backups-mode 'insert)
 (evil-set-initial-state 'erc-mode 'emacs)
+(evil-set-initial-state 'git-commit-mode 'insert)
 
 (add-hook 'package-menu-mode-hook
   '(lambda ()
@@ -2848,14 +2849,28 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
 ;;; Magit - fast, interactive git
 ;;; =============================
 (global-set-key (kbd "C-c C-c g") 'magit-status)
-;; and psvn for svn awesomeness
+
+(evil-set-initial-state 'svn-status-mode 'insert)
+(evil-set-initial-state 'magit-status-mode 'insert)
+
+
+(eval-after-load 'magit
+  '(progn
+     (raise-minor-mode-map-alist 'magit-status-mode-map) 
+     (define-key magit-status-mode-map (kbd "k") 'previous-line)
+     (define-key magit-status-mode-map (kbd "K") 'magit-discard-item)
+     (define-key magit-status-mode-map (kbd "j") 'next-line)))
+
+(add-hook 'magit-status-mode-hook
+  '(lambda ()
+     (set-input-method "TeX")))
+
+;; and psvn for svn not-so-awesomeness
 (autoload 'svn-status "psvn")
 
 (eval-after-load 'psvn
   '(progn
      (setq svn-status-verbose nil)))
-
-(evil-set-initial-state 'svn-status-mode 'insert)
 
 (global-set-key (kbd "C-c C-c s") 'svn-status)
 
