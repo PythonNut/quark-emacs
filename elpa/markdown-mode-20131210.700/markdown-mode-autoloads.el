@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads (gfm-mode markdown-mode) "markdown-mode" "markdown-mode.el"
-;;;;;;  (21159 19075 813007 16000))
+;;;;;;  (21485 2603 735694 391000))
 ;;; Generated autoloads from markdown-mode.el
 
 (autoload 'markdown-mode "markdown-mode" "\
@@ -22,8 +22,8 @@ Major mode for editing GitHub Flavored Markdown files.
 
 ;;;***
 
-;;;### (autoloads nil nil ("markdown-mode-pkg.el") (21159 19075 843057
-;;;;;;  742000))
+;;;### (autoloads nil nil ("markdown-mode-pkg.el") (21485 2603 811834
+;;;;;;  527000))
 
 ;;;***
 
