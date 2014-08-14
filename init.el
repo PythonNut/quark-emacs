@@ -1422,6 +1422,16 @@ the current line."
 (define-key evil-normal-state-map "f" 'evil-fastnav-forward-to)
 (define-key evil-normal-state-map "F" 'evil-fastnav-backward-to)
 
+(define-key evil-motion-state-map "t" 'evil-fastnav-forward-til) 
+(define-key evil-motion-state-map "T" 'evil-fastnav-backward-til)
+(define-key evil-motion-state-map "f" 'evil-fastnav-forward-to)
+(define-key evil-motion-state-map "F" 'evil-fastnav-backward-to)
+
+(define-key evil-visual-state-map "t" 'evil-fastnav-forward-til) 
+(define-key evil-visual-state-map "T" 'evil-fastnav-backward-til)
+(define-key evil-visual-state-map "f" 'evil-fastnav-forward-to)
+(define-key evil-visual-state-map "F" 'evil-fastnav-backward-to)
+
 ;;; Change modeline color by Evil state
 (lexical-let ((default-color (cons (face-background 'mode-line)
                                (face-foreground 'mode-line))))
@@ -1439,8 +1449,7 @@ the current line."
                      ((evil-insert-state-p)  '("#93a1a1" . "#073642"))
                      ((evil-visual-state-p) '("#268bd2" . "#eee8d5"))
                      ((evil-replace-state-p) '("#dc322f" . "#eee8d5"))
-                     (t '("grey70" . "black"))
-                     )))
+                     (t '("grey70" . "black")))))
         (set-face-background 'mode-line (first color))
         (set-face-foreground 'mode-line (rest color))))))
 
