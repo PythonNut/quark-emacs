@@ -3399,6 +3399,12 @@ The current directory is assumed to be the project's root otherwise."
 
 (global-set-key (kbd "C-'") 'switch-to-minibuffer-window)
 
+
+;;; ==================================
+;;; Tramp -- transparent remote access
+;;; ==================================
+(setq tramp-chunksize 500)
+(setq tramp-default-method "ssh")
 (eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
 
 ;;; ====================================
