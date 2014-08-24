@@ -3598,12 +3598,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-emacs-state-map (kbd "C-y") 'whole-line-or-region-yank)
 
 ;; mc conflicts with yasnippet
-(add-hook 'multiple-cursors-mode-enabled-hook
-  '(lambda ()
-     (yas-minor-mode -1)))
-(add-hook 'multiple-cursors-mode-disabled-hook
-  '(lambda ()
-     (yas-minor-mode +1)))
+(add-to-list 'mc/unsupported-minor-modes 'yas-minor-mode)
 
 ;; fast cursor placement
 (evil-leader/set-key
