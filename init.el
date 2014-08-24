@@ -3652,17 +3652,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (global-set-key (kbd "M-<left>") 'smart-backward)
 (global-set-key (kbd "M-<right>") 'smart-forward)
 
-;; Drag stuff - easy transposition
-(autoload 'drag-stuff-up "drag-stuff")
-(autoload 'drag-stuff-down "drag-stuff")
-(autoload 'drag-stuff-left "drag-stuff")
-(autoload 'drag-stuff-right "drag-stuff")
-
-(global-set-key (kbd "C-S-<up>") 'drag-stuff-up)
-(global-set-key (kbd "C-S-<down>") 'drag-stuff-down)
-(global-set-key (kbd "C-S-<left>") 'drag-stuff-left)
-(global-set-key (kbd "C-S-<right>") 'drag-stuff-right)
-
 ;; Back Button - navigate marks like a web browser
 (autoload 'back-button-mode "back-button")
 (defun auto-back-button ()
