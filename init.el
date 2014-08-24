@@ -3664,15 +3664,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (global-set-key (kbd "C-S-<right>") 'drag-stuff-right)
 
 ;; Back Button - navigate marks like a web browser
-;; (defun pulse-face-settings ()
-;;   "Face settings for `pulse'."
-;;   (custom-set-faces '(pulse-highlight-start-face
-;;                        ((((class color) (min-colors 88) (background dark)) :background "#AAAA33")
-;;                          (((class color) (min-colors 88) (background light)) :background "#FFFFAA")
-;;                          (((class color) (min-colors 8)) :background "blue" :foreground "red")))))
-
-;; (eval-after-load "pulse"
-;;   `(pulse-face-settings))
 (autoload 'back-button-mode "back-button")
 (defun auto-back-button ()
   (unless (and (boundp 'back-button-mode) back-button-mode)
@@ -3690,9 +3681,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   '(progn
      (set-face-foreground 'nav-flash-face 'nil)
      (set-face-background 'nav-flash-face "grey40")
-     ;; (defface 'nav-flash-pulse-face )
-     ;; (set-face-background 'nav-flash-pulse-face "white")
-     ;; (set-face-foreground 'nav-flash-pulse-face "back")
      (setq nav-flash-use-pulse 't)))
 
 (defun auto-back-button-global ()
@@ -3779,48 +3767,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 (global-set-key (kbd "C-x 5 3") 'doremi-frame-width+)
 (global-set-key (kbd "C-x 5 4") 'doremi-frame-horizontally+)
-
-;;; ============
-;;; Code folding
-;;; ============
-(autoload 'fold-dwim-toggle   "fold-dwim")
-(autoload 'fold-dwim-hide-all "fold-dwim")
-(autoload 'fold-dwim-show-all "fold-dwim")
-
-(defun toggle-selective-display (column)
-  (interactive "P")
-  (set-selective-display
-  (or column (unless selective-display
-    (1+ (current-column))))))
-
-(defun toggle-hiding (column)
-  (interactive "P")
-  (if hs-minor-mode
-    (if (condition-case nil
-        (hs-toggle-hiding)
-        (error t))
-      (hs-show-all))
-  (toggle-selective-display column)))
-
-(defun al-hide-show ()
-  (defadvice fold-dwim-toggle (before auto-hide-show activate)
-    (hs-minor-mode +1))
-  (defadvice fold-dwim-hide-all (before auto-hide-show activate)
-    (hs-minor-mode +1))
-  (defadvice fold-dwim-show-all (before auto-hide-show activate)
-    (hs-minor-mode +1)))
-
-(add-hook 'c-mode-common-hook   'al-hide-show)
-(add-hook 'emacs-lisp-mode-hook 'al-hide-show)
-(add-hook 'java-mode-hook       'al-hide-show)
-(add-hook 'lisp-mode-hook       'al-hide-show)
-(add-hook 'perl-mode-hook       'al-hide-show)
-(add-hook 'sh-mode-hook         'al-hide-show)
-(add-hook 'python-mode-hook     'al-hide-show)
-
-(global-set-key (kbd "<f7>")      'fold-dwim-toggle)
-(global-set-key (kbd "<S-f7>")    'fold-dwim-hide-all)
-(global-set-key (kbd "<S-M-f7>")  'fold-dwim-show-all)
 
 ;;; =================================================
 ;;; God mode - a VI command mode using emacs bindings
