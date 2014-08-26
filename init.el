@@ -2144,80 +2144,12 @@ to replace the symbol under cursor"
 
      (set-face-attribute 'linum-relative-current-face nil :weight 'extra-bold)
 
-     ;; click and drag to select lines
-     (defvar *linum-mdown-line* nil)
-
-     (defun line-at-click ()
-       (save-excursion
-         (let ((click-y (rest (rest (mouse-position))))
-                (line-move-visual-store line-move-visual))
-           (setq line-move-visual t)
-           (goto-char (window-start))
-           (next-line (1- click-y))
-           (setq line-move-visual line-move-visual-store)
-           ;; If you are using tabbar substitute the next line with
-           ;; (line-number-at-pos))))
-           (1+ (line-number-at-pos)))))
-
-     (defun md-select-linum ()
-       (interactive)
-       (goto-line (line-at-click))
-       (set-mark (point))
-       (setq *linum-mdown-line*
-         (line-number-at-pos)))
-
-     (defun mu-select-linum ()
-       (interactive)
-       (when *linum-mdown-line*
-         (let (mu-line)
-           ;; (goto-line (line-at-click))
-           (setq mu-line (line-at-click))
-           (goto-line (max *linum-mdown-line* mu-line))
-           (set-mark (line-end-position))
-           (goto-line (min *linum-mdown-line* mu-line))
-           (setq *linum-mdown*
-             nil))))
-
-     (global-set-key (kbd "<left-margin> <down-mouse-1>") 'md-select-linum)
-     (global-set-key (kbd "<left-margin> <mouse-1>") 'mu-select-linum)
-     (global-set-key (kbd "<left-margin> <drag-mouse-1>") 'mu-select-linum)
      (global-set-key (kbd "C-c L")
        '(lambda ()
           (interactive)
           (if linum-mode (linum-relative-toggle)
             (linum-mode +1))))
-     (global-set-key (kbd "<left-fringe> <mouse-1>") 'linum-relative-toggle)
-
-     ))
-
-;; line numbers on right side
-;; (defun linum-relative-right-set-margin ()
-;;   "Make width of right margin the same as left margin"
-;;   (let* ((win (get-buffer-window))
-;;      (width (first (window-margins win))))
-;;     (set-window-margins win width width)))
-
-;; (defadvice linum-update-current (after linum-left-right-update activate)
-;;   "Advice to run right margin update"
-;;   (linum-relative-right-set-margin)
-;;   (linum-relative-right-update (line-number-at-pos)))
-
-;; (defadvice linum-delete-overlays (after linum-relative-right-delete activate)
-;;   "Set margins width to 0"
-;;   (set-window-margins (get-buffer-window) 0 0))
-
-;; (defun linum-relative-right-update (line)
-;;   "Put relative numbers to the right margin"
-;;   (dolist (ov (overlays-in (window-start) (window-end)))
-;;     (let ((str (overlay-get ov 'linum-str)))
-;;       (if str
-;;       (let ((nstr (number-to-string
-;;                (abs (- (string-to-number str) line)))))
-;;         ;; copy string properties
-;;         (set-text-properties 0 (length nstr) (text-properties-at 0 str) nstr)
-;;         (overlay-put ov 'after-string
-;;              (propertize " " 'display `((margin right-margin) ,nstr))))))))
-
+     (global-set-key (kbd "<left-fringe> <mouse-1>") 'linum-relative-toggle)))
 
 ;;; ================
 ;;; Auto indent mode
