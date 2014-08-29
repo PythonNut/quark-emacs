@@ -183,7 +183,8 @@
 ;; (global-set-key (kbd "C-w") 'clipboard-kill-region)
 ;; (global-set-key (kbd "M-w") 'clipboard-kill-ring-save)
 ;; (global-set-key (kbd "C-y") 'clipboard-yank)
-(require 'xclipboard)
+(when (locate-file "xsel" exec-path)
+  (require 'xclipboard))
 
 (global-set-key (kbd "<mouse-8>")
   '(lambda ()
