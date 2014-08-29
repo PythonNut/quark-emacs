@@ -2029,8 +2029,9 @@ to replace the symbol under cursor"
 ;;; =======================================
 ;; text mode
 (defun setup-flyspell ()
-  (setq ispell-program-name "hunspell")
-  (add-to-list 'ispell-extra-args "--sug-mode=ultra")
+  (when (locate-file "hunspell" exec-path)
+    (setq ispell-program-name "hunspell")
+    (add-to-list 'ispell-extra-args "--sug-mode=ultra"))
   (set 'flyspell-issue-message-flag nil))
 
 (add-hook 'text-mode-hook
