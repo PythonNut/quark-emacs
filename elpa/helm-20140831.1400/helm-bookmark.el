@@ -79,29 +79,21 @@
     (define-key map (kbd "C-d")   'helm-bookmark-run-delete)
     (define-key map (kbd "C-]")   'helm-bookmark-toggle-filename)
     (define-key map (kbd "M-e")   'helm-bookmark-run-edit)
-    (when (locate-library "bookmark-extensions")
-      (define-key map (kbd "M-F") 'helm-bmkext-run-sort-by-frequency)
-      (define-key map (kbd "M-V") 'helm-bmkext-run-sort-by-last-visit)
-      (define-key map (kbd "M-A") 'helm-bmkext-run-sort-alphabetically))
     (define-key map (kbd "C-c ?") 'helm-bookmark-help)
-    (delq nil map))
+    map)
   "Generic Keymap for emacs bookmark sources.")
 
-(defvar helm-bookmarks-cache nil)
 (defvar helm-source-bookmarks
-  '((name . "Bookmarks")
-    (init . (lambda ()
-              (require 'bookmark)
-              (setq helm-bookmark-mode-line-string
-                    (list (car helm-bookmark-mode-line-string)
-                          (replace-regexp-in-string "Sort:\\[.*\\] " ""
-                                                    (cadr helm-bookmark-mode-line-string))))                          
-              (setq helm-bookmarks-cache
-                    (bookmark-all-names))))
-    (candidates . helm-bookmarks-cache)
-    (filtered-candidate-transformer . helm-bookmark-transformer)
-    (match . helm-bookmark-match-fn)
-    (type . bookmark))
+  (helm-build-in-buffer-source
+   "Bookmarks"
+   :init (lambda ()
+           (bookmark-maybe-load-default-file)
+           (helm-init-candidates-in-buffer
+               'global
+             (bookmark-all-names)))
+   :filtered-candidate-transformer 'helm-bookmark-transformer
+   :search 'helm-bookmark-search-fn
+   :type 'bookmark)
   "See (info \"(emacs)Bookmarks\").")
 
 (defun helm-bookmark-transformer (candidates _source)
@@ -167,11 +159,7 @@
 (defvar helm-source-pp-bookmarks
   '((name . "PP-Bookmarks")
     (init . (lambda ()
-              (require 'bookmark)
-              (setq helm-bookmark-mode-line-string
-                    (list (car helm-bookmark-mode-line-string)
-                          (replace-regexp-in-string "Sort:\\[.*\\] " ""
-                                                    (cadr helm-bookmark-mode-line-string))))
+              (bookmark-maybe-load-default-file)
               (helm-init-candidates-in-buffer
                   'global (cl-loop for b in (bookmark-all-names) collect
                                 (propertize b 'location (bookmark-location b))))))

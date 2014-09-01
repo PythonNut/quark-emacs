@@ -1,5 +1,5 @@
 ;;; git-commit-mode.el --- Major mode for editing git commit messages -*- lexical-binding: t; -*-
-;; Version: 20140814.1435
+;; Version: 20140831.1359
 
 ;; Copyright (c) 2010-2012  Florian Ragwitz
 ;; Copyright (c) 2012-2013  Sebastian Wiesner
@@ -343,7 +343,10 @@ The commit message is saved to the kill ring."
   "Cycle backward through message history, after saving current message.
 With a numeric prefix ARG, go back ARG comments."
   (interactive "*p")
-  (git-commit-save-message)
+  (when (and (git-commit-save-message) (> arg 0))
+    (setq log-edit-comment-ring-index
+          (log-edit-new-comment-index
+           arg (ring-length log-edit-comment-ring))))
   (save-restriction
     (narrow-to-region (point-min) (git-commit-find-pseudo-header-position))
     (log-edit-previous-comment arg)))
@@ -617,6 +620,8 @@ basic structure of and errors in git commit messages."
                      (line-beginning-position)
                      (line-end-position)))
     (open-line 1))
+  ;; That's what happens when every little detail is commented
+  (make-local-variable 'log-edit-comment-ring-index)
   ;; Make sure `git-commit-abort' cannot be by-passed
   (add-hook 'kill-buffer-query-functions
             'git-commit-kill-buffer-noop nil t)

@@ -557,7 +557,13 @@ i.e After the creation of `helm-buffer'."))
     :documentation
     "  A string or a list that will be used to initialize the buffer that handle this data.
   This data will be passed to the init slot function and the buffer will be build with
-  `helm-init-candidates-in-buffer'.")
+  `helm-init-candidates-in-buffer'.
+  This is an easy and fast method to build a `candidates-in-buffer' source,
+  however NOTE that when using this, if you had a function in the init slot,
+  it will be overhidden by the new function passed to the init slot, so
+  if you have something else to define at initialization
+  \(apart building the candidates buffer\) use the init slot only or
+  create a hook and add it to the `:before-init-hook' slot.")
    
    (dont-plug
     :initform '(helm-compile-source--candidates-in-buffer))
@@ -741,6 +747,10 @@ Arguments ARGS are keyword value pairs as defined in CLASS."
 ;;; Method to build sources.
 ;;
 ;;
+(defmethod helm--setup-source :before ((source helm-source))
+  (helm-aif (slot-value source :keymap)
+      (and (symbolp it) (set-slot-value source :keymap (symbol-value it)))))
+
 (defmethod helm--setup-source ((_source helm-source-sync)))
 
 (defmethod helm--setup-source ((source helm-source-in-buffer))
