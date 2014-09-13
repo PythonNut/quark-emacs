@@ -4252,3 +4252,9 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
               (set-window-configuration ediff-saved-window-configuration))))
       (add-hook 'ediff-quit-hook restore-window-configuration 'append)
       (add-hook 'ediff-suspend-hook restore-window-configuration 'append))))
+
+;;; ==========
+;;; Julia mode
+;;; ==========
+(require 'ess-site)
+(add-hook 'julia-mode 'inferior-ess-mode)
