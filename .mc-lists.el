@@ -45,6 +45,7 @@
          evil-goto-line
          evil-insert
          evil-join
+         evil-jump-forward
          evil-jump-item
          evil-mouse-drag-region
          evil-next-line
@@ -81,6 +82,7 @@
          my-evil-smart-undo
          my-helm-omni
          my-normal-smart-undo
+         my-wlr-cua-cut-region
          previous-buffer
          python-backspace
          python-electric-colon
@@ -88,6 +90,8 @@
          smart-newline
          sp--cua-replace-region
          sp--self-insert-command
+         sp-backward-sexp
+         sp-forward-sexp
          sp-kill-sexp
          sp-remove-active-pair-overlay
          transpose-sexps
@@ -108,6 +112,7 @@
          my-helm-buffers
          my-helm-find-files
          projectile-switch-project
+         python-shell-send-buffer
          scroll-bar-mode
          scroll-bar-toolkit-scroll
          smex
