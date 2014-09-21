@@ -6,7 +6,7 @@
 ;; Maintainer: Le Wang
 ;; Description: fuzzy matching with good sorting
 ;; Created: Wed Apr 17 01:01:41 2013 (+0800)
-;; Version: 20140630.2152
+;; Version: 20140921.739
 ;; X-Original-Version: 0.5
 ;; Package-Requires: ((cl-lib "0.3"))
 ;; URL: https://github.com/lewang/flx
@@ -145,7 +145,7 @@ See documentation for logic."
                ;; ++++ -45 penalize extension
                (when (eq last-char penalty-lead)
                  (cl-incf (aref scores index) -45))
-               (when (eq group-separator char )
+               (when (eq group-separator char)
                  (setcar (cdar groups-alist) group-word-count)
                  (setq group-word-count 0)
                  (push (nconc (list index group-word-count)) groups-alist))

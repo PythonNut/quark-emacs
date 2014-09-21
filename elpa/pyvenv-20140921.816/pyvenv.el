@@ -4,8 +4,8 @@
 
 ;; Author: Jorgen Schaefer <contact@jorgenschaefer.de>
 ;; URL: http://github.com/jorgenschaefer/pyvenv
-;; Version: 20140906.848
-;; X-Original-Version: 1.3
+;; Version: 20140921.816
+;; X-Original-Version: 1.4
 ;; Keywords: Python, Virtualenv, Tools
 
 ;; This program is free software; you can redistribute it and/or
@@ -361,7 +361,8 @@ CAREFUL! This will modify your `process-environment' and
              nil t nil))
         (delete-file tmpfile)))
     (goto-char (point-min))
-    (when (re-search-forward "\n=-=-=\n" nil t)
+    (when (and (not (re-search-forward "ImportError: No module named virtualenvwrapper" nil t))
+               (re-search-forward "\n=-=-=\n" nil t))
       (let ((output (buffer-substring (point-min)
                                       (match-beginning 0))))
         (when (> (length output) 0)
