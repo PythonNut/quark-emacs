@@ -23,7 +23,7 @@
 ;;
 (require 'easymenu)
 (require 'helm-aliases)
-(require 'async-bytecomp)
+(require 'async-bytecomp nil t)
 
 
 (defgroup helm-config nil
@@ -226,7 +226,6 @@ So far, F can only be a symbol, not a lambda expression.")
 ;; byte-compile-warnings: (not cl-functions obsolete)
 ;; coding: utf-8
 ;; indent-tabs-mode: nil
-;; no-byte-compile: t
 ;; End:
 
 ;;; helm-config.el ends here

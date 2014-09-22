@@ -4,7 +4,7 @@
 ;; Author: Jeremy Rayman <opensource@jeremyrayman.com>
 ;; Maintainer: Jeremy Rayman <opensource@jeremyrayman.com>
 ;; Created: 2010-09-02
-;; Version: 20140917.323
+;; Version: 20140922.1121
 ;; X-Original-Version: 1.3.11
 ;; Keywords: faces, convenience, lisp, matching, tools, rainbow, rainbow parentheses, rainbow parens
 ;; EmacsWiki: http://www.emacswiki.org/emacs/RainbowDelimiters
@@ -56,7 +56,6 @@
 ;; (require 'rainbow-delimiters)
 ;;
 ;; 4. Activate the mode in your init file.
-;;    You can choose to enable it only in certain modes, or Emacs-wide:
 ;;
 ;; - To enable it only in certain modes, add lines like the following:
 ;; (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
@@ -64,14 +63,8 @@
 ;; - To enable it in all programming-related emacs modes (Emacs 24+):
 ;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 ;;
-;; - To activate the mode globally, add to your init file:
-;; (global-rainbow-delimiters-mode)
-;;
-;; - To temporarily activate rainbow-delimiters mode in an open buffer:
+;; - To toggle rainbow-delimiters mode in an open buffer:
 ;; M-x rainbow-delimiters-mode
-;;
-;; - To toggle global-rainbow-delimiters-mode:
-;; M-x global-rainbow-delimiters-mode
 
 ;;; Customization:
 
@@ -590,9 +583,20 @@ Used by font-lock for dynamic highlighting."
 ;;;###autoload
 (define-globalized-minor-mode global-rainbow-delimiters-mode
   rainbow-delimiters-mode rainbow-delimiters-mode-enable-maybe)
+(make-obsolete
+ 'global-rainbow-delimiters-mode
+ "
+It's a bad idea that breaks some major modes.
+Instead, use `add-hook' to add `rainbow-delimiters-mode' to the hooks of the
+major modes you actually want to use `rainbow-delimiters' in."
+ "1.3.12")
 
 (defun rainbow-delimiters-mode-enable-maybe ()
   "Enable `rainbow-delimiters-mode' if appropriate in this buffer."
+  (message "Warning: `global-rainbow-delimiters-mode' is an obsolete function.
+It's a bad idea that breaks some major modes.
+Instead, use `add-hook' to add `rainbow-delimiters-mode' to the hooks
+of the major modes you actually want to use `rainbow-delimiters' in.")
   (unless (apply 'derived-mode-p rainbow-delimiters-ignore-modes)
     (rainbow-delimiters-mode-enable)))
 

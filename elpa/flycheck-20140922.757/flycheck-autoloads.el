@@ -5,7 +5,7 @@
 
 ;;;### (autoloads (flycheck-define-error-level flycheck-info flycheck-def-option-var
 ;;;;;;  flycheck-def-config-file-var global-flycheck-mode flycheck-mode)
-;;;;;;  "flycheck" "flycheck.el" (21533 47453 918947 962000))
+;;;;;;  "flycheck" "flycheck.el" (21536 35283 205962 382000))
 ;;; Generated autoloads from flycheck.el
 
 (autoload 'flycheck-mode "flycheck" "\
@@ -136,7 +136,8 @@ The following PROPERTIES constitute an error level:
 
 ;;;***
 
-;;;### (autoloads nil nil ("flycheck-pkg.el") (21533 47454 4122 865000))
+;;;### (autoloads nil nil ("flycheck-pkg.el") (21536 35283 243054
+;;;;;;  619000))
 
 ;;;***
 

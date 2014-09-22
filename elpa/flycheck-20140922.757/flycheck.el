@@ -3046,7 +3046,7 @@ from the node list."
   "Parse an xml string from a region.
 
 Use libxml if Emacs is built with libxml support.  Otherwise fall
-back to `xml-parse-region'.")
+back to `xml-parse-region', via `flycheck-parse-xml-region'.")
 
 (defun flycheck-parse-xml-string (xml)
   "Parse an XML string.
@@ -3804,7 +3804,7 @@ non-nil."
                   (setq next-error-pos end)))))
           ;; Delete the old overlays
           (mapc #'delete-overlay old-overlays)
-          (unless preserve-pos
+          (when (and (not preserve-pos) errors-at-line)
             ;; Move point to the middle error
             (goto-char (+ min-point (/ (- max-point min-point) 2)))
             (beginning-of-line)
