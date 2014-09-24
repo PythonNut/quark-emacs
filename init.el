@@ -3869,7 +3869,10 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 (eval-after-load 'js2-mode
   '(progn
-     (js2r-add-keybindings-with-prefix "C-c C-r")))
+     (js2r-add-keybindings-with-prefix "C-c C-r")
+     (setq
+       js2-basic-offset 2
+       js2-bounce-indent-p t)))
 
 (eval-after-load 'tern
   '(progn
