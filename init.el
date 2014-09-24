@@ -1959,11 +1959,12 @@ to replace the symbol under cursor"
 ;; (indent-guide-global-mode)
 ;; (require 'indent-vline)
 
-;; (add-hook 'prog-mode-hook (lambda ()
-;;   (require 'ws-butler)
-;;   (ws-butler-global-mode +1)))
+(setq require-final-newline t)
+(add-hook 'find-file-hooks
+  (lambda ()
+    (require 'ws-butler)
+    (ws-butler-global-mode +1)))
 
-;; (add-hook 'prog-mode-hook 'ws-butler-mode)
 ;; (add-hook 'prog-mode-hook 'indent-hint-mode)
 
 (defun cleanup-buffer-safe ()
