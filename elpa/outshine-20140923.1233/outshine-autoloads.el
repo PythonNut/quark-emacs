@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-;;;### (autoloads nil nil ("outshine-pkg.el" "outshine.el") (21535
-;;;;;;  19851 205334 512000))
+;;;### (autoloads nil nil ("outshine-pkg.el" "outshine.el") (21539
+;;;;;;  11641 61475 453000))
 
 ;;;***
 

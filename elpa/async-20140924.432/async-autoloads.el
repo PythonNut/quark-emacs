@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads (async-start async-start-process) "async" "async.el"
-;;;;;;  (21536 35286 66006 704000))
+;;;;;;  (21539 11660 48575 937000))
 ;;; Generated autoloads from async.el
 
 (autoload 'async-start-process "async" "\
@@ -69,7 +69,7 @@ returns nil.  It can still be useful, however, as an argument to
 ;;;***
 
 ;;;### (autoloads nil nil ("async-bytecomp.el" "async-pkg.el" "dired-async.el"
-;;;;;;  "smtpmail-async.el") (21536 35286 74202 161000))
+;;;;;;  "smtpmail-async.el") (21539 11660 60184 993000))
 
 ;;;***
 

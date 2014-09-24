@@ -4,7 +4,7 @@
 ;;
 ;; Author: Justin Talbott <justin@waymondo.com>
 ;; URL: https://github.com/waymondo/ace-jump-buffer
-;; Version: 20140923.1846
+;; Version: 20140924.807
 ;; X-Original-Version: 0.3.0
 ;; Package-Requires: ((ace-jump-mode "1.0") (dash "2.4.0"))
 ;;
@@ -20,6 +20,7 @@
 (require 'recentf)
 (require 'dash)
 
+;;;###autoload
 (defmacro make-ace-jump-buffer-function (name &rest buffer-list-reject-filter)
   "Create a `bs-configuration' and interactive defun using NAME that displays buffers
 that don't get rejected by the body of BUFFER-LIST-REJECT-FILTER."
@@ -34,7 +35,7 @@ that don't get rejected by the body of BUFFER-LIST-REJECT-FILTER."
          (let ((ajb-bs-configuration ,name))
            (ace-jump-buffer)))
        (add-to-list 'bs-configurations
-                 '(,name nil nil nil ,filter-defun-name nil)))))
+                    '(,name nil nil nil ,filter-defun-name nil)))))
 
 (when (require 'perspective nil 'noerror)
   (make-ace-jump-buffer-function "persp"
@@ -70,6 +71,7 @@ that don't get rejected by the body of BUFFER-LIST-REJECT-FILTER."
 (defvar ajb/showing nil)
 (defvar ajb/other-window nil)
 (defvar ajb/in-one-window nil)
+(defvar ajb/configuration-history nil)
 
 ;; settings for a barebones `bs' switcher
 (defvar ajb/bs-attributes-list '(("" 2 2 left " ")
@@ -149,7 +151,9 @@ that don't get rejected by the body of BUFFER-LIST-REJECT-FILTER."
   "Quickly hop to buffer with `ace-jump-mode' with selected configuration."
   (interactive)
   (let* ((name (completing-read "Ace jump buffer with configuration: "
-                                bs-configurations nil t))
+                                (--map (car it) bs-configurations) nil t nil
+                                'ajb/configuration-history
+                                (car ajb/configuration-history)))
          (ajb-bs-configuration name))
     (ace-jump-buffer)))
 

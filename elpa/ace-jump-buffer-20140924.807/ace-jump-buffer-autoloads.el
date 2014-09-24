@@ -4,9 +4,18 @@
 
 
 ;;;### (autoloads (ace-jump-buffer-with-configuration ace-jump-buffer-in-one-window
-;;;;;;  ace-jump-buffer-other-window ace-jump-buffer) "ace-jump-buffer"
-;;;;;;  "ace-jump-buffer.el" (21538 17998 673194 8000))
+;;;;;;  ace-jump-buffer-other-window ace-jump-buffer make-ace-jump-buffer-function)
+;;;;;;  "ace-jump-buffer" "ace-jump-buffer.el" (21539 11660 575505
+;;;;;;  921000))
 ;;; Generated autoloads from ace-jump-buffer.el
+
+(autoload 'make-ace-jump-buffer-function "ace-jump-buffer" "\
+Create a `bs-configuration' and interactive defun using NAME that displays buffers
+that don't get rejected by the body of BUFFER-LIST-REJECT-FILTER.
+
+\(fn NAME &rest BUFFER-LIST-REJECT-FILTER)" nil t)
+
+(put 'make-ace-jump-buffer-function 'lisp-indent-function '1)
 
 (autoload 'ace-jump-buffer "ace-jump-buffer" "\
 Quickly hop to buffer with `ace-jump-mode'.
@@ -30,8 +39,8 @@ Quickly hop to buffer with `ace-jump-mode' with selected configuration.
 
 ;;;***
 
-;;;### (autoloads nil nil ("ace-jump-buffer-pkg.el") (21538 17998
-;;;;;;  694666 90000))
+;;;### (autoloads nil nil ("ace-jump-buffer-pkg.el") (21539 11660
+;;;;;;  583760 271000))
 
 ;;;***
 
