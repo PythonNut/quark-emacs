@@ -1,7 +1,7 @@
 ;;; outshine.el --- outline with outshine outshines outline
 
 ;; Author: Thorsten Jolitz <tjolitz AT gmail DOT com>
-;; Version: 20140923.1233
+;; Version: 20140925.49
 ;; X-Original-Version: 2.0
 ;; URL: https://github.com/tj64/outshine
 
@@ -933,7 +933,7 @@ section are given (with section title in submatch 1)."
 	 ;; stay after inserted text
 	 (copy-marker org-log-note-marker t)))
     ad-do-it
-    (unless (derived-mode-p 'org-mode)
+    (unless (derived-mode-p 'org-mode 'org-agenda-mode)
       (comment-region outshine-log-note-beg-marker
 		      outshine-log-note-end-marker))
     (move-marker outshine-log-note-beg-marker nil)

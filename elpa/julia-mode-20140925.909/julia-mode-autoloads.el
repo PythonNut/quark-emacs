@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-;;;### (autoloads (julia-mode) "julia-mode" "julia-mode.el" (21524
-;;;;;;  48476 632631 32000))
+;;;### (autoloads (julia-mode) "julia-mode" "julia-mode.el" (21540
+;;;;;;  40251 97602 725000))
 ;;; Generated autoloads from julia-mode.el
 
 (add-to-list 'auto-mode-alist '("\\.jl\\'" . julia-mode))
@@ -16,8 +16,8 @@ Major mode for editing julia code.
 
 ;;;***
 
-;;;### (autoloads nil nil ("julia-mode-pkg.el") (21524 48476 664140
-;;;;;;  100000))
+;;;### (autoloads nil nil ("julia-mode-pkg.el") (21540 40251 103399
+;;;;;;  308000))
 
 ;;;***
 
