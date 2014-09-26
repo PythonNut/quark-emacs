@@ -1,7 +1,7 @@
 emacs-config
 ============
 
-My personal emacs config
+My personal emacs config (to be put in `~/.emacs.d` and optionally `ln -s ~/.emacs.d/init.el ~/.emacs`)
 
  * You will need to do a `M-x byte-recompile-directory` because `*.elc` is in `.gitignore`
  * Features `vim` emulation including extensive custom textobjects and motions
