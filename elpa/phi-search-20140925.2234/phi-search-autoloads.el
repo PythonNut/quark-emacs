@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads (phi-replace-query phi-replace) "phi-replace" "phi-replace.el"
-;;;;;;  (21521 5412 245648 312000))
+;;;;;;  (21541 36092 882856 730000))
 ;;; Generated autoloads from phi-replace.el
 
 (autoload 'phi-replace "phi-replace" "\
@@ -20,7 +20,7 @@ replace command using phi-search
 ;;;***
 
 ;;;### (autoloads (phi-search-backward phi-search) "phi-search" "phi-search.el"
-;;;;;;  (21521 5412 228973 311000))
+;;;;;;  (21541 36092 882856 730000))
 ;;; Generated autoloads from phi-search.el
 
 (autoload 'phi-search "phi-search" "\
@@ -36,7 +36,7 @@ incremental search command compatible with \"multiple-cursors\"
 ;;;***
 
 ;;;### (autoloads nil nil ("phi-search-core.el" "phi-search-pkg.el")
-;;;;;;  (21521 5412 284856 966000))
+;;;;;;  (21541 36093 30703 612000))
 
 ;;;***
 

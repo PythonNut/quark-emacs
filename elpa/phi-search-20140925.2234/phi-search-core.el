@@ -414,7 +414,8 @@ Otherwise yank a word from target buffer and expand query."
   (phi-search--with-target-buffer
    (phi-search--with-sublimity
     (phi-search--delete-overlays)))
-  (phi-search-complete))
+  (let ((phi-search--before-complete-function nil))
+    (phi-search-complete)))
 
 ;; + provide
 
