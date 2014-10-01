@@ -2086,8 +2086,7 @@ to replace the symbol under cursor"
 (add-hook 'prog-mode-hook
   '(lambda ()
      (when window-system
-       (linum-mode +1)
-       (set-fringe-mode '(4 . 1)))))
+       (linum-mode +1))))
 
 (eval-after-load 'linum
   '(progn
@@ -2398,17 +2397,12 @@ to replace the symbol under cursor"
 
 ;; color all parentheses at all times
 (require 'rainbow-delimiters)
-(global-rainbow-delimiters-mode +1)
 
-;; (set-face-foreground 'rainbow-delimiters-depth-1-face "#dddddd")
-;; (set-face-foreground 'rainbow-delimiters-depth-2-face "#fce94f")
-;; (set-face-foreground 'rainbow-delimiters-depth-3-face "#b4fa70")
-;; (set-face-foreground 'rainbow-delimiters-depth-4-face "#8cc4ff")
-;; (set-face-foreground 'rainbow-delimiters-depth-5-face "#fcaf3e")
-;; (set-face-foreground 'rainbow-delimiters-depth-6-face "#73d216")
-;; (set-face-foreground 'rainbow-delimiters-depth-7-face "#e6a8df")
-;; (set-face-foreground 'rainbow-delimiters-depth-8-face "#acd2f8")
-;; (set-face-foreground 'rainbow-delimiters-depth-9-face "#6a8057")
+;; color parentheses by level
+;; if cursor is on a paren, make the parens stick out more
+
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'text-mode-hook 'rainbow-delimiters-mode)
 
 (set-face-foreground 'rainbow-delimiters-depth-1-face "#dddddd")
 (set-face-foreground 'rainbow-delimiters-depth-2-face "#fce94f")
@@ -2437,12 +2431,12 @@ to replace the symbol under cursor"
 
 (defun rainbow-delimiters-saturate (face &optional degree)
   (require 'hexrgb)
-  "Make the foreground colour of FACE appear a bit more pale."
+  "Adjust the saturation of the given face by the given degree"
   (set-face-foreground face
     (hexrgb-increment-saturation
       (face-attribute face :foreground) 0.5)))
 
-(defvar rainbow-delimiters-face 0.1)
+(defvar rainbow-delimiters-face-delta 0.1)
 (defun rainbow-delimiters-focus (arg)
   (rainbow-delimiters-saturate 'rainbow-delimiters-depth-1-face arg)
   (rainbow-delimiters-saturate 'rainbow-delimiters-depth-2-face arg)
@@ -2458,12 +2452,12 @@ to replace the symbol under cursor"
 
 (defun rainbow-delimiters-on-maybe ()
   (unless (or rainbow-delimiters-switch (minibufferp))
-    (rainbow-delimiters-focus 0.1)
+    (rainbow-delimiters-focus rainbow-delimiters-face-delta)
     (setq rainbow-delimiters-switch t)))
 
 (defun rainbow-delimiters-off-maybe ()
   (when rainbow-delimiters-switch
-    (rainbow-delimiters-focus -0.1)
+    (rainbow-delimiters-focus (- rainbow-delimiters-face-delta))
     (setq rainbow-delimiters-switch nil)))
 
 (defun rainbow-delimiters-focus-on-maybe ()
@@ -2522,11 +2516,6 @@ to replace the symbol under cursor"
 (define-key auto-highlight-symbol-mode-map (kbd "C-c <left>") 'ahs-backward)
 (define-key auto-highlight-symbol-mode-map (kbd "C-c <right>") 'ahs-forward)
 (global-auto-highlight-symbol-mode +1)
-
-;; (require 'smartrep)
-;; (smartrep-define-key auto-highlight-symbol-mode-map "\C-c"
-;;   '(("<left>" . 'ahs-backward)
-;;      ("<right>" . 'ahs-forward)))
 
 (set-face-background 'ahs-definition-face "grey10")
 (set-face-foreground 'ahs-definition-face 'nil)
