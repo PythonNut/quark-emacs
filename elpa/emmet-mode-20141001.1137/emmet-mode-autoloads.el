@@ -5,7 +5,7 @@
 
 ;;;### (autoloads (emmet-prev-edit-point emmet-next-edit-point emmet-wrap-with-markup
 ;;;;;;  emmet-preview emmet-expand-yas emmet-mode emmet-expand-line)
-;;;;;;  "emmet-mode" "emmet-mode.el" (21503 32186 684492 200000))
+;;;;;;  "emmet-mode" "emmet-mode.el" (21548 54403 73417 815000))
 ;;; Generated autoloads from emmet-mode.el
 
 (autoload 'emmet-expand-line "emmet-mode" "\
@@ -71,8 +71,8 @@ Wrap region with markup.
 
 ;;;***
 
-;;;### (autoloads nil nil ("emmet-mode-pkg.el") (21503 32186 703889
-;;;;;;  462000))
+;;;### (autoloads nil nil ("emmet-mode-pkg.el") (21548 54403 81162
+;;;;;;  531000))
 
 ;;;***
 

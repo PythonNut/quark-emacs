@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads (easy-mark easy-kill) "easy-kill" "easy-kill.el"
-;;;;;;  (21547 29330 71021 99000))
+;;;;;;  (21548 54403 670084 459000))
 ;;; Generated autoloads from easy-kill.el
 
 (autoload 'easy-kill "easy-kill" "\
@@ -34,8 +34,8 @@ Similar to `easy-kill' (which see) but for marking.
 
 ;;;***
 
-;;;### (autoloads nil nil ("easy-kill-pkg.el" "test.el") (21547 29330
-;;;;;;  81271 181000))
+;;;### (autoloads nil nil ("easy-kill-pkg.el" "test.el") (21548 54403
+;;;;;;  692800 133000))
 
 ;;;***
 

@@ -22,6 +22,7 @@
 (require 'helm-utils)
 (require 'helm-elscreen)
 (require 'helm-grep)
+(require 'helm-plugin)
 (require 'helm-regexp)
 
 (declare-function ido-make-buffer-list "ido" (default))
@@ -94,6 +95,11 @@ Only buffer names are fuzzy matched when this is enabled,
 (defface helm-buffer-directory
     '((t (:foreground "DarkRed" :background "LightGray")))
   "Face used for directories in `helm-buffers-list'."
+  :group 'helm-buffers)
+
+(defface helm-buffer-file
+    '((t :inherit font-lock-type-face))
+  "Face for buffer file names in `helm-buffers-list'."
   :group 'helm-buffers)
 
 
@@ -288,7 +294,7 @@ See `ido-make-buffer-list' for more infos."
       (file-name
        (helm-buffer--show-details
         name name-prefix file-name size mode dir
-        'font-lock-type-face 'helm-buffer-process nil details 'filebuf))
+        'helm-buffer-file 'helm-buffer-process nil details 'filebuf))
       ;; Any non--file buffer.=>grey italic
       (t
        (helm-buffer--show-details

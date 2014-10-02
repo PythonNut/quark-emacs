@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-;;;### (autoloads (web-mode) "web-mode" "web-mode.el" (21547 29310
-;;;;;;  301021 417000))
+;;;### (autoloads (web-mode) "web-mode" "web-mode.el" (21548 54396
+;;;;;;  853417 902000))
 ;;; Generated autoloads from web-mode.el
 
 (autoload 'web-mode "web-mode" "\
@@ -14,8 +14,8 @@ Major mode for editing web templates.
 
 ;;;***
 
-;;;### (autoloads nil nil ("web-mode-pkg.el" "wfs-mode.el") (21547
-;;;;;;  29310 318533 72000))
+;;;### (autoloads nil nil ("web-mode-pkg.el" "wfs-mode.el") (21548
+;;;;;;  54396 873734 559000))
 
 ;;;***
 
