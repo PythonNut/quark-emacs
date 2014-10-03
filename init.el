@@ -95,14 +95,6 @@
 ;;; ===========
 ;;; Theme setup
 ;;; ===========
-;; theme description
-;; #e6a8df - special purple
-;; #fcaf3e - orange
-;; #8cc4ff - lightblue
-;; #b4fa70 - keyword green
-;; #73d216 - comment green
-;; #fce94f - function orange
-;; (load-theme 'tango-dark t)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 (add-hook 'emacs-startup-hook '(lambda ()
@@ -216,17 +208,6 @@
     (delete-blank-lines)
     ad-do-it))
 
-;; (defadvice delete-horizontal-space (around delete-empty-lines activate)
-;;   (if (string-match "^[[:space:]]*$"
-;;         (buffer-substring-no-properties
-;;           (line-beginning-position)
-;;           (line-end-position)))
-;;     (progn
-;;       (delete-blank-lines)
-;;       (kill-whole-line)
-;;       ad-do-it)
-;;    ad-do-it))
-
 ;;; ==================
 ;;; save last position
 ;;; ==================
@@ -250,15 +231,6 @@
   `((".*" ,autosave-location t)))
 
 (global-set-key (kbd "C-c B") 'backup-walker-start)
-(add-hook 'backup-walker-mode-hook
-  '(lambda ()
-     (interactive)
-     (evil-insert-state)))
-
-;; (add-hook 'diff-mode-hook
-;;   '(lambda ()
-;;      (interactive)
-;;      (evil-motion-state)))
 
 (require 'backups-mode)
 (backups-mode-start)
@@ -308,38 +280,7 @@
 (add-hook 'before-save-hook  'force-backup-of-buffer)
 
 ;; also save when frame focus lost
-(defvar save-on-focus-lost-is-set nil)
-(defun set-save-on-focus-lost (frame)
-  "Save all buffers when a frame loses focus"
-  (interactive)
-  (when (and (featurep 'x) window-system (not save-on-focus-lost-is-set))
-    (message "Setting save on focus lost")
-    (setq save-on-focus-lost-is-set t)
-    (defvar on-blur--saved-window-id 0 "Last known focused window.")
-    (defvar on-blur--timer nil "Timer refreshing known focused window.")
-    (defun on-blur--refresh ()
-      "Runs on-blur-hook if emacs has lost focus."
-      (let* ((active-window (x-window-property
-                              "_NET_ACTIVE_WINDOW" nil "WINDOW" 0 nil t))
-              (active-window-id (if (numberp active-window)
-                                  active-window
-                                  (string-to-number
-                                    (format "%x00%x"
-                                      (first active-window)
-                                      (rest active-window)) 16)))
-              (emacs-window-id (string-to-number
-                                 (frame-parameter nil 'outer-window-id))))
-        (when (and
-                (= emacs-window-id on-blur--saved-window-id)
-                (not (= active-window-id on-blur--saved-window-id)))
-          (run-hooks 'on-blur-hook))
-        (setq on-blur--saved-window-id active-window-id)
-        (run-with-timer 1 nil 'on-blur--refresh)))
-    (add-hook 'on-blur-hook #'(lambda () (save-some-buffers t)))
-    (on-blur--refresh)))
-
-;; (set-save-on-focus-lost (car (frame-list)))
-;; (add-hook 'after-make-frame-functions 'set-save-on-focus-lost)
+;; TODO: 24.4 focus hooks
 
 ;;; ========================
 ;;; Elscreen - tabs in emacs
@@ -481,9 +422,6 @@
 ;;; =========================================
 (require 'key-chord)
 (key-chord-mode 1)
-;; (add-hook 'after-init-hook '(lambda ()
-;;  (set-input-method "TeX")
-;;  (toggle-input-method)))
 
 ;;; ==========================
 ;;; Kill ring - cut and paste+
@@ -542,14 +480,7 @@
 ;;; ======================
 ;;; Text mode improvements
 ;;; ======================
-(autoload 'auto-capitalize-mode "auto-capitalize"
-  "Toggle `auto-capitalize' minor mode in this buffer." t)
-(autoload 'turn-on-auto-capitalize-mode "auto-capitalize"
-  "Turn on `auto-capitalize' minor mode in this buffer." t)
-;; (add-hook 'text-mode-hook 'turn-on-auto-capitalize-mode)
-;; (setq auto-capitalize-words '("I" "I'm"))
-
-(add-hook 'text-mode-hook 'auto-fill-mode) 
+(add-hook 'text-mode-hook 'auto-fill-mode)
 
 ;;; =====================================
 ;;; Make scripts executable automatically
@@ -580,7 +511,6 @@
 ;;; ========
 ;;; CUA mode
 ;;; ========
-;; (cua-mode +1)
 (xterm-mouse-mode +1)
 (cua-selection-mode +1)
 
@@ -593,6 +523,7 @@
   '(lambda ()
      (interactive)
      (cua-selection-mode +1)))
+
 ;;; ===================================
 ;;; Evil mode - Emacs + Vim keybindings
 ;;; ===================================
@@ -618,6 +549,7 @@
 (evil-set-initial-state 'backups-mode 'insert)
 (evil-set-initial-state 'erc-mode 'emacs)
 (evil-set-initial-state 'git-commit-mode 'insert)
+(evil-set-initial-state 'backup-walker-mode 'insert)
 
 (add-hook 'package-menu-mode-hook
   '(lambda ()
@@ -680,11 +612,6 @@
   (let ((repeat-previous-repeated-command command)
          (last-repeatable-command 'repeat))
     (repeat nil)))
-
-;; (define-key evil-normal-state-map (kbd "C-s")
-;;   '(lambda ()
-;;      (interactive)
-;;      (message "use /")))
 
 
 (define-key evil-normal-state-map (kbd "C-SPC")
@@ -813,14 +740,6 @@
   (when (eq (first (get-char-property 0 'yank-handler (first kill-ring)))
           'evil-yank-line-handler)
     (put-text-property 0 1 'whole-line-or-region t (first kill-ring))))
-
-;; reindent empty lines when editing
-;; (defadvice evil-insert-state (after autoindent activate)
-;;   (when (string-match "^[[:space:]\n]*$"
-;;           (buffer-substring-no-properties
-;;             (line-beginning-position)
-;;             (line-end-position)))
-;;     (indent-according-to-mode)))
 
 (autoload 'evil-exchange        "evil-exchange")
 (autoload 'evil-exchange-cancel "evil-exchange")
@@ -1439,12 +1358,6 @@ the current line."
   (add-hook 'post-command-hook
     (lambda ()
       (let ((color (cond ((minibufferp) default-color)
-                     ;; ((evil-normal-state-p) '("#444488" . "white"))
-                     ;; ((evil-emacs-state-p)  '("#884444" . "white"))
-                     ;; ((evil-insert-state-p)  '("grey70" . "black"))
-                     ;; ((evil-visual-state-p) '("#666699" . "white"))
-                     ;; ((evil-replace-state-p) '("#662222" . "white"))
-                     ;; (t '("grey70" . "black"))
                      ((evil-normal-state-p) '("#586e75" . "#eee8d5"))
                      ((evil-emacs-state-p)  '("#859900" . "#eee8d5"))
                      ((evil-insert-state-p)  '("#93a1a1" . "#073642"))
@@ -1458,7 +1371,7 @@ the current line."
 (require 'surround)
 (global-surround-mode +1)
 
-;; Esc quits -- anything
+;; Esc quits from everything
 (define-key evil-normal-state-map [escape] 'keyboard-quit)
 (define-key evil-visual-state-map [escape] 'keyboard-quit)
 (define-key evil-motion-state-map [escape] 'evil-normal-state)
@@ -1560,26 +1473,6 @@ to replace the symbol under cursor"
 (eval-after-load 'phi-search
   '(progn
      (define-key phi-search-default-map (kbd "RET") 'phi-search-complete)))
-
-;; (defun my-smart-search (arg)
-;;   (interactive "p")
-;;   (evil-normal-state)
-;;   (run-at-time 0.01 nil 'evil-search-forward) 
-;;   (unless (fboundp 'smartrep-read-event-loop)
-;;     (require 'smartrep))
-;;   (run-at-time 0.3 nil 'keyboard-quit)
-;;   (condition-case e
-;;     (smartrep-read-event-loop
-;;       '(("C-s" . my-smart-search-icicle)))
-;;     (quit nil)))
-
-;; (defun my-smart-search-icicle ()
-;;   (interactive)
-;;   (execute-kbd-macro "<return>")
-;;   (evil-insert-state)
-;;   (icicle-search))
-
-;; (define-key evil-insert-state-map (kbd "C-s") 'my-smart-search)
 
 ;;; ===============================
 ;;; Abbrev mode - text substitution
@@ -1781,22 +1674,6 @@ to replace the symbol under cursor"
           (widen))))
 
 (key-chord-define evil-insert-state-map "jc" 'ace-jump-to-char-within-N-lines)
-;; (define-key evil-motion-state-map (kbd "SPC") #'evil-ace-jump-char-mode)
-;; (define-key evil-motion-state-map (kbd "C-SPC") #'evil-ace-jump-word-mode)
-
-;; (define-key evil-operator-state-map (kbd "SPC") #'evil-ace-jump-char-mode)
-;; (define-key evil-operator-state-map (kbd "C-SPC") #'evil-ace-jump-char-to-mode)
-;; (define-key evil-operator-state-map (kbd "M-SPC") #'evil-ace-jump-word-mode)
-
-;; ;; different jumps for different visual modes
-;; (defadvice evil-visual-line (before spc-for-line-jump activate)
-;;   (define-key evil-visual-state-map (kbd "SPC") #'evil-ace-jump-line-mode))
-
-;; (defadvice evil-visual-char (before spc-for-char-jump activate)
-;;   (define-key evil-visual-state-map (kbd "SPC") #'evil-ace-jump-char-mode))
-
-;; (defadvice evil-visual-block (before spc-for-char-jump activate)
-;;   (define-key evil-visual-state-map (kbd "SPC") #'evil-ace-jump-char-mode))
 
 (require 'noflet)
 (require 'ace-jump-mode)
@@ -2217,7 +2094,6 @@ to replace the symbol under cursor"
 (yas-global-mode 1)
 
 ;; automatic yasnippets
-;;(require 'auto-yasnippet)
 (autoload 'aya-create "auto-yasnippet")
 (autoload 'aya-expand "auto-yasnippet")
 (global-set-key (kbd "C-c C") 'aya-create)
@@ -2998,12 +2874,6 @@ The current directory is assumed to be the project's root otherwise."
 
 (eval-after-load 'helm
   '(progn
-     ;; (add-hook 'helm-before-initialize-hook
-     ;;   #'(lambda ()
-     ;;       (helm-attrset 'follow 1 helm-source-buffers-list)))
-
-     ;; (helm-mode +1)
-     ;; (helm-adaptative-mode +1)
      (setq helm-locate-command "locate %s -r %s -be -l 999")
      (setq helm-ff-transformer-show-only-basename nil)
      (setq helm-buffers-fuzzy-matching t)
@@ -3336,21 +3206,6 @@ The current directory is assumed to be the project's root otherwise."
 ;;; ====================================
 (defun emacsclient-setup (&rest args)
   (interactive)
-  ;; (load-theme 'tango-dark)
-  ;; (if (display-graphic-p)
-  ;;   (progn
-  ;;     (set-face-foreground 'font-lock-comment-face "#6a8057")
-  ;;     (set-face-foreground 'font-lock-comment-delimiter-face "#6a8057")
-  ;;     (menu-bar-mode +1)
-  ;;     (load-theme 'solarized-dark)
-  ;;     (linum-mode +1)
-  ;;     (highlight-current-line-set-bg-color "073642"))
-  ;;   (progn
-  ;;     (set-face-foreground 'font-lock-comment-face "#888")
-  ;;     (set-face-foreground 'font-lock-comment-delimiter-face "#888")
-  ;;     (menu-bar-mode -1)
-  ;;     (highlight-current-line-set-bg-color "grey25")
-  ;;     (load-theme 'tango-dark)))
 
   (global-set-key (kbd "<mouse-5>")
     '(lambda ()
@@ -3399,7 +3254,7 @@ The current directory is assumed to be the project's root otherwise."
 ;;; =================================
 ;;; Multiple cursors - blow your mind
 ;;; =================================
-(require 'multiple-cursors)
+(require 'multiple-cursors-autoloads)
 (global-set-key (kbd "C-c l") 'mc/edit-lines)
 (global-set-key (kbd "C-c a") 'mc/mark-all-like-this-dwim)
 (global-set-key (kbd "C-c m") 'mc/mark-more-like-this-extended)
@@ -3850,8 +3705,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 ;; (add-hook 'js3-mode-hook 'tern-mode)
 ;; (add-to-list 'ac-modes 'js3-mode)
 
-;; (add-to-list 'load-path "/usr/lib/node_modules/tern/emacs/")
-
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (setq tern-ac-on-dot t)
 (setq ac-js2-evaluate-calls t)
@@ -4005,31 +3858,9 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 (autoload 'bongo "bongo")
 (autoload 'asy-mode "asy-mode")
-
-;; (add-hook 'outline-minor-mode-hook '(lambda ()
-;;   (require 'outshine)
-;;   (defvar outline-minor-mode-prefix "\C-c")
-;;   (outshine-hook-function)))
-
-;; (add-hook 'prog-mode-hook 'outline-minor-mode)
 ;;; =========
 ;;; Customize
 ;;; =========
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(cua-rectangle ((t (:inherit region :background "#93a1a1" :foreground "#002b36"))))
-;;  '(flycheck-error ((t (:underline "Red1"))))
-;;  '(flycheck-info ((t (:underline "#353"))))
-;;  '(flycheck-warning ((t (:underline "gray35"))))
-;;  '(flyspell-duplicate ((t (:underline "#fcaf3e"))))
-;;  '(flyspell-incorrect ((t (:underline "#ef2929"))))
-;;  '(mode-line ((t (:background "grey70" :foreground "black" :box nil))))
-;;  '(mode-line-emphasis ((t (:background "gray70" :weight bold))))
-;;  '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light)))))
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -4045,38 +3876,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
  '(mode-line-emphasis ((t (:background "gray70" :weight bold))))
  '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light)))))
 
-;; (custom-set-variables
-;;  ;; custom-set-variables was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(adaptive-wrap-extra-indent 2)
-;;   '(ansi-color-names-vector ["#002b36" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
-;;  '(compilation-message-face (quote default))
-;;  '(custom-safe-themes (quote ("fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
-;;  '(ergoemacs-mode-used "5.7.5")
-;;  '(ergoemacs-theme "5.7.5")
-;;  '(fci-rule-color "#073642")
-;;  '(flycheck-indication-mode nil)
-;;  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
-;;  '(highlight-tail-colors (quote (("#073642" . 0) ("#546E00" . 20) ("#00736F" . 30) ("#00629D" . 50) ("#7B6000" . 60) ("#8B2C02" . 70) ("#93115C" . 85) ("#073642" . 100))))
-;;  '(magit-diff-use-overlays nil)
-;;  '(projectile-globally-ignored-directories (quote (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "venv" "build" ".svn")))
-;;  '(projectile-project-root-files (quote (".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "rebar.config" "project.clj" "pom.xml" "build.sbt" "build.gradle" "Gemfile" "Makefile" ".svn")))
-;;  '(recentf-exclude nil t)
-;;  '(recentf-max-menu-items 20)
-;;  '(recentf-max-saved-items 40)
-;;  '(syslog-debug-face (quote ((t :background unspecified :foreground "#2aa198" :weight bold))))
-;;  '(syslog-error-face (quote ((t :background unspecified :foreground "#dc322f" :weight bold))))
-;;  '(syslog-hour-face (quote ((t :background unspecified :foreground "#859900"))))
-;;  '(syslog-info-face (quote ((t :background unspecified :foreground "#268bd2" :weight bold))))
-;;  '(syslog-ip-face (quote ((t :background unspecified :foreground "#b58900"))))
-;;  '(syslog-su-face (quote ((t :background unspecified :foreground "#d33682"))))
-;;  '(syslog-warn-face (quote ((t :background unspecified :foreground "#cb4b16" :weight bold))))
-;;  '(vc-annotate-background nil)
-;;  '(vc-annotate-color-map (quote ((20 . "#dc322f") (40 . "#CF4F1F") (60 . "#C26C0F") (80 . "#b58900") (100 . "#AB8C00") (120 . "#A18F00") (140 . "#989200") (160 . "#8E9500") (180 . "#859900") (200 . "#729A1E") (220 . "#609C3C") (240 . "#4E9D5B") (260 . "#3C9F79") (280 . "#2aa198") (300 . "#299BA6") (320 . "#2896B5") (340 . "#2790C3") (360 . "#268bd2"))))
-;;  '(vc-annotate-very-old-color nil)
-;;  '(weechat-color-list (quote (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83"))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -4114,13 +3913,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 (require 'solarized)
 (load-theme 'solarized-dark)
-;; (if (display-graphic-p)
-;;   (progn
-;;     (require 'solarized)
-;;     (load-theme 'solarized-dark))
-;;   (progn
-;;     (load-theme 'tango-dark)
-;;     (linum-mode +1)))
 
 (scroll-bar-mode -1)
 (set-face-attribute 'show-paren-match-face nil :weight 'extra-bold)
@@ -4184,11 +3976,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (defun ergo ()
   (interactive)
   (require 'ergo))
-
-;; (toggle-fullscreen)
-;; (menu-bar-mode -1)
-;; (call-interactively 'multi-term)
-
 
 (eval-after-load "em-ls"
   '(progn
