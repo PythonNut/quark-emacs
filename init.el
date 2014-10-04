@@ -3257,7 +3257,7 @@ The current directory is assumed to be the project's root otherwise."
 ;;; =================================
 ;;; Multiple cursors - blow your mind
 ;;; =================================
-(require 'multiple-cursors-autoloads)
+(require 'multiple-cursors)
 (global-set-key (kbd "C-c l") 'mc/edit-lines)
 (global-set-key (kbd "C-c a") 'mc/mark-all-like-this-dwim)
 (global-set-key (kbd "C-c m") 'mc/mark-more-like-this-extended)
@@ -3378,9 +3378,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-emacs-state-map (kbd "<remap> <kill-region>") 'my-wlr-cua-cut-region)
 (define-key evil-emacs-state-map (kbd "<remap> <kill-ring-save>") 'easy-kill)
 (define-key evil-emacs-state-map (kbd "C-y") 'whole-line-or-region-yank)
-
-;; mc conflicts with yasnippet
-(add-to-list 'mc/unsupported-minor-modes 'yas-minor-mode)
 
 ;; fast cursor placement
 (evil-leader/set-key
