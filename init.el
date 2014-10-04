@@ -512,6 +512,9 @@
 ;;; CUA mode
 ;;; ========
 (xterm-mouse-mode +1)
+(add-hook 'kill-emacs-hook
+  '(lambda (&rest args)
+     (xterm-mouse-mode -1)))
 (cua-selection-mode +1)
 
 (add-hook 'minibuffer-setup-hook
