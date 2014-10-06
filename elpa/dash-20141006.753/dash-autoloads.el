@@ -3,8 +3,8 @@
 ;;; Code:
 
 
-;;;### (autoloads nil nil ("dash-pkg.el" "dash.el") (21553 62596
-;;;;;;  284352 502000))
+;;;### (autoloads nil nil ("dash-pkg.el" "dash.el") (21555 10399
+;;;;;;  166950 374000))
 
 ;;;***
 

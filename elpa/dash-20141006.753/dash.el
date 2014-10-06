@@ -3,7 +3,7 @@
 ;; Copyright (C) 2012-2014 Magnar Sveen
 
 ;; Author: Magnar Sveen <magnars@gmail.com>
-;; Version: 20141005.705
+;; Version: 20141006.753
 ;; X-Original-Version: 2.8.0
 ;; Keywords: lists
 
@@ -1180,7 +1180,37 @@ otherwise do ELSE."
   (let ((s (make-symbol "--dash-source--")))
     (cons (list s source) (dash--match-cons-1 match-form s))))
 
-(defun dash--match-cons-1 (match-form source)
+(defun dash--match-cons-skip-cdr (skip-cdr source)
+  "Helper function generating idiomatic shifting code."
+  (cond
+   ((= skip-cdr 0)
+    `(pop ,source))
+   (t
+    `(progn
+       (setq ,s (nthcdr ,skip-cdr ,s))
+       (pop ,s)))))
+
+(defun dash--match-cons-get-car (skip-cdr source)
+  "Helper function generating idiomatic code to get nth car."
+  (cond
+   ((= skip-cdr 0)
+    `(car ,source))
+   ((= skip-cdr 1)
+    `(cadr ,source))
+   (t
+    `(nth ,skip-cdr ,source))))
+
+(defun dash--match-cons-get-cdr (skip-cdr source)
+  "Helper function generating idiomatic code to get nth cdr."
+  (cond
+   ((= skip-cdr 0)
+    source)
+   ((= skip-cdr 1)
+    `(cdr ,source))
+   (t
+    `(nthcdr ,skip-cdr ,source))))
+
+(defun dash--match-cons-1 (match-form source &optional props)
   "Match MATCH-FORM against SOURCE.
 
 MATCH-FORM is a proper or improper list.  Each element of
@@ -1192,22 +1222,37 @@ If the cdr of last cons cell in the list is `nil', matching stops
 there.
 
 SOURCE is a proper or improper list."
-  (cond
-   ((and (consp match-form)
-         (not (null match-form)))
+  (let ((skip-cdr (or (plist-get props :skip-cdr) 0)))
     (cond
-     ;; because each bind-body has a side-effect of chopping the head
-     ;; of the list, we must create a binding even for _ places
-     ((symbolp (car match-form))
-      (cons (list (car match-form) `(prog1 (car ,s) (!cdr ,s)))
-            (dash--match-cons-1 (cdr match-form) s)))
+     ((and (consp match-form)
+           (not (null match-form)))
+      (cond
+       ((symbolp (car match-form))
+        (cond
+         ((cdr match-form)
+          (cond
+           ((eq (aref (symbol-name (car match-form)) 0) ?_)
+            (dash--match-cons-1 (cdr match-form) s
+                                (plist-put props :skip-cdr (1+ skip-cdr))))
+           (t
+            (cons (list (car match-form) (dash--match-cons-skip-cdr skip-cdr s))
+                  (dash--match-cons-1 (cdr match-form) s)))))
+         ;; Last matching place, no need for shift
+         (t
+          (list (list (car match-form) (dash--match-cons-get-car skip-cdr s))))))
+       (t
+        (cond
+         ((cdr match-form)
+          (-concat (dash--match (car match-form) (dash--match-cons-skip-cdr skip-cdr s))
+                   (dash--match-cons-1 (cdr match-form) s)))
+         ;; Last matching place, no need for shift
+         (t
+          (dash--match (car match-form) (dash--match-cons-get-car skip-cdr s)))))))
+     ((eq match-form nil)
+      nil)
+     ;; Handle improper lists.  Last matching place, no need for shift
      (t
-      (-concat (dash--match (car match-form) `(prog1 (car ,s) (!cdr ,s)))
-               (dash--match-cons-1 (cdr match-form) s)))))
-   ((eq match-form nil)
-    nil)
-   (t
-    (list (list match-form s)))))
+      (list (list match-form (dash--match-cons-get-cdr skip-cdr s)))))))
 
 (defun dash--vector-tail (seq start)
   "Return the tail of SEQ starting at START."
@@ -1452,7 +1497,7 @@ penalty.
 See `-let' for the description of destructuring mechanism."
   (cond
    ((not (consp match-form))
-    (error "match-form must be a list"))
+    (signal 'wrong-type-argument "match-form must be a list"))
    ;; no destructuring, so just return regular lambda to make things faster
    ((-all? 'symbolp match-form)
     `(lambda ,match-form ,@body))
