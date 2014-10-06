@@ -3538,9 +3538,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 ;;; Do Re Mi - incremental commands
 ;;; ===============================
 
-(global-set-key (kbd "C-x 5 3") 'doremi-frame-width+)
-(global-set-key (kbd "C-x 5 4") 'doremi-frame-horizontally+)
-
 ;;; =================================================
 ;;; God mode - a VI command mode using emacs bindings
 ;;; =================================================
