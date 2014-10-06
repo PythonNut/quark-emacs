@@ -1368,7 +1368,8 @@ the current line."
                      ((evil-replace-state-p) '("#dc322f" . "#eee8d5"))
                      (t '("grey70" . "black")))))
         (set-face-background 'mode-line (first color))
-        (set-face-foreground 'mode-line (rest color))))))
+        (set-face-foreground 'mode-line (rest color))
+        (set-face-foreground 'mode-line-buffer-id (rest color))))))
 
 ;; Evil surround, easily change surrounding chars
 (require 'surround)
@@ -2188,7 +2189,7 @@ to replace the symbol under cursor"
 
 (defun my-sp-pair-function (id action context)
   (if (eq action 'insert)
-    (or (looking-at "[[:space:]]")
+    (or (looking-at "[[:space:][:punct:]]")
       (sp-point-before-eol-p id action context))
     t))
 
@@ -2198,10 +2199,14 @@ to replace the symbol under cursor"
      (sp-pair "{" "}" :when '(my-sp-pair-function) :wrap "C-}")
      (sp-pair "[" "]" :when '(my-sp-pair-function) :wrap "C-]")
      (sp-pair "\"" "\"" :when '(my-sp-pair-function) :wrap "C-\"")
+     (sp-pair "'" "'" :when '(my-sp-pair-function))
+
      (define-key evil-insert-state-map (kbd "C-]") 'nil)
      (define-key evil-normal-state-map (kbd "C-]") 'nil)
      (define-key evil-motion-state-map (kbd "C-]") 'nil)
      (define-key evil-emacs-state-map (kbd "C-]") 'nil)
+
+     (sp-local-pair 'haskell-mode "'" nil :actions nil)
      (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
      (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
 
