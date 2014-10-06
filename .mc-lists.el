@@ -19,6 +19,7 @@
          delete-horizontal-space
          easy-kill
          end-of-visual-line
+         ess-smart-S-assign
          eval-and-replace
          eval-last-sexp
          evil-backward-WORD-begin
