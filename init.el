@@ -2736,10 +2736,6 @@ using the specified hippie-expand function."
 ;;; Projectile
 ;;; ==========
 ;; (require 'projectile)
-;; (projectile-global-mode +1)
-;; (eval-after-load 'projectile
-;;    (progn (setcar (rest (assq 'projectile-mode minor-mode-alist)) " *")))
-;; (require 'grizzl-autoloads)
 (autoload 'projectile-find-file "projectile")
 (autoload 'projectile-find-dir "projectile")
 (autoload 'projectile-switch-project "projectile")
