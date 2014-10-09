@@ -1930,36 +1930,12 @@ to replace the symbol under cursor"
 
 (eval-after-load 'linum
   '(progn
-     ;; (defface linum-leading-zero
-     ;;   `((t :inherit 'linum
-     ;;        :foreground ,(face-attribute 'linum :background nil t)))
-     ;;   "Face for displaying leading zeroes for line numbers in display margin."
-     ;;   :group 'linum)
-     ;; (defun linum-format-func (line)
-     ;;   (let ((w (length
-     ;;             (number-to-string (count-lines (point-min) (point-max))))))
-     ;;     (concat
-     ;;      (propertize (make-string (- w (length (number-to-string line))) ?0)
-     ;;                  'face 'linum-leading-zero)
-     ;;      (propertize (number-to-string line) 'face 'linum))))
-     ;; (setq linum-format 'linum-format-func)
-
-     ;; (defvar my-linum-format-string "%4d ")
-     ;; (add-hook 'linum-before-numbering-hook 'my-linum-get-format-string)
-     ;; (defun my-linum-get-format-string ()
-     ;;   (let* ((width (length (number-to-string
-     ;;                          (count-lines (point-min) (point-max)))))
-     ;;          (format (concat "%" (number-to-string width) "d ")))
-     ;;     (setq my-linum-format-string format)))
-     ;; (setq linum-format 'my-linum-format)
-     ;; (defun my-linum-format (line-number)
-     ;;   (propertize (format my-linum-format-string line-number) 'face 'linum))
-
      (set-face-background 'linum 'nil)
      (set-face-foreground 'linum "grey51")
 
      (require 'linum-relative)
-     
+
+     ;; truncate current line to four digits
      (defun linum-relative (line-number)
        (let* ((diff1 (abs (- line-number linum-relative-last-pos)))
                (diff (if (minusp diff1)
@@ -1990,8 +1966,7 @@ to replace the symbol under cursor"
        '(lambda ()
           (interactive)
           (if linum-mode (linum-relative-toggle)
-            (linum-mode +1))))
-     (global-set-key (kbd "<left-fringe> <mouse-1>") 'linum-relative-toggle)))
+            (linum-mode +1))))))
 
 ;;; ================
 ;;; Auto indent mode
