@@ -2152,11 +2152,31 @@ to replace the symbol under cursor"
 
 (eval-after-load 'smartparens
   '(progn
+     (set-face-background 'sp-pair-overlay-face "grey20")
+     (set-face-foreground 'sp-pair-overlay-face "default")
+
      (sp-pair "(" ")" :when '(my-sp-pair-function) :wrap "C-)")
      (sp-pair "{" "}" :when '(my-sp-pair-function) :wrap "C-}")
      (sp-pair "[" "]" :when '(my-sp-pair-function) :wrap "C-]")
      (sp-pair "\"" "\"" :when '(my-sp-pair-function) :wrap "C-\"")
      (sp-pair "'" "'" :when '(my-sp-pair-function))
+
+     (let ((my-c-modes
+             '('c++-mode
+                'java-mode
+                'c-mode
+                'css-mode
+                'scss-mode
+                'web-mode
+                'js2-mode
+                'js3-mode)))
+
+       (while my-c-modes
+         (sp-local-pair (car my-c-modes) "{" nil :post-handlers
+           '(:add
+              ("||\n[i]" "RET")
+              ("| " "SPC")))
+         (setq my-c-modes (cdr my-c-modes))))
 
      (define-key evil-insert-state-map (kbd "C-]") 'nil)
      (define-key evil-normal-state-map (kbd "C-]") 'nil)
@@ -2173,53 +2193,9 @@ to replace the symbol under cursor"
 (add-hook 'sgml-mode-hook '(lambda ()
   (require 'smartparens-html)))
 
-(defface sp-pair-overlay-face
-  '((t (:inherit highlight)))
-  "The face used to highlight pair overlays."
-  :group 'smartparens)
-
-(defface sp-wrap-overlay-face
-  '((t (:inherit sp-pair-overlay-face)))
-  "The face used to highlight wrap overlays."
-  :group 'smartparens)
-
-(defface sp-wrap-tag-overlay-face
-  '((t (:inherit sp-pair-overlay-face)))
-  "The face used to highlight wrap tag overlays."
-  :group 'smartparens)
-
-(set-face-background 'sp-pair-overlay-face "grey20")
-(set-face-foreground 'sp-pair-overlay-face "default")
-
-(defun my-create-newline-and-enter-sexp (&rest _ignored)
-  "Open a new brace or bracket expression, with relevant newlines and indent. "
-  (newline)
-  (indent-according-to-mode)
-  (forward-line -1)
-  (indent-according-to-mode))
-
-(let ((my-c-modes
-        '('c++-mode
-           'java-mode
-           'c-mode
-           'css-mode
-           'scss-mode
-           'web-mode
-           'js2-mode
-           'js3-mode)))
-  (defmacro add-sp-post-hook (mode)
-    `(sp-local-pair ,mode "{" nil :post-handlers
-       '(:add
-          ("||\n[i]" "RET")
-          ("| " "SPC"))))
-
-  (while my-c-modes
-    (add-sp-post-hook (car my-c-modes))
-    (setq my-c-modes (cdr my-c-modes))))
-
 ;; show matching
 (show-paren-mode +1)
-(set 'show-paren-delay 0.1)
+(set 'show-paren-delay 0.05)
 (set-face-background 'show-paren-match-face "default")
 (set-face-foreground 'show-paren-match-face "default")
 
