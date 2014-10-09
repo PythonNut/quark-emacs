@@ -1907,6 +1907,8 @@ to replace the symbol under cursor"
 (setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode t)
 
+(define-key evil-normal-state-map (kbd "SPC SPC") 'auto-smex)
+
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
 ;;; =======================================
