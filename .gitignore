@@ -67,6 +67,10 @@ ac-comphist.dat
 /tramp
 
 
+# EDE projects file
+/ede-projects.el
+
+
 # misc
 *.undo.xz
 *#
