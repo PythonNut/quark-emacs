@@ -2928,8 +2928,7 @@ The current directory is assumed to be the project's root otherwise."
 
      (global-set-key (kbd "C-x C-b") 'my-helm-buffers)
      (global-set-key (kbd "C-x b") 'ido-switch-buffer)
-     (global-set-key (kbd "C-c b") 'isearchb-activate)
-     
+
      (defun my-helm-find-files (&rest arg)
        (interactive)
        (helm-other-buffer
