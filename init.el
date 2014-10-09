@@ -3661,7 +3661,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   c-default-style
   '((java-mode . "java")
      (awk-mode . "awk")
-     (other . "knf")))
+     (other . "linux")))
 
 
 (add-hook 'c++-mode-hook
