@@ -2992,14 +2992,12 @@ The current directory is assumed to be the project's root otherwise."
            (append '(helm-source-buffers-list)
 
              ;; projectile explodes when not in project
-             (if (my-projectile-project-root)
-               (progn
-                 (unless (fboundp 'helm-source-projectile-files-list)
-                   (require 'helm-projectile))
-                 '(helm-source-projectile-recentf-list
-                    helm-source-projectile-files-list
-                    helm-source-projectile-buffers-list))
-               '())
+             (when (my-projectile-project-root)
+               (unless (fboundp 'helm-source-projectile-files-list)
+                 (require 'helm-projectile))
+               '(helm-source-projectile-recentf-list
+                  helm-source-projectile-files-list
+                  helm-source-projectile-buffers-list))
 
              '( ;; files
                 helm-source-file-cache
