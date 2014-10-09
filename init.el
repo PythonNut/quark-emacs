@@ -2598,11 +2598,10 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
 ;;; =============================
 ;;; Magit - fast, interactive git
 ;;; =============================
-(global-set-key (kbd "C-c C-c g") 'magit-status)
+(global-set-key (kbd "C-c C-g") 'magit-status)
 
 (evil-set-initial-state 'svn-status-mode 'insert)
 (evil-set-initial-state 'magit-status-mode 'insert)
-
 
 (eval-after-load 'magit
   '(progn
