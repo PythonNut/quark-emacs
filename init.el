@@ -1883,15 +1883,6 @@ to replace the symbol under cursor"
   (global-set-key (kbd "M-x") 'smex)
   (smex))
 
-(defun auto-major-smex ()
-  (interactive)
-  (and (fboundp 'smex-initialize)
-    (or (boundp 'smex-cache)
-      (smex-initialize)))
-  (global-set-key (kbd "M-X") 'smex-major-mode-commands)
-  (smex-major-mode-commands))
-
-(global-set-key (kbd "M-X") 'auto-major-smex)
 (global-set-key (kbd "M-x") 'auto-smex)
 
 (defadvice smex (around space-inserts-hyphen activate compile)
