@@ -3045,7 +3045,7 @@ The current directory is assumed to be the project's root otherwise."
 
 (eval-after-load 'icicles
   '(progn
-     (icy-mode +1)
+     ;; (icy-mode +1)
      ;; (icicle-ido-like-mode +1)
 
      (setq icicle-region-background "grey20")
