@@ -1915,36 +1915,9 @@ to replace the symbol under cursor"
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 ;;; ============================
-;;; Semantic - language analasys
+;;; Semantic - language analyses
 ;;; ============================
-;; autoload semantic when needed
-(defun auto-semantic ()
-  (unless (and (boundp 'semantic-mode) semantic-mode)
-    (semantic-mode +1)))
-
-(defun auto-semantic-jump-local ()
-  (interactive)
-  (auto-semantic)
-  (semantic-complete-jump-local))
-
-(defun auto-semantic-jump-global ()
-  (interactive)
-  (auto-semantic)
-  (semantic-complete-jump))
-
-(defun auto-semantic-jump-list ()
-  (interactive)
-  (auto-semantic)
-  (semantic-analyze-possible-completion))
-
-(defun auto-semantic-jump-to-definition (&optional arg1 &optional arg2)
-  (interactive "P\np")
-  (auto-semantic)
-  (semantic-ia-fast-jump arg1)
-  (mc/mark-all-symbols-like-this)
-  (evil-insert-state))
-
-(global-set-key (kbd "<f12>") 'auto-semantic-jump-to-definition)
+(add-hook 'prog-mode-hook 'semantic-mode)
 
 ;;; =======================================
 ;;; Line numbers - intelligent line numbers
