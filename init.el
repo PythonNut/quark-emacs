@@ -3140,14 +3140,14 @@ The current directory is assumed to be the project's root otherwise."
 (defun emacsclient-setup (&rest args)
   (interactive)
 
-  (global-set-key (kbd "<mouse-5>")
+  (global-set-key (kbd "<mouse-4>")
     '(lambda ()
        (interactive)
        (scroll-down-line)
        (scroll-down-line)
        (scroll-down-line)))
 
-  (global-set-key (kbd "<mouse-4>")
+  (global-set-key (kbd "<mouse-5>")
     '(lambda ()
        (interactive)
        (scroll-up-line)
