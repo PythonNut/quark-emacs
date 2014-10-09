@@ -3037,61 +3037,6 @@ The current directory is assumed to be the project's root otherwise."
           (interactive)
           (setq icicle-Completions-window-max-height (/ (* (frame-height) 2) 3))))))
 
-(defun list-helm-icicle-commands ()
-  (interactive)
-  (setq force-smart-menu-ex nil)
-  (minibuffer-with-setup-hook
-    (lambda ()
-      (insert "\\(icicle\\|helm\\)-"))
-    (call-interactively 'helm-M-x)))
-
-(defun list-icicle-helm-commands ()
-  (interactive)
-  (setq force-smart-menu-ex nil)
-  (minibuffer-with-setup-hook
-    (lambda ()
-      (insert "\\(icicle\\|helm\\)-")
-      (execute-kbd-macro (kbd "<backtab>")))
-    (call-interactively 'icicle-execute-extended-command)))
-
-(defvar force-smart-menu-ex t)
-(defun my-smart-menu (&rest args)
-  (interactive)
-  (unless (fboundp 'smartrep-read-event-loop)
-    (require 'smartrep))
-  (defun backward-line (&optional arg)
-    (interactive)
-    (forward-line (- (or arg 1))))
-  (cua-set-mark) 
-  (message ":")
-  (let ((old-point (point)))
-    (condition-case e
-      (smartrep-read-event-loop
-        '(("<left>" . backward-char)
-           ("<right>" . forward-char)
-           ("<down>" . forward-line)
-           ("<up>" . backward-line)
-           ("<home>" . back-to-indentation-or-beginning)
-           ("<end>" . end-of-visual-line)
-           ("<prior>" . evil-scroll-page-up)
-           ("<next>" . evil-scroll-page-down)
-           ("<menu>" . list-helm-icicle-commands)))
-      (quit nil))
-    (if force-smart-menu-ex
-      (if (= old-point (point))
-        (progn
-          (evil-normal-state)
-          (evil-ex)
-          (deactivate-mark))
-        (let ((cur-point (point)))
-          (set-mark old-point)))))
-  (setq force-smart-menu-ex t))
-
-(define-key evil-normal-state-map (kbd "<menu>") 'my-smart-menu)
-(define-key evil-insert-state-map (kbd "<menu>") 'my-smart-menu)
-(define-key evil-visual-state-map (kbd "<menu>") 'my-smart-menu)
-(define-key evil-replace-state-map (kbd "<menu>") 'my-smart-menu)
-
 (global-set-key (kbd "C-c C-c o") 'icicle-occur)
 (global-set-key (kbd "C-c C-c <tab>") 'icicle-dabbrev-completion)
 
