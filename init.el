@@ -1904,22 +1904,15 @@ to replace the symbol under cursor"
 ;;; Flyspell - inline real time spell check
 ;;; =======================================
 ;; text mode
-(defun setup-flyspell ()
-  (when (locate-file "hunspell" exec-path)
-    (setq ispell-program-name "hunspell")
-    (add-to-list 'ispell-extra-args "--sug-mode=ultra"))
-  (set 'flyspell-issue-message-flag nil))
+(eval-after-load 'flyspell-mode
+  '(progn
+    (when (locate-file "hunspell" exec-path)
+      (setq ispell-program-name "hunspell")
+      (add-to-list 'ispell-extra-args "--sug-mode=ultra"))
+    (set 'flyspell-issue-message-flag nil)))
 
-(add-hook 'text-mode-hook
-  '(lambda ()
-     (flyspell-mode)
-     (setup-flyspell)))
-
-;; programming mode
-(add-hook 'prog-mode-hook
-  '(lambda ()
-     (flyspell-prog-mode)
-     (setup-flyspell)))
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 ;;; ============================
 ;;; Semantic - language analasys
