@@ -2122,7 +2122,7 @@ to replace the symbol under cursor"
 ;;; Emacs tables
 ;;; ============
 (setq max-lisp-eval-depth '40000)
-;; (setq max-specpdl-size '100000)
+(setq max-specpdl-size '10000)
 
 ;;; ============================================
 ;;; AcuTeX - the most powerful LaTeX editor ever
