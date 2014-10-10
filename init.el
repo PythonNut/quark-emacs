@@ -1784,46 +1784,17 @@ to replace the symbol under cursor"
 (set-face-background 'trailing-whitespace "#744")
 (setq show-trailing-whitespace t)
 
-;; (defvar my-prev-whitespace-mode t)
-;; (make-variable-buffer-local 'my-prev-whitespace-mode)
-;; (defadvice ac-menu-create (before popup-draw-whitespace compile)
-;;   "Turn off whitespace mode before showing autocomplete box"
-;;   (if (or whitespace-mode my-prev-whitespace-mode)
-;;     (whitespace-mode -1)
-;;     ;; (progn
-;;     ;;   (setq my-prev-whitespace-mode t)
-;;     ;;   (run-at-time "0.1s" 0
-;;     ;;   (let ((current-prefix-arg -1))
-;;     ;;     (progn
-;;     ;;       (call-interactively 'whitespace-mode)
-;;     ;;       (message "whitespace disabled")
-;;     ;;       )))
-;;     ;;   )
-;;     (setq my-prev-whitespace-mode nil)))
-
-;; (defadvice ac-menu-delete (after popup-hide-whitespace compile)
-;;   "Restore previous whitespace mode when deleting autocomplete box"
-;;   (if my-prev-whitespace-mode
-;;     (whitespace-mode +1)
-;;     ;; (let ((current-prefix-arg +1))
-;;     ;;   (progn
-;;     ;;     (call-interactively 'whitespace-mode)
-;;     ;;     (message "whitespace enabled")
-;;     ;;     ))
-;;     ))
-
-;; (add-hook 'prog-mode-hook 'highlight-indentation-current-column-mode)
-
 (eval-after-load 'whitespace
   '(progn
      (setq whitespace-style
        '(
           face
-          tabs
-          spaces
+          ;; tabs
+          ;; spaces
+          ;; trailing
           trailing
-          space-mark
-          ;;tab-mark
+          ;; space-mark
+          ;; tab-mark
           ))
 
      ;; dim grey dots are good for guiding the eye
