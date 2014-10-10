@@ -3286,15 +3286,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (global-set-key (kbd "M-<left>") 'smart-backward)
 (global-set-key (kbd "M-<right>") 'smart-forward)
 
-;; Back Button - navigate marks like a web browser
-(autoload 'back-button-mode "back-button")
-(defun auto-back-button ()
-  (unless (and (boundp 'back-button-mode) back-button-mode)
-    (setq back-button-mode-lighter " ⤝")
-    (setq back-button-local-backward-keystrokes '("C-c <C-left>"))
-    (setq back-button-local-forward-keystrokes '("C-c <C-right>"))
-    (back-button-mode +1)))
-
 (eval-after-load 'smartrep
   '(progn
      (setq smartrep-mode-line-string-activated "[...]")
@@ -3306,39 +3297,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
      (set-face-background 'nav-flash-face "grey40")
      (setq nav-flash-use-pulse 't)))
 
-(defun auto-back-button-global ()
-  (interactive)
-  (auto-back-button)
-  (back-button-global))
-
-(defun auto-back-button-global-backward ()
-  (interactive)
-  (auto-back-button)
-  (back-button-global-backward))
-
-(defun auto-back-button-global-forward ()
-  (interactive)
-  (auto-back-button)
-  (back-button-global-forward))
-
-(defun auto-back-button-local-backward ()
-  (interactive)
-  (auto-back-button)
-  (back-button-local-backward))
-
-(defun auto-back-button-local-forward ()
-  (interactive)
-  (auto-back-button)
-  (back-button-local-forward))
-
-(global-set-key (kbd "C-x C-<SPC>")   'auto-back-button-global)
-(global-set-key (kbd "C-x C-<left>")  'auto-back-button-global-backward)
-(global-set-key (kbd "C-x C-<right>") 'auto-back-button-global-forward)
-(global-set-key (kbd "C-c C-<left>")  'auto-back-button-local-backward)
-(global-set-key (kbd "C-c C-<right>") 'auto-back-button-local-forward)
-
 ;; make newline super smart
-
 (define-key evil-normal-state-map (kbd "RET") 'smart-newline)
 
 (define-key evil-insert-state-map (kbd "C-m") 'newline)
