@@ -1538,9 +1538,23 @@ to replace the symbol under cursor"
           (evil-motion-state)))
      
      ;; compress undo with xz
-     (defadvice undo-tree-make-history-save-file-name
-       (after undo-tree activate)
-       (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz")))
+     (when (locate-file "xz" exec-path)
+       (defadvice undo-tree-make-history-save-file-name
+         (after undo-tree activate)
+         (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz"))))
+
+     ;; Keep region when undoing in region
+     (defadvice undo-tree-undo (around keep-region activate)
+       (if (use-region-p)
+         (let ((m (set-marker (make-marker) (mark)))
+                (p (set-marker (make-marker) (point))))
+           ad-do-it
+           (goto-char p)
+           (set-mark m)
+           (set-marker p nil)
+           (set-marker m nil))
+         ad-do-it))
+
 
      (message "")))
 
