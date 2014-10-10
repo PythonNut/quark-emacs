@@ -1744,9 +1744,18 @@ to replace the symbol under cursor"
 (ease-motion "SPC gE" evil-backward-WORD-end)
 
 (ease-motion "SPC h" evil-backward-char)
-(ease-motion "SPC j" next-line)
-(ease-motion "SPC k" previous-line)
+(ease-motion "SPC j" evil-next-line)
+(ease-motion "SPC k" evil-previous-line)
 (ease-motion "SPC l" evil-forward-char)
+
+(ease-motion "SPC H" evil-backward-symbol)
+(ease-motion "SPC L" evil-forward-symbol)
+
+(ease-motion "SPC g j" evil-next-visual-line)
+(ease-motion "SPC g k" evil-previous-visual-line)
+
+(ease-motion "SPC s f" evil-forward-sexp)
+(ease-motion "SPC s b" evil-backward-sexp)
 
 (ease-motion "SPC [[" evil-backward-section-begin)
 (ease-motion "SPC []" evil-backward-section-end)
