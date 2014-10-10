@@ -1704,6 +1704,9 @@ to replace the symbol under cursor"
                       (< count (length ace-jump-mode-move-keys)))
                 (push (1+ (point)) points)
                 (setq count (1+ count))
+                (setq
+                  last-command (quote ,func)
+                  this-command (quote ,func))
                 (call-interactively (quote ,func))
                 t))
        (set-window-start (selected-window) win-start)
@@ -1843,7 +1846,7 @@ to replace the symbol under cursor"
 ;;; ==============================================
 ;;; SMEX - interactive command interface
 (setq smex-save-file "~/.emacs.d/smex-items")
-(setq smex-history-length 10000)
+(setq smex-history-length 1000)
 ;; SMEX M-x async load
 
 (global-set-key (kbd "C-x M-x") 'execute-extended-command)
