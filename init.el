@@ -1611,25 +1611,13 @@ to replace the symbol under cursor"
       (progn (next-line) (previous-line)))))
 
 (defadvice evil-ace-jump-word-mode (after cleanup activate)
-  (progn
-    (call-interactively
-      '(lambda ()
-         (interactive)
-         (realign-cursor)))))
+  (call-interactively (realign-cursor)))
 
 (defadvice evil-ace-jump-char-mode (after cleanup activate)
-  (progn
-    (call-interactively
-      '(lambda ()
-         (interactive)
-         (realign-cursor)))))
+  (call-interactively (realign-cursor)))
 
 (defadvice evil-ace-jump-line-mode (after realign activate)
-  (progn
-    (call-interactively
-      '(lambda ()
-         (interactive)
-         (realign-cursor)))))
+  (call-interactively (realign-cursor)))
 
 (defadvice evil-ace-jump-line-mode (around restore-pos activate)
   (let ((cursor (first (nth 6 (posn-at-point))))
