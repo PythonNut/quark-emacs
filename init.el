@@ -3775,10 +3775,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (message "loading back-button")
   (require 'back-button))
 
-(defun ergo ()
-  (interactive)
-  (require 'ergo))
-
 (eval-after-load "em-ls"
   '(progn
      (defun ted-eshell-ls-find-file-at-point (point)
