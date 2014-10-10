@@ -168,15 +168,16 @@
     (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
         (normal-top-level-add-subdirs-to-load-path))))
 
-;; (package-initialize)
 ;; env tweaks
 (setq default-major-mode 'text-mode)
 (setq-default indent-tabs-mode nil)
-;; (global-set-key (kbd "C-w") 'clipboard-kill-region)
-;; (global-set-key (kbd "M-w") 'clipboard-kill-ring-save)
-;; (global-set-key (kbd "C-y") 'clipboard-yank)
-(when (locate-file "xsel" exec-path)
-  (require 'xclipboard))
+
+(setq mouse-drag-copy-region nil)
+(setq x-select-enable-primary t)
+(setq x-select-enable-clipboard t)
+(setq select-active-regions t)
+(setf interprogram-cut-function 'x-select-text)
+(setf interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
 (global-set-key (kbd "<mouse-8>")
   '(lambda ()
