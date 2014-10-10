@@ -233,20 +233,9 @@
 
 (global-set-key (kbd "C-c B") 'backup-walker-start)
 
-;; (require 'backups-mode)
-;; (backups-mode-start)
+(require 'backups-mode)
+(backups-mode-start)
 (auto-save-mode +1)
-
-(add-hook 'diff-mode-hook
-  (first (add-hook 'backups-mode-hook
-           '(lambda ()
-              (interactive)
-              (call-interactively 'evil-motion-state)
-              (run-at-time 0.2 nil
-                '(lambda ()
-                   (interactive)
-                   (call-interactively 'evil-motion-state)
-                   (run-hooks 'post-command-hook)))))))
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
@@ -550,11 +539,11 @@
 (global-evil-leader-mode +1)
 (setq evil-leader/leader "," evil-leader/in-all-states t)
 
-(evil-set-initial-state 'diff-mode 'insert)
+(evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
 (evil-set-initial-state 'erc-mode 'emacs)
 (evil-set-initial-state 'git-commit-mode 'insert)
-(evil-set-initial-state 'backup-walker-mode 'insert)
+(evil-set-initial-state 'backup-walker-mode 'motion)
 
 (add-hook 'package-menu-mode-hook
   '(lambda ()
