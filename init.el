@@ -233,8 +233,9 @@
 
 (global-set-key (kbd "C-c B") 'backup-walker-start)
 
-(require 'backups-mode)
-(backups-mode-start)
+;; (require 'backups-mode)
+;; (backups-mode-start)
+(auto-save-mode +1)
 
 (add-hook 'diff-mode-hook
   (first (add-hook 'backups-mode-hook
@@ -268,15 +269,15 @@
   kept-old-versions 0   ;; Number of oldest versions to keep
   delete-old-versions t ;; Don't Ask to delete excess backup versions
   backup-by-copying t   ;; Copy linked files, don't rename.
-  ;; backup-by-copying-when-linked t
+  backup-by-copying-when-linked t ;; copy links too
   auto-save-default t    ;; also auto-save
-  auto-save-timeout 20   ;; auto-save after 20s of idle time
-  auto-save-interval 300 ;; auto-save after 300 chars
+  auto-save-timeout 10   ;; auto-save after 10s of idle time
+  auto-save-interval 200 ;; auto-save after 200 chars
+  vc-make-backup-files t ;; because we don't commit every save
   )
 
 (defun force-backup-of-buffer ()
-  (let ((buffer-backed-up nil))
-    (backup-buffer)))
+  (setq buffer-backed-up nil))
 
 (add-hook 'before-save-hook  'force-backup-of-buffer)
 
