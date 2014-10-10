@@ -2574,6 +2574,9 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
 (evil-set-initial-state 'svn-status-mode 'insert)
 (evil-set-initial-state 'magit-status-mode 'insert)
 
+(setq magit-completing-read-function
+  'magit-ido-completing-read)
+
 (eval-after-load 'magit
   '(progn
      (raise-minor-mode-map-alist 'magit-status-mode-map)
