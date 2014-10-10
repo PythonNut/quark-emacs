@@ -43,10 +43,6 @@ ac-comphist.dat
 /helm-adaptive-history
 
 
-# emacs multimedia system cache and history
-/emms
-
-
 # semantic parser cache
 /semanticdb
 
