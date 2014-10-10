@@ -1841,7 +1841,7 @@ to replace the symbol under cursor"
 ;;; ==============================================
 ;;; SMEX - interactive command interface
 (setq smex-save-file "~/.emacs.d/smex-items")
-(setq smex-history-length 1000)
+(setq smex-history-length 10000)
 ;; SMEX M-x async load
 
 (global-set-key (kbd "C-x M-x") 'execute-extended-command)
