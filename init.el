@@ -453,7 +453,7 @@
      (visual-line-mode . "")
      (smartparens-mode . " ⒮")
      (auto-indent-mode . " ⤷")
-     (ws-butler-mode . " ﹇")
+     (ws-butler-mode . "")
 
      ;; Major modes
      (js2-mode . "js")
