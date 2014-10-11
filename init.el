@@ -102,7 +102,7 @@
   (set-face-attribute 'font-lock-keyword-face 'nil :weight 'extra-bold)
   (set-face-attribute 'font-lock-comment-face 'nil :slant 'italic)
   ;; (set-face-foreground 'font-lock-comment-face "#28490d")
-  (egoge-wash-out-fontlock-faces 0.5)))
+                                 (egoge-wash-out-fontlock-faces 0.5)))
 
 (defun raise-minor-mode-map-alist (mode-symbol)
   "Raise `minor-mode-map-alist' priority of MODE-SYMBOL."
@@ -3342,29 +3342,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (global-set-key (kbd "C-<backtab>") 'iflipb-previous-buffer)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'iflipb-previous-buffer)
 
-;;; ===============================
-;;; Do Re Mi - incremental commands
-;;; ===============================
-
-;;; =================================================
-;;; God mode - a VI command mode using emacs bindings
-;;; =================================================
-(eval-after-load 'god-mode
-  '(progn
-     (key-chord-define evil-normal-state-map "JK" 'god-mode)
-     (key-chord-define evil-insert-state-map "JK" 'god-mode)
-     (key-chord-define evil-emacs-state-map "JK" 'god-local-mode)
-
-     (add-hook 'god-mode-enabled-hook
-       '(lambda ()
-          (interactive)
-          (evil-emacs-state)))
-
-     (add-hook 'god-mode-disabled-hook
-       '(lambda ()
-          (interactive)
-          (evil-insert-state)))))
-
 ;;; ====================================================
 ;;; dtrt-indent - guess indentation offset of alien code
 ;;; ====================================================
@@ -3762,8 +3739,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (message "loading smex")
   (require 'smex)
   (smex-initialize)
-  (message "loading god-mode")
-  (require 'god-mode)
   (message "loading framemove")
   (require 'framemove)
   (message "loading undo-tree")
