@@ -545,16 +545,7 @@
 (evil-set-initial-state 'erc-mode 'emacs)
 (evil-set-initial-state 'git-commit-mode 'insert)
 (evil-set-initial-state 'backup-walker-mode 'motion)
-
-(add-hook 'package-menu-mode-hook
-  '(lambda ()
-     (interactive)
-     (call-interactively 'evil-motion-state)
-     (run-at-time 0.2 nil
-       '(lambda ()
-          (interactive)
-          (call-interactively 'evil-motion-state)
-          (run-hooks 'post-command-hook)))))
+(evil-set-initial-state 'package-menu-mode 'motion)
 
 (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") 'evil-previous-visual-line)
