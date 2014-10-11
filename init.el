@@ -511,12 +511,10 @@
 
 (add-hook 'minibuffer-setup-hook
   '(lambda ()
-     (interactive)
      (cua-selection-mode -1)))
 
 (add-hook 'minibuffer-exit-hook
   '(lambda ()
-     (interactive)
      (cua-selection-mode +1)))
 
 ;;; ===================================
@@ -2176,7 +2174,6 @@ to replace the symbol under cursor"
   "If the matching paren is offscreen, show the matching line in the
         echo area. Has no effect if the character before point is not of
         the syntax class ')'."
-  (interactive)
   (let* ((cb (char-before (point)))
           (matching-text (and cb
                            (char-equal (char-syntax cb) ?\))
@@ -2777,11 +2774,9 @@ The current directory is assumed to be the project's root otherwise."
 
 (run-with-idle-timer 5 nil
   '(lambda ()
-     (interactive)
      (require 'helm-ring)
      (run-with-idle-timer 5 nil
        '(lambda ()
-          (interactive)
           (require 'helm-misc)))))
 
 (eval-after-load 'helm
@@ -3010,7 +3005,6 @@ The current directory is assumed to be the project's root otherwise."
 
      (add-hook 'icicle-minibuffer-setup-hook
        '(lambda ()
-          (interactive)
           (setq icicle-Completions-window-max-height (/ (* (frame-height) 2) 3))))))
 
 (global-set-key (kbd "C-c C-c o") 'icicle-occur)
