@@ -391,9 +391,9 @@
         (= (length (window-list)) 1)
         (= (length (frame-list)) 1))
     (if (and (elscreen-get-screen-list)
-      (> (length (elscreen-get-screen-list)) 1))
+          (> (length (elscreen-get-screen-list)) 1))
       (al-elscreen-previous)
-        ad-do-it)
+      ad-do-it)
     ad-do-it))
 
 (defadvice windmove-right (around try-elscreen activate)
