@@ -3149,17 +3149,16 @@ The current directory is assumed to be the project's root otherwise."
   (whole-line-or-region-call-with-region 'easy-kill prefix))
 
 (defun my-wlr-cua-cut-region (&optional prefix)
-  (interactive "p")
+  (interactive "*p")
   (whole-line-or-region-call-with-region
     '(lambda (&optional beg end)
        (goto-char beg)
        (set-mark-command prefix)
        (cua-set-mark)
        (goto-char end)
-       (cua-cut-region current-prefix-arg)
-       (message ""))))
+       (cua-cut-region current-prefix-arg)) prefix))
 
-(defun whole-line-or-region-yank (raw-prefix &optional string-in)
+(defun whole-line-or-region-yank-cua (raw-prefix &optional string-in)
   "Yank (paste) previously killed text.
 
 If the text to be yanked was killed with a whole-line-or-region
@@ -3227,11 +3226,11 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-insert-state-map (kbd "<remap> <kill-region>") 'my-wlr-cua-cut-region)
 (define-key evil-insert-state-map (kbd "<remap> <kill-ring-save>") 'easy-kill)
 (define-key evil-normal-state-map (kbd "<remap> <kill-ring-save>") 'easy-kill)
-(define-key evil-insert-state-map (kbd "C-y") 'whole-line-or-region-yank)
+(define-key evil-insert-state-map (kbd "C-y") 'whole-line-or-region-yank-cua)
 
 (define-key evil-emacs-state-map (kbd "<remap> <kill-region>") 'my-wlr-cua-cut-region)
 (define-key evil-emacs-state-map (kbd "<remap> <kill-ring-save>") 'easy-kill)
-(define-key evil-emacs-state-map (kbd "C-y") 'whole-line-or-region-yank)
+(define-key evil-emacs-state-map (kbd "C-y") 'whole-line-or-region-yank-cua)
 
 ;; fast cursor placement
 (evil-leader/set-key
