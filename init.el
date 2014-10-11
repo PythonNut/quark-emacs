@@ -97,12 +97,13 @@
 ;;; ===========
 
 (defalias 'yes-or-no-p 'y-or-n-p)
-(add-hook 'emacs-startup-hook '(lambda ()
-  ;; bold keywords please
-  (set-face-attribute 'font-lock-keyword-face 'nil :weight 'extra-bold)
-  (set-face-attribute 'font-lock-comment-face 'nil :slant 'italic)
-  ;; (set-face-foreground 'font-lock-comment-face "#28490d")
-                                 (egoge-wash-out-fontlock-faces 0.5)))
+(add-hook 'emacs-startup-hook
+  '(lambda ()
+     ;; bold keywords please
+     (set-face-attribute 'font-lock-keyword-face 'nil :weight 'extra-bold)
+     (set-face-attribute 'font-lock-comment-face 'nil :slant 'italic)
+     ;; (set-face-foreground 'font-lock-comment-face "#28490d")
+     (egoge-wash-out-fontlock-faces 0.5)))
 
 (defun raise-minor-mode-map-alist (mode-symbol)
   "Raise `minor-mode-map-alist' priority of MODE-SYMBOL."
@@ -162,11 +163,11 @@
 (add-to-list 'load-path "~/.emacs.d/personal/")
 
 (let* ((dir (expand-file-name "~/.emacs.d/elpa"))
-       (default-directory dir))
+        (default-directory dir))
   (when (file-directory-p dir)
     (add-to-list 'load-path dir)
     (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-        (normal-top-level-add-subdirs-to-load-path))))
+      (normal-top-level-add-subdirs-to-load-path))))
 
 ;; env tweaks
 (setq default-major-mode 'text-mode)
@@ -309,7 +310,7 @@
   '(progn
      (add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update)
      (setq elscreen-prefix-key "\C-l")
-     
+
      (set-face-background 'elscreen-tab-background-face "grey65")
      (set-face-attribute 'elscreen-tab-background-face nil :underline nil)
      (set-face-foreground 'elscreen-tab-current-screen-face "white")
@@ -318,28 +319,28 @@
      (set-face-foreground 'elscreen-tab-other-screen-face "black")
      (set-face-background 'elscreen-tab-other-screen-face "grey65")
      (set-face-attribute 'elscreen-tab-other-screen-face nil :underline 'nil)
-     
+
      ;; automatically create new if switching to blank screen
      (defmacro elscreen-create-automatically-open (ad-do-it)
        `(if (not (= (length (elscreen-get-screen-list)) (+ (elscreen-get-current-screen) 1)))
-            , ad-do-it
-          (elscreen-create)
-       (elscreen-notify-screen-modification 'force-immediately)
-       (elscreen-message "New screen is automatically created")))
-     
-     (defmacro elscreen-create-automatically (ad-do-it)
-       `(if (not (elscreen-one-screen-p))
-            , ad-do-it
+          , ad-do-it
           (elscreen-create)
           (elscreen-notify-screen-modification 'force-immediately)
           (elscreen-message "New screen is automatically created")))
-     
+
+     (defmacro elscreen-create-automatically (ad-do-it)
+       `(if (not (elscreen-one-screen-p))
+          , ad-do-it
+          (elscreen-create)
+          (elscreen-notify-screen-modification 'force-immediately)
+          (elscreen-message "New screen is automatically created")))
+
      (defadvice elscreen-next (around elscreen-create-automatically activate)
        (elscreen-create-automatically-open ad-do-it))
-     
+
      (defadvice elscreen-previous (around elscreen-create-automatically activate)
-    (elscreen-create-automatically ad-do-it))
-     
+       (elscreen-create-automatically ad-do-it))
+
      (defadvice elscreen-toggle (around elscreen-create-automatically activate)
        (elscreen-create-automatically ad-do-it))))
 
@@ -676,7 +677,7 @@
       (condition-case e
         (smartrep-read-event-loop
           '(("o" . evil-open-paragraph-empty)))
-      (quit nil))
+        (quit nil))
       (condition-case e
         (smartrep-read-event-loop
           '(("o" . evil-open-paragraph-full)))
@@ -876,7 +877,7 @@
     (let ((count (abs (or count 1)))
            (beg (and beg end (min beg end)))
            (end (and beg end (max beg end)))
-          (ch (evil-read-key))
+           (ch (evil-read-key))
            beg-inc end-inc)
       (save-excursion
         (when beg (goto-char beg))
@@ -888,9 +889,9 @@
         (evil-find-char count ch)
         (setq end-inc (1+ (point))))
       (if inclusive
-          (evil-range beg-inc end-inc)
+        (evil-range beg-inc end-inc)
         (if (and beg end (= (1+ beg-inc) beg) (= (1- end-inc) end))
-            (evil-range beg-inc end-inc)
+          (evil-range beg-inc end-inc)
           (evil-range (1+ beg-inc) (1- end-inc)))))))
 
 (evil-define-text-object evil-a-between (count &optional beg end type)
@@ -921,24 +922,24 @@
          (forward-line 1)))
 
   (cl-flet ((before-end () (/= (point) (point-max)))
-          (empty-line-p ()
-           (string-match "^[[:space:]]*$"
-             (buffer-substring-no-properties
-               (line-beginning-position)
-               (line-end-position)))))
+             (empty-line-p ()
+               (string-match "^[[:space:]]*$"
+                 (buffer-substring-no-properties
+                   (line-beginning-position)
+                   (line-end-position)))))
     (let ((indent (evil-indent--current-indentation)))
       (cl-flet ((line-indent-ok ()
-               (or (>=
-                     (length (evil-indent--current-indentation))
-                     (length indent))
-                 (empty-line-p))))
+                  (or (>=
+                        (length (evil-indent--current-indentation))
+                        (length indent))
+                    (empty-line-p))))
         ;; now skip ahead to the Nth block with this indentation
         (setq index (or last-prefix-arg 0))
         (while (> index 1)
           (while (and (before-end) (line-indent-ok))
-                 (forward-line 1))
+            (forward-line 1))
           (while (and (before-end) (not (line-indent-ok)))
-                 (forward-line 1))
+            (forward-line 1))
           (setq index (1- index)))
         (save-excursion
           (when point (goto-char point))
@@ -969,7 +970,7 @@
                   (goto-char (first (evil-indent--block-range)))
                   (forward-line -1)
                   (point-at-bol))
-                (second range) 'line)))
+      (second range) 'line)))
 
 (evil-define-text-object evil-indent-a-block-end (&optional count beg end type)
   "Text object describing the block with the same indentation as the current line and the lines above and below."
@@ -979,10 +980,10 @@
                   (goto-char (first range))
                   (forward-line -1)
                   (point-at-bol))
-                (save-excursion
-                  (goto-char (second range))
-                  (forward-line 1)
-                  (point-at-eol)) 'line)))
+      (save-excursion
+        (goto-char (second range))
+        (forward-line 1)
+        (point-at-eol)) 'line)))
 
 (define-key evil-inner-text-objects-map "c" 'evil-indent-i-block)
 (define-key evil-outer-text-objects-map "c" 'evil-indent-a-block)
@@ -1022,8 +1023,8 @@
   "Determine if the point is inside a comment"
   (interactive)
   (let ((syn (syntax-ppss (or pt (point)))))
-      (and (nth 8 syn)
-        (not (nth 3 syn)))))
+    (and (nth 8 syn)
+      (not (nth 3 syn)))))
 
 (defun evil-indent--comment-range (&optional point)
   "Return the point at the begin and end of the text block with the same indentation.
@@ -1033,11 +1034,11 @@
     (goto-char point))
 
   (cl-flet ((before-end () (/= (point) (point-max)))
-          (after-beg () (/= (point) (point-min)))
-          (comment-anywhere ()
-            (or
-              (point-in-comment-p (point-at-bol))
-              (point-in-comment-p (point-at-eol)))))
+             (after-beg () (/= (point) (point-min)))
+             (comment-anywhere ()
+               (or
+                 (point-in-comment-p (point-at-bol))
+                 (point-in-comment-p (point-at-eol)))))
 
     (while (and (before-end) (not (comment-anywhere)))
       (forward-line 1))
@@ -1046,7 +1047,7 @@
 
     (while (> index 1)
       (while (and (before-end) (comment-anywhere))
-          (forward-line 1))
+        (forward-line 1))
       (while (and (before-end) (not (comment-anywhere)))
         (forward-line 1))
       (setq index (1- index)))
@@ -1064,10 +1065,10 @@
         (let ((start (point)) begin end)
           (while (and (/= (point) (point-min))
                    (or (save-excursion
-                     (progn
-                       (back-to-indentation)
-                       (evil-forward-WORD-begin)
-                       (point-in-comment-p)))
+                         (progn
+                           (back-to-indentation)
+                           (evil-forward-WORD-begin)
+                           (point-in-comment-p)))
                      (point-in-comment-p (line-beginning-position))))
             (setq begin (point-at-bol))
             (forward-line -1))
@@ -1076,10 +1077,10 @@
 
           (while (and (before-end)
                    (or (save-excursion
-                     (progn
-                       (back-to-indentation)
-                       (evil-forward-WORD-begin)
-                       (point-in-comment-p)))
+                         (progn
+                           (back-to-indentation)
+                           (evil-forward-WORD-begin)
+                           (point-in-comment-p)))
                      (point-in-comment-p (line-beginning-position))))
             (setq end (point-at-eol))
             (forward-line 1))
@@ -1298,7 +1299,7 @@ the current line."
     (goto-char end)
     (eval-region beg end)
     (evil-normal-state)))
-  
+
 (define-key evil-operator-state-map "gV" 'evil-eval-region)
 (define-key evil-normal-state-map "gV" 'evil-eval-region)
 
@@ -1331,17 +1332,17 @@ the current line."
   (fastnav-jump-to-char-backward (or count 1))
   (forward-char))
 
-(define-key evil-normal-state-map "t" 'evil-fastnav-forward-til) 
+(define-key evil-normal-state-map "t" 'evil-fastnav-forward-til)
 (define-key evil-normal-state-map "T" 'evil-fastnav-backward-til)
 (define-key evil-normal-state-map "f" 'evil-fastnav-forward-to)
 (define-key evil-normal-state-map "F" 'evil-fastnav-backward-to)
 
-(define-key evil-motion-state-map "t" 'evil-fastnav-forward-til) 
+(define-key evil-motion-state-map "t" 'evil-fastnav-forward-til)
 (define-key evil-motion-state-map "T" 'evil-fastnav-backward-til)
 (define-key evil-motion-state-map "f" 'evil-fastnav-forward-to)
 (define-key evil-motion-state-map "F" 'evil-fastnav-backward-to)
 
-(define-key evil-visual-state-map "t" 'evil-fastnav-forward-til) 
+(define-key evil-visual-state-map "t" 'evil-fastnav-forward-til)
 (define-key evil-visual-state-map "T" 'evil-fastnav-backward-til)
 (define-key evil-visual-state-map "f" 'evil-fastnav-forward-to)
 (define-key evil-visual-state-map "F" 'evil-fastnav-backward-to)
@@ -1532,11 +1533,11 @@ to replace the symbol under cursor"
        'undo-tree-visualizer-toggle-timestamps)
      (evil-define-key 'motion  undo-tree-visualizer-mode-map (kbd "d")
        'undo-tree-visualizer-toggle-diff)
-     
+
      (add-hook 'undo-tree-visualizer-mode-hook
        '(lambda ()
           (evil-motion-state)))
-     
+
      ;; compress undo with xz
      (when (locate-file "xz" exec-path)
        (defadvice undo-tree-make-history-save-file-name
@@ -1633,14 +1634,15 @@ to replace the symbol under cursor"
                     (or (- (line-end-position)
                           (line-beginning-position)) 1))))))))
 
-(eval-after-load "ace-jump-mode" '(progn
-  (ace-jump-mode-enable-mark-sync)
-  (if (< (display-color-cells) 256)
-    (progn
-      (set-face-foreground 'ace-jump-face-background "white")
-      (set-face-background 'ace-jump-face-background "black")
-      (set-face-foreground 'ace-jump-face-foreground "black")
-      (set-face-background 'ace-jump-face-foreground "white")))))
+(eval-after-load 'ace-jump-mode
+  '(progn
+     (ace-jump-mode-enable-mark-sync)
+     (if (< (display-color-cells) 256)
+       (progn
+         (set-face-foreground 'ace-jump-face-background "white")
+         (set-face-background 'ace-jump-face-background "black")
+         (set-face-foreground 'ace-jump-face-foreground "black")
+         (set-face-background 'ace-jump-face-foreground "white")))))
 
 (key-chord-define evil-insert-state-map "jl" 'evil-ace-jump-line-mode)
 (key-chord-define evil-insert-state-map "jk" 'evil-ace-jump-word-mode)
@@ -1655,20 +1657,20 @@ to replace the symbol under cursor"
   (interactive "p")
   (let* ((N (or n (window-body-height)))
           (query-char (read-char "Query Char:"))
-               (start (save-excursion
-                        (forward-line (- N))
-                        (point)))
-               (stop (save-excursion
-                       (forward-line (1+ N))
-                       (point))))
-        (unwind-protect
-              (condition-case err
-                (progn
-                  (narrow-to-region start stop)
-                          (evil-ace-jump-char-mode query-char))
-                      (error
-                        (message (error-message-string err))))
-          (widen))))
+          (start (save-excursion
+                   (forward-line (- N))
+                   (point)))
+          (stop (save-excursion
+                  (forward-line (1+ N))
+                  (point))))
+    (unwind-protect
+      (condition-case err
+        (progn
+          (narrow-to-region start stop)
+          (evil-ace-jump-char-mode query-char))
+        (error
+          (message (error-message-string err))))
+      (widen))))
 
 (key-chord-define evil-insert-state-map "jc" 'ace-jump-to-char-within-N-lines)
 
@@ -1863,11 +1865,11 @@ to replace the symbol under cursor"
 
 (defadvice smex (around space-inserts-hyphen activate compile)
   (let ((ido-cannot-complete-command
-    `(lambda ()
-      (interactive)
-      (if (string= " " (this-command-keys))
-        (insert ?-)
-        (funcall ,ido-cannot-complete-command)))))
+          `(lambda ()
+             (interactive)
+             (if (string= " " (this-command-keys))
+               (insert ?-)
+               (funcall ,ido-cannot-complete-command)))))
     ad-do-it))
 
 ;;; recursive minibuffers
@@ -1926,7 +1928,7 @@ to replace the symbol under cursor"
                (face (if current-p 'linum-relative-current-face 'linum)))
          (propertize (format linum-relative-format current-symbol) 'face face)))
 
-     
+
      (setq linum-relative-current-symbol "")
      (setq linum-relative-format "%3s ")
 
@@ -1952,9 +1954,9 @@ to replace the symbol under cursor"
 (setq auto-indent-key-for-end-of-line-insert-char-then-newline "<M-S-return>")
 
 (defadvice auto-indent-eol-newline (after indent-too activate)
- (indent-for-tab-command))
+  (indent-for-tab-command))
 (defadvice auto-indent-eol-char-newline (after indent-too activate)
- (indent-for-tab-command))
+  (indent-for-tab-command))
 
 (global-set-key (kbd "M-RET") 'auto-indent-eol-newline)
 (global-set-key (kbd "C-M-j") 'auto-indent-eol-newline)
@@ -1967,9 +1969,9 @@ to replace the symbol under cursor"
 (auto-indent-global-mode +1)
 
 (defun back-to-indentation-or-beginning ()
-   (interactive "^")
-   (if (= (point) (progn (back-to-indentation) (point)))
-     (beginning-of-line)))
+  (interactive "^")
+  (if (= (point) (progn (back-to-indentation) (point)))
+    (beginning-of-line)))
 
 (put 'back-to-indentation-or-beginning 'CUA 'move)
 (global-set-key (kbd "<home>") 'back-to-indentation-or-beginning)
@@ -2049,10 +2051,10 @@ to replace the symbol under cursor"
   (add-to-list 'ac-modes 'latex-mode)
   (setq ac-sources
     (append '(
-      ac-source-math-unicode
-      ac-source-math-latex
-      ac-source-latex-commands)
-    ac-sources))
+               ac-source-math-unicode
+               ac-source-math-latex
+               ac-source-latex-commands)
+      ac-sources))
   (ac-auctex-setup))
 
 (add-hook 'LaTeX-mode-hook 'ac-latex-mode-setup)
@@ -2163,11 +2165,13 @@ to replace the symbol under cursor"
      (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
      (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
 
-(add-hook 'LaTeX-mode-hook '(lambda ()
-  (require 'smartparens-latex)))
+(add-hook 'LaTeX-mode-hook
+  '(lambda ()
+     (require 'smartparens-latex)))
 
-(add-hook 'sgml-mode-hook '(lambda ()
-  (require 'smartparens-html)))
+(add-hook 'sgml-mode-hook
+  '(lambda ()
+     (require 'smartparens-html)))
 
 ;; show matching
 (show-paren-mode +1)
@@ -2263,7 +2267,7 @@ to replace the symbol under cursor"
             (or (sp--looking-at (if sp-show-pair-from-inside allowed opening))
               (and (memq major-mode sp-navigate-consider-stringlike-sexp)
                 (looking-at (sp--get-stringlike-regexp))))
-            
+
             (or (sp--looking-back (if sp-show-pair-from-inside allowed closing))
               (and (memq major-mode sp-navigate-consider-stringlike-sexp)
                 (sp--looking-back (sp--get-stringlike-regexp)))))
@@ -2351,8 +2355,10 @@ to replace the symbol under cursor"
 (require 'auto-complete-config)
 
 (global-auto-complete-mode)
-(add-hook 'text-mode-hook '(lambda ()
-  (auto-complete-mode +1)))
+(add-hook 'text-mode-hook
+  '(lambda ()
+     (auto-complete-mode +1)))
+
 (ac-set-trigger-key "C-c <C-tab>")
 
 (ac-config-default)
@@ -2429,7 +2435,7 @@ to replace the symbol under cursor"
 (defun try-expand-flx-regexp (str)
   "Generate regexp for flexible matching of str."
   (concat "\\b" (mapconcat (lambda (x) (concat "\\w*-*" (list x))) str "")
-          "\\w*-*" "\\b"))
+    "\\w*-*" "\\b"))
 
 (global-set-key (kbd "M-/") 'hippie-expand)
 (setq hippie-expand-try-functions-list
@@ -2560,7 +2566,7 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
               (setq this-command 'company-complete)
               (company-complete)
               (message "company-complete"))
-            
+
             (progn
               (setq this-command 'hippie-expand)
               (hippie-expand arg)
@@ -2674,9 +2680,9 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
   "Return the full list of possible completions generated by `hippie-expand'.
 The optional argument can be generated with `make-hippie-expand-function'."
   (let ((this-command 'my-hippie-expand-completions)
-        (last-command last-command)
-        (buffer-modified (buffer-modified-p))
-        (hippie-expand-function (or hippie-expand-function 'hippie-expand)))
+         (last-command last-command)
+         (buffer-modified (buffer-modified-p))
+         (hippie-expand-function (or hippie-expand-function 'hippie-expand)))
     (cl-flet ((ding))
       ;; avoid the (ding) when hippie-expand exhausts its options.
       (while (progn
@@ -2695,14 +2701,14 @@ The optional argument can be generated with `make-hippie-expand-function'."
   "Generate an interactively-callable function that offers ido-based completion
 using the specified hippie-expand function."
   `(call-interactively
-    (lambda (&optional selection)
-      (interactive
-       (let ((options (my-hippie-expand-completions ,hippie-expand-function)))
-         (if options
+     (lambda (&optional selection)
+       (interactive
+         (let ((options (my-hippie-expand-completions ,hippie-expand-function)))
+           (if options
              (list (ido-completing-read "Completions: " options)))))
-      (if selection
-        (he-substitute-string selection t)
-        (message "No expansion found")))))
+       (if selection
+         (he-substitute-string selection t)
+         (message "No expansion found")))))
 
 (defun my-ido-hippie-expand ()
   "Offer ido-based completion for the word at point."
@@ -2792,7 +2798,7 @@ The current directory is assumed to be the project's root otherwise."
      (setq helm-locate-command "locate %s -r %s -be -l 999")
      (setq helm-ff-transformer-show-only-basename nil)
      (setq helm-buffers-fuzzy-matching t)
-     
+
      ;; (set-face-background 'helm-source-header "grey15")
      ;; (set-face-foreground 'helm-source-header "#e6a8df")
      ;; (set-face-background 'helm-selection     "grey40")
@@ -2850,7 +2856,7 @@ The current directory is assumed to be the project's root otherwise."
          "*helm-find-files"))
 
      (global-set-key (kbd "C-x C-f") 'my-helm-find-files)
-     
+
      (defvar my-helm-source-evaluation-result
        '((name . "Evaluation Result")
           (init . (lambda () (require 'edebug)))
@@ -2959,7 +2965,7 @@ The current directory is assumed to be the project's root otherwise."
      (setq icicle-default-cycling-mode 'apropos)
      (setq icicle-show-multi-completion-flag t)
      (setq icicle-search-highlight-all-current-flag t)
-     
+
      (setq icicle-command-abbrev-match-all-parts-flag nil)
      ;; (setq icicle-add-proxy-candidates-flag t)
      (setq icicle-highlight-input-completion-failure-delay 0)
@@ -2975,7 +2981,7 @@ The current directory is assumed to be the project's root otherwise."
      (setq icicle-show-Completions-initially-flag t)
      ;; (setq icicle-top-level-when-sole-completion-flag t)
      ;; (setq icicle-top-level-when-sole-completion-delay 0.3)
-     
+
      (set-face-background 'icicle-candidate-part "grey15")
      (set-face-background 'icicle-completion "grey15")
      (set-face-background 'icicle-mode-line-help "grey30")
@@ -2999,7 +3005,7 @@ The current directory is assumed to be the project's root otherwise."
 
      (set-face-background 'icicle-Completions-instruction-1 "grey15")
      (set-face-foreground 'icicle-Completions-instruction-1 "grey70")
-     
+
      (defadvice icicle-other-window-or-frame (around buffers-too activate)
        (if (and
              (= (length (window-list)) 1)
@@ -3088,7 +3094,7 @@ The current directory is assumed to be the project's root otherwise."
   (set-face-foreground 'rainbow-delimiters-depth-8-face "#acd2f8")
   (set-face-foreground 'rainbow-delimiters-depth-9-face "#6a8057")
   (rainbow-delimiters-wash 1.5)
-  
+
   (set-face-background 'fringe "#022F3A"))
 
 (add-hook 'after-make-frame-functions
@@ -3432,7 +3438,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (defun term-send-kill-word ()
     (interactive)
     (term-send-raw-string "^[^H]"))
-  
+
   (define-key term-mode-map (kbd "<tab>") 'term-send-tab)
   (define-key term-mode-map (kbd "<C-backspace>") 'term-send-tab))
 
@@ -3648,54 +3654,54 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 ;;; Customize
 ;;; =========
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(cua-rectangle ((t (:inherit region :background "#93a1a1" :foreground "#002b36"))))
- '(flycheck-error ((t (:underline "Red1"))))
- '(flycheck-info ((t (:underline "#353"))))
- '(flycheck-warning ((t (:underline "gray35"))))
- '(flyspell-duplicate ((t (:underline "#7e6d3a"))))
- '(flyspell-incorrect ((t (:underline "#772a2f"))))
- '(mode-line ((t (:background "grey70" :foreground "black" :box nil :underline nil))))
- '(mode-line-emphasis ((t (:background "gray70" :weight bold))))
- '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light)))))
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+  '(cua-rectangle ((t (:inherit region :background "#93a1a1" :foreground "#002b36"))))
+  '(flycheck-error ((t (:underline "Red1"))))
+  '(flycheck-info ((t (:underline "#353"))))
+  '(flycheck-warning ((t (:underline "gray35"))))
+  '(flyspell-duplicate ((t (:underline "#7e6d3a"))))
+  '(flyspell-incorrect ((t (:underline "#772a2f"))))
+  '(mode-line ((t (:background "grey70" :foreground "black" :box nil :underline nil))))
+  '(mode-line-emphasis ((t (:background "gray70" :weight bold))))
+  '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light)))))
 
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(adaptive-wrap-extra-indent 2)
- '(ansi-color-names-vector ["#002b36" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
- '(compilation-message-face (quote default))
- '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
- '(ergoemacs-mode-used "5.7.5")
- '(ergoemacs-theme "5.7.5")
- '(fci-rule-color "#073642")
- '(flycheck-indication-mode nil)
- '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
- '(highlight-tail-colors (quote (("#073642" . 0) ("#546E00" . 20) ("#00736F" . 30) ("#00629D" . 50) ("#7B6000" . 60) ("#8B2C02" . 70) ("#93115C" . 85) ("#073642" . 100))))
- '(magit-diff-use-overlays nil)
- '(magit-use-overlays nil)
- '(projectile-globally-ignored-directories (quote (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "venv" "build" ".svn")))
- '(projectile-project-root-files (quote (".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "rebar.config" "project.clj" "pom.xml" "build.sbt" "build.gradle" "Gemfile" "Makefile" ".svn")))
- '(recentf-exclude (quote ("\\\\.emacs.d/elpa\\\\")) t)
- '(recentf-max-menu-items 20)
- '(recentf-max-saved-items 100)
- '(send-mail-function (quote smtpmail-send-it))
- '(syslog-debug-face (quote ((t :background unspecified :foreground "#2aa198" :weight bold))))
- '(syslog-error-face (quote ((t :background unspecified :foreground "#dc322f" :weight bold))))
- '(syslog-hour-face (quote ((t :background unspecified :foreground "#859900"))))
- '(syslog-info-face (quote ((t :background unspecified :foreground "#268bd2" :weight bold))))
- '(syslog-ip-face (quote ((t :background unspecified :foreground "#b58900"))))
- '(syslog-su-face (quote ((t :background unspecified :foreground "#d33682"))))
- '(syslog-warn-face (quote ((t :background unspecified :foreground "#cb4b16" :weight bold))))
- '(vc-annotate-background nil)
- '(vc-annotate-color-map (quote ((20 . "#dc322f") (40 . "#CF4F1F") (60 . "#C26C0F") (80 . "#b58900") (100 . "#AB8C00") (120 . "#A18F00") (140 . "#989200") (160 . "#8E9500") (180 . "#859900") (200 . "#729A1E") (220 . "#609C3C") (240 . "#4E9D5B") (260 . "#3C9F79") (280 . "#2aa198") (300 . "#299BA6") (320 . "#2896B5") (340 . "#2790C3") (360 . "#268bd2"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list (quote (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83"))))
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+  '(adaptive-wrap-extra-indent 2)
+  '(ansi-color-names-vector ["#002b36" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#839496"])
+  '(compilation-message-face (quote default))
+  '(custom-safe-themes (quote ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+  '(ergoemacs-mode-used "5.7.5")
+  '(ergoemacs-theme "5.7.5")
+  '(fci-rule-color "#073642")
+  '(flycheck-indication-mode nil)
+  '(highlight-changes-colors (quote ("#d33682" "#6c71c4")))
+  '(highlight-tail-colors (quote (("#073642" . 0) ("#546E00" . 20) ("#00736F" . 30) ("#00629D" . 50) ("#7B6000" . 60) ("#8B2C02" . 70) ("#93115C" . 85) ("#073642" . 100))))
+  '(magit-diff-use-overlays nil)
+  '(magit-use-overlays nil)
+  '(projectile-globally-ignored-directories (quote (".idea" ".eunit" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "venv" "build" ".svn")))
+  '(projectile-project-root-files (quote (".projectile" ".git" ".hg" ".fslckout" ".bzr" "_darcs" "rebar.config" "project.clj" "pom.xml" "build.sbt" "build.gradle" "Gemfile" "Makefile" ".svn")))
+  '(recentf-exclude (quote ("\\\\.emacs.d/elpa\\\\")) t)
+  '(recentf-max-menu-items 20)
+  '(recentf-max-saved-items 100)
+  '(send-mail-function (quote smtpmail-send-it))
+  '(syslog-debug-face (quote ((t :background unspecified :foreground "#2aa198" :weight bold))))
+  '(syslog-error-face (quote ((t :background unspecified :foreground "#dc322f" :weight bold))))
+  '(syslog-hour-face (quote ((t :background unspecified :foreground "#859900"))))
+  '(syslog-info-face (quote ((t :background unspecified :foreground "#268bd2" :weight bold))))
+  '(syslog-ip-face (quote ((t :background unspecified :foreground "#b58900"))))
+  '(syslog-su-face (quote ((t :background unspecified :foreground "#d33682"))))
+  '(syslog-warn-face (quote ((t :background unspecified :foreground "#cb4b16" :weight bold))))
+  '(vc-annotate-background nil)
+  '(vc-annotate-color-map (quote ((20 . "#dc322f") (40 . "#CF4F1F") (60 . "#C26C0F") (80 . "#b58900") (100 . "#AB8C00") (120 . "#A18F00") (140 . "#989200") (160 . "#8E9500") (180 . "#859900") (200 . "#729A1E") (220 . "#609C3C") (240 . "#4E9D5B") (260 . "#3C9F79") (280 . "#2aa198") (300 . "#299BA6") (320 . "#2896B5") (340 . "#2790C3") (360 . "#268bd2"))))
+  '(vc-annotate-very-old-color nil)
+  '(weechat-color-list (quote (unspecified "#002b36" "#073642" "#990A1B" "#dc322f" "#546E00" "#859900" "#7B6000" "#b58900" "#00629D" "#268bd2" "#93115C" "#d33682" "#00736F" "#2aa198" "#839496" "#657b83"))))
 
 (require 'solarized)
 (load-theme 'solarized-dark)
@@ -3780,9 +3786,9 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
         ;; (set-face-foreground 'ediff-current-diff-face-A "#6c71c4")
         ;; (set-face-foreground 'ediff-current-diff-face-B "#cb4b16")
         ;; (set-face-foreground 'ediff-current-diff-face-C "#859900")
-        
+
         (setq ediff-saved-window-configuration (current-window-configuration))))
-    
+
     (let ((restore-window-configuration
             (lambda ()
               (set-window-configuration ediff-saved-window-configuration))))
