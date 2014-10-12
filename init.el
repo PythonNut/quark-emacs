@@ -1997,13 +1997,12 @@ to replace the symbol under cursor"
   (sp-previous-sexp count))
 
 ;; textobject for the sexp immediately after point
-(defun evil-next-thing (count beg end type &optional inclusive)
+(defun evil-next-thing (count &optional beg end type inclusive)
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-next-thing count)
       (if (> (point) (mark))
         (exchange-point-and-mark))
-      (message (string (char-after (point)) (char-before (mark))))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
             (not (and
@@ -2026,13 +2025,12 @@ to replace the symbol under cursor"
 (define-key evil-outer-text-objects-map "n" 'evil-a-next-thing)
 (define-key evil-inner-text-objects-map "n" 'evil-i-next-thing)
 
-(defun evil-previous-thing (count beg end type &optional inclusive)
+(defun evil-previous-thing (count &optional beg end type inclusive)
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-previous-thing count)
       (if (> (point) (mark))
         (exchange-point-and-mark))
-      (message (string (char-after (point)) (char-before (mark))))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
             (not (and
