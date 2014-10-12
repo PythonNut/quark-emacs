@@ -746,106 +746,27 @@
 (define-key evil-visual-state-map "gX" 'auto-evil-exchange-cancel)
 
 ;;; === Evil motion section ===
-(defun beginning-and-end-of-sexp ()
-  (destructuring-bind (b . e)
-    (save-excursion
-      (forward-char)
-      (bounds-of-thing-at-point 'sexp))
-    (cons b e)))
-
 (evil-define-motion evil-forward-sexp (count)
-  :type inclusive
-  (dotimes (i (or count 1))
-    (let ((lookahead-1 (char-syntax (char-after (point))))
-           (lookahead-2 (char-syntax (char-after (1+ (point)))))
-           (new-point (point)))
-      (condition-case nil
-        (progn (save-excursion
-                 (message "lookahead1 = %S, lookahead-2 = %S"
-                   (string lookahead-1) (string lookahead-2))
-                 (cond ((or (memq lookahead-2 '(?\ ?>))
-                          (member lookahead-1 '(?\ ?>)))
-                         (forward-char)
-                         (skip-syntax-forward "->")
-                         (setq new-point (point)))
-                   (t (unless (memq lookahead-1 '(?\" ?\())
-                        (forward-char))
-                     (sp-forward-sexp)
-                     (backward-char)
-                     (setq new-point (point)))))
-          (goto-char new-point))
-        (error (error "End of sexp"))))))
-
+  (sp-forward-sexp count))
 (evil-define-motion evil-backward-sexp (count)
-  :type inclusive
-  (dotimes (i (or count 1))
-    (let ((lookahead (char-syntax (char-after (point))))
-           (new-point (point)))
-      (condition-case nil
-        (progn (save-excursion
-                 (when (memq lookahead '(?\) ?\"))
-                   (forward-char))
-                 (sp-backward-sexp)
-                 (setq new-point (point)))
-          (goto-char new-point))
-        (error (error "Beginning of sexp"))))))
-
-(evil-define-motion evil-enter-sexp (count)
-  :type inclusive
-  (dotimes (i (or count 1))
-    (let ((lookahead-1 (char-syntax (char-after (point))))
-           (lookahead-2 (char-syntax (char-after (1+ (point)))))
-           (lookbehind-1 (char-syntax (char-before (point))))
-           (lookbehind-2 (char-syntax (char-before (1- (point))))))
-      (cond ((and (= lookahead-1 ?\()
-               (/= lookbehind-1 ?\\)
-               (= (char-after (1+ (point))) ?\n))
-              (forward-char)
-              (skip-syntax-forward "-"))
-        ((and (= lookahead-1 ?\()
-           (/= lookbehind-1 ?\\)
-           (/= lookahead-2 ?\)))
-          ;; do not move the cursor if it's on the opening paren of ()
-          (forward-char)
-          (skip-syntax-forward "-"))
-        ((and (= lookahead-1 ?\))
-           (or (/= lookbehind-1 ?\( )
-             (= lookbehind-2 ?\\)))
-          ;; do not move the cursor if it's on the closing paren of ()
-          (skip-syntax-backward "-")
-          (backward-char))
-        (t (error "Already at the deepest level"))))))
-
-(evil-define-motion evil-exit-sexp (count)
-  :type inclusive
-  (dotimes (i (or count 1))
-    (let (op-pos cl-pos)
-      (condition-case nil
-        (progn (save-excursion
-                 (sp-backward-up-sexp)
-                 (setq op-pos (point))
-                 (sp-forward-sexp)
-                 (setq cl-pos (point)))
-          (let ((lookahead (char-syntax (char-after (point)))))
-            (case lookahead
-              (?\( (goto-char op-pos))
-              (?\) (goto-char cl-pos))
-              (otherwise (goto-char (if (> (abs (- (point) cl-pos))
-                                          (abs (- (point) op-pos)))
-                                      op-pos
-                                      cl-pos))))))
-        (error (error "Already at top-level."))))) )
+  (sp-backward-sexp count))
+(evil-define-motion evil-up-sexp (count)
+  (sp-up-sexp count))
+(evil-define-motion evil-backward-up-sexp (count)
+  (sp-backward-up-sexp count))
+(evil-define-motion evil-down-sexp (count)
+  (sp-down-sexp count))
 
 (define-key evil-motion-state-map (kbd "M-h") 'evil-backward-sexp)
 (define-key evil-motion-state-map (kbd "M-j") 'evil-enter-sexp)
-(define-key evil-motion-state-map (kbd "M-k") 'evil-exit-sexp)
+(define-key evil-motion-state-map (kbd "M-k") 'evil-backward-up-sexp)
 (define-key evil-motion-state-map (kbd "M-l") 'evil-forward-sexp)
 
 (evil-define-motion evil-forward-symbol (count)
-  (call-interactively 'sp-forward-symbol count))
+  (sp-forward-symbol count))
 
 (evil-define-motion evil-backward-symbol (count)
-  (call-interactively 'sp-backward-symbol count))
+  (sp-backward-symbol count))
 
 (define-key evil-motion-state-map "L" 'evil-forward-symbol)
 (define-key evil-motion-state-map "H" 'evil-backward-symbol)
