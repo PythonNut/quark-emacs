@@ -2100,7 +2100,7 @@ to replace the symbol under cursor"
 (define-key evil-normal-state-map (kbd "g s p") 'evil-previous-sexp)
 (define-key evil-normal-state-map (kbd "g s r") 'sp-rewrap-sexp)
 (define-key evil-normal-state-map (kbd "g s k") 'sp-kill-sexp)
-(define-key evil-normal-state-map (kbd "g s K") 'sp-backwards-kill-sexp)
+(define-key evil-normal-state-map (kbd "g s K") 'sp-backward-kill-sexp)
 (define-key evil-normal-state-map (kbd "g s w") 'sp-unwrap-sexp)
 (define-key evil-normal-state-map (kbd "g s s") 'sp-forward-slurp-sexp)
 (define-key evil-normal-state-map (kbd "g s b") 'sp-forward-barf-sexp)
