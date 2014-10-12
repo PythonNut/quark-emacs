@@ -2586,29 +2586,7 @@ When pressing Shift+tab, erase words backward (one at a time) up to the beginnin
   (interactive)
   (if mark-active
     (unindent-block)
-    (progn
-      (unless (bolp)
-        (if (looking-back "^[ \t]*")
-          (progn
-            ;;"a" holds how many spaces are
-            ;; there to the beginning of the line
-            (let ((a (length
-                       (buffer-substring-no-properties
-                         (point-at-bol)
-                         (point)))))
-              (progn
-                ;; delete backwards progressively
-                ;; in my-tab-width steps, but without
-                ;; going further of the beginning of line.
-                (if (> a my-tab-width)
-                  (delete-backward-char my-tab-width)
-                  (backward-delete-char a)))))
-          ;; delete tab and spaces first,
-          ;; if at least 2 exist, before removing words
-          (progn
-            (if (looking-back "[ \t]\\{2,\\}")
-              (delete-horizontal-space)
-              (backward-kill-word 1))))))))
+    (icicle-complete-keys)))
 
 (defun indent-or-complete (arg)
   "Indent region selected as a block; if no selection present either indent according to mode,
@@ -2646,6 +2624,9 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
           (setq this-command 'indent-for-tab-command)
           (indent-for-tab-command arg)
           (message "indent"))))))
+
+(define-key evil-insert-state-map (kbd "<tab>") 'indent-or-complete)
+(define-key evil-insert-state-map (kbd "<backtab>") 'my-unindent)
 
 ;;; =============================
 ;;; Magit - fast, interactive git
