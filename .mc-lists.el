@@ -75,6 +75,7 @@
          jump-char-process-char
          keyboard-quit
          kill-ring-search
+         kill-sexp
          kring-down
          kring-left
          kring-right
