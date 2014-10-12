@@ -2060,6 +2060,8 @@ to replace the symbol under cursor"
 
 (define-key sp-keymap (kbd "C-M-f") 'evil-forward-sexp)
 (define-key sp-keymap (kbd "C-M-b") 'evil-backward-sexp)
+(define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+
 
 (define-key sp-keymap (kbd "C-M-d") 'evil-down-sexp)
 (define-key sp-keymap (kbd "C-M-a") 'evil-backward-down-sexp)
