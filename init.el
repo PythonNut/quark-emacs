@@ -1996,6 +1996,65 @@ to replace the symbol under cursor"
 (evil-define-motion evil-previous-sexp (count)
   (sp-previous-sexp count))
 
+;; textobject for the sexp immediately after point
+(defun evil-next-thing (count beg end type &optional inclusive)
+  (ignore-errors
+    (save-excursion
+      (call-interactively 'sp-select-next-thing count)
+      (if (> (point) (mark))
+        (exchange-point-and-mark))
+      (message (string (char-after (point)) (char-before (mark))))
+      ;; check, it doesn't make sense to take the "inside" of a symbol
+      (if (or inclusive
+            (not (and
+                   (string-match
+                     (string (char-after (point)))
+                     "[^[:punct:]([{]")
+                   (string-match
+                     (string (char-before (mark)))
+                     "[^[:punct:])\]}]"))))
+        (evil-range (point) (mark))
+        (evil-range (1+ (point)) (1- (mark)))))))
+
+(evil-define-text-object evil-a-next-thing (count &optional beg end type)
+  "Select the range defined by sp-select-next-thing."
+  (evil-next-thing count beg end type t))
+(evil-define-text-object evil-i-next-thing (count &optional beg end type)
+  "Select the range defined by sp-select-next-thing."
+  (evil-next-thing count beg end type))
+
+(define-key evil-outer-text-objects-map "n" 'evil-a-next-thing)
+(define-key evil-inner-text-objects-map "n" 'evil-i-next-thing)
+
+(defun evil-previous-thing (count beg end type &optional inclusive)
+  (ignore-errors
+    (save-excursion
+      (call-interactively 'sp-select-previous-thing count)
+      (if (> (point) (mark))
+        (exchange-point-and-mark))
+      (message (string (char-after (point)) (char-before (mark))))
+      ;; check, it doesn't make sense to take the "inside" of a symbol
+      (if (or inclusive
+            (not (and
+                   (string-match
+                     (string (char-after (point)))
+                     "[^[:punct:]([{]")
+                   (string-match
+                     (string (char-before (mark)))
+                     "[^[:punct:])\]}]"))))
+        (evil-range (point) (mark))
+        (evil-range (1+ (point)) (1- (mark)))))))
+
+(evil-define-text-object evil-a-previous-thing (count &optional beg end type)
+  "Select the range defined by sp-select-previous-thing."
+  (evil-previous-thing count beg end type t))
+(evil-define-text-object evil-i-previous-thing (count &optional beg end type)
+  "Select the range defined by sp-select-previous-thing."
+  (evil-previous-thing count beg end type))
+
+(define-key evil-outer-text-objects-map "N" 'evil-a-previous-thing)
+(define-key evil-inner-text-objects-map "N" 'evil-i-previous-thing)
+
 (define-key evil-motion-state-map (kbd "M-h") 'evil-backward-sexp)
 (define-key evil-motion-state-map (kbd "M-j") 'evil-enter-sexp)
 (define-key evil-motion-state-map (kbd "M-k") 'evil-backward-up-sexp)
@@ -2039,8 +2098,6 @@ to replace the symbol under cursor"
 (define-key evil-normal-state-map (kbd "g s u") 'evil-backward-up-sexp)
 (define-key evil-normal-state-map (kbd "g s n") 'evil-next-sexp)
 (define-key evil-normal-state-map (kbd "g s p") 'evil-previous-sexp)
-(define-key evil-normal-state-map (kbd "g s N") 'sp-select-next-thing)
-(define-key evil-normal-state-map (kbd "g s P") 'sp-select-previous-thing)
 (define-key evil-normal-state-map (kbd "g s r") 'sp-rewrap-sexp)
 (define-key evil-normal-state-map (kbd "g s k") 'sp-kill-sexp)
 (define-key evil-normal-state-map (kbd "g s K") 'sp-backwards-kill-sexp)
