@@ -2868,7 +2868,6 @@ The current directory is assumed to be the project's root otherwise."
      (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
      (global-set-key (kbd "C-S-X C-S-B") 'icicle-buffer)
 
-     (global-set-key (kbd "C-c f") 'fiplr-find-file)
      (global-set-key (kbd "C-c C-e") 'helm-eval-expression)
      (global-set-key (kbd "C-c C-s") 'helm-swoop)
 
