@@ -2779,6 +2779,10 @@ using the specified hippie-expand function."
 (autoload 'projectile-project-p "projectile")
 (autoload 'projectile-mode "projectile")
 
+(eval-after-load 'projectile
+  '(progn
+     (projectile-global-mode +1)))
+
 (setq projectile-completion-system 'ido)
 (setq projectile-enable-caching t)
 (setq projectile-require-project-root t)
@@ -2956,7 +2960,9 @@ The current directory is assumed to be the project's root otherwise."
              ;; projectile explodes when not in project
              (when (my-projectile-project-root)
                (unless (fboundp 'helm-source-projectile-files-list)
-                 (require 'helm-projectile))
+                 (require 'helm-projectile)
+                 (unless projectile-global-mode-buffers
+                   (projectile-global-mode +1)))
                '(helm-source-projectile-recentf-list
                   helm-source-projectile-files-list
                   helm-source-projectile-buffers-list))
