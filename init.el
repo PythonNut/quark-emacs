@@ -2667,8 +2667,10 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
 (ido-mode +1)
 (require 'flx-ido)
 (require 'ido-ubiquitous)
+(require 'ido-vertical-mode)
 (ido-ubiquitous +1)
 (flx-ido-mode +1)
+(ido-vertical-mode +1)
 
 (set-face-foreground 'flx-highlight-face "grey70")
 (set-face-background 'flx-highlight-face "grey20")
