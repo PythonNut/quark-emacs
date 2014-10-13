@@ -70,6 +70,7 @@ ac-comphist.dat
 # misc
 *.undo.xz
 *#
+*.swp
 *.elc
 /.elisp-cache-stamp
 /kkrc
