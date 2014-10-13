@@ -2986,6 +2986,14 @@ The current directory is assumed to be the project's root otherwise."
                 ))
            "*helm-omni*")))
 
+     (defadvice  evil-paste-pop (around auto-helm-omni activate)
+       (if (memq last-command
+                 '(evil-paste-after
+                    evil-paste-before
+                    evil-visual-paste))
+         ad-do-it
+         (call-interactively 'my-helm-omni)))
+
      (global-set-key (kbd "C-c C-o") 'my-helm-omni)
      (define-key evil-normal-state-map (kbd "C-c C-o") 'my-helm-omni)
      (define-key evil-insert-state-map (kbd "C-c C-o") 'my-helm-omni)
