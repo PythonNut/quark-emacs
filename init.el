@@ -2774,12 +2774,8 @@ using the specified hippie-expand function."
 ;;; Projectile
 ;;; ==========
 ;; (require 'projectile)
-(autoload 'projectile-find-file "projectile")
-(autoload 'projectile-find-dir "projectile")
-(autoload 'projectile-switch-project "projectile")
-(autoload 'projectile-switch-to-buffer "projectile")
-(autoload 'projectile-project-p "projectile")
-(autoload 'projectile-mode "projectile")
+(require 'projectile-autoloads)
+(projectile-global-mode +1)
 
 (eval-after-load 'projectile
   '(progn
