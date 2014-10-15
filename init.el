@@ -909,14 +909,14 @@ the current line."
         (list end beg)))))
 
 (evil-define-text-object evil-i-arbitrary-char-range (&optional _c _b _e _t)
-  "Text object describing the block with the same indentation as the current line."
+  "Text object describing the range between two arbitrary points"
   :type inclusive
   (let ((range (evil-make-arbitrary-char-range)))
     (evil-range (first range) (second range) 'inclusive)))
 
 (evil-define-text-object evil-a-arbitrary-char-range (&optional _c _b _e _t)
+  "Text object describing the range between two arbitrary points"
   :type exclusive
-  "Text object describing the block with the same indentation as the current line."
   (let ((range (evil-make-arbitrary-char-range)))
     (evil-range (1- (first range)) (1+ (second range)) 'inclusive)))
 
