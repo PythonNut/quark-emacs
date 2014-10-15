@@ -229,25 +229,25 @@
 (setq elscreen-display-screen-number   nil)
 (setq elscreen-tab-display-control     nil)
 
-(defun elscreen-frame-title-update ()
-  (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
-    (let* ((screen-list (sort (elscreen-get-screen-list) '<))
-            (screen-to-name-alist (elscreen-get-screen-to-name-alist))
-            (title (mapconcat
-                     (lambda (screen)
-                       (format "%s"
-                         (if (string= (elscreen-status-label screen) "+")
-                           (concat "[" (get-alist screen screen-to-name-alist) "]")
-                           (get-alist screen screen-to-name-alist))))
-                     screen-list " - ")))
-      (if (fboundp 'set-frame-name)
-        (set-frame-name title)
-        (setq frame-title-format title)))))
+;; (defun elscreen-frame-title-update ()
+;;   (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
+;;     (let* ((screen-list (sort (elscreen-get-screen-list) '<))
+;;             (screen-to-name-alist (elscreen-get-screen-to-name-alist))
+;;             (title (mapconcat
+;;                      (lambda (screen)
+;;                        (format "%s"
+;;                          (if (string= (elscreen-status-label screen) "+")
+;;                            (concat "[" (get-alist screen screen-to-name-alist) "]")
+;;                            (get-alist screen screen-to-name-alist))))
+;;                      screen-list " - ")))
+;;       (if (fboundp 'set-frame-name)
+;;         (set-frame-name title)
+;;         (setq frame-title-format title)))))
 
 (eval-after-load "elscreen"
   '(progn
      (elscreen-start)
-     (add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update)
+     ;; (add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update)
      (setq elscreen-prefix-key "\C-l")
 
      (set-face-background 'elscreen-tab-background-face "grey65")
@@ -900,7 +900,7 @@ the current line."
 
 (define-key evil-inner-text-objects-map "C" 'evil-indent-i-comment)
 
-(defun evil-make-arbitrary-char-range (&rest _ignored)
+(defun evil-make-arbitrary-char-range ()
   (save-excursion
     (let ((beg (progn (deactivate-mark) (evil-ace-jump-char-mode) (point)))
            (end (progn (deactivate-mark) (evil-ace-jump-char-mode) (point))))
