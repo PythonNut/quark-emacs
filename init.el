@@ -229,13 +229,6 @@
 (setq elscreen-display-screen-number   nil)
 (setq elscreen-tab-display-control     nil)
 
-;; automatically start elscreen if needed
-(setq started-elscreen nil)
-(defun load-elscreen ()
-  (interactive)
-  (elscreen-start)
-  (setq started-elscreen t))
-
 (defun elscreen-frame-title-update ()
   (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
     (let* ((screen-list (sort (elscreen-get-screen-list) '<))
@@ -253,6 +246,7 @@
 
 (eval-after-load "elscreen"
   '(progn
+     (elscreen-start)
      (add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update)
      (setq elscreen-prefix-key "\C-l")
 
@@ -289,38 +283,12 @@
      (defadvice elscreen-toggle (around elscreen-create-automatically activate)
        (elscreen-create-automatically ad-do-it))))
 
-(defun al-elscreen-next ()
-  (interactive)
-  (unless started-elscreen
-    (load-elscreen))
-  (elscreen-next))
-
-(defun al-elscreen-previous ()
-  (interactive)
-  (unless started-elscreen
-    (load-elscreen))
-  (elscreen-previous))
-
-;; (defun al-elscreen-create ()
-;;   (interactive)
-;;   (unless started-elscreen
-;;     (load-elscreen))
-;;   (elscreen-create))
-
-;; (defun al-elscreen-clone ()
-;;   (interactive)
-;;   (unless started-elscreen
-;;     (load-elscreen))
-;;   (elscreen-clone))
-
-;; (define-prefix-command 'elscreen-map)
-;; (global-set-key (kbd "C-l") 'elscreen-map)
-;; (global-set-key (kbd "C-l c") 'al-elscreen-create)
-;; (global-set-key (kbd "C-l C") 'al-elscreen-clone)
+(autoload 'elscreen-next     "elscreen")
+(autoload 'elscreen-previous "elscreen")
 
 ;; Alt+(PgUp|PgDown) switches between elscreens
-(global-set-key (kbd "M-<prior>") 'al-elscreen-previous)
-(global-set-key (kbd "M-<next>") 'al-elscreen-next)
+(global-set-key (kbd "M-<prior>") 'elscreen-previous)
+(global-set-key (kbd "M-<next>") 'elscreen-next)
 
 ;;; =====================================
 ;;; Windmove - effortless window movement
