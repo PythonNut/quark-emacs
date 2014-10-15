@@ -467,7 +467,10 @@
          (when (eq mode major-mode)
            (setq mode-name mode-str)))))
 
-(add-hook 'after-change-major-mode-hook 'clean-mode-line)
+(add-hook 'after-change-major-mode-hook
+  '(lambda ()
+     (clean-mode-line)
+     (run-at-time 0.3 nil 'clean-mode-line)))
 
 ;;; ======================
 ;;; Text mode improvements
@@ -2416,7 +2419,23 @@ to replace the symbol under cursor"
 (eval-after-load 'flycheck
   '(progn
      (setq flycheck-display-errors-function #'my-display-error-messages-condensed)
-     (setq flycheck-mode-line-lighter " ✓")
+     (defun flycheck-mode-line-status-text (&optional status)
+       (let ((text (pcase (or status flycheck-last-status-change)
+                     (`not-checked "")
+                     (`no-checker "-")
+                     (`running "*")
+                     (`errored "!")
+                     (`finished
+                       (if flycheck-current-errors
+                         (let ((error-counts (flycheck-count-errors
+                                               flycheck-current-errors)))
+                           (format ":%s/%s"
+                             (or (cdr (assq 'error error-counts)) 0)
+                             (or (cdr (assq 'warning error-counts)) 0)))
+                         ""))
+                     (`interrupted "-")
+                     (`suspicious "?"))))
+         (concat " ✓" text)))
      (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
      (global-flycheck-mode +1)))
 
