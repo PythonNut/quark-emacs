@@ -731,22 +731,10 @@
 (autoload 'evil-exchange        "evil-exchange")
 (autoload 'evil-exchange-cancel "evil-exchange")
 
-(defun auto-evil-exchange ()
-  (interactive)
-  (unless (boundp 'evil-exchange)
-    (require 'evil-exchange))
-  (call-interactively 'evil-exchange))
-
-(defun auto-evil-exchange-cancel ()
-  (interactive)
-  (unless (boundp 'evil-exchange)
-    (require 'evil-exchange))
-  (call-interactively 'evil-exchange-cancel))
-
-(define-key evil-normal-state-map "gx" 'auto-evil-exchange)
-(define-key evil-visual-state-map "gx" 'auto-evil-exchange)
-(define-key evil-normal-state-map "gX" 'auto-evil-exchange-cancel)
-(define-key evil-visual-state-map "gX" 'auto-evil-exchange-cancel)
+(define-key evil-normal-state-map "gx" 'evil-exchange)
+(define-key evil-visual-state-map "gx" 'evil-exchange)
+(define-key evil-normal-state-map "gX" 'evil-exchange-cancel)
+(define-key evil-visual-state-map "gX" 'evil-exchange-cancel)
 
 ;;; === Evil motion section ===
 
