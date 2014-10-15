@@ -612,7 +612,7 @@
      (evil-insert-state)
      (cua-set-rectangle-mark)))
 
-(define-key evil-insert-state-map (kbd "C-e") 'end-of-visual-line)
+(define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-visual-line)
 (setq evil-replace-state-cursor '("#884444" box))
 
 (defun evil-open-below-normal (arg)
