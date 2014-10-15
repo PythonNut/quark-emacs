@@ -306,7 +306,7 @@
         (= (length (frame-list)) 1))
     (if (and (elscreen-get-screen-list)
           (> (length (elscreen-get-screen-list)) 1))
-      (al-elscreen-previous)
+      (elscreen-previous)
       ad-do-it)
     ad-do-it))
 
@@ -316,9 +316,9 @@
         (= (length (frame-list)) 1))
     (if (and (elscreen-get-screen-list)
           (> (length (elscreen-get-screen-list)) 1))
-      (al-elscreen-next)
+      (elscreen-next)
       (if (y-or-n-p-with-timeout "Start elscreen? " 2 nil)
-        (al-elscreen-next)
+        (elscreen-next)
         ad-do-it))
     ad-do-it))
 
