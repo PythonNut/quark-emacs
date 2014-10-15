@@ -141,25 +141,9 @@
 (setf interprogram-cut-function 'x-select-text)
 (setf interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
-(global-set-key (kbd "<mouse-8>")
-  '(lambda ()
-     (interactive)
-     (scroll-down-line)
-     (scroll-down-line)
-     (scroll-down-line)))
-
-(global-set-key (kbd "<mouse-9>")
-  '(lambda ()
-     (interactive)
-     (scroll-up-line)
-     (scroll-up-line)
-     (scroll-up-line)))
-
-(unless (display-graphic-p)
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))))
-
-(setq mouse-wheel-progressive-speed nil)
-(setq mouse-wheel-follow-mouse 't)
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
+  mouse-wheel-progressive-speed nil
+  mouse-wheel-follow-mouse t)
 
 (global-set-key (kbd "M-DEL") 'evil-delete-backward-word)
 
@@ -3120,20 +3104,6 @@ The current directory is assumed to be the project's root otherwise."
 ;;; ====================================
 (defun emacsclient-setup (&rest args)
   (interactive)
-
-  (global-set-key (kbd "<mouse-4>")
-    '(lambda ()
-       (interactive)
-       (scroll-down-line)
-       (scroll-down-line)
-       (scroll-down-line)))
-
-  (global-set-key (kbd "<mouse-5>")
-    '(lambda ()
-       (interactive)
-       (scroll-up-line)
-       (scroll-up-line)
-       (scroll-up-line)))
 
   (set-face-foreground 'rainbow-delimiters-depth-1-face "#dddddd")
   (set-face-foreground 'rainbow-delimiters-depth-2-face "#fce94f")
