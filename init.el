@@ -1916,19 +1916,17 @@ to replace the symbol under cursor"
 (global-set-key (kbd "C-c E") 'aya-expand)
 
 ;; emmet mode - extensible html/css snippets
-(defun autoload-emmet ()
-  (interactive)
-  (require 'emmet-mode)
-  (add-hook 'emmet-mode-hook
-    '(lambda ()
-       (defun try-expand-emmet (arg)
-         (emmet-expand-yas))
-       (add-to-list 'hippie-expand-try-functions-list 'try-expand-emmet)))
-  (emmet-mode +1))
+(eval-after-load 'emmet-mode
+  '(progn
+     (defun try-expand-emmet (arg)
+       (emmet-expand-yas))
+     (add-to-list 'hippie-expand-try-functions-list
+       'try-expand-emmet)
+     (emmet-mode +1)))
 
 ;; Auto-start on any markup modes
-(add-hook 'sgml-mode-hook 'autoload-emmet)
-(add-hook 'css-mode-hook  'autoload-emmet)
+(add-hook 'sgml-mode-hook '(lambda () (require 'emmet-mode)))
+(add-hook 'css-mode-hook  '(lambda () (require 'emmet-mode)))
 
 ;;; ============
 ;;; Emacs tables
@@ -1950,10 +1948,10 @@ to replace the symbol under cursor"
 
   (add-to-list 'ac-modes 'latex-mode)
   (setq ac-sources
-    (append '(
-               ac-source-math-unicode
-               ac-source-math-latex
-               ac-source-latex-commands)
+    (append
+      '(ac-source-math-unicode
+         ac-source-math-latex
+         ac-source-latex-commands)
       ac-sources))
   (ac-auctex-setup))
 
