@@ -2405,11 +2405,7 @@ to replace the symbol under cursor"
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
 
-(add-hook 'prog-mode-hook
-  '(lambda ()
-     (require 'flycheck)
-     (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
-     (setq flycheck-mode-line-lighter " ✓")))
+(add-hook 'prog-mode-hook '(lambda () (require 'flycheck)))
 
 (defun my-display-error-messages-condensed (errors)
   (-when-let (messages (-keep #'flycheck-error-message errors))
@@ -2419,7 +2415,9 @@ to replace the symbol under cursor"
 
 (eval-after-load 'flycheck
   '(progn
-     '(setq flycheck-display-errors-function #'my-display-error-messages-condensed)
+     (setq flycheck-display-errors-function #'my-display-error-messages-condensed)
+     (setq flycheck-mode-line-lighter " ✓")
+     (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
      (global-flycheck-mode +1)))
 
 ;;; ================================
