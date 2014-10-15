@@ -902,8 +902,8 @@ the current line."
 
 (defun evil-make-arbitrary-char-range ()
   (save-excursion
-    (let ((beg (progn (deactivate-mark) (evil-ace-jump-char-mode) (point)))
-           (end (progn (deactivate-mark) (evil-ace-jump-char-mode) (point))))
+    (let ((beg (progn (deactivate-mark) (ace-jump-char-mode) (point)))
+           (end (progn (deactivate-mark) (ace-jump-char-mode) (point))))
       (if (> beg end)
         (list beg end)
         (list end beg)))))
@@ -1411,13 +1411,13 @@ to replace the symbol under cursor"
       (progn (next-line) (previous-line)))))
 
 (defadvice evil-ace-jump-word-mode (after cleanup activate)
-  (call-interactively (realign-cursor)))
+  (ignore-errors (call-interactively 'realign-cursor)))
 
 (defadvice evil-ace-jump-char-mode (after cleanup activate)
-  (call-interactively (realign-cursor)))
+  (ignore-errors (call-interactively 'realign-cursor)))
 
 (defadvice evil-ace-jump-line-mode (after realign activate)
-  (call-interactively (realign-cursor)))
+  (ignore-errors (call-interactively 'realign-cursor)))
 
 (defadvice evil-ace-jump-line-mode (around restore-pos activate)
   (let ((cursor (first (nth 6 (posn-at-point))))
