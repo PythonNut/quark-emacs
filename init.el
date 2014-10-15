@@ -178,8 +178,9 @@
 
 (global-set-key (kbd "C-c B") 'backup-walker-start)
 
-(require 'backups-mode)
-(backups-mode-start)
+(add-hook 'first-change-hook (lambda () (require 'backups-mode)))
+(eval-after-load 'backups-mode '(backups-mode-start))
+
 (auto-save-mode +1)
 
 ;; automatically save buffers associated with files on buffer switch
