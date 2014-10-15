@@ -171,8 +171,7 @@
 (defvar tramp-backup-directory "~/.emacs.d/data/tramp-backups")
 
 (setq backup-directory-alist
-  `((".*" . ,backup-location)
-     (".*\.emacs\.d.*" . "/dev/null")))
+  `((".*" . ,backup-location)))
 
 (setq auto-save-file-name-transforms
   `((".*" ,autosave-location t)))
