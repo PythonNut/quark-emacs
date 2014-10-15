@@ -101,9 +101,7 @@
   '(lambda ()
      ;; bold keywords please
      (set-face-attribute 'font-lock-keyword-face 'nil :weight 'extra-bold)
-     (set-face-attribute 'font-lock-comment-face 'nil :slant 'italic)
-     ;; (set-face-foreground 'font-lock-comment-face "#28490d")
-     (egoge-wash-out-fontlock-faces 0.5)))
+     (set-face-attribute 'font-lock-comment-face 'nil :slant 'italic)))
 
 (defun raise-minor-mode-map-alist (mode-symbol)
   "Raise `minor-mode-map-alist' priority of MODE-SYMBOL."
@@ -114,43 +112,6 @@
   "Lower `minor-mode-map-alist' priority of MODE-SYMBOL."
   (let ((rel (assq mode-symbol minor-mode-map-alist)))
     (setq minor-mode-map-alist (append (delete rel minor-mode-map-alist) (list rel)))))
-
-(defun egoge-wash-out-colour (colour &optional degree)
-  "Return a colour string specifying a washed-out version of COLOUR."
-  (let ((basec (color-values
-                 (face-attribute 'default :foreground)))
-         (col (color-values colour))
-         (list nil))
-    (unless degree (setq degree 2))
-    (while col
-      (push (/ (/ (+ (or (pop col) 128)
-                    (* degree (or (pop basec) 128)))
-                 (1+ degree))
-              256)
-        list))
-    (apply 'format "#%02x%02x%02x" (nreverse list))))
-
-(defun egoge-wash-out-face (face &optional degree)
-  "Make the foreground colour of FACE appear a bit more pale."
-  (let ((colour (face-attribute face :foreground)))
-    (unless (eq colour 'unspecified)
-      (set-face-attribute face nil
-        :foreground (egoge-wash-out-colour colour degree)))))
-
-(defun egoge-find-faces (regexp)
-  "Return a list of all faces whose names match REGEXP."
-  (delq nil
-    (mapcar (lambda (face)
-              (and (string-match regexp
-                     (symbol-name face))
-                face))
-      (face-list))))
-
-(defun egoge-wash-out-fontlock-faces (&optional degree)
-  (mapc (lambda (elt)
-          (egoge-wash-out-face elt degree))
-    (delq 'font-lock-warning-face
-      (egoge-find-faces "^font-lock"))))
 
 ;;; ===========
 ;;; basic setup
@@ -2275,16 +2236,39 @@ to replace the symbol under cursor"
 (set-face-foreground 'rainbow-delimiters-depth-8-face "#6c71c4")
 (set-face-foreground 'rainbow-delimiters-depth-9-face "#2aa198")
 
+
+(defun rainbow-wash-out-colour (colour &optional degree)
+  "Return a colour string specifying a washed-out version of COLOUR."
+  (let ((basec (color-values
+                 (face-attribute 'default :foreground)))
+         (col (color-values colour))
+         (list nil))
+    (unless degree (setq degree 2))
+    (while col
+      (push (/ (/ (+ (or (pop col) 128)
+                    (* degree (or (pop basec) 128)))
+                 (1+ degree))
+              256)
+        list))
+    (apply 'format "#%02x%02x%02x" (nreverse list))))
+
+(defun rainbow-wash-out-face (face &optional degree)
+  "Make the foreground colour of FACE appear a bit more pale."
+  (let ((colour (face-attribute face :foreground)))
+    (unless (eq colour 'unspecified)
+      (set-face-attribute face nil
+        :foreground (rainbow-wash-out-colour colour degree)))))
+
 (defun rainbow-delimiters-wash (arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-1-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-2-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-3-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-4-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-5-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-6-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-7-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-8-face arg)
-  (egoge-wash-out-face 'rainbow-delimiters-depth-9-face arg))
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-1-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-2-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-3-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-4-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-5-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-6-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-7-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-8-face arg)
+  (rainbow-wash-out-face 'rainbow-delimiters-depth-9-face arg))
 
 (add-hook 'emacs-startup-hook
   '(lambda ()
