@@ -520,6 +520,20 @@ enabled.  Changing it will not affect buffers which already have
   :package-version '(flycheck . "0.15")
   :safe #'booleanp)
 
+(defcustom flycheck-navigation-minimum-level nil
+  "The minimum level of errors to navigate.
+
+If set to an error level, only navigate errors whose error level
+is at least as severe as this one.  If nil, navigate all errors."
+  :group 'flycheck
+  :type '(radio (const :tag "All locations" nil)
+                (const :tag "Informational messages" info)
+                (const :tag "Warnings" warning)
+                (const :tag "Errors" error)
+                (symbol :tag "Custom error level"))
+  :safe #'flycheck-error-level-p
+  :package-version '(flycheck . "0.21"))
+
 (defcustom flycheck-completion-system nil
   "The completion system to use.
 
@@ -720,15 +734,15 @@ This variable is a normal hook.  See Info node `(elisp)Hooks'."
   :group 'flycheck-faces
   :version '(flycheck . "0.16"))
 
+(defface flycheck-error-list-checker-name
+  '((t :inherit font-lock-type-face))
+  "Face for the syntax checker name in the error list."
+  :group 'flycheck-faces
+  :version '(flycheck . "0.21"))
+
 (defface flycheck-error-list-highlight
   '((t :inherit highlight))
   "Flycheck face to highlight errors in the error list."
-  :package-version '(flycheck . "0.15")
-  :group 'flycheck-faces)
-
-(defface flycheck-error-list-highlight-at-point
-  '((t :inherit lazy-highlight))
-  "Flycheck face to highlight error at point in the error list."
   :package-version '(flycheck . "0.15")
   :group 'flycheck-faces)
 
@@ -3357,7 +3371,7 @@ Return the created overlay."
     ;; error display and error navigation, even if the highlighting is disabled.
     ;; We erase the highlighting later on in this case
     (pcase-let* ((`(,beg . ,end) (flycheck-error-region-for-mode
-                                  err (or flycheck-highlighting-mode'lines)))
+                                  err (or flycheck-highlighting-mode 'lines)))
                  (overlay (make-overlay beg end))
                  (level (flycheck-error-level err))
                  (category (flycheck-error-level-overlay-category level)))
@@ -3423,6 +3437,18 @@ Return the created overlay."
 
 
 ;;; Error navigation
+(defun flycheck-error-level-interesting-at-pos-p (pos)
+  "Check if error severity at POS passes `flycheck-error-level-interesting-p'."
+  (flycheck-error-level-interesting-p (get-char-property pos 'flycheck-error)))
+
+(defun flycheck-error-level-interesting-p (err)
+  "Check if ERR severity is >= `flycheck-navigation-minimum-level'."
+  (when (flycheck-error-p err)
+    (-if-let (min-level flycheck-navigation-minimum-level)
+        (<= (flycheck-error-level-severity min-level)
+            (flycheck-error-level-severity (flycheck-error-level err)))
+      t)))
+
 (defun flycheck-next-error-pos (n &optional reset)
   "Get the position of the N-th next error.
 
@@ -3442,11 +3468,11 @@ there is none."
             ;; Move beyond from the current error if any
             (setq pos (next-single-char-property-change pos 'flycheck-error)))
           (while (not (or (= pos (point-max))
-                          (get-char-property pos 'flycheck-error)))
+                          (flycheck-error-level-interesting-at-pos-p pos)))
             ;; Scan for the next error
             (setq pos (next-single-char-property-change pos 'flycheck-error)))
           (when (and (= pos (point-max))
-                     (not (get-char-property pos 'flycheck-error)))
+                     (not (flycheck-error-level-interesting-at-pos-p pos)))
             ;; If we reached the end of the buffer, but no error, we didn't find
             ;; any
             (setq pos nil)))
@@ -3457,10 +3483,10 @@ there is none."
         ;; the current one, because `previous-single-char-property-change'
         ;; always moves to the position *of* the change.
         (while (not (or (= pos (point-min))
-                        (get-char-property (1- pos) 'flycheck-error)))
+                        (flycheck-error-level-interesting-at-pos-p (1- pos))))
           (setq pos (previous-single-char-property-change pos 'flycheck-error)))
         (when (and (= pos (point-min))
-                   (not (get-char-property pos 'flycheck-error)))
+                   (not (flycheck-error-level-interesting-at-pos-p pos)))
           ;; We didn't find any error.
           (setq pos nil))
         (when pos
@@ -3519,15 +3545,19 @@ the beginning of the buffer."
     map)
   "The keymap of `flycheck-error-list-mode'.")
 
+(defconst flycheck-error-list-format
+  [("Line" 4 flycheck-error-list-entry-< :right-align t)
+   ("Col" 3 nil :right-align t)
+   ("Level" 8 flycheck-error-list-entry-level-<)
+   ("Message" 0 t)
+   (" (Checker)" 8 t)]
+  "Table format for the error list.")
+
 (define-derived-mode flycheck-error-list-mode tabulated-list-mode "Flycheck errors"
   "Major mode for listing Flycheck errors.
 
 \\{flycheck-error-list-mode-map}"
-  (setq tabulated-list-format
-        [("Line" 4 flycheck-error-list-entry-< :right-align t)
-         ("Col" 3 nil :right-align t)
-         ("Level" 8 flycheck-error-list-entry-level-<)
-         ("Message" 0 nil)]
+  (setq tabulated-list-format flycheck-error-list-format
         ;; Sort by location initially
         tabulated-list-sort-key (cons "Line" nil)
         tabulated-list-padding 1
@@ -3567,12 +3597,12 @@ the beginning of the buffer."
   "Go to the error at BUTTON."
   (flycheck-error-list-goto-error (button-start button)))
 
-(defun flycheck-error-list-make-cell (text &optional face)
+(defsubst flycheck-error-list-make-cell (text &optional face)
   "Make an error list cell with TEXT and FACE."
   (let ((face (or face 'default)))
     (list text 'type 'flycheck-error-list 'face face)))
 
-(defun flycheck-error-list-make-number-cell (number face)
+(defsubst flycheck-error-list-make-number-cell (number face)
   "Make a table cell for a NUMBER with FACE.
 
 Convert NUMBER to string, fontify it with FACE and return the
@@ -3599,8 +3629,10 @@ Return a list with the contents of the table cell."
                    column 'flycheck-error-list-column-number)
                   (flycheck-error-list-make-cell
                    (symbol-name (flycheck-error-level error)) level-face)
+                  (flycheck-error-list-make-cell message)
                   (flycheck-error-list-make-cell
-                   (format "%s (%s)" message checker))))))
+                   (format "(%s)" checker)
+                   'flycheck-error-list-checker-name)))))
 
 (defun flycheck-error-list-entries ()
   "Create the entries for the error list."
@@ -3770,27 +3802,21 @@ source buffer, and on the same line as point.  Then recenter the
 error list to the highlighted error, unless PRESERVE-POS is
 non-nil."
   (when (get-buffer flycheck-error-list-buffer)
-    (let ((errors-at-line (flycheck-overlay-errors-in (line-beginning-position)
-                                                      (line-end-position)))
-          (errors-at-point (flycheck-overlay-errors-at (point))))
+    (let ((current-errors (flycheck-overlay-errors-in (line-beginning-position)
+                                                      (line-end-position))))
       (with-current-buffer flycheck-error-list-buffer
         (let ((old-overlays flycheck-error-list-highlight-overlays)
               (min-point (point-max))
               (max-point (point-min)))
           ;; Display the new overlays first, to avoid re-display flickering
           (setq flycheck-error-list-highlight-overlays nil)
-          (when errors-at-line
+          (when current-errors
             (let ((next-error-pos (point-min)))
               (while next-error-pos
                 (let* ((beg next-error-pos)
                        (end (flycheck-error-list-next-error-pos beg))
-                       (err (tabulated-list-get-id beg))
-                       (face (cond
-                              ((member err errors-at-point)
-                               'flycheck-error-list-highlight-at-point)
-                              ((member err errors-at-line)
-                               'flycheck-error-list-highlight))))
-                  (when face
+                       (err (tabulated-list-get-id beg)))
+                  (when (member err current-errors)
                     (setq min-point (min min-point beg)
                           max-point (max max-point beg))
                     (let ((ov (make-overlay beg
@@ -3800,11 +3826,11 @@ non-nil."
                                             (or end (point-max)))))
                       (push ov flycheck-error-list-highlight-overlays)
                       (overlay-put ov 'flycheck-error-highlight-overlay t)
-                      (overlay-put ov 'face face)))
+                      (overlay-put ov 'face 'flycheck-error-list-highlight)))
                   (setq next-error-pos end)))))
           ;; Delete the old overlays
           (mapc #'delete-overlay old-overlays)
-          (when (and (not preserve-pos) errors-at-line)
+          (when (and (not preserve-pos) current-errors)
             ;; Move point to the middle error
             (goto-char (+ min-point (/ (- max-point min-point) 2)))
             (beginning-of-line)

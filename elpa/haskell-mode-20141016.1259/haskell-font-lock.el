@@ -566,22 +566,26 @@ that should be commented under LaTeX-style literate scripts."
    ;; requires extra work for each and every non-Haddock comment, so I only
    ;; go through the more expensive check if we've already seen a Haddock
    ;; comment in the buffer.
+   ;;
+   ;; And then there are also haddock section headers that start with
+   ;; any number of stars:
+   ;;   -- * ...
    ((and haskell-font-lock-haddock
          (save-excursion
            (goto-char (nth 8 state))
-           (or (looking-at "\\(-- \\|{-\\)[ \\t]*[|^]")
+           (or (looking-at "[{-]-[ \\t]*[|^*]")
                (and haskell-font-lock-seen-haddock
-                    (looking-at "-- ")
+                    (looking-at "--")
                     (let ((doc nil)
                           pos)
                       (while (and (not doc)
                                   (setq pos (line-beginning-position))
                                   (forward-comment -1)
                                   (eq (line-beginning-position 2) pos)
-                                  (looking-at "--\\( [|^]\\)?"))
+                                  (looking-at "--\\([ \\t]*[|^*]\\)?"))
                         (setq doc (match-beginning 1)))
                       doc)))))
-    (set (make-local-variable 'haskell-font-lock-seen-haddock) t)
+    (setq haskell-font-lock-seen-haddock t)
     font-lock-doc-face)
    (t font-lock-comment-face)))
 
