@@ -790,7 +790,6 @@
 (autoload 'evilnc-copy-and-comment-lines "evil-nerd-commenter")
 
 (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
-(global-set-key (kbd "M-:") 'evilnc-comment-or-uncomment-to-the-line)
 (global-set-key (kbd "C-M-;") 'evilnc-copy-and-comment-lines)
 
 (defun evilnc-comment-or-uncomment-object ()
@@ -2817,6 +2816,7 @@ The current directory is assumed to be the project's root otherwise."
      (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
      (global-set-key (kbd "C-S-X C-S-B") 'icicle-buffer)
 
+     (global-set-key (kbd "M-:") 'helm-eval-expression)
      (global-set-key (kbd "C-c C-e") 'helm-eval-expression)
      (global-set-key (kbd "C-c C-s") 'helm-swoop)
 
