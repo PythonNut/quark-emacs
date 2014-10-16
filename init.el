@@ -141,10 +141,6 @@
 (setf interprogram-cut-function 'x-select-text)
 (setf interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
-(setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
-  mouse-wheel-progressive-speed nil
-  mouse-wheel-follow-mouse t)
-
 (global-set-key (kbd "M-DEL") 'evil-delete-backward-word)
 
 (defadvice kill-whole-line (around delete-empty-lines activate)
@@ -1279,14 +1275,26 @@ to replace the symbol under cursor"
 ;;; ================
 ;;; Smooth scrolling
 ;;; ================
-(setq smooth-scroll-margin 5)
 
-(setq scroll-margin 1
+(setq
+  mouse-wheel-scroll-amount '(3 ((shift) . 1))
+  redisplay-dont-pause t
+  mouse-wheel-progressive-speed nil
+  mouse-wheel-follow-mouse t
+  smooth-scroll-margin 5
+  scroll-margin 5
   scroll-conservatively 0
   scroll-up-aggressively 0.01
   scroll-down-aggressively 0.01)
-(setq-default scroll-up-aggressively 0.01
+
+(setq-default
+  scroll-up-aggressively 0.01
   scroll-down-aggressively 0.01)
+
+;; scroll-margin is reset at start for some reason
+(add-hook 'emacs-startup-hook
+  '(lambda ()
+     (setq scroll-margin 5)))
 
 ;; Package archives
 (setq package-archives
@@ -1494,7 +1502,8 @@ to replace the symbol under cursor"
 (defmacro ace-motion-collect (func)
   `(let ((points ())
           (count 0)
-          (smooth-scroll-window-margin 0)
+          (smooth-scroll-margin 0)
+          (scroll-margin 0)
           (win-start (window-start))
           (win-end (window-end)))
      (save-excursion
