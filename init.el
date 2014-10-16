@@ -2,6 +2,7 @@
   split-width-threshold 0
   split-height-threshold 0
   inhibit-startup-screen t
+  ring-bell-function 'ignore
   inhibit-startup-echo-area-message t
   inhibit-default-init 1
   ;; sentence-end-double-space nil
