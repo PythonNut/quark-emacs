@@ -3793,7 +3793,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 ;;; ==========
 ;;; Julia mode
 ;;; ==========
-(require 'ess-site)
+;; (require 'ess-site)
 (add-hook 'julia-mode 'inferior-ess-mode)
 
 (add-hook 'julia-mode-hook
