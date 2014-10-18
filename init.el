@@ -2822,7 +2822,6 @@ The current directory is assumed to be the project's root otherwise."
      (global-set-key (kbd "C-S-X C-S-B") 'icicle-buffer)
 
      (global-set-key (kbd "M-:") 'helm-eval-expression)
-     (global-set-key (kbd "C-c C-e") 'helm-eval-expression)
      (global-set-key (kbd "C-c C-s") 'helm-swoop)
 
      (setq helm-locate
