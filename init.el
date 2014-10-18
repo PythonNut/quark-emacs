@@ -88,9 +88,6 @@
 (epa-file-name-regexp-update)
 (setenv "GPG_AGENT_INFO" nil)
 
-(global-set-key (kbd "<mouse-6>") (kbd "<left>"))
-(global-set-key (kbd "<mouse-7>") (kbd "<right>"))
-
 (global-set-key (kbd "<f6>") 'multi-term)
 
 ;;; ===========
@@ -1813,6 +1810,9 @@ to replace the symbol under cursor"
 (put 'sfp-page-up 'isearch-scroll t)
 (put 'sfp-page-up 'CUA 'move)
 (global-set-key (kbd "<prior>") 'sfp-page-up)
+
+(global-set-key (kbd "<mouse-6>") 'sfp-page-down)
+(global-set-key (kbd "<mouse-7>") 'sfp-page-up)
 
 ;;; ====================================
 ;;; snippets - prebaked code just for me
