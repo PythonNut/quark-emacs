@@ -1811,8 +1811,8 @@ to replace the symbol under cursor"
 (put 'sfp-page-up 'CUA 'move)
 (global-set-key (kbd "<prior>") 'sfp-page-up)
 
-(global-set-key (kbd "<mouse-6>") 'sfp-page-down)
-(global-set-key (kbd "<mouse-7>") 'sfp-page-up)
+(global-set-key (kbd "<mouse-6>") 'evil-scroll-page-down)
+(global-set-key (kbd "<mouse-7>") 'evil-scroll-page-up)
 
 ;;; ====================================
 ;;; snippets - prebaked code just for me
