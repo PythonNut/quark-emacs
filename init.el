@@ -1681,6 +1681,14 @@ to replace the symbol under cursor"
 (setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode t)
 
+;; don't let the cursor go into minibuffer prompt
+(setq minibuffer-prompt-properties
+  '(read-only t
+     point-entered
+     minibuffer-avoid-prompt
+     face
+     minibuffer-prompt))
+
 (define-key evil-normal-state-map (kbd "SPC SPC") 'auto-smex)
 
 ;;; =======================================
