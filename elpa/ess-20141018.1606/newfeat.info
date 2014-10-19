@@ -1,0 +1,178 @@
+This is /tmp/ess6517Duy/ess-20141018.1606/newfeat.info, produced by
+makeinfo version 4.13 from
+/home/melpa/melpa/working/ess/doc/newfeat.texi.
+
+Changes / Selected Bug Fixes in 14.09:
+   * [Julia]: Executable is changed to `julia'.
+
+   * [Julia]: Completion and help system was adjusted to Julia v.0.3.0.
+     Julia v.0.2.x is no more supported.
+
+   * [R]: Running R with `gdb' debugger now works as expected
+
+   * : Inferior ESS buffers are now derived from `comint-mode'
+
+   * [R]: `ess-execute-screen-options' uses correct screen width in
+     terminal sessions
+
+   * : `ess-build-tags-for-directory' works when no TAGS file name was
+     provided
+
+   * : `ess-continued-statement-offset' is now respected everywhere
+     except inside of the `if' test condition.
+
+   * : New variable `ess-first-continued-statement-offset' for
+     indentation of the first line in multiline statements.
+
+   * R: Starting `,' in multiline statements indentation is now ignored
+     to achieve a more pleasant alignment.
+
+   * R: Improved behavior of `RET' in roxygen blocks.
+
+   * [R]: command cleaning with `C-u C-u C-y' was broken with lines
+     containing " + "
+
+   * [R]: fixed "empty watch window bug"
+
+   * [R]: don't ask for help location on ac-quick-help (request of
+     github #81)
+
+   * [R]: "importClassesFrom" and "importMethodsFrom" were added to the
+     list of two-parameter roxygen commands
+
+   * [R]: fix vignetes display and hyperlinks (were broken in 13.09-1)
+
+   * [Julia]: recognize function names ending with !
+
+   * [Julia]: fix indentation of "for" comprehension syntax within
+     brackets.
+
+   Changes / Selected Bug Fixes in 13.09-1:
+   * ess-remote and TRAMP: R support code is now downloaded in binary
+     form instead of being injected from local machine. The R code is
+     stored in `~/.config/ESSR/' directory on the remote machine
+
+   * TRAMP: PAGER environment variable is now correctly set to
+     `inferior-ess-pager'
+
+   * retrieval of help topics on remote machines is fixed
+
+   * org-babel: source references of R code executed from org files
+     correctly point to source references in original org files
+     (version 8.2.1 or higher of org-mode is required for this feature)
+
+   * `ess-execute' is now bound to `C-c C-e C-e' in `ess-extra-map'.
+
+   * completion works again in `ess-execute'
+
+   * [R]: `head' and `tail' methods were replaced by `htsummary' in
+     `ess-R-describe-object-at-point-commands'
+
+   * [roxygen]: evaluation commands now work in roxygen blocks.
+     Leading comments are automatically removed before the evaluation
+
+   * [transcript]: 'Clean Region' now works with multiline statements;
+     `ess-transcript-clean-region' etc. correctly treat  multiline
+     statements, i.e., no longer forgets the lines typically  preceded
+     by '+'
+
+   * [SAS]: Three features/fixes with special thanks to Matthew Fidler
+     https://github.com/emacs-ess/ESS/pulls/mlf176f2
+     (https://github.com/emacs-ess/ESS/pulls/mlf176f2). Turn on SAS log
+     mode when appropriate.  Indent comments and CARDS statement more
+     appropriately.
+
+   * [SAS]: `ess-sas-edit-keys-toggle' default returns to `nil'
+
+   * [R]: support for `prettify-symbols-mode': contribution from
+     Rudiger Sonderfeld `https://github.com/emacs-ess/ESS/pull/65'
+
+   * [SWV]: knitr now evaluates in the current frame
+
+   * [developer]: ess-developer doesn't kill open DESCRIPTION files
+     anymore
+
+   * [roxygen]: `ess-roxy-preview-HTML' is now on `C-c C-o C-w' and
+     `ess-roxy-preview-text' is now on `C-c C-o C-t'
+
+   * : installation with `make install' was simplified and should work
+     out of the box on most *nix systems
+
+   *  installation instructions simplified
+
+   * fixed font-lock bug introduced in 13.09 that was causing very slow
+     process output
+
+   Changes/New Features in 13.09:
+   * font-lock in process buffers doesn't "spill" over prompts.
+     Missing closing string delimiters should not cause wrong
+     fontification of the following command input.
+
+   * [julia]: full features M-TAB completion and auto-complete support,
+     which now works for modules, structures and data types.
+
+   * [julia]: a much better eldoc showing arguments of methods and data
+     type constructors
+
+   * ESS-developer:
+        - ESS-developer work-flow pattern has been streamlined:
+          ESS-developer is now automatically activated on per-file
+          basis if the   file is part of a developed package
+          `ess-developer-packages'. The   old behavior (activation on
+          per-process basis) is still available on   `M-x
+          ess-developer' in a process buffer.
+
+        - integration with `devtools' package. New command
+          `ess-developer-load-package' calls `load_all' on the package
+          containing current file. `ess-developer-add-package' now
+          offers IDO   menu completions with available loading methods,
+          currently   `library', and `load_all'. Loading command can be
+          customized   with `ess-developer-load-on-add-commands'.
+
+   * `TAB' now indents region if region is active (a contribution of
+     Matthew Fidler in pull #41)
+
+   * `M-x ess-version' now reports full loading path and recognizes git
+     and ELPA versions.
+
+   * warning and error keyword are now highlighted with
+     `font-lock-warning-face' as they should be, (for quite some time
+     these keywords have been hijacked by compilation mode
+     fontification).
+
+   * eldoc: Eldoc now recognizes multiple processes.  If current
+     process is busy, or current buffer is not associated with a
+     process, eldoc picks its completions from the first available free
+     process.
+
+   * org-babel: evaluation is now org-friendly
+
+   * help: new help buffers now try to reuse ess-help buffers.  This
+     behavior is controlled by `ess-help-reuse-window' custom variable.
+
+   * help: ?foo pops IDO menu on multiple help files (so far it worked
+     only for `C-c C-v')
+
+   * remote evaluation is considerably faster now on slow connections
+
+   * [R] tracebug R source references regular expressions are (mostly)
+     language agnostic.
+
+   * `ess-function-call-face' inherits from
+     `font-lock-function-name-face' rather than
+     `font-lock-builtin-face'.
+
+   * `ess-inject-source' now accepts `function-and-buffer' option.
+
+   * Documentation: The "New Features" section (and `NEWS') now
+     represent recent changes: within the last year or so.  All changes
+     can be found in the new news.html (news.html) (or `NEWS' and
+     `ONEWS').
+
+   * [R] `ess-rep-regexp' should no longer inf.loop (rarely!), and
+     hence `M-x ess-fix-miscellaneous' should neither.
+
+   Changes/New Features in 13.05:
+   * [gretl]: Support for `gretl' (both editing and sub-process
+     interaction). A contribution of Ahmadou Dicko.
+
