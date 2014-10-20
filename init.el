@@ -2157,6 +2157,7 @@ to replace the symbol under cursor"
      (define-key evil-emacs-state-map (kbd "C-]") 'nil)
 
      (sp-local-pair 'haskell-mode "'" nil :actions nil)
+     (sp-local-pair 'text-mode "'" nil :actions nil)
      (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
      (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
 
