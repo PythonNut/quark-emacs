@@ -1,4 +1,4 @@
-This is /tmp/flycheck26798SO-/flycheck-20141016.443/flycheck.info,
+This is /tmp/flycheck26318WOX/flycheck-20141020.724/flycheck.info,
 produced by makeinfo version 4.13 from
 /home/melpa/melpa/working/flycheck/doc/flycheck.texi.
 
@@ -4583,6 +4583,27 @@ See also
 
      See URL `https://github.com/koalaman/shellcheck/'(8).
 
+Options
+.......
+
+      -- User Option: flycheck-shellcheck-excluded-warnings
+               Variable properties: Automatically becomes buffer-local
+               when set.  This variable is safe as a file local
+               variable if its value satisfies the predicate *note
+               flycheck-string-list-p: 9b.
+
+          A list of excluded warnings for ShellCheck.
+
+          The value of this variable is a list of strings, where each
+          string is a warning code to be excluded from ShellCheck reports.
+          By default, no warnings are excluded.
+
+          This variable is an option for the syntax checker ``sh-shellcheck''
+
+          This user option was introduced, or its default value was
+          changed, in version 0.21 of the flycheck package.
+
+
 ---------- Footnotes ----------
 
 (1) http://www.gnu.org/software/bash/
@@ -4759,7 +4780,7 @@ disabled syntax checker
 
 enabled syntax checker
      A *note registered syntax checker: 61. which is not a *note
-     disabled syntax checker: 154.  
+     disabled syntax checker: 155.  
 
 suitable syntax checker
      A *note syntax checker: 64. which can be used to check the current
@@ -4826,7 +4847,7 @@ Flycheck 0.20 is out, with new syntax checkers, many new options,
 improvements and bug fixes, and some important breaking changes.
 
 This announcement covers the most important changes.  For details,
-please refer to the *note Changelog: 15a.
+please refer to the *note Changelog: 15b.
 
 * Menu:
 
@@ -5456,7 +5477,7 @@ checkers, a brand-new error list, and the ability to override the
 executables of syntax checkers.
 
 Let's go through the list of important changes.  For a detailed list,
-please read the *note Changelog: 15a.
+please read the *note Changelog: 15b.
 
 * Menu:
 
@@ -5650,7 +5671,7 @@ the modern syntax-checking extension for Emacs.
 
 It is three months since the last release, so this release brings quite
 a lot of changes.  For a complete list of all changes, please read the
-complete list of *note Changelog: 15a.  This article will just cover
+complete list of *note Changelog: 15b.  This article will just cover
 the most important changes.
 
 * Menu:
@@ -5671,7 +5692,7 @@ File: flycheck.info,  Node: Breaking changes<6>,  Next: New syntax checkers,  Up
 ........................
 
 This release introduces three breaking changes.  Two of these are
-related to the *note new-error-list: 199.:
+related to the *note new-error-list: 19a.:
 
      Warning: `flycheck-display-errors-in-list' is gone.  If you had
      previously set *note flycheck-display-errors-function: 28. to this
@@ -5944,6 +5965,9 @@ File: flycheck.info,  Node: master in development,  Next: 0 20 Aug 12 2014,  Up:
           appearance of the syntax checker name in the error list
           [GH-500]
 
+        - Add `flycheck-shellcheck-excluded-warnings' to exclude
+          warnings from ShellCheck reports [GH-499]
+
    - Improvements:
 
         - Improve GCC syntax checking by expanding templates [GH-459]
@@ -5953,6 +5977,8 @@ File: flycheck.info,  Node: master in development,  Next: 0 20 Aug 12 2014,  Up:
         - Remove Projectile-based config file search [GH-461]
 
         - Do not change point when navigating in the error list [GH-487]
+
+        - ShellCheck warnings now include the corresponding warning code
 
    - Bug fixes:
 
@@ -7125,7 +7151,7 @@ provides examples for common use cases.
 
 If you define a new syntax checker, _please_ contribute it to Flycheck
 to make it available to other users, too.  See *note Contributing
-syntax checkers: 1c3. for more information.
+syntax checkers: 1c4. for more information.
 
 * Menu:
 
@@ -7181,7 +7207,7 @@ You define new syntax checkers with *note flycheck-define-checker: 19.:
 
           Each ARG is an argument to the executable, either as string,
           or as special symbol or form for
-          *note `flycheck-substitute-argument': 1c5, which see.
+          *note `flycheck-substitute-argument': 1c6, which see.
 
      `:error-patterns ((LEVEL SEXP ...) ...)'
           An unquoted list of error patterns to parse the output of
@@ -7193,7 +7219,7 @@ You define new syntax checkers with *note flycheck-define-checker: 19.:
           extract line, column, file name and error message.
 
           See ``rx'' for general information about RX, and
-          *note `flycheck-rx-to-string': 1c6. for special RX forms provided by
+          *note `flycheck-rx-to-string': 1c7. for special RX forms provided by
           Flycheck.
 
           All patterns are applied in the order of declaration to the
@@ -7349,11 +7375,11 @@ File: flycheck.info,  Node: Error parsers,  Next: Extending syntax checkers<2>, 
 
 Syntax checkers may use more sophisticated error parsing by given the
 `:error-parser' argument to *note flycheck-define-checker: 19.  See
-*note Builtin error parsers: 1cf. for a list of builtin parsers.
+*note Builtin error parsers: 1d0. for a list of builtin parsers.
 
 You may also define your own error parsers.  An error parser is any
 function that takes the following three arguments and returns a list of
-*note flycheck-error: 1d0. objects (see *note Error API: 78. for more
+*note flycheck-error: 1d1. objects (see *note Error API: 78. for more
 information):
 
 `output'
@@ -7366,7 +7392,7 @@ information):
      A buffer object referring to the buffer that was syntax-checked.
 
 Flycheck provides some utility functions to implement your own error
-parsers.  See *note Error parser API: 1d1. for details.
+parsers.  See *note Error parser API: 1d2. for details.
 
 
 File: flycheck.info,  Node: Extending syntax checkers<2>,  Next: Examples,  Prev: Error parsers,  Up: Extending Flycheck
@@ -7444,7 +7470,7 @@ directory and containing the contents of the buffer to check.
 Next we specify how to parse the output of the syntax checker.  PHP
 CodeSniffer provides an option to output errors in an XML format
 similar to the Java tool Checkstyle, so we use the built-in _error
-parser_ *note flycheck-parse-checkstyle: 1d8. to parse the output.
+parser_ *note flycheck-parse-checkstyle: 1d9. to parse the output.
 
 Then we enable the syntax checker in PHP editing modes.
 
@@ -7577,7 +7603,7 @@ omitted from the command line.
 Some Syntax checkers can also be configured using options passed on the
 command line.  Flycheck supports this case, too.  We will use this
 facility to extend the PHP CodeSniffer syntax checker from the *note
-Basic syntax checkers: 1d7. section with support for coding standards:
+Basic syntax checkers: 1d8. section with support for coding standards:
 
     (flycheck-def-option-var flycheck-phpcs-standard nil phpcs
       "The coding standard for PHP CodeSniffer."
@@ -7597,7 +7623,7 @@ The syntax checker is pretty much the same as before, except that a new
 element was added to `:command'.  This element passes the value of the
 new option variable *note flycheck-phpcs-standard: 10c. to the syntax
 checker.  This variable is declared with the special macro *note
-flycheck-def-option-var: 1c8. at the beginning.
+flycheck-def-option-var: 1c9. at the beginning.
 
 
 File: flycheck.info,  Node: Chaining syntax checkers,  Prev: Configuration files for syntax checkers,  Up: Examples
@@ -7720,7 +7746,7 @@ File: flycheck.info,  Node: Error API,  Next: Error Analysis,  Prev: Status API,
 ==============
 
 Flycheck errors are represented by the CL structure *note
-flycheck-error: 1d0.  See *note Structures: (cl)Structures. for more
+flycheck-error: 1d1.  See *note Structures: (cl)Structures. for more
 information about CL structures.
 
  -- CL Struct: flycheck-error
@@ -7758,19 +7784,19 @@ information about CL structures.
           level defined with *note flycheck-define-error-level: 25.
 
      There are two constructors to create new *note flycheck-error:
-     1d0. objects:
+     1d1. objects:
 
       -- Function: flycheck-error-new-at line column &optional level
                message &key checker filename buffer
           Create a new Flycheck error at the given LINE and COLUMN.
 
-          LINE and COLUMN refer to the *note line: 1e5. and *note
-          column: 1e6. of the new error.  The optional LEVEL and
-          MESSAGE arguments fill the *note level: 1e8. and
+          LINE and COLUMN refer to the *note line: 1e6. and *note
+          column: 1e7. of the new error.  The optional LEVEL and
+          MESSAGE arguments fill the *note level: 1e9. and
           cl-slot:`message' slots respectively.
 
           CHECKER, FILENAME and BUFFER are keyword arguments, for *note
-          checker: 1e3, *note filename: 1e4. and *note buffer: 1e2.
+          checker: 1e4, *note filename: 1e5. and *note buffer: 1e3.
           respectively.  BUFFER defaults to the current buffer, the
           other two default to `nil'.
 
@@ -7780,12 +7806,12 @@ information about CL structures.
                arguments.
 
       -- Function: flycheck-error-new &rest attributes
-          Create a new *note flycheck-error: 1d0. with the given
+          Create a new *note flycheck-error: 1d1. with the given
           ATTRIBUTES.
 
           ATTRIBUTES is a property list, where each property specifies
           the value for the corresponding slot of *note flycheck-error:
-          1d0, for instance:
+          1d1, for instance:
 
               (flycheck-error-new :line 10 :column 5 :message "Foo" :level 'warning)
 
@@ -7847,7 +7873,7 @@ information about CL structures.
       -- Function: flycheck-error-level-< err1 err2
           Determine whether ERR1 goes before ERR2 by error level.
 
-          Like *note `flycheck-error-<': 1f1, but compares by error level severity
+          Like *note `flycheck-error-<': 1f2, but compares by error level severity
           first.  Levels of the same severity are compared by name.
 
 
@@ -7998,7 +8024,7 @@ File: flycheck.info,  Node: Syntax checker API,  Next: Builtin option filters,  
           as primary input to a checker, unless absolutely necessary.
 
           When using this symbol as primary input to the syntax
-          checker, add *note `flycheck-buffer-saved-p': 201. to the ``:predicate''.
+          checker, add *note `flycheck-buffer-saved-p': 202. to the ``:predicate''.
 
      ``temporary-directory''
           Create a unique temporary directory and return its path.
@@ -8021,7 +8047,7 @@ File: flycheck.info,  Node: Syntax checker API,  Next: Builtin option filters,  
 
      `(config-file OPTION VARIABLE [PREPEND-FN])'
           Search the configuration file bound to VARIABLE with
-          *note `flycheck-locate-config-file': 202. and return a list of arguments
+          *note `flycheck-locate-config-file': 203. and return a list of arguments
           that pass this configuration file to the syntax checker, or
           nil if the configuration file was not found.
 
@@ -8099,7 +8125,7 @@ File: flycheck.info,  Node: Syntax checker API,  Next: Builtin option filters,  
           the number, the more severe is this level compared to other
           levels.  Defaults to 0.
 
-          The severity is used by *note `flycheck-error-level-<': 1f2. to
+          The severity is used by *note `flycheck-error-level-<': 1f3. to
           determine the ordering of errors according to their levels.
 
      `:overlay-category CATEGORY'
@@ -8447,7 +8473,7 @@ Then install the syntax checkers that you'd like to test:
     $ cabal install hlint shellcheck
 
      Note: If you'd like to keep your environment clean, use the *note
-     Virtual test environment: 21a. instead.
+     Virtual test environment: 21b. instead.
 
 Run the entire test suite:
 
@@ -8525,7 +8551,7 @@ After the VM is started, you can connect to it:
     $ vagrant ssh
 
 This will give you a bash prompt within the VM, on which you can run
-the tests as explained in *note Test running: 218.
+the tests as explained in *note Test running: 219.
 
 To switch between Emacs versions, pass `EMACS' to `make test':
 
@@ -8570,7 +8596,7 @@ File: flycheck.info,  Node: Travis CI,  Prev: Virtual test environment,  Up: Tes
 12.4 Travis CI
 ==============
 
-The entire test suite continuously runs on *note Travis CI: 21d. after
+The entire test suite continuously runs on *note Travis CI: 21e. after
 every push, with the latest Emacs release and a nightly Emacs snapshot.
 
 Travis CI is configured from `.travis.yml' in the top-level source
@@ -8579,7 +8605,7 @@ directory, and uses mostly the same playbooks for provisioning.
      Note: Travis CI is the *reference environment* for Flycheck's test
      suite.  All tests *must pass* on Travis CI.
 
-     In case Travis CI diverges from the *note VM: 21a, Travis CI is
+     In case Travis CI diverges from the *note VM: 21b, Travis CI is
      authoritative.
 
 
@@ -8650,7 +8676,7 @@ File: flycheck.info,  Node: Building HTML and Texinfo,  Next: Verifying referenc
 ==============================
 
 First, switch to the virtual environment you created in the *note Build
-environment setup: 220, and make sure that the requirements are up to
+environment setup: 221, and make sure that the requirements are up to
 date:
 
     $ source ~/.virtualenvs/cask/bin/activate
@@ -8716,7 +8742,7 @@ Flycheck.
 
 When making changes to the documentation, you need to rebuild the
 Texinfo version with, by following the *note instructions to build the
-documentation: 222.
+documentation: 223.
 
 ---------- Footnotes ----------
 

@@ -1,4 +1,4 @@
-This is /tmp/flycheck26798SO-/flycheck-20141016.443/flycheck.info,
+This is /tmp/flycheck26318WOX/flycheck-20141020.724/flycheck.info,
 produced by makeinfo version 4.13 from
 /home/melpa/melpa/working/flycheck/doc/flycheck.texi.
 
@@ -731,6 +731,8 @@ Index
                                                               (line  72)
 * flycheck-set-checker-executable; Emacs Lisp command: Syntax checker executables.
                                                               (line  22)
+* flycheck-shellcheck-excluded-warnings; Emacs Lisp user option: Shell script languages.
+                                                              (line  78)
 * flycheck-sphinx-warn-on-missing-references; Emacs Lisp user option: ReStructuredText.
                                                               (line  19)
 * flycheck-standard-error-navigation; Emacs Lisp user option: Error navigation.

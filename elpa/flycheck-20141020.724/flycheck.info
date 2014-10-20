@@ -1,4 +1,4 @@
-This is /tmp/flycheck26798SO-/flycheck-20141016.443/flycheck.info,
+This is /tmp/flycheck26318WOX/flycheck-20141020.724/flycheck.info,
 produced by makeinfo version 4.13 from
 /home/melpa/melpa/working/flycheck/doc/flycheck.texi.
 
@@ -28,7 +28,7 @@ Copyright (C) 2014, Sebastian Wiesner
 
 Indirect:
 flycheck.info-1: 1113
-flycheck.info-2: 320100
+flycheck.info-2: 321073
 
 Tag Table:
 (Indirect)
@@ -868,731 +868,733 @@ Ref: guide/languages el flycheck-checker sh-zsh148055
 Ref: 13f148055
 Ref: guide/languages el flycheck-checker sh-shellcheck148463
 Ref: 13c148463
-Ref: Shell script languages-Footnote-1148663
-Ref: Shell script languages-Footnote-2148702
-Ref: Shell script languages-Footnote-3148749
-Ref: Shell script languages-Footnote-4148827
-Ref: Shell script languages-Footnote-5148866
-Ref: Shell script languages-Footnote-6148958
-Ref: Shell script languages-Footnote-7149036
-Ref: Shell script languages-Footnote-8149061
-Node: Slim149106
-Ref: guide/languages gnu-bash-posix-mode149217
-Ref: 140149217
-Ref: guide/languages slim149217
-Ref: 141149217
-Ref: guide/languages el flycheck-checker slim149238
-Ref: 142149238
-Ref: Slim-Footnote-1149399
-Node: TeX/LaTeX149425
-Ref: guide/languages tex-latex149521
-Ref: 143149521
-Ref: guide/languages el flycheck-checker tex-chktex149594
-Ref: 144149594
-Ref: guide/languages el variable flycheck-chktexrc149784
-Ref: 145149784
-Ref: guide/languages el flycheck-checker tex-lacheck150081
-Ref: 146150081
-Ref: TeX/LaTeX-Footnote-1150261
-Ref: TeX/LaTeX-Footnote-2150296
-Ref: TeX/LaTeX-Footnote-3150329
-Ref: TeX/LaTeX-Footnote-4150364
-Node: Texinfo150401
-Ref: guide/languages tex-live150500
-Ref: 147150500
-Ref: guide/languages texinfo150500
-Ref: 148150500
-Ref: guide/languages el flycheck-checker texinfo150527
-Ref: 149150527
-Ref: Texinfo-Footnote-1150701
-Node: Verilog150743
-Ref: guide/languages verilog150836
-Ref: 14a150836
-Ref: guide/languages el flycheck-checker verilog-verilator150863
-Ref: 14b150863
-Ref: Verilog-Footnote-1151076
-Node: XML151120
-Ref: guide/languages xml151210
-Ref: 14c151210
-Ref: guide/languages el flycheck-checker xml-xmlstarlet151229
-Ref: 14d151229
-Ref: guide/languages el flycheck-checker xml-xmllint151396
-Ref: 14e151396
-Ref: XML-Footnote-1151619
-Ref: XML-Footnote-2151656
-Node: YAML151685
-Ref: guide/languages yaml151759
-Ref: 14f151759
-Ref: guide/languages el flycheck-checker yaml-jsyaml151780
-Ref: 150151780
-Ref: guide/languages el flycheck-checker yaml-ruby151918
-Ref: 151151918
-Ref: YAML-Footnote-1152210
-Ref: YAML-Footnote-2152249
-Node: Glossary152318
-Ref: guide/glossary glossary152422
-Ref: 152152422
-Ref: guide/glossary doc152422
-Ref: 153152422
-Ref: guide/glossary term-syntax-checker152445
-Ref: 64152445
-Ref: guide/glossary term-registered-syntax-checker152555
-Ref: 61152555
-Ref: guide/glossary term-disabled-syntax-checker152712
-Ref: 154152712
-Ref: guide/glossary term-enabled-syntax-checker152892
-Ref: 63152892
-Ref: guide/glossary term-suitable-syntax-checker153018
-Ref: 50153018
-Ref: guide/glossary term-chaining153316
-Ref: 57153316
-Node: Flycheck releases153899
-Ref: guide/releases/index flycheck-releases154002
-Ref: 155154002
-Ref: guide/releases/index doc154002
-Ref: 156154002
-Node: Release announcements154185
-Ref: guide/releases/index release-announcements154280
-Ref: 157154280
-Node: Flycheck 0 20154535
-Ref: guide/releases/flycheck-0 20 flycheck-0-20154630
-Ref: 158154630
-Ref: guide/releases/flycheck-0 20 doc154630
-Ref: 159154630
-Node: Breaking changes155126
-Ref: guide/releases/flycheck-0 20 breaking-changes155219
-Ref: 15b155219
-Node: Language support156060
-Ref: guide/releases/flycheck-0 20 language-support156185
-Ref: 15c156185
-Node: C/C++<2>156471
-Ref: guide/releases/flycheck-0 20 c-c156550
-Ref: 15d156550
-Node: Rust<2>157064
-Ref: guide/releases/flycheck-0 20 rust157160
-Ref: 15e157160
-Node: Scala<2>157548
-Ref: guide/releases/flycheck-0 20 scala157645
-Ref: 15f157645
-Ref: Scala<2>-Footnote-1157778
-Node: Sass/SCSS157810
-Ref: guide/releases/flycheck-0 20 scalastyle157913
-Ref: 160157913
-Ref: guide/releases/flycheck-0 20 sass-scss157913
-Ref: 161157913
-Node: Javascript<2>158084
-Ref: guide/releases/flycheck-0 20 javascript158186
-Ref: 162158186
-Ref: Javascript<2>-Footnote-1158460
-Ref: Javascript<2>-Footnote-2158484
-Node: Ruby<2>158525
-Ref: guide/releases/flycheck-0 20 ruby158609
-Ref: 163158609
-Ref: guide/releases/flycheck-0 20 configuring-eslint158609
-Ref: 164158609
-Node: Error list improvements158774
-Ref: guide/releases/flycheck-0 20 error-list-improvements158910
-Ref: 165158910
-Node: User interface improvements159557
-Ref: guide/releases/flycheck-0 20 user-interface-improvements159703
-Ref: 166159703
-Node: Miscellaneous new features160519
-Ref: guide/releases/flycheck-0 20 miscellaneous-new-features160661
-Ref: 167160661
-Node: Miscellaneous fixes160992
-Ref: guide/releases/flycheck-0 20 miscellaneous-fixes161113
-Ref: 168161113
-Node: Get it161327
-Ref: guide/releases/flycheck-0 20 get-it161413
-Ref: 169161413
-Node: Flycheck 0 19161577
-Ref: guide/releases/flycheck-0 19 flycheck-0-19161694
-Ref: 16a161694
-Ref: guide/releases/flycheck-0 19 doc161694
-Ref: 16b161694
-Node: Breaking changes<2>161962
-Ref: guide/releases/flycheck-0 19 breaking-changes162051
-Ref: 16c162051
-Node: Languages162235
-Ref: guide/releases/flycheck-0 19 languages162345
-Ref: 16d162345
-Node: C/C++<3>162493
-Ref: guide/releases/flycheck-0 19 c-c162571
-Ref: 16e162571
-Node: Emacs Lisp<2>162908
-Ref: guide/releases/flycheck-0 19 emacs-lisp163000
-Ref: 16f163000
-Node: Go<2>163158
-Ref: guide/releases/flycheck-0 19 go163252
-Ref: 170163252
-Node: Haskell<2>163480
-Ref: guide/releases/flycheck-0 19 haskell163568
-Ref: 171163568
-Node: Rust<3>163731
-Ref: guide/releases/flycheck-0 19 rust163805
-Ref: 172163805
-Node: New features163947
-Ref: guide/releases/flycheck-0 19 new-features164047
-Ref: 173164047
-Node: Bug fixes165142
-Ref: guide/releases/flycheck-0 19 bug-fixes165245
-Ref: 174165245
-Node: Misc changes165504
-Ref: guide/releases/flycheck-0 19 misc-changes165604
-Ref: 175165604
-Ref: Misc changes-Footnote-1165812
-Node: Get it<2>165846
-Ref: guide/releases/flycheck-0 19 get-it165928
-Ref: 176165928
-Ref: guide/releases/flycheck-0 19 github-profile165928
-Ref: 177165928
-Node: Flycheck 0 18165990
-Ref: guide/releases/flycheck-0 18 doc166107
-Ref: 178166107
-Ref: guide/releases/flycheck-0 18 flycheck-0-18166107
-Ref: 179166107
-Node: Breaking changes<3>166516
-Ref: guide/releases/flycheck-0 18 breaking-changes166614
-Ref: 17a166614
-Node: Syntax checkers<2>167324
-Ref: guide/releases/flycheck-0 18 syntax-checkers167443
-Ref: 17b167443
-Ref: Syntax checkers<2>-Footnote-1168598
-Ref: Syntax checkers<2>-Footnote-2168634
-Ref: Syntax checkers<2>-Footnote-3168677
-Node: Bug fixes<2>168721
-Ref: guide/releases/flycheck-0 18 shellcheck168830
-Ref: 17c168830
-Ref: guide/releases/flycheck-0 18 bug-fixes168830
-Ref: 17d168830
-Node: Get it<3>169495
-Ref: guide/releases/flycheck-0 18 get-it169577
-Ref: 17e169577
-Node: Flycheck 0 17169637
-Ref: guide/releases/flycheck-0 17 flycheck-0-17169754
-Ref: 17f169754
-Ref: guide/releases/flycheck-0 17 doc169754
-Ref: 180169754
-Node: Breaking changes<4>170131
-Ref: guide/releases/flycheck-0 17 breaking-changes170228
-Ref: 181170228
-Node: New online manual170834
-Ref: guide/releases/flycheck-0 17 new-online-manual170958
-Ref: 182170958
-Ref: New online manual-Footnote-1172823
-Ref: New online manual-Footnote-2172850
-Ref: New online manual-Footnote-3172892
-Ref: New online manual-Footnote-4172938
-Ref: New online manual-Footnote-5172980
-Node: Syntax checkers<3>173007
-Ref: guide/releases/flycheck-0 17 syntax-checkers173137
-Ref: 183173137
-Ref: guide/releases/flycheck-0 17 llvm-documentation173137
-Ref: 184173137
-Node: Extending syntax checkers173715
-Ref: guide/releases/flycheck-0 17 extending-syntax-checkers173860
-Ref: 185173860
-Node: Other bug fixes and improvements173929
-Ref: guide/releases/flycheck-0 17 other-bug-fixes-and-improvements174047
-Ref: 186174047
-Node: Flycheck 0 16174664
-Ref: guide/releases/flycheck-0 16 flycheck-0-16174781
-Ref: 187174781
-Ref: guide/releases/flycheck-0 16 doc174781
-Ref: 188174781
-Node: Breaking changes<5>175391
-Ref: guide/releases/flycheck-0 16 breaking-changes175489
-Ref: 189175489
-Ref: Breaking changes<5>-Footnote-1175769
-Node: Syntax checkers<4>175821
-Ref: guide/releases/flycheck-0 16 syntax-checkers175943
-Ref: 18a175943
-Ref: guide/releases/flycheck-0 16 flycheck-hdevtools175943
-Ref: 18b175943
-Node: New languages and checkers176090
-Ref: guide/releases/flycheck-0 16 new-languages-and-checkers176204
-Ref: 18c176204
-Ref: New languages and checkers-Footnote-1176577
-Ref: New languages and checkers-Footnote-2176603
-Ref: New languages and checkers-Footnote-3176629
-Ref: New languages and checkers-Footnote-4176658
-Ref: New languages and checkers-Footnote-5176697
-Ref: New languages and checkers-Footnote-6176727
-Ref: New languages and checkers-Footnote-7176756
-Ref: New languages and checkers-Footnote-8176798
-Ref: New languages and checkers-Footnote-9176841
-Ref: New languages and checkers-Footnote-10176879
-Ref: New languages and checkers-Footnote-11176928
-Node: Better Haskell support176973
-Ref: guide/releases/flycheck-0 16 js-yaml177121
-Ref: 18d177121
-Ref: guide/releases/flycheck-0 16 better-haskell-support177121
-Ref: 18e177121
-Ref: Better Haskell support-Footnote-1177723
-Node: Miscellaneous new options177773
-Ref: guide/releases/flycheck-0 16 miscellaneous-new-options177886
-Ref: 18f177886
-Ref: guide/releases/flycheck-0 16 flycheck-haskell177886
-Ref: 190177886
-Node: New features<2>178333
-Ref: guide/releases/flycheck-0 16 new-features178455
-Ref: 191178455
-Node: Syntax checker executables<2>178604
-Ref: guide/releases/flycheck-0 16 syntax-checker-executables178726
-Ref: 192178726
-Node: Disable syntax checkers easily178911
-Ref: guide/releases/flycheck-0 16 disable-syntax-checkers-easily179033
-Ref: 193179033
-Node: Improved error list179908
-Ref: guide/releases/flycheck-0 16 improved-error-list180021
-Ref: 194180021
-Node: Get it<4>180567
-Ref: guide/releases/flycheck-0 16 get-it180656
-Ref: 195180656
-Node: Flycheck 0 15180718
-Ref: guide/releases/flycheck-0 15 flycheck-0-15180813
-Ref: 196180813
-Ref: guide/releases/flycheck-0 15 doc180813
-Ref: 197180813
-Node: Breaking changes<6>181457
-Ref: guide/releases/flycheck-0 15 breaking-changes181556
-Ref: 198181556
-Node: New syntax checkers182378
-Ref: guide/releases/flycheck-0 15 new-syntax-checkers182500
-Ref: 19a182500
-Ref: New syntax checkers-Footnote-1183031
-Ref: New syntax checkers-Footnote-2183057
-Ref: New syntax checkers-Footnote-3183104
-Node: New error list183127
-Ref: guide/releases/flycheck-0 15 new-error-list183243
-Ref: 199183243
-Ref: guide/releases/flycheck-0 15 id1183243
-Ref: 19b183243
-Node: C/C++ support183999
-Ref: guide/releases/flycheck-0 15 c-c-support184119
-Ref: 19c184119
-Node: New info level messages185409
-Ref: guide/releases/flycheck-0 15 new-info-level-messages185534
-Ref: 19d185534
-Ref: New info level messages-Footnote-1186714
-Ref: New info level messages-Footnote-2186762
-Node: Custom error levels186808
-Ref: guide/releases/flycheck-0 15 custom-error-levels186938
-Ref: 19e186938
-Ref: guide/releases/flycheck-0 15 id2186938
-Ref: 19f186938
-Node: Other improvements187637
-Ref: guide/releases/flycheck-0 15 other-improvements187753
-Ref: 1a0187753
-Node: Get it<5>188716
-Ref: guide/releases/flycheck-0 15 get-it188804
-Ref: 1a1188804
-Node: Changelog188864
-Ref: guide/releases/index id1188959
-Ref: 1a2188959
-Ref: guide/releases/index changelog188959
-Ref: 15a188959
-Node: master in development189977
-Ref: guide/releases/index master-in-development190071
-Ref: 1a3190071
-Node: 0 20 Aug 12 2014192031
-Ref: guide/releases/index aug-12-2014192150
-Ref: 1a4192150
-Node: 0 19 Jun 12 2014195430
-Ref: guide/releases/index jun-12-2014195544
-Ref: 1a5195544
-Node: 0 18 Mar 24 2014197276
-Ref: guide/releases/index mar-24-2014197389
-Ref: 1a6197389
-Node: 0 17 Feb 1 2014199212
-Ref: guide/releases/index feb-1-2014199325
-Ref: 1a7199325
-Ref: 0 17 Feb 1 2014-Footnote-1200937
-Node: 0 16 Jan 11 2014200964
-Ref: guide/releases/index sphinx201077
-Ref: 1a8201077
-Ref: guide/releases/index jan-11-2014201077
-Ref: 1a9201077
-Ref: 0 16 Jan 11 2014-Footnote-1203707
-Node: 0 15 Nov 15 2013203759
-Ref: guide/releases/index nov-15-2013203875
-Ref: 1aa203875
-Ref: guide/releases/index flycheck-hdevtools203875
-Ref: 1ab203875
-Ref: 0 15 Nov 15 2013-Footnote-1207816
-Node: 0 14 1 Aug 16 2013207854
-Ref: guide/releases/index grizzl207970
-Ref: 1ac207970
-Ref: guide/releases/index aug-16-2013207970
-Ref: 1ad207970
-Node: 0 14 Aug 15 2013208089
-Ref: guide/releases/index aug-15-2013208205
-Ref: 1ae208205
-Node: 0 13 Jun 28 2013210900
-Ref: guide/releases/index jun-28-2013211014
-Ref: 1af211014
-Node: 0 12 May 18 2013213501
-Ref: guide/releases/index may-18-2013213615
-Ref: 1b0213615
-Node: 0 11 May 01 2013214376
-Ref: guide/releases/index may-01-2013214490
-Ref: 1b1214490
-Ref: 0 11 May 01 2013-Footnote-1215417
-Node: 0 10 Apr 21 2013215460
-Ref: guide/releases/index apr-21-2013215573
-Ref: 1b2215573
-Ref: guide/releases/index projectile215573
-Ref: 1b3215573
-Ref: 0 10 Apr 21 2013-Footnote-1217157
-Node: 0 9 Apr 13 2013217212
-Ref: guide/releases/index apr-13-2013217323
-Ref: 1b4217323
-Ref: guide/releases/index google-this217323
-Ref: 1b5217323
-Node: 0 8 Apr 9 2013217657
-Ref: guide/releases/index apr-9-2013217769
-Ref: 1b6217769
-Node: 0 7 1 Feb 23 2013218805
-Ref: guide/releases/index feb-23-2013218917
-Ref: 1b7218917
-Node: 0 7 Feb 14 2013219482
-Ref: guide/releases/index feb-14-2013219597
-Ref: 1b8219597
-Node: 0 6 1 Jan 30 2013220304
-Ref: guide/releases/index jan-30-2013220417
-Ref: 1b9220417
-Node: 0 6 Jan 29 2013220505
-Ref: guide/releases/index jan-29-2013220618
-Ref: 1ba220618
-Node: 0 5 Dec 28 2012222487
-Ref: guide/releases/index dec-28-2012222598
-Ref: 1bb222598
-Node: 0 4 Nov 21 2012223346
-Ref: guide/releases/index nov-21-2012223457
-Ref: 1bc223457
-Ref: guide/releases/index flymake-cursor223457
-Ref: 1bd223457
-Node: 0 3 Nov 21 2012223852
-Ref: guide/releases/index id2223963
-Ref: 1be223963
-Node: 0 2 Oct 25 2012224098
-Ref: guide/releases/index oct-25-2012224209
-Ref: 1bf224209
-Node: 0 1 Oct 11 2012224378
-Ref: guide/releases/index oct-11-2012224465
-Ref: 1c0224465
-Node: Extending Flycheck224708
-Ref: dev/extending doc224815
-Ref: 1c1224815
-Ref: dev/extending extending-flycheck224815
-Ref: 1c2224815
-Node: Defining new syntax checkers225353
-Ref: dev/extending defining-new-syntax-checkers225478
-Ref: a225478
-Ref: dev/extending id1225478
-Ref: 1c4225478
-Ref: dev/extending el function flycheck-define-checker225618
-Ref: 19225618
-Ref: dev/extending el function flycheck-def-config-file-var231092
-Ref: 1c7231092
-Ref: dev/extending el function flycheck-def-option-var231708
-Ref: 1c8231708
-Node: Registering new syntax checkers232333
-Ref: dev/extending registering-new-syntax-checkers232482
-Ref: 1c9232482
-Ref: dev/extending id2232482
-Ref: 1ca232482
-Node: Error levels<2>233482
-Ref: dev/extending id3233616
-Ref: 1cb233616
-Ref: dev/extending error-levels233616
-Ref: 1cc233616
-Node: Error parsers233920
-Ref: dev/extending error-parsers234051
-Ref: 1cd234051
-Ref: dev/extending id4234051
-Ref: 1ce234051
-Node: Extending syntax checkers<2>234854
-Ref: dev/extending id5234978
-Ref: 1d2234978
-Ref: dev/extending extending-syntax-checkers234978
-Ref: 1d3234978
-Ref: dev/extending el function flycheck-add-next-checker235096
-Ref: 1d4235096
-Node: Examples235834
-Ref: dev/extending examples235936
-Ref: 1d5235936
-Node: Basic syntax checkers236108
-Ref: dev/extending id6236216
-Ref: 1d6236216
-Ref: dev/extending basic-syntax-checkers236216
-Ref: 1d7236216
-Node: Syntax checkers with predicates239422
-Ref: dev/extending syntax-checkers-with-predicates239578
-Ref: 1d9239578
-Node: Configuration files for syntax checkers241553
-Ref: dev/extending configuration-files-for-syntax-checkers241712
-Ref: 1da241712
-Node: Chaining syntax checkers244266
-Ref: dev/extending chaining-syntax-checkers244385
-Ref: 1db244385
-Node: Flycheck API245739
-Ref: dev/api doc245852
-Ref: 1dc245852
-Ref: dev/api flycheck-api245852
-Ref: 1dd245852
-Node: Status API246364
-Ref: dev/api id1246443
-Ref: 1de246443
-Ref: dev/api status-api246443
-Ref: 1df246443
-Ref: dev/api el function flycheck-report-status246476
-Ref: 5a246476
-Ref: dev/api el function flycheck-report-error247321
-Ref: 1e0247321
-Ref: dev/api el variable flycheck-last-status-change247561
-Ref: 94247561
-Ref: dev/api el function flycheck-mode-line-status-text247742
-Ref: 93247742
-Node: Error API247955
-Ref: dev/api error-api248057
-Ref: 78248057
-Ref: dev/api id2248057
-Ref: 1e1248057
-Ref: dev/api el struct flycheck-error248249
-Ref: 1d0248249
-Ref: dev/api el function flycheck-error-buffer248368
-Ref: 1e2248368
-Ref: dev/api el function flycheck-error-checker248665
-Ref: 1e3248665
-Ref: dev/api el function flycheck-error-filename248744
-Ref: 1e4248744
-Ref: dev/api el function flycheck-error-line248833
-Ref: 1e5248833
-Ref: dev/api el function flycheck-error-column248915
-Ref: 1e6248915
-Ref: dev/api el function flycheck-error-message249112
-Ref: 1e7249112
-Ref: dev/api el function flycheck-error-level249190
-Ref: 1e8249190
-Ref: dev/api el function flycheck-error-new-at249438
-Ref: 1e9249438
-Ref: dev/api el function flycheck-error-new250355
-Ref: 1ea250355
-Ref: dev/api el function flycheck-error-with-buffer250814
-Ref: 1eb250814
-Ref: dev/api el function flycheck-error-line-region251002
-Ref: 1ec251002
-Ref: dev/api el function flycheck-error-column-region251315
-Ref: 1ed251315
-Ref: dev/api el function flycheck-error-thing-region251648
-Ref: 1ee251648
-Ref: dev/api el function flycheck-error-pos252121
-Ref: 1ef252121
-Ref: dev/api el function flycheck-error-format252410
-Ref: 1f0252410
-Ref: dev/api el function flycheck-error-<252618
-Ref: 1f1252618
-Ref: dev/api el function flycheck-error-level-<252791
-Ref: 1f2252791
-Node: Error Analysis253062
-Ref: dev/api error-analysis253175
-Ref: 1f3253175
-Ref: dev/api el variable flycheck-current-errors253308
-Ref: 5b253308
-Ref: dev/api el function flycheck-count-errors253496
-Ref: 95253496
-Ref: dev/api el function flycheck-has-errors-p253746
-Ref: 1f4253746
-Ref: dev/api el function flycheck-has-max-errors-p253847
-Ref: 1f5253847
-Node: Builtin error parsers253967
-Ref: dev/api id3254087
-Ref: 1f6254087
-Ref: dev/api builtin-error-parsers254087
-Ref: 1cf254087
-Ref: dev/api el function flycheck-parse-with-patterns254142
-Ref: 1f7254142
-Ref: dev/api el function flycheck-parse-checkstyle254645
-Ref: 1d8254645
-Ref: Builtin error parsers-Footnote-1255052
-Node: Error parser API255092
-Ref: dev/api error-parser-api255211
-Ref: 1d1255211
-Ref: dev/api id4255211
-Ref: 1f8255211
-Ref: dev/api el function flycheck-parse-xml-string255320
-Ref: 1f9255320
-Node: Error filters255738
-Ref: dev/api error-filters255854
-Ref: 1fa255854
-Ref: dev/api builtin-error-filters255854
-Ref: 1fb255854
-Ref: dev/api el function flycheck-sanitize-errors255893
-Ref: 1fc255893
-Ref: dev/api el function flycheck-collapse-error-message-whitespace256155
-Ref: 1fd256155
-Ref: dev/api el function flycheck-fold-include-errors256293
-Ref: 1fe256293
-Node: Syntax checker API256337
-Ref: dev/api syntax-checker-api256459
-Ref: 1ff256459
-Ref: dev/api id5256459
-Ref: 200256459
-Ref: dev/api el function flycheck-registered-checker-p256508
-Ref: 65256508
-Ref: dev/api el function flycheck-substitute-argument256695
-Ref: 1c5256695
-Ref: dev/api el function flycheck-locate-config-file261637
-Ref: 202261637
-Ref: dev/api el function flycheck-define-error-level261958
-Ref: 25261958
-Node: Builtin option filters263727
-Ref: dev/api id6263869
-Ref: 203263869
-Ref: dev/api builtin-option-filters263869
-Ref: 204263869
-Ref: dev/api el function flycheck-option-int263926
-Ref: 205263926
-Ref: dev/api el function flycheck-option-comma-separated-list264105
-Ref: 206264105
-Node: Builtin syntax checker predicates264709
-Ref: dev/api builtin-syntax-checker-predicates264842
-Ref: 207264842
-Ref: dev/api el function flycheck-buffer-saved-p264921
-Ref: 201264921
-Node: Utilities265220
-Ref: dev/api utilities265322
-Ref: 208265322
-Ref: dev/api el function flycheck-rx-to-string265355
-Ref: 1c6265355
-Ref: dev/api el function flycheck-string-list-p266028
-Ref: 9b266028
-Ref: dev/api el function flycheck-symbol-list-p266114
-Ref: 62266114
-Node: Contribution guidelines266200
-Ref: contrib/guidelines doc266311
-Ref: 209266311
-Ref: contrib/guidelines contribution-guidelines266311
-Ref: 20a266311
-Ref: Contribution guidelines-Footnote-1266693
-Node: Reporting issues266742
-Ref: contrib/guidelines id1266846
-Ref: 20b266846
-Ref: contrib/guidelines reporting-issues266846
-Ref: 91266846
-Node: Contributing code267292
-Ref: contrib/guidelines id2267396
-Ref: 20c267396
-Ref: contrib/guidelines contributing-code267396
-Ref: 20d267396
-Node: General267679
-Ref: contrib/guidelines general267761
-Ref: 20e267761
-Node: Code style267886
-Ref: contrib/guidelines code-style267992
-Ref: 20f267992
-Node: Commit messages268408
-Ref: contrib/guidelines commit-messages268535
-Ref: 210268535
-Ref: Commit messages-Footnote-1270297
-Ref: Commit messages-Footnote-2270371
-Ref: Commit messages-Footnote-3270412
-Node: Contributing syntax checkers270449
-Ref: contrib/guidelines contributing-syntax-checkers270579
-Ref: 1c3270579
-Ref: contrib/guidelines id3270579
-Ref: 211270579
-Node: Pull requests271359
-Ref: contrib/guidelines id4271465
-Ref: 212271465
-Ref: contrib/guidelines pull-requests271465
-Ref: 213271465
-Ref: Pull requests-Footnote-1272054
-Node: Testing Flycheck272112
-Ref: contrib/testing testing-flycheck272232
-Ref: 214272232
-Ref: contrib/testing doc272232
-Ref: 215272232
-Ref: contrib/testing pull-request272232
-Ref: 216272232
-Node: Test suite layout272563
-Ref: contrib/testing test-suite-layout272656
-Ref: 217272656
-Node: Test running273210
-Ref: contrib/testing test-running273336
-Ref: 218273336
-Ref: contrib/testing id1273336
-Ref: 219273336
-Ref: Test running-Footnote-1274486
-Node: Virtual test environment274519
-Ref: contrib/testing id2274637
-Ref: 21b274637
-Ref: contrib/testing virtual-test-environment274637
-Ref: 21a274637
-Ref: Virtual test environment-Footnote-1276708
-Ref: Virtual test environment-Footnote-2276741
-Ref: Virtual test environment-Footnote-3276774
-Ref: Virtual test environment-Footnote-4276805
-Ref: Virtual test environment-Footnote-5276838
-Node: Travis CI276859
-Ref: contrib/testing homebrew276956
-Ref: 21c276956
-Ref: contrib/testing travis-ci276956
-Ref: 21d276956
-Node: Writing documentation277475
-Ref: contrib/docs writing-documentation277589
-Ref: 21e277589
-Ref: contrib/docs doc277589
-Ref: 21f277589
-Node: Build environment setup277813
-Ref: contrib/docs doc-build-env277930
-Ref: 220277930
-Ref: contrib/docs build-environment-setup277930
-Ref: 221277930
-Ref: Build environment setup-Footnote-1279046
-Ref: Build environment setup-Footnote-2279073
-Ref: Build environment setup-Footnote-3279132
-Ref: Build environment setup-Footnote-4279182
-Ref: Build environment setup-Footnote-5279208
-Node: Building HTML and Texinfo279259
-Ref: contrib/docs building-docs279405
-Ref: 222279405
-Ref: contrib/docs building-html-and-texinfo279405
-Ref: 223279405
-Ref: Building HTML and Texinfo-Footnote-1280131
-Node: Verifying references280162
-Ref: contrib/docs verifying-references280276
-Ref: 224280276
-Node: Maintenance tasks280634
-Ref: contrib/maintenance maintenance-tasks280758
-Ref: 225280758
-Ref: contrib/maintenance doc280758
-Ref: 226280758
-Node: Rebuilding the Texinfo280992
-Ref: contrib/maintenance rebuilding-the-texinfo281100
-Ref: 227281100
-Ref: Rebuilding the Texinfo-Footnote-1281594
-Node: Rasterized logo files281625
-Ref: contrib/maintenance rasterized-logo-files281733
-Ref: 228281733
-Ref: contrib/maintenance melpa281733
-Ref: 229281733
-Ref: Rasterized logo files-Footnote-1282483
-Ref: Rasterized logo files-Footnote-2282516
-Node: GNU General Public License282546
-Ref: gpl gnu-general-public-license282679
-Ref: 22a282679
-Ref: gpl doc282679
-Ref: 22b282679
-Ref: gpl inkscape282679
-Ref: 22c282679
-Node: GNU Free Documentation License320100
-Ref: fdl doc320221
-Ref: 22d320221
-Ref: fdl gnu-free-documentation-license320221
-Ref: 22e320221
-Node: Index344736
+Ref: guide/languages el variable flycheck-shellcheck-excluded-warnings148647
+Ref: 140148647
+Ref: Shell script languages-Footnote-1149444
+Ref: Shell script languages-Footnote-2149483
+Ref: Shell script languages-Footnote-3149530
+Ref: Shell script languages-Footnote-4149608
+Ref: Shell script languages-Footnote-5149647
+Ref: Shell script languages-Footnote-6149739
+Ref: Shell script languages-Footnote-7149817
+Ref: Shell script languages-Footnote-8149842
+Node: Slim149887
+Ref: guide/languages gnu-bash-posix-mode149998
+Ref: 141149998
+Ref: guide/languages slim149998
+Ref: 142149998
+Ref: guide/languages el flycheck-checker slim150019
+Ref: 143150019
+Ref: Slim-Footnote-1150180
+Node: TeX/LaTeX150206
+Ref: guide/languages tex-latex150302
+Ref: 144150302
+Ref: guide/languages el flycheck-checker tex-chktex150375
+Ref: 145150375
+Ref: guide/languages el variable flycheck-chktexrc150565
+Ref: 146150565
+Ref: guide/languages el flycheck-checker tex-lacheck150862
+Ref: 147150862
+Ref: TeX/LaTeX-Footnote-1151042
+Ref: TeX/LaTeX-Footnote-2151077
+Ref: TeX/LaTeX-Footnote-3151110
+Ref: TeX/LaTeX-Footnote-4151145
+Node: Texinfo151182
+Ref: guide/languages tex-live151281
+Ref: 148151281
+Ref: guide/languages texinfo151281
+Ref: 149151281
+Ref: guide/languages el flycheck-checker texinfo151308
+Ref: 14a151308
+Ref: Texinfo-Footnote-1151482
+Node: Verilog151524
+Ref: guide/languages verilog151617
+Ref: 14b151617
+Ref: guide/languages el flycheck-checker verilog-verilator151644
+Ref: 14c151644
+Ref: Verilog-Footnote-1151857
+Node: XML151901
+Ref: guide/languages xml151991
+Ref: 14d151991
+Ref: guide/languages el flycheck-checker xml-xmlstarlet152010
+Ref: 14e152010
+Ref: guide/languages el flycheck-checker xml-xmllint152177
+Ref: 14f152177
+Ref: XML-Footnote-1152400
+Ref: XML-Footnote-2152437
+Node: YAML152466
+Ref: guide/languages yaml152540
+Ref: 150152540
+Ref: guide/languages el flycheck-checker yaml-jsyaml152561
+Ref: 151152561
+Ref: guide/languages el flycheck-checker yaml-ruby152699
+Ref: 152152699
+Ref: YAML-Footnote-1152991
+Ref: YAML-Footnote-2153030
+Node: Glossary153099
+Ref: guide/glossary glossary153203
+Ref: 153153203
+Ref: guide/glossary doc153203
+Ref: 154153203
+Ref: guide/glossary term-syntax-checker153226
+Ref: 64153226
+Ref: guide/glossary term-registered-syntax-checker153336
+Ref: 61153336
+Ref: guide/glossary term-disabled-syntax-checker153493
+Ref: 155153493
+Ref: guide/glossary term-enabled-syntax-checker153673
+Ref: 63153673
+Ref: guide/glossary term-suitable-syntax-checker153799
+Ref: 50153799
+Ref: guide/glossary term-chaining154097
+Ref: 57154097
+Node: Flycheck releases154680
+Ref: guide/releases/index flycheck-releases154783
+Ref: 156154783
+Ref: guide/releases/index doc154783
+Ref: 157154783
+Node: Release announcements154966
+Ref: guide/releases/index release-announcements155061
+Ref: 158155061
+Node: Flycheck 0 20155316
+Ref: guide/releases/flycheck-0 20 flycheck-0-20155411
+Ref: 159155411
+Ref: guide/releases/flycheck-0 20 doc155411
+Ref: 15a155411
+Node: Breaking changes155907
+Ref: guide/releases/flycheck-0 20 breaking-changes156000
+Ref: 15c156000
+Node: Language support156841
+Ref: guide/releases/flycheck-0 20 language-support156966
+Ref: 15d156966
+Node: C/C++<2>157252
+Ref: guide/releases/flycheck-0 20 c-c157331
+Ref: 15e157331
+Node: Rust<2>157845
+Ref: guide/releases/flycheck-0 20 rust157941
+Ref: 15f157941
+Node: Scala<2>158329
+Ref: guide/releases/flycheck-0 20 scala158426
+Ref: 160158426
+Ref: Scala<2>-Footnote-1158559
+Node: Sass/SCSS158591
+Ref: guide/releases/flycheck-0 20 scalastyle158694
+Ref: 161158694
+Ref: guide/releases/flycheck-0 20 sass-scss158694
+Ref: 162158694
+Node: Javascript<2>158865
+Ref: guide/releases/flycheck-0 20 javascript158967
+Ref: 163158967
+Ref: Javascript<2>-Footnote-1159241
+Ref: Javascript<2>-Footnote-2159265
+Node: Ruby<2>159306
+Ref: guide/releases/flycheck-0 20 ruby159390
+Ref: 164159390
+Ref: guide/releases/flycheck-0 20 configuring-eslint159390
+Ref: 165159390
+Node: Error list improvements159555
+Ref: guide/releases/flycheck-0 20 error-list-improvements159691
+Ref: 166159691
+Node: User interface improvements160338
+Ref: guide/releases/flycheck-0 20 user-interface-improvements160484
+Ref: 167160484
+Node: Miscellaneous new features161300
+Ref: guide/releases/flycheck-0 20 miscellaneous-new-features161442
+Ref: 168161442
+Node: Miscellaneous fixes161773
+Ref: guide/releases/flycheck-0 20 miscellaneous-fixes161894
+Ref: 169161894
+Node: Get it162108
+Ref: guide/releases/flycheck-0 20 get-it162194
+Ref: 16a162194
+Node: Flycheck 0 19162358
+Ref: guide/releases/flycheck-0 19 flycheck-0-19162475
+Ref: 16b162475
+Ref: guide/releases/flycheck-0 19 doc162475
+Ref: 16c162475
+Node: Breaking changes<2>162743
+Ref: guide/releases/flycheck-0 19 breaking-changes162832
+Ref: 16d162832
+Node: Languages163016
+Ref: guide/releases/flycheck-0 19 languages163126
+Ref: 16e163126
+Node: C/C++<3>163274
+Ref: guide/releases/flycheck-0 19 c-c163352
+Ref: 16f163352
+Node: Emacs Lisp<2>163689
+Ref: guide/releases/flycheck-0 19 emacs-lisp163781
+Ref: 170163781
+Node: Go<2>163939
+Ref: guide/releases/flycheck-0 19 go164033
+Ref: 171164033
+Node: Haskell<2>164261
+Ref: guide/releases/flycheck-0 19 haskell164349
+Ref: 172164349
+Node: Rust<3>164512
+Ref: guide/releases/flycheck-0 19 rust164586
+Ref: 173164586
+Node: New features164728
+Ref: guide/releases/flycheck-0 19 new-features164828
+Ref: 174164828
+Node: Bug fixes165923
+Ref: guide/releases/flycheck-0 19 bug-fixes166026
+Ref: 175166026
+Node: Misc changes166285
+Ref: guide/releases/flycheck-0 19 misc-changes166385
+Ref: 176166385
+Ref: Misc changes-Footnote-1166593
+Node: Get it<2>166627
+Ref: guide/releases/flycheck-0 19 get-it166709
+Ref: 177166709
+Ref: guide/releases/flycheck-0 19 github-profile166709
+Ref: 178166709
+Node: Flycheck 0 18166771
+Ref: guide/releases/flycheck-0 18 doc166888
+Ref: 179166888
+Ref: guide/releases/flycheck-0 18 flycheck-0-18166888
+Ref: 17a166888
+Node: Breaking changes<3>167297
+Ref: guide/releases/flycheck-0 18 breaking-changes167395
+Ref: 17b167395
+Node: Syntax checkers<2>168105
+Ref: guide/releases/flycheck-0 18 syntax-checkers168224
+Ref: 17c168224
+Ref: Syntax checkers<2>-Footnote-1169379
+Ref: Syntax checkers<2>-Footnote-2169415
+Ref: Syntax checkers<2>-Footnote-3169458
+Node: Bug fixes<2>169502
+Ref: guide/releases/flycheck-0 18 shellcheck169611
+Ref: 17d169611
+Ref: guide/releases/flycheck-0 18 bug-fixes169611
+Ref: 17e169611
+Node: Get it<3>170276
+Ref: guide/releases/flycheck-0 18 get-it170358
+Ref: 17f170358
+Node: Flycheck 0 17170418
+Ref: guide/releases/flycheck-0 17 flycheck-0-17170535
+Ref: 180170535
+Ref: guide/releases/flycheck-0 17 doc170535
+Ref: 181170535
+Node: Breaking changes<4>170912
+Ref: guide/releases/flycheck-0 17 breaking-changes171009
+Ref: 182171009
+Node: New online manual171615
+Ref: guide/releases/flycheck-0 17 new-online-manual171739
+Ref: 183171739
+Ref: New online manual-Footnote-1173604
+Ref: New online manual-Footnote-2173631
+Ref: New online manual-Footnote-3173673
+Ref: New online manual-Footnote-4173719
+Ref: New online manual-Footnote-5173761
+Node: Syntax checkers<3>173788
+Ref: guide/releases/flycheck-0 17 syntax-checkers173918
+Ref: 184173918
+Ref: guide/releases/flycheck-0 17 llvm-documentation173918
+Ref: 185173918
+Node: Extending syntax checkers174496
+Ref: guide/releases/flycheck-0 17 extending-syntax-checkers174641
+Ref: 186174641
+Node: Other bug fixes and improvements174710
+Ref: guide/releases/flycheck-0 17 other-bug-fixes-and-improvements174828
+Ref: 187174828
+Node: Flycheck 0 16175445
+Ref: guide/releases/flycheck-0 16 flycheck-0-16175562
+Ref: 188175562
+Ref: guide/releases/flycheck-0 16 doc175562
+Ref: 189175562
+Node: Breaking changes<5>176172
+Ref: guide/releases/flycheck-0 16 breaking-changes176270
+Ref: 18a176270
+Ref: Breaking changes<5>-Footnote-1176550
+Node: Syntax checkers<4>176602
+Ref: guide/releases/flycheck-0 16 syntax-checkers176724
+Ref: 18b176724
+Ref: guide/releases/flycheck-0 16 flycheck-hdevtools176724
+Ref: 18c176724
+Node: New languages and checkers176871
+Ref: guide/releases/flycheck-0 16 new-languages-and-checkers176985
+Ref: 18d176985
+Ref: New languages and checkers-Footnote-1177358
+Ref: New languages and checkers-Footnote-2177384
+Ref: New languages and checkers-Footnote-3177410
+Ref: New languages and checkers-Footnote-4177439
+Ref: New languages and checkers-Footnote-5177478
+Ref: New languages and checkers-Footnote-6177508
+Ref: New languages and checkers-Footnote-7177537
+Ref: New languages and checkers-Footnote-8177579
+Ref: New languages and checkers-Footnote-9177622
+Ref: New languages and checkers-Footnote-10177660
+Ref: New languages and checkers-Footnote-11177709
+Node: Better Haskell support177754
+Ref: guide/releases/flycheck-0 16 js-yaml177902
+Ref: 18e177902
+Ref: guide/releases/flycheck-0 16 better-haskell-support177902
+Ref: 18f177902
+Ref: Better Haskell support-Footnote-1178504
+Node: Miscellaneous new options178554
+Ref: guide/releases/flycheck-0 16 miscellaneous-new-options178667
+Ref: 190178667
+Ref: guide/releases/flycheck-0 16 flycheck-haskell178667
+Ref: 191178667
+Node: New features<2>179114
+Ref: guide/releases/flycheck-0 16 new-features179236
+Ref: 192179236
+Node: Syntax checker executables<2>179385
+Ref: guide/releases/flycheck-0 16 syntax-checker-executables179507
+Ref: 193179507
+Node: Disable syntax checkers easily179692
+Ref: guide/releases/flycheck-0 16 disable-syntax-checkers-easily179814
+Ref: 194179814
+Node: Improved error list180689
+Ref: guide/releases/flycheck-0 16 improved-error-list180802
+Ref: 195180802
+Node: Get it<4>181348
+Ref: guide/releases/flycheck-0 16 get-it181437
+Ref: 196181437
+Node: Flycheck 0 15181499
+Ref: guide/releases/flycheck-0 15 flycheck-0-15181594
+Ref: 197181594
+Ref: guide/releases/flycheck-0 15 doc181594
+Ref: 198181594
+Node: Breaking changes<6>182238
+Ref: guide/releases/flycheck-0 15 breaking-changes182337
+Ref: 199182337
+Node: New syntax checkers183159
+Ref: guide/releases/flycheck-0 15 new-syntax-checkers183281
+Ref: 19b183281
+Ref: New syntax checkers-Footnote-1183812
+Ref: New syntax checkers-Footnote-2183838
+Ref: New syntax checkers-Footnote-3183885
+Node: New error list183908
+Ref: guide/releases/flycheck-0 15 new-error-list184024
+Ref: 19a184024
+Ref: guide/releases/flycheck-0 15 id1184024
+Ref: 19c184024
+Node: C/C++ support184780
+Ref: guide/releases/flycheck-0 15 c-c-support184900
+Ref: 19d184900
+Node: New info level messages186190
+Ref: guide/releases/flycheck-0 15 new-info-level-messages186315
+Ref: 19e186315
+Ref: New info level messages-Footnote-1187495
+Ref: New info level messages-Footnote-2187543
+Node: Custom error levels187589
+Ref: guide/releases/flycheck-0 15 custom-error-levels187719
+Ref: 19f187719
+Ref: guide/releases/flycheck-0 15 id2187719
+Ref: 1a0187719
+Node: Other improvements188418
+Ref: guide/releases/flycheck-0 15 other-improvements188534
+Ref: 1a1188534
+Node: Get it<5>189497
+Ref: guide/releases/flycheck-0 15 get-it189585
+Ref: 1a2189585
+Node: Changelog189645
+Ref: guide/releases/index id1189740
+Ref: 1a3189740
+Ref: guide/releases/index changelog189740
+Ref: 15b189740
+Node: master in development190758
+Ref: guide/releases/index master-in-development190852
+Ref: 1a4190852
+Node: 0 20 Aug 12 2014193004
+Ref: guide/releases/index aug-12-2014193123
+Ref: 1a5193123
+Node: 0 19 Jun 12 2014196403
+Ref: guide/releases/index jun-12-2014196517
+Ref: 1a6196517
+Node: 0 18 Mar 24 2014198249
+Ref: guide/releases/index mar-24-2014198362
+Ref: 1a7198362
+Node: 0 17 Feb 1 2014200185
+Ref: guide/releases/index feb-1-2014200298
+Ref: 1a8200298
+Ref: 0 17 Feb 1 2014-Footnote-1201910
+Node: 0 16 Jan 11 2014201937
+Ref: guide/releases/index sphinx202050
+Ref: 1a9202050
+Ref: guide/releases/index jan-11-2014202050
+Ref: 1aa202050
+Ref: 0 16 Jan 11 2014-Footnote-1204680
+Node: 0 15 Nov 15 2013204732
+Ref: guide/releases/index nov-15-2013204848
+Ref: 1ab204848
+Ref: guide/releases/index flycheck-hdevtools204848
+Ref: 1ac204848
+Ref: 0 15 Nov 15 2013-Footnote-1208789
+Node: 0 14 1 Aug 16 2013208827
+Ref: guide/releases/index grizzl208943
+Ref: 1ad208943
+Ref: guide/releases/index aug-16-2013208943
+Ref: 1ae208943
+Node: 0 14 Aug 15 2013209062
+Ref: guide/releases/index aug-15-2013209178
+Ref: 1af209178
+Node: 0 13 Jun 28 2013211873
+Ref: guide/releases/index jun-28-2013211987
+Ref: 1b0211987
+Node: 0 12 May 18 2013214474
+Ref: guide/releases/index may-18-2013214588
+Ref: 1b1214588
+Node: 0 11 May 01 2013215349
+Ref: guide/releases/index may-01-2013215463
+Ref: 1b2215463
+Ref: 0 11 May 01 2013-Footnote-1216390
+Node: 0 10 Apr 21 2013216433
+Ref: guide/releases/index apr-21-2013216546
+Ref: 1b3216546
+Ref: guide/releases/index projectile216546
+Ref: 1b4216546
+Ref: 0 10 Apr 21 2013-Footnote-1218130
+Node: 0 9 Apr 13 2013218185
+Ref: guide/releases/index apr-13-2013218296
+Ref: 1b5218296
+Ref: guide/releases/index google-this218296
+Ref: 1b6218296
+Node: 0 8 Apr 9 2013218630
+Ref: guide/releases/index apr-9-2013218742
+Ref: 1b7218742
+Node: 0 7 1 Feb 23 2013219778
+Ref: guide/releases/index feb-23-2013219890
+Ref: 1b8219890
+Node: 0 7 Feb 14 2013220455
+Ref: guide/releases/index feb-14-2013220570
+Ref: 1b9220570
+Node: 0 6 1 Jan 30 2013221277
+Ref: guide/releases/index jan-30-2013221390
+Ref: 1ba221390
+Node: 0 6 Jan 29 2013221478
+Ref: guide/releases/index jan-29-2013221591
+Ref: 1bb221591
+Node: 0 5 Dec 28 2012223460
+Ref: guide/releases/index dec-28-2012223571
+Ref: 1bc223571
+Node: 0 4 Nov 21 2012224319
+Ref: guide/releases/index nov-21-2012224430
+Ref: 1bd224430
+Ref: guide/releases/index flymake-cursor224430
+Ref: 1be224430
+Node: 0 3 Nov 21 2012224825
+Ref: guide/releases/index id2224936
+Ref: 1bf224936
+Node: 0 2 Oct 25 2012225071
+Ref: guide/releases/index oct-25-2012225182
+Ref: 1c0225182
+Node: 0 1 Oct 11 2012225351
+Ref: guide/releases/index oct-11-2012225438
+Ref: 1c1225438
+Node: Extending Flycheck225681
+Ref: dev/extending doc225788
+Ref: 1c2225788
+Ref: dev/extending extending-flycheck225788
+Ref: 1c3225788
+Node: Defining new syntax checkers226326
+Ref: dev/extending defining-new-syntax-checkers226451
+Ref: a226451
+Ref: dev/extending id1226451
+Ref: 1c5226451
+Ref: dev/extending el function flycheck-define-checker226591
+Ref: 19226591
+Ref: dev/extending el function flycheck-def-config-file-var232065
+Ref: 1c8232065
+Ref: dev/extending el function flycheck-def-option-var232681
+Ref: 1c9232681
+Node: Registering new syntax checkers233306
+Ref: dev/extending registering-new-syntax-checkers233455
+Ref: 1ca233455
+Ref: dev/extending id2233455
+Ref: 1cb233455
+Node: Error levels<2>234455
+Ref: dev/extending id3234589
+Ref: 1cc234589
+Ref: dev/extending error-levels234589
+Ref: 1cd234589
+Node: Error parsers234893
+Ref: dev/extending error-parsers235024
+Ref: 1ce235024
+Ref: dev/extending id4235024
+Ref: 1cf235024
+Node: Extending syntax checkers<2>235827
+Ref: dev/extending id5235951
+Ref: 1d3235951
+Ref: dev/extending extending-syntax-checkers235951
+Ref: 1d4235951
+Ref: dev/extending el function flycheck-add-next-checker236069
+Ref: 1d5236069
+Node: Examples236807
+Ref: dev/extending examples236909
+Ref: 1d6236909
+Node: Basic syntax checkers237081
+Ref: dev/extending id6237189
+Ref: 1d7237189
+Ref: dev/extending basic-syntax-checkers237189
+Ref: 1d8237189
+Node: Syntax checkers with predicates240395
+Ref: dev/extending syntax-checkers-with-predicates240551
+Ref: 1da240551
+Node: Configuration files for syntax checkers242526
+Ref: dev/extending configuration-files-for-syntax-checkers242685
+Ref: 1db242685
+Node: Chaining syntax checkers245239
+Ref: dev/extending chaining-syntax-checkers245358
+Ref: 1dc245358
+Node: Flycheck API246712
+Ref: dev/api doc246825
+Ref: 1dd246825
+Ref: dev/api flycheck-api246825
+Ref: 1de246825
+Node: Status API247337
+Ref: dev/api id1247416
+Ref: 1df247416
+Ref: dev/api status-api247416
+Ref: 1e0247416
+Ref: dev/api el function flycheck-report-status247449
+Ref: 5a247449
+Ref: dev/api el function flycheck-report-error248294
+Ref: 1e1248294
+Ref: dev/api el variable flycheck-last-status-change248534
+Ref: 94248534
+Ref: dev/api el function flycheck-mode-line-status-text248715
+Ref: 93248715
+Node: Error API248928
+Ref: dev/api error-api249030
+Ref: 78249030
+Ref: dev/api id2249030
+Ref: 1e2249030
+Ref: dev/api el struct flycheck-error249222
+Ref: 1d1249222
+Ref: dev/api el function flycheck-error-buffer249341
+Ref: 1e3249341
+Ref: dev/api el function flycheck-error-checker249638
+Ref: 1e4249638
+Ref: dev/api el function flycheck-error-filename249717
+Ref: 1e5249717
+Ref: dev/api el function flycheck-error-line249806
+Ref: 1e6249806
+Ref: dev/api el function flycheck-error-column249888
+Ref: 1e7249888
+Ref: dev/api el function flycheck-error-message250085
+Ref: 1e8250085
+Ref: dev/api el function flycheck-error-level250163
+Ref: 1e9250163
+Ref: dev/api el function flycheck-error-new-at250411
+Ref: 1ea250411
+Ref: dev/api el function flycheck-error-new251328
+Ref: 1eb251328
+Ref: dev/api el function flycheck-error-with-buffer251787
+Ref: 1ec251787
+Ref: dev/api el function flycheck-error-line-region251975
+Ref: 1ed251975
+Ref: dev/api el function flycheck-error-column-region252288
+Ref: 1ee252288
+Ref: dev/api el function flycheck-error-thing-region252621
+Ref: 1ef252621
+Ref: dev/api el function flycheck-error-pos253094
+Ref: 1f0253094
+Ref: dev/api el function flycheck-error-format253383
+Ref: 1f1253383
+Ref: dev/api el function flycheck-error-<253591
+Ref: 1f2253591
+Ref: dev/api el function flycheck-error-level-<253764
+Ref: 1f3253764
+Node: Error Analysis254035
+Ref: dev/api error-analysis254148
+Ref: 1f4254148
+Ref: dev/api el variable flycheck-current-errors254281
+Ref: 5b254281
+Ref: dev/api el function flycheck-count-errors254469
+Ref: 95254469
+Ref: dev/api el function flycheck-has-errors-p254719
+Ref: 1f5254719
+Ref: dev/api el function flycheck-has-max-errors-p254820
+Ref: 1f6254820
+Node: Builtin error parsers254940
+Ref: dev/api id3255060
+Ref: 1f7255060
+Ref: dev/api builtin-error-parsers255060
+Ref: 1d0255060
+Ref: dev/api el function flycheck-parse-with-patterns255115
+Ref: 1f8255115
+Ref: dev/api el function flycheck-parse-checkstyle255618
+Ref: 1d9255618
+Ref: Builtin error parsers-Footnote-1256025
+Node: Error parser API256065
+Ref: dev/api error-parser-api256184
+Ref: 1d2256184
+Ref: dev/api id4256184
+Ref: 1f9256184
+Ref: dev/api el function flycheck-parse-xml-string256293
+Ref: 1fa256293
+Node: Error filters256711
+Ref: dev/api error-filters256827
+Ref: 1fb256827
+Ref: dev/api builtin-error-filters256827
+Ref: 1fc256827
+Ref: dev/api el function flycheck-sanitize-errors256866
+Ref: 1fd256866
+Ref: dev/api el function flycheck-collapse-error-message-whitespace257128
+Ref: 1fe257128
+Ref: dev/api el function flycheck-fold-include-errors257266
+Ref: 1ff257266
+Node: Syntax checker API257310
+Ref: dev/api syntax-checker-api257432
+Ref: 200257432
+Ref: dev/api id5257432
+Ref: 201257432
+Ref: dev/api el function flycheck-registered-checker-p257481
+Ref: 65257481
+Ref: dev/api el function flycheck-substitute-argument257668
+Ref: 1c6257668
+Ref: dev/api el function flycheck-locate-config-file262610
+Ref: 203262610
+Ref: dev/api el function flycheck-define-error-level262931
+Ref: 25262931
+Node: Builtin option filters264700
+Ref: dev/api id6264842
+Ref: 204264842
+Ref: dev/api builtin-option-filters264842
+Ref: 205264842
+Ref: dev/api el function flycheck-option-int264899
+Ref: 206264899
+Ref: dev/api el function flycheck-option-comma-separated-list265078
+Ref: 207265078
+Node: Builtin syntax checker predicates265682
+Ref: dev/api builtin-syntax-checker-predicates265815
+Ref: 208265815
+Ref: dev/api el function flycheck-buffer-saved-p265894
+Ref: 202265894
+Node: Utilities266193
+Ref: dev/api utilities266295
+Ref: 209266295
+Ref: dev/api el function flycheck-rx-to-string266328
+Ref: 1c7266328
+Ref: dev/api el function flycheck-string-list-p267001
+Ref: 9b267001
+Ref: dev/api el function flycheck-symbol-list-p267087
+Ref: 62267087
+Node: Contribution guidelines267173
+Ref: contrib/guidelines doc267284
+Ref: 20a267284
+Ref: contrib/guidelines contribution-guidelines267284
+Ref: 20b267284
+Ref: Contribution guidelines-Footnote-1267666
+Node: Reporting issues267715
+Ref: contrib/guidelines id1267819
+Ref: 20c267819
+Ref: contrib/guidelines reporting-issues267819
+Ref: 91267819
+Node: Contributing code268265
+Ref: contrib/guidelines id2268369
+Ref: 20d268369
+Ref: contrib/guidelines contributing-code268369
+Ref: 20e268369
+Node: General268652
+Ref: contrib/guidelines general268734
+Ref: 20f268734
+Node: Code style268859
+Ref: contrib/guidelines code-style268965
+Ref: 210268965
+Node: Commit messages269381
+Ref: contrib/guidelines commit-messages269508
+Ref: 211269508
+Ref: Commit messages-Footnote-1271270
+Ref: Commit messages-Footnote-2271344
+Ref: Commit messages-Footnote-3271385
+Node: Contributing syntax checkers271422
+Ref: contrib/guidelines contributing-syntax-checkers271552
+Ref: 1c4271552
+Ref: contrib/guidelines id3271552
+Ref: 212271552
+Node: Pull requests272332
+Ref: contrib/guidelines id4272438
+Ref: 213272438
+Ref: contrib/guidelines pull-requests272438
+Ref: 214272438
+Ref: Pull requests-Footnote-1273027
+Node: Testing Flycheck273085
+Ref: contrib/testing testing-flycheck273205
+Ref: 215273205
+Ref: contrib/testing doc273205
+Ref: 216273205
+Ref: contrib/testing pull-request273205
+Ref: 217273205
+Node: Test suite layout273536
+Ref: contrib/testing test-suite-layout273629
+Ref: 218273629
+Node: Test running274183
+Ref: contrib/testing test-running274309
+Ref: 219274309
+Ref: contrib/testing id1274309
+Ref: 21a274309
+Ref: Test running-Footnote-1275459
+Node: Virtual test environment275492
+Ref: contrib/testing id2275610
+Ref: 21c275610
+Ref: contrib/testing virtual-test-environment275610
+Ref: 21b275610
+Ref: Virtual test environment-Footnote-1277681
+Ref: Virtual test environment-Footnote-2277714
+Ref: Virtual test environment-Footnote-3277747
+Ref: Virtual test environment-Footnote-4277778
+Ref: Virtual test environment-Footnote-5277811
+Node: Travis CI277832
+Ref: contrib/testing homebrew277929
+Ref: 21d277929
+Ref: contrib/testing travis-ci277929
+Ref: 21e277929
+Node: Writing documentation278448
+Ref: contrib/docs writing-documentation278562
+Ref: 21f278562
+Ref: contrib/docs doc278562
+Ref: 220278562
+Node: Build environment setup278786
+Ref: contrib/docs doc-build-env278903
+Ref: 221278903
+Ref: contrib/docs build-environment-setup278903
+Ref: 222278903
+Ref: Build environment setup-Footnote-1280019
+Ref: Build environment setup-Footnote-2280046
+Ref: Build environment setup-Footnote-3280105
+Ref: Build environment setup-Footnote-4280155
+Ref: Build environment setup-Footnote-5280181
+Node: Building HTML and Texinfo280232
+Ref: contrib/docs building-docs280378
+Ref: 223280378
+Ref: contrib/docs building-html-and-texinfo280378
+Ref: 224280378
+Ref: Building HTML and Texinfo-Footnote-1281104
+Node: Verifying references281135
+Ref: contrib/docs verifying-references281249
+Ref: 225281249
+Node: Maintenance tasks281607
+Ref: contrib/maintenance maintenance-tasks281731
+Ref: 226281731
+Ref: contrib/maintenance doc281731
+Ref: 227281731
+Node: Rebuilding the Texinfo281965
+Ref: contrib/maintenance rebuilding-the-texinfo282073
+Ref: 228282073
+Ref: Rebuilding the Texinfo-Footnote-1282567
+Node: Rasterized logo files282598
+Ref: contrib/maintenance rasterized-logo-files282706
+Ref: 229282706
+Ref: contrib/maintenance melpa282706
+Ref: 22a282706
+Ref: Rasterized logo files-Footnote-1283456
+Ref: Rasterized logo files-Footnote-2283489
+Node: GNU General Public License283519
+Ref: gpl gnu-general-public-license283652
+Ref: 22b283652
+Ref: gpl doc283652
+Ref: 22c283652
+Ref: gpl inkscape283652
+Ref: 22d283652
+Node: GNU Free Documentation License321073
+Ref: fdl doc321194
+Ref: 22e321194
+Ref: fdl gnu-free-documentation-license321194
+Ref: 22f321194
+Node: Index345709
 
 End Tag Table
 
