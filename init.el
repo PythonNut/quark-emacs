@@ -2609,6 +2609,7 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
      (define-key magit-status-mode-map (kbd "K") 'magit-discard-item)
      (define-key magit-status-mode-map (kbd "j") 'next-line)))
 
+;; disable regular key chords by switching input methods
 (add-hook 'magit-status-mode-hook
   '(lambda ()
      (set-input-method "TeX")))
