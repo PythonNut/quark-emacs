@@ -32,6 +32,7 @@
 
 (require 'package)
 (require 'uniquify)
+
 (setq
   uniquify-buffer-name-style 'post-forward
   uniquify-separator ":")
@@ -2393,7 +2394,7 @@ to replace the symbol under cursor"
                      (`interrupted "-")
                      (`suspicious "?"))))
          (concat " ✓" text)))
-     (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
+     ;; (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
      (global-flycheck-mode +1)))
 
 ;;; ================================
