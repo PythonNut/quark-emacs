@@ -3257,7 +3257,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
      (setq nav-flash-use-pulse 't)))
 
 ;; make newline super smart
-(define-key evil-normal-state-map (kbd "RET") 'smart-newline)
+(evil-define-key 'normal prog-mode-map (kbd "RET") 'smart-newline)
 
 (define-key evil-insert-state-map (kbd "C-m") 'newline)
 (define-key evil-normal-state-map (kbd "C-m") 'newline)
