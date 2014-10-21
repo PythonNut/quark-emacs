@@ -436,6 +436,10 @@
 (global-evil-leader-mode +1)
 (setq evil-leader/leader "," evil-leader/in-all-states t)
 
+(add-hook 'org-mode-hook
+  '(lambda ()
+     (require 'evil-org)))
+
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
 (evil-set-initial-state 'erc-mode 'emacs)
