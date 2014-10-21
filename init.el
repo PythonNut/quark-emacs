@@ -564,12 +564,7 @@
 ;;; ================
 ;;; better registers
 ;;; ================
-;; (require 'better-registers)
 (autoload 'jump-to-register "better-registers")
-;; (better-registers-install-save-registers-hook)
-;; (setq better-registers-save-file "~/.emacs.d/saveregisters.el")
-;; (load better-registers-save-file)
-;; (better-registers -1)
 (define-key evil-insert-state-map (kbd "C-r") 'jump-to-register)
 
 ;;; ================================
