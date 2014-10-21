@@ -117,7 +117,7 @@
       (normal-top-level-add-subdirs-to-load-path))))
 
 ;; env tweaks
-(setq default-major-mode 'text-mode)
+(setq-default major-mode 'text-mode)
 (setq-default indent-tabs-mode nil)
 
 (setq mouse-drag-copy-region nil)
