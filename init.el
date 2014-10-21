@@ -3315,7 +3315,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (autoload 'iflipb-next-buffer "iflipb")
 (autoload 'iflipb-previous-buffer "iflipb")
 
-(defvar iflipb-auto-off-timeout-sec 1)
+(defvar iflipb-auto-off-timeout-sec 3)
 
 (setq
   iflipb-ignore-buffers "^ "
