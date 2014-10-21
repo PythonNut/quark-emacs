@@ -1912,6 +1912,21 @@ to replace the symbol under cursor"
 (evil-define-motion evil-previous-sexp (count)
   (sp-previous-sexp count))
 
+
+(put 'evil-forward-sexp       'CUA 'move)
+(put 'evil-backward-sexp      'CUA 'move)
+(put 'evil-up-sexp            'CUA 'move)
+(put 'evil-backward-up-sexp   'CUA 'move)
+(put 'evil-down-sexp          'CUA 'move)
+(put 'evil-forward-sexp       'CUA 'move)
+(put 'evil-backward-sexp      'CUA 'move)
+(put 'evil-up-sexp            'CUA 'move)
+(put 'evil-backward-up-sexp   'CUA 'move)
+(put 'evil-down-sexp          'CUA 'move)
+(put 'evil-backward-down-sexp 'CUA 'move)
+(put 'evil-next-sexp          'CUA 'move)
+(put 'evil-previous-sexp      'CUA 'move)
+
 ;; textobject for the sexp immediately after point
 (defun evil-next-thing (count &optional beg end type inclusive)
   (ignore-errors
