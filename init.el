@@ -1988,6 +1988,8 @@ to replace the symbol under cursor"
 (define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
 (define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
 
+(define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+
 (define-key sp-keymap (kbd "M-(") 'sp-select-previous-thing)
 (define-key sp-keymap (kbd "M-)") 'sp-select-next-thing)
 
