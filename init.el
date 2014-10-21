@@ -2000,8 +2000,8 @@ to replace the symbol under cursor"
 (define-key sp-keymap (kbd "C-M-e") 'evil-up-sexp)
 (define-key sp-keymap (kbd "C-M-u") 'evil-backward-up-sexp)
 
-(define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
-(define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
+(define-key sp-keymap (kbd "C-M-n") 'evil-next-sexp)
+(define-key sp-keymap (kbd "C-M-p") 'evil-previous-sexp)
 
 (define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
 
