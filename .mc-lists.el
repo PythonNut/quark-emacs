@@ -25,6 +25,7 @@
          evil-backward-WORD-begin
          evil-backward-char
          evil-backward-sentence
+         evil-backward-sexp
          evil-backward-word-begin
          evil-change
          evil-change-to-previous-state
@@ -34,6 +35,7 @@
          evil-digit-argument-or-evil-beginning-of-line
          evil-emacs-state
          evil-end-of-line
+         evil-end-of-visual-line
          evil-exit-visual-state
          evil-fastnav-forward-to
          evil-find-char-to
