@@ -4,7 +4,7 @@
 
 ;; Author: Chen Bin <chenbin.sh@gmail.com>
 ;; URL: http://github.com/redguardtoo/evil-nerd-commenter
-;; Version: 1.5.5
+;; Version: 1.5.7
 ;; Keywords: commenter vim line evil
 ;;
 ;; This file is not part of GNU Emacs.
@@ -308,11 +308,16 @@
 
 (defun evilnc--find-dst-line-num (UNITS)
   (let ((cur-line-num (evilnc--current-line-num))
-        dst-line-num)
-    (if (>= (mod cur-line-num 10) UNITS)
-        (setq UNITS (+ UNITS 10))
+        dst-line-num
+        (r 1)
+        (l (length (number-to-string UNITS))))
+    (while (> l 0)
+      (setq r (* r 10))
+      (setq l (- l 1)))
+    (if (>= (mod cur-line-num r) UNITS)
+        (setq UNITS (+ UNITS r))
       )
-    (setq dst-line-num (+ cur-line-num (- UNITS (mod cur-line-num 10))))
+    (setq dst-line-num (+ cur-line-num (- UNITS (mod cur-line-num r))))
     ))
 
 ;; ==== below this line are public commands
@@ -494,7 +499,7 @@ or 'C-u 3 M-x evilnc-quick-comment-or-uncomment-to-the-line' to comment to the l
 ;;;###autoload
 (defun evilnc-version ()
   (interactive)
-  (message "1.5.5"))
+  (message "1.5.7"))
 
 ;;;###autoload
 (defun evilnc-default-hotkeys ()
@@ -514,9 +519,16 @@ or 'C-u 3 M-x evilnc-quick-comment-or-uncomment-to-the-line' to comment to the l
        (define-key evil-normal-state-map ",cr" 'comment-or-uncomment-region)
        (define-key evil-normal-state-map ",cv" 'evilnc-toggle-invert-comment-line-by-line))))
 
+;; workaround issue https://github.com/redguardtoo/evil-nerd-commenter/issues/36
+;; shamelessly copied from http://www.lunaryorn.com/2013/06/25/introducing-with-eval-after-load.html
+(unless (fboundp 'with-eval-after-load)
+  (defmacro with-eval-after-load (file &rest body)
+    `(eval-after-load ,file
+       `(funcall (function ,(lambda () ,@body))))))
+
 ;; Attempt to define the operator on first load.
 ;; Will only work if evil has been loaded
-(eval-after-load 'evil
+(with-eval-after-load 'evil
   '(progn
      (evil-define-operator evilnc-comment-operator (beg end type register yank-handler)
        "Comments text from BEG to END with TYPE.

@@ -6,7 +6,7 @@
 ;; URL: https://github.com/bbatsov/projectile
 ;; Created: 2011-31-07
 ;; Keywords: project, convenience
-;; Version: 20141018.1003
+;; Version: 20141020.2305
 ;; X-Original-Version: 0.11.0
 ;; Package-Requires: ((helm "1.4.0") (projectile "0.11.0") (cl-lib "0.3"))
 
@@ -261,7 +261,7 @@ It is there because Helm requires it."
     (init . (lambda ()
               (let ((projectile-require-project-root nil))
                 (helm-projectile-init-buffer-with-files ""
-                                                        (projectile-files-in-all-projects)))))
+                                                        (projectile-all-project-files)))))
     (coerce . helm-projectile-coerce-file)
     (candidates-in-buffer)
     (keymap . ,helm-projectile-find-file-map)
