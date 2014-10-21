@@ -415,6 +415,11 @@
   '(lambda ()
      (cua-selection-mode +1)))
 
+(strokes-mode +1)
+(setq strokes-file "~/.emacs.d/.strokes")
+(strokes-load-user-strokes)
+(global-set-key (kbd "<down-mouse-3>") 'strokes-do-stroke)
+
 ;;; ===================================
 ;;; Evil mode - Emacs + Vim keybindings
 ;;; ===================================
