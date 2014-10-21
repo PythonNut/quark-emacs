@@ -54,17 +54,6 @@
 
 (global-set-key (kbd "<f11>") 'toggle-fullscreen)
 
-(defun toggle-ui ()
-  (interactive)
-  (if (and (boundp 'menu-bar-mode) menu-bar-mode)
-    (menu-bar-mode -1)
-    (menu-bar-mode +1))
-  (if (and (boundp 'scroll-bar-mode) scroll-bar-mode)
-    (scroll-bar-mode -1)
-    (scroll-bar-mode +1)))
-
-(global-set-key (kbd "<f9>") 'toggle-ui)
-
 (defun toggle-mode-line ()
   "toggles the modeline on and off"
   (interactive)
@@ -78,7 +67,6 @@
   (setq debug-on-error t))
 
 (global-set-key (kbd "<M-f9>") 'toggle-mode-line)
-(global-set-key (kbd "<right-fringe> <mouse-1>") 'scroll-bar-mode)
 
 (auto-compression-mode 1)
 (blink-cursor-mode 0)
