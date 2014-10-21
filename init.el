@@ -2577,10 +2577,14 @@ or expand the word preceding point. Multiple tabs cycle indentation level."
               (hippie-expand arg)
               (message "hippie-expand"))))
 
-        (progn
-          (setq this-command 'indent-for-tab-command)
-          (indent-for-tab-command arg)
-          (message "indent"))))))
+        (if (eq major-mode 'org-mode)
+          (progn
+            (setq this-command 'org-cycle)
+            (call-interactively 'org-cycle))
+          (progn
+            (setq this-command 'indent-for-tab-command)
+            (indent-for-tab-command arg)
+            (message "indent")))))))
 
 (define-key evil-insert-state-map (kbd "<tab>") 'indent-or-complete)
 (define-key evil-insert-state-map (kbd "<backtab>") 'my-unindent)
@@ -3589,20 +3593,10 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 ;;; ========
 ;;; Org mode
 ;;; ========
-(defun yas/org-very-safe-expand ()
-  (let ((yas/fallback-behavior 'return-nil)) (yas/expand)))
-
 (add-hook 'org-mode-hook
   '(lambda ()
      (yas/minor-mode -1)
-     (ws-butler-mode +1)
-     ;; try and fix yasnippet
-     (global-set-key (kbd "<f7>") 'org-cycle)
 
-     (make-variable-buffer-local 'yas/trigger-key)
-     (setq yas/trigger-key "<tab>")
-     (add-to-list 'org-tab-first-hook 'yas/org-very-safe-expand)
-     (define-key yas/keymap "<tab>" 'yas/next-field)
      ;; Make windmove work in org-mode:
      (add-hook 'org-shiftup-final-hook 'windmove-up)
      (add-hook 'org-shiftleft-final-hook 'windmove-left)
