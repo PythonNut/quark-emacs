@@ -1,13 +1,14 @@
 (require 'package)
 
 ;; Package archives
-(setq package-archives
+(setq
+ package-enable-at-startup nil
+ package-archives
   '(("gnu" . "http://elpa.gnu.org/packages/")
      ("elpa" . "http://tromey.com/elpa/")
      ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (package-initialize)
-(provide 'config-package)
 
 ;; Guarantee all packages are installed on start
 (defvar packages-list
@@ -32,6 +33,7 @@
      evil-visualstar
 
      magit
+     magit-filenotify
      psvn
      linum-relative
      ws-butler
@@ -68,6 +70,7 @@
     ;; Install the missing packages
     (dolist (p packages-list)
       (when (not (package-installed-p p))
-	(package-install p)))))
+	(package-install p)))
+    (package-initialize)))
 
 (install-all-packages)
