@@ -71,7 +71,11 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
             (delete-active-region))
           (insert string-in))
         ;; just yank as normal
-        (cua-paste raw-prefix)))))
+	(if (eq (car (get-text-property 0 'yank-handler
+		       string-to-yank))
+	      'evil-yank-line-handler)
+	  (evil-paste-before raw-prefix)
+	  (cua-paste raw-prefix))))))
 
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
@@ -100,3 +104,4 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (add-hook 'kill-emacs-hook
     '(lambda ()
        (xterm-mouse-mode -1))))
+
