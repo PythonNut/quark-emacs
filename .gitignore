@@ -1,3 +1,6 @@
+# elpa files
+/elpa
+
 # session backups
 /session*
 
