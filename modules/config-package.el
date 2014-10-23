@@ -31,6 +31,7 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     easy-kill
      load-dir
      auto-indent-mode
      lacarte
