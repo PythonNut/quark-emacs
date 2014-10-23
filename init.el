@@ -20,6 +20,7 @@
  )
 
 (load-library "config-setq.el")
+(load-library "config-modes.el")
 (load-library "config-package.el")
 (load-library "config-safety.el")
 (load-library "config-minibuffer.el")
