@@ -31,6 +31,7 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     linum-relative
      ws-butler
      dtrt-indent
      adaptive-wrap
