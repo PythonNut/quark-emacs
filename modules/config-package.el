@@ -4,8 +4,38 @@
 (setq package-archives
   '(("gnu" . "http://elpa.gnu.org/packages/")
      ("elpa" . "http://tromey.com/elpa/")
-     ("marmalade" . "http://marmalade-repo.org/packages/")
      ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (package-initialize)
 (provide 'config-package)
+
+;; Guarantee all packages are installed on start
+(defvar packages-list
+  '(icicles
+
+    ;; ido based packages
+    smex
+    flx-ido
+    ido-vertical-mode
+    ido-ubiquitous
+    
+    flycheck
+    flyspell
+    helm-projectile
+    iflipb)
+  "List of packages needs to be installed at launch")
+
+(defun has-package-not-installed ()
+  (loop for p in packages-list
+        when (not (package-installed-p p)) do (return t)
+        finally (return nil)))
+
+(when (has-package-not-installed)
+  ;; Check for new packages (package versions)
+  (message "%s" "Get latest versions of all packages...")
+  (package-refresh-contents)
+  (message "%s" " done.")
+  ;; Install the missing packages
+  (dolist (p packages-list)
+    (when (not (package-installed-p p))
+      (package-install p))))
