@@ -31,6 +31,7 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     dtrt-indent
      adaptive-wrap
      xclip
      easy-kill
