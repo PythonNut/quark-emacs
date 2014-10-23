@@ -46,3 +46,6 @@
   (setq buffer-backed-up nil))
 
 (add-hook 'before-save-hook  'force-backup-of-buffer)
+
+;; save buffers on blur
+(add-hook 'focus-out-hook '(lambda () (save-some-buffers t)))
