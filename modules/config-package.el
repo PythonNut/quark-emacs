@@ -25,7 +25,10 @@
     evil-leader
     evil-nerd-commenter
     evil-indent-textobject
-    
+    evil-surround
+ 
+    wide-n
+    key-chord
     auto-complete
     flycheck
     flyspell
