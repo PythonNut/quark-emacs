@@ -26,7 +26,14 @@
     evil-nerd-commenter
     evil-indent-textobject
     evil-surround
+    evil-org
+    evil-exchange
+    evil-terminal-cursor-changer
+    evil-visualstar
 
+    load-dir
+    auto-indent-mode
+    lacarte
     smartrep
     whole-line-or-region
     wide-n
@@ -43,12 +50,16 @@
         when (not (package-installed-p p)) do (return t)
         finally (return nil)))
 
-(when (has-package-not-installed)
-  ;; Check for new packages (package versions)
-  (message "%s" "Get latest versions of all packages...")
-  (package-refresh-contents)
-  (message "%s" " done.")
-  ;; Install the missing packages
-  (dolist (p packages-list)
-    (when (not (package-installed-p p))
-      (package-install p))))
+(defun install-all-packages ()
+  (interactive)
+  (when (has-package-not-installed)
+    ;; Check for new packages (package versions)
+    (message "%s" "Get latest versions of all packages...")
+    (package-refresh-contents)
+    (message "%s" " done.")
+    ;; Install the missing packages
+    (dolist (p packages-list)
+      (when (not (package-installed-p p))
+	(package-install p)))))
+
+(install-all-packages)
