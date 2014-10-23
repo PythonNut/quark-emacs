@@ -12,13 +12,21 @@
 ;; Guarantee all packages are installed on start
 (defvar packages-list
   '(icicles
+    solarized-theme
 
     ;; ido based packages
     smex
     flx-ido
     ido-vertical-mode
     ido-ubiquitous
+
+    ;; evil based modes
+    evil
+    evil-leader
+    evil-nerd-commenter
+    evil-indent-textobject
     
+    auto-complete
     flycheck
     flyspell
     helm-projectile
