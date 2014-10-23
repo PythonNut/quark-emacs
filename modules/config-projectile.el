@@ -1,22 +1,22 @@
 (projectile-global-mode +1)
 
 (setq my-projectile-project-root-files
-      '(".projectile"       ; projectile project marker
-        ".git"             ; Git VCS root dir
-        ".hg"              ; Mercurial VCS root dir
-        ".fslckout"        ; Fossil VCS root dir
-        ".bzr"             ; Bazaar VCS root dir
-        "_darcs"           ; Darcs VCS root dir
-        "rebar.config"     ; Rebar project file
-        "project.clj"      ; Leiningen project file
-        "pom.xml"          ; Maven project file
-        "build.sbt"        ; SBT project file
-        "build.gradle"     ; Gradle project file
-        "Gemfile"          ; Bundler file
-        "requirements.txt" ; Pip file
-        "Makefile"         ; Make project file
-        ".svn"             ; SVN project file
-        ))
+  '(".projectile"       ; projectile project marker
+     ".git"             ; Git VCS root dir
+     ".hg"              ; Mercurial VCS root dir
+     ".fslckout"        ; Fossil VCS root dir
+     ".bzr"             ; Bazaar VCS root dir
+     "_darcs"           ; Darcs VCS root dir
+     "rebar.config"     ; Rebar project file
+     "project.clj"      ; Leiningen project file
+     "pom.xml"          ; Maven project file
+     "build.sbt"        ; SBT project file
+     "build.gradle"     ; Gradle project file
+     "Gemfile"          ; Bundler file
+     "requirements.txt" ; Pip file
+     "Makefile"         ; Make project file
+     ".svn"             ; SVN project file
+     ))
 
 ;; autoload some basic projectile functions or polyfill
 (autoload '->> "dash")
@@ -36,4 +36,4 @@ The current directory is assumed to be the project's root otherwise."
         (-remove #'null)
         (car)
         (my-projectile-file-truename))
-      ()))
+    ()))
