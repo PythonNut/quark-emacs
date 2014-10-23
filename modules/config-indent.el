@@ -1,2 +1,1 @@
-(require 'auto-indent-mode)
-(auto-indent-mode +1)
+(auto-indent-global-mode +1)
