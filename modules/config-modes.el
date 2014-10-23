@@ -5,6 +5,7 @@
 (auto-compression-mode +1)
 (transient-mark-mode +1)
 (delete-selection-mode +1)
+(global-hl-line-mode +1)
 
 ;; encryption mode
 (setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
