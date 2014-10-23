@@ -20,4 +20,11 @@
   jit-lock-stealth-nice 0.1
   jit-lock-stealth-verbose nil)
 
+(setq mouse-drag-copy-region nil)                                               
+(setq x-select-enable-primary t)                                                
+(setq x-select-enable-clipboard t)                                              
+(setq select-active-regions t)                                                  
+(setf interprogram-cut-function 'x-select-text)                                 
+(setf interprogram-paste-function 'x-cut-buffer-or-selection-value)
+
 (provide 'config-setq)
