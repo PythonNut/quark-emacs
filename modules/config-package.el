@@ -31,6 +31,8 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     magit
+     psvn
      linum-relative
      ws-butler
      dtrt-indent
