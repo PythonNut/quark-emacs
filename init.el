@@ -26,6 +26,7 @@
 (load-library "config-pre-bindings.el")
 (load-library "config-safety.el")
 (load-library "config-evil.el")
+(load-library "config-ui.el")
 (load-library "config-paste.el")
 (load-library "config-auto-complete")
 (load-library "config-whitespace.el")
