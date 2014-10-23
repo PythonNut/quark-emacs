@@ -25,6 +25,7 @@
 (load-library "config-pre-bindings.el")
 (load-library "config-safety.el")
 (load-library "config-evil.el")
+(load-library "config-whitespace.el")
 (load-library "config-projects.el")
 (load-library "config-minibuffer.el")
 (load-library "config-solarized.el")
