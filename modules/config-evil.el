@@ -2,7 +2,6 @@
 ;;; Evil mode - Emacs + Vim keybindings
 ;;; ===================================
 (require 'evil)
-(require 'evil-leader)
 
 (setq 
  evil-want-C-w-delete nil
@@ -16,8 +15,12 @@
  evil-symbol-word-search t)
 
 (evil-mode +1)
+
+(require 'evil-leader)
 (global-evil-leader-mode +1)
-(setq evil-leader/leader "," evil-leader/in-all-states t)
+(setq 
+ evil-leader/leader "," 
+ evil-leader/in-all-states t)
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
@@ -49,6 +52,47 @@
 (key-chord-define evil-normal-state-map " b" 'ace-jump-buffer)
 (key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
 (key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
+
+;; Esc quits from everything
+(define-key evil-normal-state-map [escape] 'keyboard-quit)
+(define-key evil-visual-state-map [escape] 'keyboard-quit)
+(define-key evil-motion-state-map [escape] 'evil-normal-state)
+(define-key evil-operator-state-map [escape] 'evil-normal-state)
+(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+
+;; define a key to switch to emacs state
+(define-key evil-insert-state-map (kbd "C-M-z") 'evil-emacs-state)
+(define-key evil-emacs-state-map (kbd "C-M-z") 'evil-insert-state)
+(define-key evil-normal-state-map (kbd "C-M-z") 'evil-insert-state)
+(define-key evil-motion-state-map (kbd "C-M-z") 'evil-insert-state)
+(define-key evil-visual-state-map (kbd "C-M-z") 'evil-insert-state)
+
+;; indent pasted regions in evil
+(defadvice evil-paste-before (around auto-indent activate)
+  (evil-indent (point) (+ (point) (length ad-do-it))))
+
+(defadvice evil-paste-after (around auto-indent activate)
+  (evil-indent (point) (+ (point) (length ad-do-it))))
+
+;;; Change modeline color by Evil state
+(lexical-let ((default-color (cons (face-background 'mode-line)
+                               (face-foreground 'mode-line))))
+  (add-hook 'post-command-hook
+    (lambda ()
+      (let ((color (cond ((minibufferp) default-color)
+                     ((evil-normal-state-p) '("#586e75" . "#eee8d5"))
+                     ((evil-emacs-state-p)  '("#859900" . "#eee8d5"))
+                     ((evil-insert-state-p)  '("#93a1a1" . "#073642"))
+                     ((evil-visual-state-p) '("#268bd2" . "#eee8d5"))
+                     ((evil-replace-state-p) '("#dc322f" . "#eee8d5"))
+                     (t '("grey70" . "black")))))
+        (set-face-background 'mode-line (first color))
+        (set-face-foreground 'mode-line (rest color))
+        (set-face-foreground 'mode-line-buffer-id (rest color))))))
 
 ;; exit isearch with jj and kk 
 (defun isearch-exit-chord-worker (&optional arg)
@@ -144,93 +188,19 @@
 
 (define-key evil-normal-state-map "o" 'evil-open-paragraph)
 
+;; let Y == y$, similar to D = d$ 
 (defun evil-yank-to-end-of-line ()
   (interactive)
   (evil-yank (point) (point-at-eol)))
 
 (define-key evil-normal-state-map "Y" 'evil-yank-to-end-of-line)
 
+;; break bad undo habits
 (define-key evil-normal-state-map "U" 'undo-tree-visualize)
 (define-key evil-normal-state-map (kbd "C-z")
   '(lambda ()
      (interactive)
      (message "use u.")))
 
-(defun my-evil-smart-undo (&rest args)
-  (interactive)
-  (undo-tree-undo)
-  (unless (fboundp 'smartrep-read-event-loop)
-    (require 'smartrep))
-  (condition-case e
-    (smartrep-read-event-loop
-      '(("r" . undo-tree-redo)
-         ("u" . undo-tree-undo)))
-    (quit nil)))
-
-(defun my-evil-smart-redo (&rest args)
-  (interactive)
-  (undo-tree-redo)
-  (unless (fboundp 'smartrep-read-event-loop)
-    (require 'smartrep))
-  (condition-case e
-    (smartrep-read-event-loop
-      '(("r" . undo-tree-redo)
-         ("u" . undo-tree-undo)))
-    (quit nil)))
-
-(define-key evil-normal-state-map (kbd "u")   'my-evil-smart-undo)
-(define-key evil-normal-state-map (kbd "C-r") 'my-evil-smart-redo)
-
-(autoload 'evil-exchange        "evil-exchange")
-(autoload 'evil-exchange-cancel "evil-exchange")
-
-(define-key evil-normal-state-map "gx" 'evil-exchange)
-(define-key evil-visual-state-map "gx" 'evil-exchange)
-(define-key evil-normal-state-map "gX" 'evil-exchange-cancel)
-(define-key evil-visual-state-map "gX" 'evil-exchange-cancel)
-;;; Change modeline color by Evil state
-(lexical-let ((default-color (cons (face-background 'mode-line)
-                               (face-foreground 'mode-line))))
-  (add-hook 'post-command-hook
-    (lambda ()
-      (let ((color (cond ((minibufferp) default-color)
-                     ((evil-normal-state-p) '("#586e75" . "#eee8d5"))
-                     ((evil-emacs-state-p)  '("#859900" . "#eee8d5"))
-                     ((evil-insert-state-p)  '("#93a1a1" . "#073642"))
-                     ((evil-visual-state-p) '("#268bd2" . "#eee8d5"))
-                     ((evil-replace-state-p) '("#dc322f" . "#eee8d5"))
-                     (t '("grey70" . "black")))))
-        (set-face-background 'mode-line (first color))
-        (set-face-foreground 'mode-line (rest color))
-        (set-face-foreground 'mode-line-buffer-id (rest color))))))
-
-;; Evil surround, easily change surrounding chars
-(require 'evil-surround)
-(global-evil-surround-mode +1)
-
-;; Esc quits from everything
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key evil-motion-state-map [escape] 'evil-normal-state)
-(define-key evil-operator-state-map [escape] 'evil-normal-state)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
-
-;; define a key to switch to emacs state
-(define-key evil-insert-state-map (kbd "C-M-z") 'evil-emacs-state)
-(define-key evil-emacs-state-map (kbd "C-M-z") 'evil-insert-state)
-(define-key evil-normal-state-map (kbd "C-M-z") 'evil-insert-state)
-(define-key evil-motion-state-map (kbd "C-M-z") 'evil-insert-state)
-(define-key evil-visual-state-map (kbd "C-M-z") 'evil-insert-state)
-
-
-;; indent pasted regions in evil
-(defadvice evil-paste-before (around auto-indent activate)
-  (evil-indent (point) (+ (point) (length ad-do-it))))
-
-(defadvice evil-paste-after (around auto-indent activate)
-  (evil-indent (point) (+ (point) (length ad-do-it))))
-
+(load-library "config-evil-modules.el")
+(load-library "config-evil-textobjects.el")
