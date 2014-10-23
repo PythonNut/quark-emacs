@@ -31,6 +31,7 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     adaptive-wrap
      xclip
      easy-kill
      load-dir
