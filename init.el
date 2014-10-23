@@ -30,3 +30,8 @@
 (load-library "config-projects.el")
 (load-library "config-minibuffer.el")
 (load-library "config-solarized.el")
+
+(setq load-dirs (concat
+		 user-emacs-directory
+		 "modules/modes/"))
+(load-dirs)
