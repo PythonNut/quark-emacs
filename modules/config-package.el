@@ -12,43 +12,43 @@
 ;; Guarantee all packages are installed on start
 (defvar packages-list
   '(icicles
-    solarized-theme
+     solarized-theme
 
-    ;; ido based packages
-    smex
-    flx-ido
-    ido-vertical-mode
-    ido-ubiquitous
+     ;; ido based packages
+     smex
+     flx-ido
+     ido-vertical-mode
+     ido-ubiquitous
 
-    ;; evil based modes
-    evil
-    evil-leader
-    evil-nerd-commenter
-    evil-indent-textobject
-    evil-surround
-    evil-org
-    evil-exchange
-    evil-terminal-cursor-changer
-    evil-visualstar
+     ;; evil based modes
+     evil
+     evil-leader
+     evil-nerd-commenter
+     evil-indent-textobject
+     evil-surround
+     evil-org
+     evil-exchange
+     evil-terminal-cursor-changer
+     evil-visualstar
 
-    load-dir
-    auto-indent-mode
-    lacarte
-    smartrep
-    whole-line-or-region
-    wide-n
-    key-chord
-    auto-complete
-    flycheck
-    flyspell
-    helm-projectile
-    iflipb)
+     load-dir
+     auto-indent-mode
+     lacarte
+     smartrep
+     whole-line-or-region
+     wide-n
+     key-chord
+     auto-complete
+     flycheck
+     flyspell
+     helm-projectile
+     iflipb)
   "List of packages needs to be installed at launch")
 
 (defun has-package-not-installed ()
   (loop for p in packages-list
-        when (not (package-installed-p p)) do (return t)
-        finally (return nil)))
+    when (not (package-installed-p p)) do (return t)
+    finally (return nil)))
 
 (defun install-all-packages ()
   (interactive)

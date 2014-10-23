@@ -4,23 +4,24 @@
 (require 'evil)
 
 (setq 
- evil-want-C-w-delete nil
- evil-want-C-w-in-emacs-state nil
- evil-ex-complete-emacs-commands t
- evil-want-fine-undo t
- evil-search-module 'evil-search
- evil-magic 'very-magic)
+  evil-want-C-w-delete nil
+  evil-want-C-w-in-emacs-state nil
+  evil-ex-complete-emacs-commands t
+  evil-want-fine-undo t
+  evil-search-module 'evil-search
+
+  evil-magic 'very-magic)
 
 (setq-default
- evil-symbol-word-search t)
+  evil-symbol-word-search t)
 
 (evil-mode +1)
 
 (require 'evil-leader)
 (global-evil-leader-mode +1)
 (setq 
- evil-leader/leader "," 
- evil-leader/in-all-states t)
+  evil-leader/leader "," 
+  evil-leader/in-all-states t)
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)

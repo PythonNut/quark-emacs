@@ -151,9 +151,9 @@
 
      (defadvice  evil-paste-pop (around auto-helm-omni activate)
        (if (memq last-command
-                 '(evil-paste-after
-                    evil-paste-before
-                    evil-visual-paste))
+	     '(evil-paste-after
+		evil-paste-before
+		evil-visual-paste))
          ad-do-it
          (call-interactively 'my-helm-omni)))
 

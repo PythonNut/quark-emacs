@@ -13,4 +13,4 @@
 
 ;; Also change cursor colors in a terminal
 (unless (display-graphic-p)
-       (require 'evil-terminal-cursor-changer))
+  (require 'evil-terminal-cursor-changer))

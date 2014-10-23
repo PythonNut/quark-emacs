@@ -23,31 +23,31 @@
 (defun evil-indent--current-indentation ()
   "Return the indentation of the current line. Moves point."
   (buffer-substring-no-properties (point-at-bol)
-				  (progn (back-to-indentation)
-					 (point))))
+    (progn (back-to-indentation)
+      (point))))
 
 (defun evil-indent--block-range (&optional point)
   "Return the point at the begin and end of the text block with the same indentation."
   ;; there are faster ways to mark the entire file
   ;; so assume the user wants a block and skip to there
   (loop while (and (/= (point) (point-max))
-		   (= 0
-		      (length (evil-indent--current-indentation))))
-	do (progn
-	     (forward-line 1)))
+		(= 0
+		  (length (evil-indent--current-indentation))))
+    do (progn
+	 (forward-line 1)))
 
   (cl-flet ((before-end () (/= (point) (point-max)))
-	    (empty-line-p ()
-			  (string-match "^[[:space:]]*$"
-					(buffer-substring-no-properties
-					 (line-beginning-position)
-					 (line-end-position)))))
+	     (empty-line-p ()
+	       (string-match "^[[:space:]]*$"
+		 (buffer-substring-no-properties
+		   (line-beginning-position)
+		   (line-end-position)))))
     (let ((indent (evil-indent--current-indentation)))
       (cl-flet ((line-indent-ok ()
-				(or (>=
-				     (length (evil-indent--current-indentation))
-				     (length indent))
-				    (empty-line-p))))
+		  (or (>=
+			(length (evil-indent--current-indentation))
+			(length indent))
+		    (empty-line-p))))
         ;; now skip ahead to the Nth block with this indentation
         (setq index (or last-prefix-arg 0))
         (while (> index 1)
@@ -85,7 +85,7 @@
                   (goto-char (first (evil-indent--block-range)))
                   (forward-line -1)
                   (point-at-bol))
-		(second range) 'line)))
+      (second range) 'line)))
 
 (evil-define-text-object evil-indent-a-block-end (&optional count beg end type)
   "Text object describing the block with the same indentation as the current line and the lines above and below."
@@ -95,10 +95,10 @@
                   (goto-char (first range))
                   (forward-line -1)
                   (point-at-bol))
-		(save-excursion
-		  (goto-char (second range))
-		  (forward-line 1)
-		  (point-at-eol)) 'line)))
+      (save-excursion
+	(goto-char (second range))
+	(forward-line 1)
+	(point-at-eol)) 'line)))
 
 (define-key evil-inner-text-objects-map "c" 'evil-indent-i-block)
 (define-key evil-outer-text-objects-map "c" 'evil-indent-a-block)
@@ -138,7 +138,7 @@
   (interactive)
   (let ((syn (syntax-ppss (or pt (point)))))
     (and (nth 8 syn)
-	 (not (nth 3 syn)))))
+      (not (nth 3 syn)))))
 
 (defun evil-indent--comment-range (&optional point)
   "Return the point at the begin and end of the text block with the same indentation.
@@ -148,11 +148,11 @@
     (goto-char point))
 
   (cl-flet ((before-end () (/= (point) (point-max)))
-	    (after-beg () (/= (point) (point-min)))
-	    (comment-anywhere ()
-			      (or
-			       (point-in-comment-p (point-at-bol))
-			       (point-in-comment-p (point-at-eol)))))
+	     (after-beg () (/= (point) (point-min)))
+	     (comment-anywhere ()
+	       (or
+		 (point-in-comment-p (point-at-bol))
+		 (point-in-comment-p (point-at-eol)))))
 
     (while (and (before-end) (not (comment-anywhere)))
       (forward-line 1))
@@ -171,41 +171,41 @@
 
     (save-excursion
       (if (string-match "^[[:space:]]*$"
-			(buffer-substring-no-properties
-			 (line-beginning-position)
-			 (save-excursion
-			   (evil-backward-WORD-end)
-			   (point))))
-	  (let ((start (point)) begin end)
-	    (while (and (/= (point) (point-min))
-			(or (save-excursion
-			      (progn
-				(back-to-indentation)
-				(evil-forward-WORD-begin)
-				(point-in-comment-p)))
-			    (point-in-comment-p (line-beginning-position))))
-	      (setq begin (point-at-bol))
-	      (forward-line -1))
+	    (buffer-substring-no-properties
+	      (line-beginning-position)
+	      (save-excursion
+		(evil-backward-WORD-end)
+		(point))))
+	(let ((start (point)) begin end)
+	  (while (and (/= (point) (point-min))
+		   (or (save-excursion
+			 (progn
+			   (back-to-indentation)
+			   (evil-forward-WORD-begin)
+			   (point-in-comment-p)))
+		     (point-in-comment-p (line-beginning-position))))
+	    (setq begin (point-at-bol))
+	    (forward-line -1))
 
-	    (goto-char start)
+	  (goto-char start)
 
-	    (while (and (before-end)
-			(or (save-excursion
-			      (progn
-				(back-to-indentation)
-				(evil-forward-WORD-begin)
-				(point-in-comment-p)))
-			    (point-in-comment-p (line-beginning-position))))
-	      (setq end (point-at-eol))
-	      (forward-line 1))
-	    (list 'line begin end))
+	  (while (and (before-end)
+		   (or (save-excursion
+			 (progn
+			   (back-to-indentation)
+			   (evil-forward-WORD-begin)
+			   (point-in-comment-p)))
+		     (point-in-comment-p (line-beginning-position))))
+	    (setq end (point-at-eol))
+	    (forward-line 1))
+	  (list 'line begin end))
         ;; back up the cursor here
         (list 'exclusive
-	      (progn
-		(while (looking-back "[[:space:]]")
-		  (backward-char))
-		(point))
-	      (line-end-position))))))
+	  (progn
+	    (while (looking-back "[[:space:]]")
+	      (backward-char))
+	    (point))
+	  (line-end-position))))))
 
 (evil-define-text-object evil-indent-i-comment (&optional count beg end type)
   "Text object describing the block with the same indentation as
@@ -218,9 +218,9 @@ the current line."
 (defun evil-make-arbitrary-char-range ()
   (save-excursion
     (let ((beg (progn (deactivate-mark) (ace-jump-char-mode) (point)))
-	  (end (progn (deactivate-mark) (ace-jump-char-mode) (point))))
+	   (end (progn (deactivate-mark) (ace-jump-char-mode) (point))))
       (if (> beg end)
-	  (list beg end)
+	(list beg end)
         (list end beg)))))
 
 (evil-define-text-object evil-i-arbitrary-char-range (&optional _c _b _e _t)
@@ -244,10 +244,10 @@ the current line."
                (evil-window-top)
                (line-number-at-pos))))
     (prog1
-	(progn
-	  (deactivate-mark)
-	  (evil-ace-jump-line-mode)
-	  (point))
+      (progn
+	(deactivate-mark)
+	(evil-ace-jump-line-mode)
+	(point))
       (scroll-up-line (- top (save-excursion
                                (evil-window-top)
                                (line-number-at-pos)))))))
@@ -255,7 +255,7 @@ the current line."
 (defun evil-make-arbitrary-line-range (&rest _ignored)
   (save-excursion
     (let ((beg (evil-ace-jump-line-and-revert))
-	  (end (evil-ace-jump-line-and-revert)))
+	   (end (evil-ace-jump-line-and-revert)))
       (evil-range (min beg end) (max beg end)))))
 
 (evil-define-text-object evil-i-arbitrary-line-range (&optional _c _b _e _t)
@@ -263,9 +263,9 @@ the current line."
   :type line
   (save-excursion
     (let ((beg (evil-ace-jump-line-and-revert))
-	  (end (evil-ace-jump-line-and-revert)))
+	   (end (evil-ace-jump-line-and-revert)))
       (if (> beg end)
-	  (evil-range beg end 'line)
+	(evil-range beg end 'line)
         (evil-range end beg 'line)))))
 
 (evil-define-text-object evil-a-arbitrary-line-range (&optional _c _b _e _t)
@@ -276,29 +276,29 @@ the current line."
                  (deactivate-mark)
                  (evil-ace-jump-line-mode)
                  (point)))
-	  (end (progn
-		 (deactivate-mark)
-		 (evil-ace-jump-line-mode)
-		 (point))))
+	   (end (progn
+		  (deactivate-mark)
+		  (evil-ace-jump-line-mode)
+		  (point))))
       (evil-range
-       (progn
-	 (goto-char (min beg end))
-	 (loop do (previous-line) while
-	       (string-match "^[[:space:]]*$"
-			     (buffer-substring-no-properties
-			      (line-beginning-position)
-			      (line-end-position))))
-	 (next-line)
-	 (point))
-       (progn
-	 (goto-char (max beg end))
-	 (loop do (next-line) while
-	       (string-match "^[[:space:]]*$"
-			     (buffer-substring-no-properties
-			      (line-beginning-position)
-			      (line-end-position))))
-	 (previous-line)
-	 (point)) 'line))))
+	(progn
+	  (goto-char (min beg end))
+	  (loop do (previous-line) while
+	    (string-match "^[[:space:]]*$"
+	      (buffer-substring-no-properties
+		(line-beginning-position)
+		(line-end-position))))
+	  (next-line)
+	  (point))
+	(progn
+	  (goto-char (max beg end))
+	  (loop do (next-line) while
+	    (string-match "^[[:space:]]*$"
+	      (buffer-substring-no-properties
+		(line-beginning-position)
+		(line-end-position))))
+	  (previous-line)
+	  (point)) 'line))))
 
 (define-key evil-inner-text-objects-map "R" 'evil-i-arbitrary-line-range)
 (define-key evil-outer-text-objects-map "R" 'evil-a-arbitrary-line-range)
@@ -368,9 +368,9 @@ the current line."
   (evil-visual-state)
   (goto-char beg)
   (evil-ex-normal (region-beginning) (region-end)
-		  (concat "@"
-			  (single-key-description
-			   (read-char "What macro?")))))
+    (concat "@"
+      (single-key-description
+	(read-char "What macro?")))))
 
 (define-key evil-operator-state-map "gl" 'evil-macro-on-all-lines)
 (define-key evil-normal-state-map "gl" 'evil-macro-on-all-lines)
