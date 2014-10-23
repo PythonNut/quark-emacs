@@ -21,4 +21,4 @@
 
 (load-library "config-setq.el")
 (load-library "config-package.el")
-(load-library "config-ido.el")
+(load-library "config-minibuffer.el")
