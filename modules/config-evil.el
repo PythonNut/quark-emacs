@@ -50,7 +50,7 @@
 (key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
 (key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
 
-
+;; exit isearch with jj and kk 
 (defun isearch-exit-chord-worker (&optional arg)
   (interactive "p")
   (execute-kbd-macro (kbd "<backspace> <return>")))
@@ -70,15 +70,7 @@
 (define-key isearch-mode-map "j" 'isearch-exit-chord)
 (define-key isearch-mode-map "k" 'isearch-exit-chord)
 
-;; This function builds a repeatable version of its argument COMMAND.
-(defun repeat-command (command)
-  "Repeat COMMAND."
-  (interactive)
-  (let ((repeat-previous-repeated-command command)
-         (last-repeatable-command 'repeat))
-    (repeat nil)))
-
-
+;; switch to insert state if I set an emacs-style mark
 (define-key evil-normal-state-map (kbd "C-SPC")
   '(lambda () (interactive)
      (evil-insert-state)
@@ -93,6 +85,7 @@
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-visual-line)
 (setq evil-replace-state-cursor '("#884444" box))
 
+;; open line and stay in normal mode 
 (defun evil-open-below-normal (arg)
   (interactive "p")
   (evil-open-below arg)
@@ -108,17 +101,13 @@
 (define-key evil-normal-state-map (kbd "[ <SPC>") 'evil-open-above-normal)
 (define-key evil-normal-state-map (kbd "] <SPC>") 'evil-open-below-normal)
 
-(define-key evil-normal-state-map (kbd "[ e") 'drag-stuff-up)
-(define-key evil-normal-state-map (kbd "] e") 'drag-stuff-down)
-
-(define-key evil-normal-state-map (kbd "[ w") 'drag-stuff-left)
-(define-key evil-normal-state-map (kbd "] w") 'drag-stuff-right)
-
+;; bind a fallback keybind to goto normal state
 (define-key evil-insert-state-map (kbd "C-j") 'evil-normal-state)
 (define-key evil-emacs-state-map (kbd "C-j") 'evil-normal-state)
 (define-key evil-visual-state-map (kbd "C-j") 'evil-normal-state)
 (define-key evil-replace-state-map (kbd "C-j") 'evil-normal-state)
 
+;; let oo open a new paragraph
 (defun evil-open-paragraph-full (arg)
   (interactive "p")
   (evil-open-above-normal arg)
@@ -230,39 +219,13 @@
 (define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
 
+;; define a key to switch to emacs state
 (define-key evil-insert-state-map (kbd "C-M-z") 'evil-emacs-state)
 (define-key evil-emacs-state-map (kbd "C-M-z") 'evil-insert-state)
 (define-key evil-normal-state-map (kbd "C-M-z") 'evil-insert-state)
 (define-key evil-motion-state-map (kbd "C-M-z") 'evil-insert-state)
 (define-key evil-visual-state-map (kbd "C-M-z") 'evil-insert-state)
 
-(defun my-normal-smart-undo (&rest args)
-  (interactive)
-  (undo-tree-undo)
-  (unless (fboundp 'smartrep-read-event-loop)
-    (require 'smartrep))
-  (condition-case e
-    (smartrep-read-event-loop
-      '(("y" . undo-tree-redo)
-         ("z" . undo-tree-undo)))
-    (quit nil)))
-
-(defun my-normal-smart-redo (&rest args)
-  (interactive)
-  (undo-tree-redo)
-  (unless (fboundp 'smartrep-read-event-loop)
-    (require 'smartrep))
-  (condition-case e
-    (smartrep-read-event-loop
-      '(("y" . undo-tree-redo)
-         ("z" . undo-tree-undo)))
-    (quit nil)))
-
-(define-key evil-insert-state-map (kbd "C-z") 'my-normal-smart-undo)
-(define-key evil-emacs-state-map (kbd "C-z") 'my-normal-smart-undo)
-
-(global-set-key (kbd "<remap> <undo-tree-redo>") 'my-normal-smart-redo)
-(global-set-key (kbd "C-S-z") 'my-normal-smart-redo)
 
 ;; indent pasted regions in evil
 (defadvice evil-paste-before (around auto-indent activate)
