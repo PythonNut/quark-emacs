@@ -21,4 +21,6 @@
 
 (load-library "config-setq.el")
 (load-library "config-package.el")
+(load-library "config-safety.el")
 (load-library "config-minibuffer.el")
+(load-library "config-solarized.el")
