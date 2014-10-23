@@ -31,6 +31,7 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     xclip
      easy-kill
      load-dir
      auto-indent-mode
