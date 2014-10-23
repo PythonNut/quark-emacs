@@ -78,5 +78,3 @@ ac-comphist.dat
 /.elisp-cache-stamp
 /kkrc
 /.python-environments
-/elpa/archives/*/archive-contents
-/elpa/*.txt
