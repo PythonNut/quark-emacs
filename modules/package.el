@@ -1,2 +1,0 @@
-(require 'package)
-(package-initialize)
