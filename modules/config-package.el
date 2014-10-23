@@ -26,7 +26,9 @@
     evil-nerd-commenter
     evil-indent-textobject
     evil-surround
- 
+
+    smartrep
+    whole-line-or-region
     wide-n
     key-chord
     auto-complete
