@@ -1,3 +1,6 @@
+# elpa files
+/elpa
+
 # session backups
 /session*
 
@@ -67,6 +70,9 @@ ac-comphist.dat
 /ede-projects.el
 
 
+# desktop files
+/desktop
+
 # misc
 *.undo.xz
 *#
@@ -75,5 +81,3 @@ ac-comphist.dat
 /.elisp-cache-stamp
 /kkrc
 /.python-environments
-/elpa/archives/*/archive-contents
-/elpa/*.txt
