@@ -32,6 +32,7 @@
 (load-library "config-auto-complete")
 (load-library "config-projects.el")
 (load-library "config-minibuffer.el")
+(load-library "config-intel.el")
 (load-library "config-solarized.el")
 
 (setq load-dirs (concat
