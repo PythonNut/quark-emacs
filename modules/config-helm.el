@@ -130,6 +130,7 @@
                 helm-source-files-in-current-dir
                 helm-source-bookmarks
                 ;; code search
+		helm-source-semantic
                 helm-source-imenu
                 helm-source-occur
                 ;; internal
