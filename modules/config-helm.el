@@ -103,6 +103,8 @@
          (require 'helm-ring))
        (unless (fboundp 'helm-source-lacarte)
          (require 'helm-misc))
+       (unless (fboundp 'helm-source-semantic)
+         (require 'helm-semantic))
 
        (let ((bufs (list (buffer-name (current-buffer)))))
          (helm-attrset 'moccur-buffers bufs helm-source-occur)
