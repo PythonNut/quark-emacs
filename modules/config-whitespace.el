@@ -11,3 +11,4 @@
 
 ;; autoload ws-butler on file open
 (add-hook 'find-file-hooks 'ws-butler-global-mode)
+(setq require-final-newline t)
