@@ -8,4 +8,6 @@
   desktop-files-not-to-save   "^$" ;reload tramp paths
   desktop-load-locked-desktop nil)
 
-(desktop-save-mode +1)
+(setq save-place-file "~/.emacs.d/saveplace")
+(setq-default save-place t)
+(require 'saveplace)
