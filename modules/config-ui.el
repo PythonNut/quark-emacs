@@ -3,3 +3,11 @@
 (load-library "config-parens.el")
 (load-library "config-ace-easymotion.el")
 
+(require 'multiple-cursors)
+(global-set-key (kbd "C-c l") 'mc/edit-lines)
+(global-set-key (kbd "C-c a") 'mc/mark-all-like-this-dwim)
+(global-set-key (kbd "C-c m") 'mc/mark-more-like-this-extended)
+(global-set-key (kbd "C-c s") 'mc/mark-all-in-region)
+(global-set-key (kbd "C-c M") 'mc/mark-pop)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)

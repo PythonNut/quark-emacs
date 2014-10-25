@@ -32,6 +32,7 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     multiple-cursors
      ace-jump-mode
      noflet
      hexrgb
