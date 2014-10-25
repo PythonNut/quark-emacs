@@ -32,6 +32,8 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     ace-jump-mode
+     noflet
      hexrgb
      rainbow-delimiters
      smartparens
