@@ -203,5 +203,5 @@
      (interactive)
      (message "use u.")))
 
-(load-library "config-evil-modules.el")
-(load-library "config-evil-textobjects.el")
+(load-library "config-evil-modules")
+(load-library "config-evil-textobjects")

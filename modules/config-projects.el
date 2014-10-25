@@ -1,2 +1,2 @@
-(load-library "config-projectile.el")
-(load-library "config-vcs.el")
+(load-library "config-projectile")
+(load-library "config-vcs")

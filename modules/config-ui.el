@@ -1,7 +1,7 @@
-(load-library "config-scroll.el")
-(load-library "config-line-numbers.el")
-(load-library "config-parens.el")
-(load-library "config-ace-easymotion.el")
+(load-library "config-scroll")
+(load-library "config-line-numbers")
+(load-library "config-parens")
+(load-library "config-ace-easymotion")
 
 (require 'multiple-cursors)
 (global-set-key (kbd "C-c l") 'mc/edit-lines)
