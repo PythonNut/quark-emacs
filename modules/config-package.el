@@ -32,6 +32,10 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     gitattributes-mode
+     gitconfig-mode
+     gitignore-mode
+     idle-require
      multiple-cursors
      ace-jump-mode
      noflet
