@@ -84,3 +84,5 @@
     (package-initialize)))
 
 (install-all-packages)
+
+(add-to-list 'load-path "~/.emacs.d/personal/")
