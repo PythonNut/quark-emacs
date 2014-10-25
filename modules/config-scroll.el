@@ -17,3 +17,9 @@
 (add-hook 'emacs-startup-hook
   '(lambda ()
      (setq scroll-margin 5)))
+
+(add-hook 'window-size-change-functions
+  '(lambda (frame)
+     (if (< (window-body-height) 10)
+       (setq scroll-margin (1-  (/ (window-body-height) 2)))
+       (setq scroll-margin 5))))
