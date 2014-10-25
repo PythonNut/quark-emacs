@@ -32,6 +32,9 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     hexrgb
+     rainbow-delimiters
+     smartparens
      magit
      magit-filenotify
      psvn
