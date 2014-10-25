@@ -32,6 +32,23 @@
      evil-terminal-cursor-changer
      evil-visualstar
 
+     ;; major modes
+     idris-mode
+     haskell-mode
+     livescript-mode
+     scss-mode
+     sass-mode
+     less-css-mode
+     markdown-mode
+     js2-mode
+     cython-mode
+     coffee-mode
+     dart-mode
+     julia-mode
+     matlab-mode
+     web-mode
+
+     auto-async-byte-compile
      gitattributes-mode
      gitconfig-mode
      gitignore-mode
