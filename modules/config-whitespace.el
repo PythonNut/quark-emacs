@@ -1,5 +1,5 @@
-(load-library "config-indent.el")
-(load-library "config-wrap.el")
+(load-library "config-indent")
+(load-library "config-wrap")
 
 ;; always ensure UTF-8
 (defun cleanup-buffer-safe ()
