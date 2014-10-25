@@ -27,4 +27,6 @@
 (setf interprogram-cut-function 'x-select-text)                                 
 (setf interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 (provide 'config-setq)
