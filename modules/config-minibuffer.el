@@ -25,3 +25,5 @@
 ;; recursive minibuffers
 (setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode t)
+
+(define-key evil-normal-state-map (kbd "SPC SPC") 'smex)
