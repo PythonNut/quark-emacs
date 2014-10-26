@@ -1,4 +1,5 @@
 (require 'smex)
+(eval-when-compile '(require 'cl))
 
 (global-set-key (kbd "M-x") 'smex)
 
