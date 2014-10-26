@@ -27,6 +27,9 @@
 (setf interprogram-cut-function 'x-select-text)                                 
 (setf interprogram-paste-function 'x-cut-buffer-or-selection-value)
 
+(setq focus-follows-mouse 1)
+(setq mouse-autoselect-window 0.3)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (provide 'config-setq)
