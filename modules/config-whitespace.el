@@ -1,6 +1,6 @@
 (load-library "config-indent")
 (load-library "config-wrap")
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 ;; always ensure UTF-8
 (defun cleanup-buffer-safe ()

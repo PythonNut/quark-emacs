@@ -1,4 +1,4 @@
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 (load-library "config-scroll")
 (load-library "config-line-numbers")

@@ -1,4 +1,4 @@
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 ;; Evil exchange, easily swap two things
 (autoload 'evil-exchange        "evil-exchange")

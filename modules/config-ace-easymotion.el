@@ -1,5 +1,6 @@
 (require 'noflet)
 (require 'ace-jump-mode)
+(eval-when-compile (require 'cl))
 
 (eval-after-load 'ace-jump-mode
   '(progn

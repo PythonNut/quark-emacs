@@ -1,5 +1,5 @@
 (projectile-global-mode +1)
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 (setq my-projectile-project-root-files
   '(".projectile"       ; projectile project marker

@@ -1,4 +1,4 @@
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 (defvar backup-location "~/.emacs.d/data/backups")
 (defvar autosave-location "~/.emacs.d/data/autosave")

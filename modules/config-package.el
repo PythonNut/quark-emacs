@@ -1,5 +1,6 @@
 (require 'package)
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 
 ;; Package archives
 (setq
@@ -49,6 +50,7 @@
      matlab-mode
      web-mode
 
+     framemove
      aggressive-indent
      auto-async-byte-compile
      gitattributes-mode
