@@ -49,6 +49,7 @@
      matlab-mode
      web-mode
 
+     aggressive-indent
      auto-async-byte-compile
      gitattributes-mode
      gitconfig-mode

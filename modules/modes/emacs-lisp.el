@@ -4,5 +4,6 @@
 
 (add-hook 'emacs-lisp-mode-hook
   '(lambda ()
+     (aggressive-indent-mode +1)
      (require 'auto-async-byte-compile)
      (auto-async-byte-compile-mode +1)))
