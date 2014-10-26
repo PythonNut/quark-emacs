@@ -1,5 +1,5 @@
 (require 'whole-line-or-region)
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 (cua-mode +1)
 

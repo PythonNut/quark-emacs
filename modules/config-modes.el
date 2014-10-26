@@ -1,4 +1,4 @@
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)

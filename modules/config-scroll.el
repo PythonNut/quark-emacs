@@ -1,4 +1,4 @@
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 (setq
   mouse-wheel-scroll-amount '(3 ((shift) . 1))

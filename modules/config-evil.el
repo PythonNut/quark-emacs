@@ -1,5 +1,5 @@
 (require 'evil)
-(eval-when-compile '(require 'cl))
+(eval-when-compile (require 'cl))
 
 (setq 
   evil-want-C-w-delete nil
