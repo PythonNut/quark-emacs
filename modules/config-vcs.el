@@ -1,3 +1,5 @@
+(eval-when-compile '(require 'cl))
+
 (evil-set-initial-state 'svn-status-mode 'insert)
 (evil-set-initial-state 'magit-status-mode 'insert)
 

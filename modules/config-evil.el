@@ -1,7 +1,5 @@
-;;; ===================================
-;;; Evil mode - Emacs + Vim keybindings
-;;; ===================================
 (require 'evil)
+(eval-when-compile '(require 'cl))
 
 (setq 
   evil-want-C-w-delete nil

@@ -1,4 +1,5 @@
 (require 'smartparens-config)
+(eval-when-compile '(require 'cl))
 
 (setq
   sp-autoinsert-quote-if-followed-by-closing-pair nil

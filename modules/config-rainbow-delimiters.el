@@ -1,4 +1,5 @@
 (require 'rainbow-delimiters)
+(eval-when-compile '(require 'cl))
 
 ;; the equivalent of a global mode, but does not
 ;; turn on for odd non-programming modes

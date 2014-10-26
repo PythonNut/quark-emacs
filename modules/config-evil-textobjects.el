@@ -1,3 +1,5 @@
+(eval-when-compile '(require 'cl))
+
 ;;; === Evil motion section ===
 
 (evil-define-motion evil-forward-symbol (count)

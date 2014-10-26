@@ -1,6 +1,5 @@
-;;; =========================
-;;; auto save - protect me!!!
-;;; =========================
+(eval-when-compile '(require 'cl))
+
 (defvar backup-location "~/.emacs.d/data/backups")
 (defvar autosave-location "~/.emacs.d/data/autosave")
 (defvar backup-directory "~/.emacs.d/data/backups")

@@ -1,4 +1,6 @@
 (require 'linum)
+(eval-when-compile '(require 'cl))
+
 (add-hook 'prog-mode-hook
   '(lambda ()
      (when window-system

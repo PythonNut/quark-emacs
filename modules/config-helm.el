@@ -1,6 +1,7 @@
 (require 'helm-config)
 (require 'helm-imenu)
 (require 'helm-files)
+(eval-when-compile '(require 'cl))
 
 (run-with-idle-timer 5 nil
   '(lambda ()

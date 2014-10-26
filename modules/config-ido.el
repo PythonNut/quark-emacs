@@ -1,4 +1,5 @@
 (ido-mode +1)
+(eval-when-compile '(require 'cl))
 
 (eval-after-load 'ido
   '(progn
