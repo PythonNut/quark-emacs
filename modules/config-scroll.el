@@ -7,13 +7,8 @@
   mouse-wheel-follow-mouse t
   smooth-scroll-margin 5
   scroll-margin 5
-  scroll-conservatively 0
-  scroll-up-aggressively 0.01
-  scroll-down-aggressively 0.01)
-
-(setq-default
-  scroll-up-aggressively 0.01
-  scroll-down-aggressively 0.01)
+  auto-window-vscroll nil
+  scroll-conservatively 1000)
 
 ;; scroll-margin is reset at start for some reason
 (add-hook 'emacs-startup-hook
@@ -22,6 +17,11 @@
 
 (add-hook 'window-size-change-functions
   '(lambda (frame)
+     ;; (setq
+
+     ;;   mouse-wheel-scroll-amount
+     ;;   `(
+     ;; 	  ,(min (max 1 (1- (/ (window-body-height) 2))) 3);; 	  ((shift) . 1)))
      (if (< (window-body-height) 10)
-       (setq scroll-margin (1-  (/ (window-body-height) 2)))
+       (setq scroll-margin (max 0 (1-  (/ (window-body-height) 2))))
        (setq scroll-margin 5))))
