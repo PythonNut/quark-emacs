@@ -106,6 +106,10 @@
          (require 'helm-misc))
        (unless (fboundp 'helm-source-semantic)
          (require 'helm-semantic))
+       (unless (fboundp 'helm-source-projectile-files-list)
+	 (require 'helm-projectile)
+	 (unless projectile-global-mode-buffers
+	   (projectile-global-mode +1)))
 
        (let ((bufs (list (buffer-name (current-buffer)))))
          (helm-attrset 'moccur-buffers bufs helm-source-occur)
@@ -118,11 +122,7 @@
            (append '(helm-source-buffers-list)
 
              ;; projectile explodes when not in project
-             (when (my-projectile-project-root)
-               (unless (fboundp 'helm-source-projectile-files-list)
-                 (require 'helm-projectile)
-                 (unless projectile-global-mode-buffers
-                   (projectile-global-mode +1)))
+             (when (ignore-errors (projectile-project-root))
                '(helm-source-projectile-recentf-list
                   helm-source-projectile-files-list
                   helm-source-projectile-buffers-list))
