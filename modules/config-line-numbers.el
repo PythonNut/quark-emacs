@@ -10,6 +10,7 @@
   '(progn
      (set-face-background 'linum 'nil)
      (set-face-foreground 'linum "grey51")
+     (setq linum-delay t)
 
      (require 'linum-relative)
 
