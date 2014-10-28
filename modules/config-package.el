@@ -50,6 +50,7 @@
      matlab-mode
      web-mode
 
+     smooth-scrolling
      framemove
      aggressive-indent
      auto-async-byte-compile
