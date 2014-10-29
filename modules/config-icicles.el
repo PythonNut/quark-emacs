@@ -1,5 +1,29 @@
 (require 'icicles)
 
+(setq icicle-region-background "grey20")
+
+(setq icicle-highlight-lighter-flag nil)
+(setq icicle-max-candidates 500)
+(setq icicle-default-cycling-mode 'apropos)
+(setq icicle-show-multi-completion-flag t)
+(setq icicle-search-highlight-all-current-flag t)
+
+(setq icicle-command-abbrev-match-all-parts-flag nil)
+;; (setq icicle-add-proxy-candidates-flag t)
+(setq icicle-highlight-input-completion-failure-delay 0)
+(setq icicle-Completions-text-scale-decrease 0.2)
+;; (add-to-list 'icicle-TAB-completion-methods 'fuzzy)
+(setq icicle-TAB-completion-methods '(vanilla substring basic))
+(setq locate-command "locate")
+(setq icicle-completions-format "vertical")
+
+;; (setq icicle-use-C-for-actions-flag nil)
+(setq icicle-incremental-completion t)
+(setq icicle-incremental-completion-delay 0.1)
+(setq icicle-show-Completions-initially-flag t)
+;; (setq icicle-top-level-when-sole-completion-flag t)
+;; (setq icicle-top-level-when-sole-completion-delay 0.3)
+
 (defmacro auto-icicle (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
      (interactive)
