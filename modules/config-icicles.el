@@ -2,11 +2,12 @@
 
 (defmacro auto-icicle (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
+     (interactive)
      (unwind-protect
        (progn
 	 (call-interactively 'icicle-mode +1)
-	 (call-interactively ',func)
-	 ;; (call-interactively (ad-get-orig-definition ',func) args))
+	 ;; (call-interactively ',func)
+	 (call-interactively (ad-get-orig-definition ',func) args))
        (call-interactively 'icicle-mode -1))))
 
 ;; (auto-icicle icicle-search)
@@ -310,11 +311,6 @@
   icicle-yank-maybe-completing
   icicle-yank-pop-commands
   icicle-zap-to-char
-  toggle
-  a
-  any
-  buffer
-  file
   icicle-anything
   icicle-apply
   icicle-bookmark-a-file
@@ -464,6 +460,4 @@
   icicle-vardoc
   icicle-where-is
   icicle-wide-n
-  synonyms
-  what-which-how
   )
