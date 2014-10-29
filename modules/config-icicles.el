@@ -32,7 +32,9 @@
 	 (call-interactively 'icicle-mode +1)
 	 ;; (call-interactively ',func)
 	 (call-interactively (ad-get-orig-definition ',func) args))
-       (call-interactively 'icicle-mode -1))))
+       (progn
+	 (call-interactively 'icicle-mode -1)
+	 (message "")))))
 
 ;; (auto-icicle icicle-search)
 ;; (auto-icicle icicle-find-file)
