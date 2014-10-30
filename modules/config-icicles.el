@@ -1,26 +1,29 @@
-(require 'icicles)
+;; (require 'icicles)
 
-(setq icicle-region-background "grey20")
+(setq
+  icicle-region-background "grey20"
+  icicle-highlight-lighter-flag nil
+  icicle-max-candidates 500
+  icicle-default-cycling-mode 'apropos
+  icicle-show-multi-completion-flag t
+  icicle-search-highlight-all-current-flag t
+  icicle-command-abbrev-match-all-parts-flag nil)
 
-(setq icicle-highlight-lighter-flag nil)
-(setq icicle-max-candidates 500)
-(setq icicle-default-cycling-mode 'apropos)
-(setq icicle-show-multi-completion-flag t)
-(setq icicle-search-highlight-all-current-flag t)
-
-(setq icicle-command-abbrev-match-all-parts-flag nil)
 ;; (setq icicle-add-proxy-candidates-flag t)
-(setq icicle-highlight-input-completion-failure-delay 0)
-(setq icicle-Completions-text-scale-decrease 0.2)
+(setq
+  icicle-highlight-input-completion-failure-delay 0
+  icicle-Completions-text-scale-decrease 0.2)
 ;; (add-to-list 'icicle-TAB-completion-methods 'fuzzy)
-(setq icicle-TAB-completion-methods '(vanilla substring basic))
-(setq locate-command "locate")
-(setq icicle-completions-format "vertical")
+(setq
+  icicle-TAB-completion-methods '(vanilla substring basic)
+  locate-command "locate"
+  icicle-completions-format "vertical")
 
 ;; (setq icicle-use-C-for-actions-flag nil)
-(setq icicle-incremental-completion t)
-(setq icicle-incremental-completion-delay 0.1)
-(setq icicle-show-Completions-initially-flag t)
+(setq
+  icicle-incremental-completion t
+  icicle-incremental-completion-delay 0.1
+  icicle-show-Completions-initially-flag t)
 ;; (setq icicle-top-level-when-sole-completion-flag t)
 ;; (setq icicle-top-level-when-sole-completion-delay 0.3)
 
@@ -36,6 +39,11 @@
 	 (call-interactively 'icicle-mode -1)
 	 (message "")))))
 
+(defmacro autoload-icicle (func)
+  `(progn
+     (autoload ',func "icicles" "autoloaded icicle function" t)
+     (auto-icicle ,func)))
+
 ;; (auto-icicle icicle-search)
 ;; (auto-icicle icicle-find-file)
 ;; (auto-icicle icicle-occur)
@@ -44,7 +52,7 @@
   `(progn
      ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
 
-(generate-calls auto-icicle
+(generate-calls autoload-icicle
   clear-option
   icicle-add-buffer-candidate
   icicle-add-buffer-config
