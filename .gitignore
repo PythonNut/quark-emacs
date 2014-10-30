@@ -23,6 +23,9 @@
 /saveplace
 
 
+# ring save file
+/savehist
+
 # persistent registers
 /saveregisters.el
 
