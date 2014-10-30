@@ -50,6 +50,7 @@
      matlab-mode
      web-mode
 
+     diminish
      smooth-scrolling
      framemove
      aggressive-indent

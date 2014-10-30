@@ -6,4 +6,9 @@
   '(lambda ()
      (aggressive-indent-mode +1)
      (require 'auto-async-byte-compile)
-     (auto-async-byte-compile-mode +1)))
+     (auto-async-byte-compile-mode +1)
+     (setq mode-name "λ")))
+
+(eval-after-load 'aggressive-indent
+  '(progn
+     (diminish 'aggressive-indent-mode " ⇶")))
