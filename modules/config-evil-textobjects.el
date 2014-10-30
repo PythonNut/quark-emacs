@@ -431,34 +431,3 @@ the current line."
 
 (define-key evil-operator-state-map "g|" 'evil-align-regexp)
 (define-key evil-normal-state-map "g|" 'evil-align-regexp)
-
-;;; === other customizations ===
-;; smarter f and t
-(evil-define-motion evil-fastnav-forward-to (count)
-  (fastnav-jump-to-char-forward (or count 1)))
-
-(evil-define-motion evil-fastnav-backward-to (count)
-  (fastnav-jump-to-char-backward (or count 1)))
-
-(evil-define-motion evil-fastnav-forward-til (count)
-  (fastnav-jump-to-char-forward (or count 1))
-  (backward-char))
-
-(evil-define-motion evil-fastnav-backward-til (count)
-  (fastnav-jump-to-char-backward (or count 1))
-  (forward-char))
-
-(define-key evil-normal-state-map "t" 'evil-fastnav-forward-til)
-(define-key evil-normal-state-map "T" 'evil-fastnav-backward-til)
-(define-key evil-normal-state-map "f" 'evil-fastnav-forward-to)
-(define-key evil-normal-state-map "F" 'evil-fastnav-backward-to)
-
-(define-key evil-motion-state-map "t" 'evil-fastnav-forward-til)
-(define-key evil-motion-state-map "T" 'evil-fastnav-backward-til)
-(define-key evil-motion-state-map "f" 'evil-fastnav-forward-to)
-(define-key evil-motion-state-map "F" 'evil-fastnav-backward-to)
-
-(define-key evil-visual-state-map "t" 'evil-fastnav-forward-til)
-(define-key evil-visual-state-map "T" 'evil-fastnav-backward-til)
-(define-key evil-visual-state-map "f" 'evil-fastnav-forward-to)
-(define-key evil-visual-state-map "F" 'evil-fastnav-backward-to)
