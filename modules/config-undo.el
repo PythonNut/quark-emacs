@@ -23,6 +23,7 @@
      (defalias 'undo 'undo-tree-undo)
 
      (key-chord-define evil-emacs-state-map "uu" 'undo-tree-visualize)
+     (key-chord-define evil-insert-state-map "uu" 'undo-tree-visualize)
 
      (global-set-key (kbd "M-_") 'undo-tree-redo)
      (setq undo-tree-auto-save-history t)
