@@ -23,3 +23,7 @@
      regexp-search-ring))
 
 
+;; remember more recent files
+(setq
+  recentf-max-saved-items 200
+  recentf-max-menu-items 30)
