@@ -98,6 +98,7 @@
      sp-forward-sexp
      sp-kill-sexp
      sp-remove-active-pair-overlay
+     sp-unwrap-sexp
      transpose-sexps
      whole-line-or-region-yank
      yas-expand
