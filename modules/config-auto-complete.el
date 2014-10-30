@@ -3,6 +3,7 @@
 
 (eval-after-load 'auto-complete
   '(progn
+     (diminish 'auto-complete-mode " ⇝")
      (global-auto-complete-mode +1)
      (ac-config-default)
      (ac-flyspell-workaround)

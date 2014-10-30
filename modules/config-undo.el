@@ -19,6 +19,7 @@
 
 (eval-after-load 'undo-tree
   '(progn
+     (diminish 'undo-tree-mode " μ")
      (defalias 'redo 'undo-tree-redo)
      (defalias 'undo 'undo-tree-undo)
 

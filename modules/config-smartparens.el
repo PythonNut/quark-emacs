@@ -1,5 +1,6 @@
 (require 'smartparens-config)
 (eval-when-compile (require 'cl))
+(eval-when-compile (require 'evil))
 
 (setq
   sp-autoinsert-quote-if-followed-by-closing-pair nil
@@ -253,6 +254,7 @@
 
 (eval-after-load 'smartparens
   '(progn
+     (diminish 'smartparens-mode " σ")
      (set-face-background 'sp-pair-overlay-face "grey20")
      (set-face-foreground 'sp-pair-overlay-face "default")
 
