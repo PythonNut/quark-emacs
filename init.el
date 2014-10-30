@@ -20,8 +20,8 @@
   )
 
 (load-library "config-setq")
-(load-library "config-modes")
 (load-library "config-package")
+(load-library "config-modes")
 (load-library "config-desktop")
 (load-library "config-pre-bindings")
 (load-library "config-safety")
