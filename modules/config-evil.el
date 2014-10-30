@@ -21,13 +21,6 @@
   evil-leader/leader "," 
   evil-leader/in-all-states t)
 
-(evil-set-initial-state 'diff-mode 'motion)
-(evil-set-initial-state 'backups-mode 'insert)
-(evil-set-initial-state 'erc-mode 'emacs)
-(evil-set-initial-state 'git-commit-mode 'insert)
-(evil-set-initial-state 'backup-walker-mode 'motion)
-(evil-set-initial-state 'package-menu-mode 'motion)
-
 (define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") 'evil-previous-visual-line)
 (define-key evil-motion-state-map (kbd "<down>") 'evil-next-visual-line)
