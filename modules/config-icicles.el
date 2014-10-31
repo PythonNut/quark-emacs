@@ -1,14 +1,16 @@
 (defmacro auto-icicle (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
      (interactive)
-     (unwind-protect
-       (progn
-	 (call-interactively 'icicle-mode +1)
-	 ;; (call-interactively ',func)
-	 (call-interactively (ad-get-orig-definition ',func) args))
-       (progn
-	 (call-interactively 'icicle-mode -1)
-	 (message "")))))
+     (if icicle-mode
+       ad-do-it
+       (unwind-protect
+	 (progn
+	   (call-interactively 'icicle-mode +1)
+	   ;; (call-interactively ',func)
+	   (call-interactively (ad-get-orig-definition ',func) args))
+	 (progn
+	   (call-interactively 'icicle-mode -1)
+	   (message ""))))))
 
 (defmacro autoload-icicle (func)
   `(autoload ',func "icicles" "autoloaded icicle function" t))
@@ -267,7 +269,7 @@
      icicle-ORIG-dabbrev-completion
      icicle-ORIG-lisp-complete-symbol
      icicle-ORIG-lisp-completion-at-point
-     ;; icicle-ORIG-repeat-complex-command
+     icicle-ORIG-repeat-complex-command
      icicle-other-window-or-frame
      icicle-pop-tag-mark
      icicle-pp-eval-expression
@@ -284,7 +286,7 @@
      icicle-remove-entry-from-saved-completion-set
      icicle-remove-file-from-recentf-list
      icicle-remove-saved-completion-set
-     ;; icicle-repeat-complex-command
+     icicle-repeat-complex-command
      icicle-reset-option-to-nil
      icicle-select-bookmarked-region
      icicle-select-frame
@@ -394,7 +396,7 @@
      icicle-read-color
      icicle-read-color-WYSIWYG
      icicle-save-string-to-variable
-     ;; icicle-search
+     icicle-search
      icicle-search-all-tags-bookmark
      icicle-search-all-tags-regexp-bookmark
      icicle-search-autofile-bookmark
