@@ -18,13 +18,13 @@
 
 ;; directional window movement
 (add-hook 'window-configuration-change-hook
-  '(lambda ()
-     (windmove-default-keybindings 'meta)))
+  (lambda ()
+    (windmove-default-keybindings 'meta)))
 
 ;; directional frame movement too
 (add-hook 'before-make-frame-hook
-  '(lambda ()
-     (windmove-default-keybindings 'meta)
-     (unless (fboundp 'framemove)
-       (require 'framemove)
-       (setq framemove-hook-into-windmove t))))
+  (lambda ()
+    (windmove-default-keybindings 'meta)
+    (unless (fboundp 'framemove)
+      (require 'framemove)
+      (setq framemove-hook-into-windmove t))))

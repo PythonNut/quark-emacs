@@ -40,13 +40,13 @@
 		     (line-beginning-position))))
 	ad-do-it
 	(call-interactively
-	  '(lambda ()
-	     ;; (back-to-indentation)
-	     (interactive)
-	     (forward-char
-	       (round (* (/ cursor (max (float line) 1))
-			(or (- (line-end-position)
-			      (line-beginning-position)) 1))))))))
+	  (lambda ()
+	    ;; (back-to-indentation)
+	    (interactive)
+	    (forward-char
+	      (round (* (/ cursor (max (float line) 1))
+		       (or (- (line-end-position)
+			     (line-beginning-position)) 1))))))))
 
     (ace-jump-mode-enable-mark-sync)
     (if (< (display-color-cells) 256)

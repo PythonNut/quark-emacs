@@ -21,5 +21,5 @@
     (diminish 'ws-butler-mode " β")))
 
 (add-hook 'highlight-changes-mode-hook
-  '(lambda ()
-     (diminish 'highlight-changes-mode)))
+  (lambda ()
+    (diminish 'highlight-changes-mode)))

@@ -277,16 +277,16 @@
 
     ;; disable "'" pairing in text mode, as it's often an apostrophe
     (add-hook 'text-mode-hook
-      '(lambda ()
-	 (sp-local-pair major-mode "'" nil :actions nil)))
+      (lambda ()
+	(sp-local-pair major-mode "'" nil :actions nil)))
 
     (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
     (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
 
 (add-hook 'LaTeX-mode-hook
-  '(lambda ()
-     (require 'smartparens-latex)))
+  (lambda ()
+    (require 'smartparens-latex)))
 
 (add-hook 'sgml-mode-hook
-  '(lambda ()
-     (require 'smartparens-html)))
+  (lambda ()
+    (require 'smartparens-html)))

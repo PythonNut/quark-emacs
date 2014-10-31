@@ -16,9 +16,9 @@
 
 ;; disable regular key chords by switching input methods
 (add-hook 'magit-status-mode-hook
-  '(lambda ()
-     (set-input-method "TeX")
-     (magit-filenotify-mode +1)))
+  (lambda ()
+    (set-input-method "TeX")
+    (magit-filenotify-mode +1)))
 
 ;; and psvn for svn not-so-awesomeness
 (autoload 'svn-status "psvn")
