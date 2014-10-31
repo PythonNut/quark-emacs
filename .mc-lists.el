@@ -95,6 +95,7 @@
      sp--cua-replace-region
      sp--self-insert-command
      sp-backward-sexp
+     sp-backward-unwrap-sexp
      sp-forward-sexp
      sp-kill-sexp
      sp-remove-active-pair-overlay
