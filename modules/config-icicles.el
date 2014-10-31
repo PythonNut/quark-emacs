@@ -13,10 +13,6 @@
 (defmacro autoload-icicle (func)
   `(autoload ',func "icicles" "autoloaded icicle function" t))
 
-(defmacro generate-calls (operator arglists)
-  `(progn
-     ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
-
 (defmacro generate-calls-proxy (operator arglist)
   `(generate-calls ,operator ,(eval arglist)))
 

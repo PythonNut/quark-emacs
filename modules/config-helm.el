@@ -1,19 +1,39 @@
 (require 'helm-config)
 (require 'helm-imenu)
 (require 'helm-files)
+
 (eval-when-compile (require 'cl))
 
-(with-eval-after-load 'helm
+(with-eval-after-load 'helm-config
   (progn
     (setq
       helm-locate-command "locate %s -r %s -be -l 500"
       helm-ff-transformer-show-only-basename nil
       helm-buffers-fuzzy-matching t
-      helm-ff-newfile-prompt-p 'nil)
+      helm-ff-newfile-prompt-p 'nil
+
+      helm-locate
+      `((name . "Locate")
+	 (init . helm-locate-set-command)
+	 (candidates-process . helm-locate-init)
+	 (type . file)
+	 (requires-pattern . 3)
+	 (history . ,'helm-file-name-history)
+	 (keymap . ,helm-generic-files-map)
+	 (help-message . helm-generic-file-help-message)
+	 (candidate-number-limit . 999)
+	 (mode-line . helm-generic-file-mode-line-string)))
 
     (set-face-attribute 'helm-selection nil :underline 'nil)
-    (add-to-list 'helm-boring-file-regexp-list "\\.undo.xz$")
-    (add-to-list 'helm-boring-file-regexp-list "\\#$")
+
+    (cl-macrolet
+      ((add-boring (regex)
+	 `(add-to-list 'helm-boring-file-regexp-list ,regex)))
+      (generate-calls add-boring
+	(
+	  "\\.undo.xz$"
+	  "\\.elc$"
+	  "\\#$")))
 
     (global-set-key (kbd "C-x f") 'ido-find-file)
     (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
@@ -21,18 +41,6 @@
 
     (global-set-key (kbd "M-:") 'helm-eval-expression)
     (global-set-key (kbd "C-c C-s") 'helm-swoop)
-
-    (setq helm-locate
-      `((name . "Locate")
-         (init . helm-locate-set-command)
-         (candidates-process . helm-locate-init)
-         (type . file)
-         (requires-pattern . 3)
-         (history . ,'helm-file-name-history)
-         (keymap . ,helm-generic-files-map)
-         (help-message . helm-generic-file-help-message)
-         (candidate-number-limit . 999)
-         (mode-line . helm-generic-file-mode-line-string)))
 
     (defun my-helm-buffers (&rest arg)
       (interactive)
