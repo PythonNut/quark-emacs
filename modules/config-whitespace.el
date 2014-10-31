@@ -15,10 +15,10 @@
 (setq require-final-newline t)
 
 ;; ws-butler also load highlight-changes-mode
-(eval-after-load 'ws-butler
-  '(progn
-     ;; (diminish 'ws-butler-global-mode)
-     (diminish 'ws-butler-mode " β")))
+(with-eval-after-load 'ws-butler
+  (progn
+    ;; (diminish 'ws-butler-global-mode)
+    (diminish 'ws-butler-mode " β")))
 
 (add-hook 'highlight-changes-mode-hook
   '(lambda ()

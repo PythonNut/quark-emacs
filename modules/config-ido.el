@@ -1,11 +1,11 @@
 (ido-mode +1)
 (eval-when-compile (require 'cl))
 
-(eval-after-load 'ido
-  '(progn
-     (ido-ubiquitous +1)
-     (flx-ido-mode +1)
-     (ido-vertical-mode +1)))
+(with-eval-after-load 'ido
+  (progn
+    (ido-ubiquitous +1)
+    (flx-ido-mode +1)
+    (ido-vertical-mode +1)))
 
 (setq ido-save-directory-list-file "~/.emacs.d/ido.last")
 
