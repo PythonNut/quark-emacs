@@ -12,12 +12,12 @@
 (defun my-wlr-cua-cut-region (&optional prefix)
   (interactive "*p")
   (whole-line-or-region-call-with-region
-    '(lambda (beg end)
-       (interactive "r")
-       (goto-char beg)
-       (cua-set-mark)
-       (goto-char end)
-       (cua-cut-region current-prefix-arg)) prefix t))
+    (lambda (beg end)
+      (interactive "r")
+      (goto-char beg)
+      (cua-set-mark)
+      (goto-char end)
+      (cua-cut-region current-prefix-arg)) prefix t))
 
 ;; cua-yank a line if cut as a line
 (defun whole-line-or-region-yank-cua (raw-prefix &optional string-in)
@@ -111,6 +111,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
     (xclip-mode +1))
   (xterm-mouse-mode +1)
   (add-hook 'kill-emacs-hook
-    '(lambda ()
-       (xterm-mouse-mode -1))))
+    (lambda ()
+      (xterm-mouse-mode -1))))
 

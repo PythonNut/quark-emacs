@@ -10,7 +10,7 @@
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
 
-(add-hook 'prog-mode-hook '(lambda () (require 'flycheck)))
+(add-hook 'prog-mode-hook (lambda () (require 'flycheck)))
 
 (defun my-display-error-messages-condensed (errors)
   (-when-let (messages (-keep #'flycheck-error-message errors))
@@ -71,9 +71,9 @@
     (set 'flyspell-issue-message-flag nil)))
 
 (add-hook 'flyspell-mode-hook
-  '(lambda ()
-     (diminish 'flyspell-mode " ῶ")
-     (diminish 'flyspell-mode " ῶ")))
+  (lambda ()
+    (diminish 'flyspell-mode " ῶ")
+    (diminish 'flyspell-mode " ῶ")))
 
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)

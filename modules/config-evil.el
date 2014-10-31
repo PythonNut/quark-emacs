@@ -108,15 +108,15 @@
 
 ;; switch to insert state if I set an emacs-style mark
 (define-key evil-normal-state-map (kbd "C-SPC")
-  '(lambda () (interactive)
-     (evil-insert-state)
-     (execute-kbd-macro (kbd "C-SPC"))))
+  (lambda () (interactive)
+    (evil-insert-state)
+    (execute-kbd-macro (kbd "C-SPC"))))
 
 (define-key evil-normal-state-map (kbd "C-RET")
-  '(lambda ()
-     (interactive)
-     (evil-insert-state)
-     (cua-set-rectangle-mark)))
+  (lambda ()
+    (interactive)
+    (evil-insert-state)
+    (cua-set-rectangle-mark)))
 
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-visual-line)
 (setq evil-replace-state-cursor '("#884444" box))
@@ -190,9 +190,9 @@
 ;; break bad undo habits
 (define-key evil-normal-state-map "U" 'undo-tree-visualize)
 (define-key evil-normal-state-map (kbd "C-z")
-  '(lambda ()
-     (interactive)
-     (message "use u.")))
+  (lambda ()
+    (interactive)
+    (message "use u.")))
 
 (load-library "config-evil-modules")
 (load-library "config-evil-textobjects")

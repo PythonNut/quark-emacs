@@ -2,9 +2,9 @@
 (eval-when-compile (require 'cl))
 
 (add-hook 'prog-mode-hook
-  '(lambda ()
-     (when window-system
-       (linum-mode +1))))
+  (lambda ()
+    (when window-system
+      (linum-mode +1))))
 
 (with-eval-after-load 'linum
   (progn
@@ -42,7 +42,7 @@
     (set-face-attribute 'linum-relative-current-face nil :weight 'extra-bold)
 
     (global-set-key (kbd "C-c L")
-      '(lambda ()
-	 (interactive)
-	 (if linum-mode (linum-relative-toggle)
-	   (linum-mode +1))))))
+      (lambda ()
+	(interactive)
+	(if linum-mode (linum-relative-toggle)
+	  (linum-mode +1))))))

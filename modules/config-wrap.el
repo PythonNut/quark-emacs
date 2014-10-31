@@ -4,5 +4,5 @@
 (setq line-move-visual t)
 
 (add-hook 'visual-line-mode-hook
-  '(lambda ()
-     (diminish 'visual-line-mode)))
+  (lambda ()
+    (diminish 'visual-line-mode)))

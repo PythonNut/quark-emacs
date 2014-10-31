@@ -3,12 +3,12 @@
 
 ;; supress XZ messages
 (add-hook 'emacs-startup-hook
-  '(lambda ()
-     (run-at-time 5 nil '(lambda () (message "")))))
+  (lambda ()
+    (run-at-time 5 nil (lambda () (message "")))))
 
 (add-hook 'find-file-hook
-  '(lambda ()
-     (run-at-time 1 nil '(lambda () (message "")))))
+  (lambda ()
+    (run-at-time 1 nil (lambda () (message "")))))
 
 (with-eval-after-load 'evil
   (progn

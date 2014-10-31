@@ -123,5 +123,5 @@
 
 (add-hook 'emacs-startup-hook 'idle-require-mode)
 (add-hook 'idle-require-mode-hook
-  '(lambda ()
-     (diminish 'idle-require-mode " ⟳")))
+  (lambda ()
+    (diminish 'idle-require-mode " ⟳")))
