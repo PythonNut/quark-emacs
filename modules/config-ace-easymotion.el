@@ -2,59 +2,59 @@
 (require 'ace-jump-mode)
 (eval-when-compile (require 'cl))
 
-(eval-after-load 'ace-jump-mode
-  '(progn
-     ;; use letters, numbers and capitals in that order
-     (setq ace-jump-mode-move-keys
-       (nconc
-	 (loop for i from ?a to ?z collect i)
-	 (loop for i from ?0 to ?9 collect i)
-	 (loop for i from ?A to ?Z collect i))
-       ace-jump-mode-case-fold nil)
+(with-eval-after-load 'ace-jump-mode
+  (progn
+    ;; use letters, numbers and capitals in that order
+    (setq ace-jump-mode-move-keys
+      (nconc
+	(loop for i from ?a to ?z collect i)
+	(loop for i from ?0 to ?9 collect i)
+	(loop for i from ?A to ?Z collect i))
+      ace-jump-mode-case-fold nil)
 
-     ;; enable and use the more powerful ACE jump back feature
-     ;; see github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
-     (setq ace-jump-mode-scope 'global)
+    ;; enable and use the more powerful ACE jump back feature
+    ;; see github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
+    (setq ace-jump-mode-scope 'global)
 
-     (defun realign-cursor ()
-       (interactive)
-       (save-excursion
-	 (if (> (rest (nth 6 (posn-at-point)))
-	       (/ (window-body-height) 2))
-	   (progn (previous-line) (next-line))
-	   (progn (next-line) (previous-line)))))
+    (defun realign-cursor ()
+      (interactive)
+      (save-excursion
+	(if (> (rest (nth 6 (posn-at-point)))
+	      (/ (window-body-height) 2))
+	  (progn (previous-line) (next-line))
+	  (progn (next-line) (previous-line)))))
 
-     (defadvice evil-ace-jump-word-mode (after cleanup activate)
-       (ignore-errors (call-interactively 'realign-cursor)))
+    (defadvice evil-ace-jump-word-mode (after cleanup activate)
+      (ignore-errors (call-interactively 'realign-cursor)))
 
-     (defadvice evil-ace-jump-char-mode (after cleanup activate)
-       (ignore-errors (call-interactively 'realign-cursor)))
+    (defadvice evil-ace-jump-char-mode (after cleanup activate)
+      (ignore-errors (call-interactively 'realign-cursor)))
 
-     (defadvice evil-ace-jump-line-mode (after realign activate)
-       (ignore-errors (call-interactively 'realign-cursor)))
+    (defadvice evil-ace-jump-line-mode (after realign activate)
+      (ignore-errors (call-interactively 'realign-cursor)))
 
-     ;; jump to appromately the same column
-     (defadvice evil-ace-jump-line-mode (around restore-pos activate)
-       (let ((cursor (first (nth 6 (posn-at-point))))
-	      (line (- (line-end-position)
-		      (line-beginning-position))))
-	 ad-do-it
-	 (call-interactively
-	   '(lambda ()
-	      ;; (back-to-indentation)
-	      (interactive)
-	      (forward-char
-		(round (* (/ cursor (max (float line) 1))
-			 (or (- (line-end-position)
-			       (line-beginning-position)) 1))))))))
+    ;; jump to appromately the same column
+    (defadvice evil-ace-jump-line-mode (around restore-pos activate)
+      (let ((cursor (first (nth 6 (posn-at-point))))
+	     (line (- (line-end-position)
+		     (line-beginning-position))))
+	ad-do-it
+	(call-interactively
+	  '(lambda ()
+	     ;; (back-to-indentation)
+	     (interactive)
+	     (forward-char
+	       (round (* (/ cursor (max (float line) 1))
+			(or (- (line-end-position)
+			      (line-beginning-position)) 1))))))))
 
-     (ace-jump-mode-enable-mark-sync)
-     (if (< (display-color-cells) 256)
-       (progn
-         (set-face-foreground 'ace-jump-face-background "white")
-         (set-face-background 'ace-jump-face-background "black")
-         (set-face-foreground 'ace-jump-face-foreground "black")
-         (set-face-background 'ace-jump-face-foreground "white")))))
+    (ace-jump-mode-enable-mark-sync)
+    (if (< (display-color-cells) 256)
+      (progn
+	(set-face-foreground 'ace-jump-face-background "white")
+	(set-face-background 'ace-jump-face-background "black")
+	(set-face-foreground 'ace-jump-face-foreground "black")
+	(set-face-background 'ace-jump-face-foreground "white")))))
 
 (key-chord-define evil-insert-state-map "jl" 'evil-ace-jump-line-mode)
 (key-chord-define evil-insert-state-map "jk" 'evil-ace-jump-word-mode)
