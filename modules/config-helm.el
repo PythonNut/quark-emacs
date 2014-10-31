@@ -3,23 +3,17 @@
 (require 'helm-files)
 (eval-when-compile (require 'cl))
 
-(run-with-idle-timer 5 nil
-  '(lambda ()
-     (require 'helm-ring)
-     (run-with-idle-timer 5 nil
-       '(lambda ()
-          (require 'helm-misc)))))
-
 (with-eval-after-load 'helm
   (progn
-    (setq helm-locate-command "locate %s -r %s -be -l 500")
-    (setq helm-ff-transformer-show-only-basename nil)
-    (setq helm-buffers-fuzzy-matching t)
+    (setq
+      helm-locate-command "locate %s -r %s -be -l 500"
+      helm-ff-transformer-show-only-basename nil
+      helm-buffers-fuzzy-matching t
+      helm-ff-newfile-prompt-p 'nil)
 
     (set-face-attribute 'helm-selection nil :underline 'nil)
     (add-to-list 'helm-boring-file-regexp-list "\\.undo.xz$")
     (add-to-list 'helm-boring-file-regexp-list "\\#$")
-    (setq helm-ff-newfile-prompt-p 'nil)
 
     (global-set-key (kbd "C-x f") 'ido-find-file)
     (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)

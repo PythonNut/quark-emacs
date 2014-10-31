@@ -109,3 +109,19 @@
 (install-all-packages)
 
 (add-to-list 'load-path "~/.emacs.d/personal/")
+
+(require 'idle-require)
+(setq idle-require-symbols
+  '(
+     icicles
+     helm
+     helm-ring
+     helm-projectile
+     helm-semantic
+     magit
+     ))
+
+(add-hook 'emacs-startup-hook 'idle-require-mode)
+(add-hook 'idle-require-mode-hook
+  '(lambda ()
+     (diminish 'idle-require-mode " ⟳")))
