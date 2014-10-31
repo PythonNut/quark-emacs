@@ -4,4 +4,4 @@
 (with-eval-after-load 'projectile
   (progn
     (setq projectile-mode-line
-      '(:eval (format " [%s]" (projectile-project-name))))))
+      '(:eval (format " ↠" (projectile-project-name))))))

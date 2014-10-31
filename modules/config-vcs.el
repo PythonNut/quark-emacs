@@ -8,6 +8,7 @@
 
 (with-eval-after-load 'magit
   (progn
+    (diminish 'magit-auto-revert-mode " ⥀")
     (define-key magit-log-mode-map (kbd "k") 'previous-line)
     (define-key magit-log-mode-map (kbd "j") 'next-line)
     (define-key magit-status-mode-map (kbd "k") 'previous-line)
