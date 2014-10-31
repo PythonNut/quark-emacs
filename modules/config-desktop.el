@@ -10,18 +10,22 @@
 
 (setq save-place-file "~/.emacs.d/saveplace")
 (setq-default save-place t)
-(require 'saveplace)
 
-(setq savehist-file "~/.emacs.d/savehist")
-(savehist-mode 1)
-(setq history-length 100)
-(setq history-delete-duplicates t)
-(setq savehist-save-minibuffer-history 1)
-(setq savehist-additional-variables
+(add-hook 'find-file-hook
+  (lambda ()
+    (require 'saveplace)))
+
+(setq
+  savehist-file "~/.emacs.d/savehist"
+  history-length 100
+  history-delete-duplicates t
+  savehist-save-minibuffer-history 1
+  savehist-additional-variables
   '(kill-ring
      search-ring
      regexp-search-ring))
 
+(savehist-mode 1)
 
 ;; remember more recent files
 (setq
