@@ -3,6 +3,13 @@
 
 (cua-mode +1)
 
+(put 'evil-forward-char             'CUA 'move)
+(put 'evil-backward-char            'CUA 'move)
+(put 'evil-next-visual-line         'CUA 'move)
+(put 'evil-previous-visual-line     'CUA 'move)
+(put 'evil-end-of-visual-line       'CUA 'move)
+(put 'evil-beginning-of-visual-line 'CUA 'move)
+
 ;; easy-kill the line if no region
 (defun my-wlr-easy-kill (&optional prefix)
   (interactive "*p")
@@ -72,11 +79,11 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
             (delete-active-region))
           (insert string-in))
         ;; just yank as normal
-	(if (eq (car (get-text-property 0 'yank-handler
-		       string-to-yank))
-	      'evil-yank-line-handler)
-	  (evil-paste-before raw-prefix)
-	  (cua-paste raw-prefix))))))
+        (if (eq (car (get-text-property 0 'yank-handler
+                       string-to-yank))
+              'evil-yank-line-handler)
+          (evil-paste-before raw-prefix)
+          (cua-paste raw-prefix))))))
 
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
