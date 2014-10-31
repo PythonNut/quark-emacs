@@ -24,3 +24,8 @@
   "Lower `minor-mode-map-alist' priority of MODE-SYMBOL."
   (let ((rel (assq mode-symbol minor-mode-map-alist)))
     (setq minor-mode-map-alist (append (delete rel minor-mode-map-alist) (list rel)))))
+
+;; basically, a mapcar for macros
+(defmacro generate-calls (operator arglists)
+  `(progn
+     ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
