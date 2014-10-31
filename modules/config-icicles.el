@@ -2,7 +2,7 @@
   `(defadvice ,func (around icy-mode (&rest args) activate)
      (interactive)
      (if icicle-mode
-       ad-do-it
+       (call-interactively (ad-get-orig-definition ',func) args)
        (unwind-protect
 	 (progn
 	   (call-interactively 'icicle-mode +1)
@@ -32,124 +32,124 @@
      icicle-apropos-variable
      icicle-apropos-vars-w-val-satisfying
      icicle-apropos-zippy
-     icicle-bbdb-complete-mail
-     icicle-bbdb-complete-name
-     icicle-bookmark
-     icicle-bookmark-all-tags
-     icicle-bookmark-all-tags-other-window
-     icicle-bookmark-all-tags-regexp
-     icicle-bookmark-all-tags-regexp-other-window
-     icicle-bookmark-annotated-narrow
-     icicle-bookmark-autofile
-     icicle-bookmark-autofile-all-tags
-     icicle-bookmark-autofile-all-tags-other-window
-     icicle-bookmark-autofile-all-tags-regexp
-     icicle-bookmark-autofile-all-tags-regexp-other-window
-     icicle-bookmark-autofile-narrow
-     icicle-bookmark-autofile-other-window
-     icicle-bookmark-autofile-some-tags
-     icicle-bookmark-autofile-some-tags-other-window
-     icicle-bookmark-autofile-some-tags-regexp
-     icicle-bookmark-autofile-some-tags-regexp-other-window
-     icicle-bookmark-autonamed
-     icicle-bookmark-autonamed-narrow
-     icicle-bookmark-autonamed-other-window
-     icicle-bookmark-autonamed-this-buffer
-     icicle-bookmark-autonamed-this-buffer-narrow
-     icicle-bookmark-autonamed-this-buffer-other-window
-     icicle-bookmark-bookmark-file
-     icicle-bookmark-bookmark-file-narrow
-     icicle-bookmark-bookmark-list
-     icicle-bookmark-bookmark-list-narrow
-     icicle-bookmark-cmd
-     icicle-bookmark-desktop
-     icicle-bookmark-desktop-narrow
-     icicle-bookmark-dired
-     icicle-bookmark-dired-narrow
-     icicle-bookmark-dired-this-dir-narrow
-     icicle-bookmark-dired-wildcards-narrow
-     icicle-bookmark-dired-other-window
-     icicle-bookmarked-buffer-list
-     icicle-bookmarked-file-list
-     icicle-bookmark-file
-     icicle-bookmark-file-all-tags
-     icicle-bookmark-file-all-tags-other-window
-     icicle-bookmark-file-all-tags-regexp
-     icicle-bookmark-file-all-tags-regexp-other-window
-     icicle-bookmark-file-other-window
-     icicle-bookmark-file-narrow
-     icicle-bookmark-file-some-tags
-     icicle-bookmark-file-some-tags-other-window
-     icicle-bookmark-file-some-tags-regexp
-     icicle-bookmark-file-some-tags-regexp-other-window
-     icicle-bookmark-file-this-dir
-     icicle-bookmark-file-this-dir-other-window
-     icicle-bookmark-file-this-dir-all-tags
-     icicle-bookmark-file-this-dir-all-tags-other-window
-     icicle-bookmark-file-this-dir-all-tags-regexp
-     icicle-bookmark-file-this-dir-all-tags-regexp-other-window
-     icicle-bookmark-file-this-dir-narrow
-     icicle-bookmark-file-this-dir-some-tags
-     icicle-bookmark-file-this-dir-some-tags-other-window
-     icicle-bookmark-file-this-dir-some-tags-regexp
-     icicle-bookmark-file-this-dir-some-tags-regexp-other-window
-     icicle-bookmark-gnus
-     icicle-bookmark-gnus-narrow
-     icicle-bookmark-gnus-other-window
-     icicle-bookmark-image
-     icicle-bookmark-image-narrow
-     icicle-bookmark-image-other-window
-     icicle-bookmark-info
-     icicle-bookmark-info-narrow
-     icicle-bookmark-info-other-window
-     icicle-bookmark-jump
-     icicle-bookmark-jump-other-window
-     icicle-bookmark-list
-     icicle-bookmark-local-file
-     icicle-bookmark-local-file-narrow
-     icicle-bookmark-local-file-other-window
-     icicle-bookmark-man
-     icicle-bookmark-man-narrow
-     icicle-bookmark-man-other-window
-     icicle-bookmark-navlist-narrow
-     icicle-bookmark-non-file
-     icicle-bookmark-non-file-narrow
-     icicle-bookmark-non-file-other-window
-     icicle-bookmark-other-window
-     icicle-bookmark-region
-     icicle-bookmark-region-narrow
-     icicle-bookmark-region-other-window
-     icicle-bookmark-remote-file
-     icicle-bookmark-remote-file-narrow
-     icicle-bookmark-remote-file-other-window
-     icicle-bookmark-save-marked-files
-     icicle-bookmark-save-marked-files-as-project
-     icicle-bookmark-save-marked-files-more
-     icicle-bookmark-save-marked-files-persistently
-     icicle-bookmark-save-marked-files-to-variable
-     icicle-bookmark-set
-     icicle-bookmark-some-tags
-     icicle-bookmark-some-tags-other-window
-     icicle-bookmark-some-tags-regexp
-     icicle-bookmark-some-tags-regexp-other-window
-     icicle-bookmark-specific-buffers
-     icicle-bookmark-specific-buffers-narrow
-     icicle-bookmark-specific-buffers-other-window
-     icicle-bookmark-specific-files
-     icicle-bookmark-specific-files-narrow
-     icicle-bookmark-specific-files-other-window
-     icicle-bookmark-temporary
-     icicle-bookmark-temporary-narrow
-     icicle-bookmark-temporary-other-window
-     icicle-bookmark-this-buffer
-     icicle-bookmark-this-buffer-narrow
-     icicle-bookmark-this-buffer-other-window
-     icicle-bookmark-url
-     icicle-bookmark-url-narrow
-     icicle-bookmark-url-other-window
-     icicle-bookmark-w3m
-     icicle-bookmark-w3m-narrow
-     icicle-bookmark-w3m-other-window
+     ;; icicle-bbdb-complete-mail
+     ;; icicle-bbdb-complete-name
+     ;; icicle-bookmark
+     ;; icicle-bookmark-all-tags
+     ;; icicle-bookmark-all-tags-other-window
+     ;; icicle-bookmark-all-tags-regexp
+     ;; icicle-bookmark-all-tags-regexp-other-window
+     ;; icicle-bookmark-annotated-narrow
+     ;; icicle-bookmark-autofile
+     ;; icicle-bookmark-autofile-all-tags
+     ;; icicle-bookmark-autofile-all-tags-other-window
+     ;; icicle-bookmark-autofile-all-tags-regexp
+     ;; icicle-bookmark-autofile-all-tags-regexp-other-window
+     ;; icicle-bookmark-autofile-narrow
+     ;; icicle-bookmark-autofile-other-window
+     ;; icicle-bookmark-autofile-some-tags
+     ;; icicle-bookmark-autofile-some-tags-other-window
+     ;; icicle-bookmark-autofile-some-tags-regexp
+     ;; icicle-bookmark-autofile-some-tags-regexp-other-window
+     ;; icicle-bookmark-autonamed
+     ;; icicle-bookmark-autonamed-narrow
+     ;; icicle-bookmark-autonamed-other-window
+     ;; icicle-bookmark-autonamed-this-buffer
+     ;; icicle-bookmark-autonamed-this-buffer-narrow
+     ;; icicle-bookmark-autonamed-this-buffer-other-window
+     ;; icicle-bookmark-bookmark-file
+     ;; icicle-bookmark-bookmark-file-narrow
+     ;; icicle-bookmark-bookmark-list
+     ;; icicle-bookmark-bookmark-list-narrow
+     ;; icicle-bookmark-cmd
+     ;; icicle-bookmark-desktop
+     ;; icicle-bookmark-desktop-narrow
+     ;; icicle-bookmark-dired
+     ;; icicle-bookmark-dired-narrow
+     ;; icicle-bookmark-dired-this-dir-narrow
+     ;; icicle-bookmark-dired-wildcards-narrow
+     ;; icicle-bookmark-dired-other-window
+     ;; icicle-bookmarked-buffer-list
+     ;; icicle-bookmarked-file-list
+     ;; icicle-bookmark-file
+     ;; icicle-bookmark-file-all-tags
+     ;; icicle-bookmark-file-all-tags-other-window
+     ;; icicle-bookmark-file-all-tags-regexp
+     ;; icicle-bookmark-file-all-tags-regexp-other-window
+     ;; icicle-bookmark-file-other-window
+     ;; icicle-bookmark-file-narrow
+     ;; icicle-bookmark-file-some-tags
+     ;; icicle-bookmark-file-some-tags-other-window
+     ;; icicle-bookmark-file-some-tags-regexp
+     ;; icicle-bookmark-file-some-tags-regexp-other-window
+     ;; icicle-bookmark-file-this-dir
+     ;; icicle-bookmark-file-this-dir-other-window
+     ;; icicle-bookmark-file-this-dir-all-tags
+     ;; icicle-bookmark-file-this-dir-all-tags-other-window
+     ;; icicle-bookmark-file-this-dir-all-tags-regexp
+     ;; icicle-bookmark-file-this-dir-all-tags-regexp-other-window
+     ;; icicle-bookmark-file-this-dir-narrow
+     ;; icicle-bookmark-file-this-dir-some-tags
+     ;; icicle-bookmark-file-this-dir-some-tags-other-window
+     ;; icicle-bookmark-file-this-dir-some-tags-regexp
+     ;; icicle-bookmark-file-this-dir-some-tags-regexp-other-window
+     ;; icicle-bookmark-gnus
+     ;; icicle-bookmark-gnus-narrow
+     ;; icicle-bookmark-gnus-other-window
+     ;; icicle-bookmark-image
+     ;; icicle-bookmark-image-narrow
+     ;; icicle-bookmark-image-other-window
+     ;; icicle-bookmark-info
+     ;; icicle-bookmark-info-narrow
+     ;; icicle-bookmark-info-other-window
+     ;; icicle-bookmark-jump
+     ;; icicle-bookmark-jump-other-window
+     ;; icicle-bookmark-list
+     ;; icicle-bookmark-local-file
+     ;; icicle-bookmark-local-file-narrow
+     ;; icicle-bookmark-local-file-other-window
+     ;; icicle-bookmark-man
+     ;; icicle-bookmark-man-narrow
+     ;; icicle-bookmark-man-other-window
+     ;; icicle-bookmark-navlist-narrow
+     ;; icicle-bookmark-non-file
+     ;; icicle-bookmark-non-file-narrow
+     ;; icicle-bookmark-non-file-other-window
+     ;; icicle-bookmark-other-window
+     ;; icicle-bookmark-region
+     ;; icicle-bookmark-region-narrow
+     ;; icicle-bookmark-region-other-window
+     ;; icicle-bookmark-remote-file
+     ;; icicle-bookmark-remote-file-narrow
+     ;; icicle-bookmark-remote-file-other-window
+     ;; icicle-bookmark-save-marked-files
+     ;; icicle-bookmark-save-marked-files-as-project
+     ;; icicle-bookmark-save-marked-files-more
+     ;; icicle-bookmark-save-marked-files-persistently
+     ;; icicle-bookmark-save-marked-files-to-variable
+     ;; icicle-bookmark-set
+     ;; icicle-bookmark-some-tags
+     ;; icicle-bookmark-some-tags-other-window
+     ;; icicle-bookmark-some-tags-regexp
+     ;; icicle-bookmark-some-tags-regexp-other-window
+     ;; icicle-bookmark-specific-buffers
+     ;; icicle-bookmark-specific-buffers-narrow
+     ;; icicle-bookmark-specific-buffers-other-window
+     ;; icicle-bookmark-specific-files
+     ;; icicle-bookmark-specific-files-narrow
+     ;; icicle-bookmark-specific-files-other-window
+     ;; icicle-bookmark-temporary
+     ;; icicle-bookmark-temporary-narrow
+     ;; icicle-bookmark-temporary-other-window
+     ;; icicle-bookmark-this-buffer
+     ;; icicle-bookmark-this-buffer-narrow
+     ;; icicle-bookmark-this-buffer-other-window
+     ;; icicle-bookmark-url
+     ;; icicle-bookmark-url-narrow
+     ;; icicle-bookmark-url-other-window
+     ;; icicle-bookmark-w3m
+     ;; icicle-bookmark-w3m-narrow
+     ;; icicle-bookmark-w3m-other-window
      icicle-buffer
      icicle-buffer-config
      icicle-buffer-list
@@ -168,18 +168,18 @@
      icicle-comint-replace-by-expanded-filename
      icicle-command-abbrev
      icicle-command-abbrev-command
-     icicle-completing-yank
-     icicle-customize-apropos
-     icicle-customize-apropos-faces
-     icicle-customize-apropos-groups
-     icicle-customize-apropos-options
-     icicle-customize-apropos-options-of-type
-     icicle-customize-apropos-opts-w-val-satisfying
-     icicle-customize-face
-     icicle-customize-face-other-window
-     icicle-customize-icicles-group
-     icicle-custom-theme
-     icicle-dabbrev-completion
+     ;; icicle-completing-yank
+     ;; icicle-customize-apropos
+     ;; icicle-customize-apropos-faces
+     ;; icicle-customize-apropos-groups
+     ;; icicle-customize-apropos-options
+     ;; icicle-customize-apropos-options-of-type
+     ;; icicle-customize-apropos-opts-w-val-satisfying
+     ;; icicle-customize-face
+     ;; icicle-customize-face-other-window
+     ;; icicle-customize-icicles-group
+     ;; icicle-custom-theme
+     ;; icicle-dabbrev-completion
      icicle-delete-file
      icicle-delete-window
      icicle-describe-option-of-type
@@ -264,12 +264,12 @@
      icicle-locate-no-search-other-window
      icicle-locate-of-content
      icicle-locate-of-content-other-window
-     icicle-ORIG-customize-face
-     icicle-ORIG-customize-face-other-window
-     icicle-ORIG-dabbrev-completion
-     icicle-ORIG-lisp-complete-symbol
-     icicle-ORIG-lisp-completion-at-point
-     icicle-ORIG-repeat-complex-command
+     ;; icicle-ORIG-customize-face
+     ;; icicle-ORIG-customize-face-other-window
+     ;; icicle-ORIG-dabbrev-completion
+     ;; icicle-ORIG-lisp-complete-symbol
+     ;; icicle-ORIG-lisp-completion-at-point
+     ;; icicle-ORIG-repeat-complex-command
      icicle-other-window-or-frame
      icicle-pop-tag-mark
      icicle-pp-eval-expression
@@ -279,7 +279,7 @@
      icicle-recent-file-of-content
      icicle-recent-file-of-content-other-window
      icicle-recent-file-other-window
-     icicle-recompute-shell-command-candidates
+     ;; icicle-recompute-shell-command-candidates
      icicle-regexp-list
      icicle-remove-buffer-candidate
      icicle-remove-buffer-config
@@ -288,7 +288,7 @@
      icicle-remove-saved-completion-set
      icicle-repeat-complex-command
      icicle-reset-option-to-nil
-     icicle-select-bookmarked-region
+     ;; icicle-select-bookmarked-region
      icicle-select-frame
      icicle-select-frame-by-name
      icicle-select-window
@@ -297,9 +297,9 @@
      icicle-send-signal-to-process
      icicle-set-option-to-t
      icicle-sexp-list
-     icicle-shell-dynamic-complete-command
-     icicle-shell-dynamic-complete-environment-variable
-     icicle-shell-dynamic-complete-filename
+     ;; icicle-shell-dynamic-complete-command
+     ;; icicle-shell-dynamic-complete-environment-variable
+     ;; icicle-shell-dynamic-complete-filename
      icicle-string-list
      icicle-toggle-option
      icicle-visit-marked-file-of-content
@@ -309,12 +309,12 @@
      icicle-widget-file-complete
      icicle-yank-maybe-completing
      icicle-yank-pop-commands
-     icicle-zap-to-char
+     ;; icicle-zap-to-char
      icicle-anything
      icicle-apply
-     icicle-bookmark-a-file
-     icicle-bookmark-tagged
-     icicle-bookmark-tagged-other-window
+     ;; icicle-bookmark-a-file
+     ;; icicle-bookmark-tagged
+     ;; icicle-bookmark-tagged-other-window
      icicle-choose-faces
      icicle-choose-invisible-faces
      icicle-choose-visible-faces
@@ -332,8 +332,8 @@
      icicle-find-file-all-tags-other-window
      icicle-find-file-all-tags-regexp
      icicle-find-file-all-tags-regexp-other-window
-     icicle-find-file-handle-bookmark
-     icicle-find-file-handle-bookmark-other-window
+     ;; icicle-find-file-handle-bookmark
+     ;; icicle-find-file-handle-bookmark-other-window
      icicle-find-file-some-tags
      icicle-find-file-some-tags-other-window
      icicle-find-file-some-tags-regexp
@@ -371,14 +371,14 @@
      icicle-imenu-variable
      icicle-imenu-variable-full
      icicle-ido-like-mode
-     icicle-Info-goto-node
-     icicle-Info-goto-node-no-search
-     icicle-Info-goto-node-of-content
-     icicle-Info-index
-     icicle-Info-index-20
-     icicle-Info-menu
-     icicle-Info-menu-cmd
-     icicle-Info-virtual-book
+     ;; icicle-Info-goto-node
+     ;; icicle-Info-goto-node-no-search
+     ;; icicle-Info-goto-node-of-content
+     ;; icicle-Info-index
+     ;; icicle-Info-index-20
+     ;; icicle-Info-menu
+     ;; icicle-Info-menu-cmd
+     ;; icicle-Info-virtual-book
      icicle-insert-thesaurus-entry
      icicle-load-library
      icicle-map
@@ -397,51 +397,51 @@
      icicle-read-color-WYSIWYG
      icicle-save-string-to-variable
      icicle-search
-     icicle-search-all-tags-bookmark
-     icicle-search-all-tags-regexp-bookmark
-     icicle-search-autofile-bookmark
-     icicle-search-autonamed-bookmark
-     icicle-search-bookmark
-     icicle-search-bookmark-list-bookmark
-     icicle-search-bookmark-list-marked
-     icicle-search-bookmarks-together
+     ;; icicle-search-all-tags-bookmark
+     ;; icicle-search-all-tags-regexp-bookmark
+     ;; icicle-search-autofile-bookmark
+     ;; icicle-search-autonamed-bookmark
+     ;; icicle-search-bookmark
+     ;; icicle-search-bookmark-list-bookmark
+     ;; icicle-search-bookmark-list-marked
+     ;; icicle-search-bookmarks-together
      icicle-search-buffer
      icicle-search-buff-menu-marked
      icicle-search-char-property
      icicle-search-defs
      icicle-search-defs-full
-     icicle-search-dired-bookmark
+     ;; icicle-search-dired-bookmark
      icicle-search-dired-marked
      icicle-search-dired-marked-recursive
      icicle-search-file
-     icicle-search-file-bookmark
+     ;; icicle-search-file-bookmark
      icicle-search-generic
-     icicle-search-gnus-bookmark
+     ;; icicle-search-gnus-bookmark
      icicle-search-highlight-cleanup
      icicle-search-ibuffer-marked
-     icicle-search-info-bookmark
+     ;; icicle-search-info-bookmark
      icicle-search-keywords
      icicle-search-lines
-     icicle-search-local-file-bookmark
-     icicle-search-man-bookmark
-     icicle-search-non-file-bookmark
+     ;; icicle-search-local-file-bookmark
+     ;; icicle-search-man-bookmark
+     ;; icicle-search-non-file-bookmark
      icicle-search-overlay-property
      icicle-search-paragraphs
      icicle-search-pages
-     icicle-search-region-bookmark
-     icicle-search-remote-file-bookmark
+     ;; icicle-search-region-bookmark
+     ;; icicle-search-remote-file-bookmark
      icicle-search-sentences
-     icicle-search-some-tags-bookmark
-     icicle-search-some-tags-regexp-bookmark
-     icicle-search-specific-buffers-bookmark
-     icicle-search-specific-files-bookmark
-     icicle-search-temporary-bookmark
+     ;; icicle-search-some-tags-bookmark
+     ;; icicle-search-some-tags-regexp-bookmark
+     ;; icicle-search-specific-buffers-bookmark
+     ;; icicle-search-specific-files-bookmark
+     ;; icicle-search-temporary-bookmark
      icicle-search-text-property
      icicle-search-thing
-     icicle-search-this-buffer-bookmark
-     icicle-search-url-bookmark
+     ;; icicle-search-this-buffer-bookmark
+     ;; icicle-search-url-bookmark
      icicle-search-w-isearch-string
-     icicle-search-w3m-bookmark
+     ;; icicle-search-w3m-bookmark
      icicle-search-word
      icicle-search-xml-element
      icicle-search-xml-element-text-node
@@ -452,13 +452,13 @@
      icicle-set-TAB-methods-for-command
      icicle-show-faces
      icicle-show-only-faces
-     icicle-synonyms
+     ;; icicle-synonyms
      icicle-tag-a-file
      icicle-tags-search
      icicle-untag-a-file
      icicle-vardoc
-     icicle-where-is
-     icicle-wide-n
+     ;; icicle-where-is
+     ;; icicle-wide-n
      ))
 
 (generate-calls-proxy autoload-icicle icicle-top-level-commands)
