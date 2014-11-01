@@ -13,14 +13,14 @@
 (add-hook 'prog-mode-hook (lambda () (require 'flycheck)))
 (add-hook 'text-mode-hook (lambda () (require 'flycheck)))
 
-(defun my-display-error-messages-condensed (errors)
-  (-when-let (messages (-keep #'flycheck-error-message errors))
-    (when (flycheck-may-use-echo-area-p)
-      (display-message-or-buffer (s-join "\n" messages)
-        flycheck-error-message-buffer))))
-
 (with-eval-after-load 'flycheck
   (progn
+    (defun my-display-error-messages-condensed (errors)
+      (-when-let (messages (-keep #'flycheck-error-message errors))
+        (when (flycheck-may-use-echo-area-p)
+          (display-message-or-buffer (s-join "\n" messages)
+            flycheck-error-message-buffer))))
+
     (setq flycheck-display-errors-function #'my-display-error-messages-condensed)
 
     (setq flycheck-indication-mode nil)
