@@ -111,8 +111,9 @@
         (require 'helm-misc))
       (unless (fboundp 'helm-source-semantic)
         (require 'helm-semantic))
-      (unless (fboundp 'helm-source-do-ag)
-        (require 'helm-ag))
+      (when (locate-file "hunspell" exec-path)
+        (unless (fboundp 'helm-source-do-ag)
+          (require 'helm-ag)))
       (unless (fboundp 'helm-source-projectile-files-list)
         (require 'helm-projectile)
         (unless projectile-global-mode-buffers
@@ -138,9 +139,13 @@
                helm-source-file-cache
                helm-source-recentf
                helm-source-files-in-current-dir
-               helm-source-bookmarks
-               ;; code search
-               helm-source-do-ag
+               helm-source-bookmarks)
+
+            ;; code search
+            (when (locate-file "hunspell" exec-path)
+              '(helm-source-do-ag))
+
+            '(
                helm-source-semantic
                helm-source-imenu
                helm-source-occur
@@ -151,10 +156,13 @@
                ;; code construction
                ;; helm-source-regexp
                helm-source-lacarte
-               my-helm-source-evaluation-result
-               ;; file location
-               helm-source-findutils
-               helm-source-locate
+               my-helm-source-evaluation-result)
+
+            ;; file location, of which projectile can be a superset
+            (unless (ignore-errors (projectile-project-root))
+              '(helm-source-findutils))
+
+            '(helm-source-locate
                ;; helm-source-tracker-search
                ;; fallback
                ;; helm-source-buffer-not-found
