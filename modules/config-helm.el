@@ -5,6 +5,7 @@
 (eval-when-compile (require 'cl))
 (eval-when-compile (require 'cl-lib))
 
+(eval-when-compile (require 'evil))
 (eval-when-compile (require 'helm-semantic))
 (eval-when-compile (require 'helm-imenu))
 (eval-when-compile (require 'helm-ring))
