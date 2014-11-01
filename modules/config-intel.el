@@ -11,6 +11,7 @@
 ;;; ====================================
 
 (add-hook 'prog-mode-hook (lambda () (require 'flycheck)))
+(add-hook 'text-mode-hook (lambda () (require 'flycheck)))
 
 (defun my-display-error-messages-condensed (errors)
   (-when-let (messages (-keep #'flycheck-error-message errors))
