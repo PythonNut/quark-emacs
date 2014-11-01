@@ -3,6 +3,8 @@
 (require 'helm-files)
 
 (eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
+(eval-when-compile (load-library "config-modes"))
 
 (with-eval-after-load 'helm-config
   (progn
