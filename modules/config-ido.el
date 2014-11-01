@@ -5,6 +5,9 @@
   (progn
     (ido-ubiquitous +1)
     (flx-ido-mode +1)
+    (setq
+      ido-enable-flex-matching t
+      ido-use-faces nil)
     (ido-vertical-mode +1)))
 
 (setq ido-save-directory-list-file "~/.emacs.d/ido.last")
