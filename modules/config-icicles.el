@@ -1,3 +1,7 @@
+(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
+(eval-when-compile (load-library "config-modes"))
+
 (defmacro auto-icicle (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
      (interactive)
