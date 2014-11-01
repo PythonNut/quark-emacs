@@ -119,6 +119,7 @@
      helm-ring
      helm-projectile
      helm-semantic
+     helm-ag
      magit
      ))
 
