@@ -4,6 +4,13 @@
 
 (eval-when-compile (require 'cl))
 (eval-when-compile (require 'cl-lib))
+
+(eval-when-compile (require 'helm-semantic))
+(eval-when-compile (require 'helm-imenu))
+(eval-when-compile (require 'helm-ring))
+(eval-when-compile (require 'helm-projectile))
+(eval-when-compile (require 'helm-files))
+
 (eval-when-compile (load-library "config-modes"))
 
 (with-eval-after-load 'helm-config

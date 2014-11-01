@@ -1,5 +1,7 @@
 (eval-when-compile (require 'cl))
 (eval-when-compile (require 'cl-lib))
+
+(eval-when-compile (require 'icicles))
 (eval-when-compile (load-library "config-modes"))
 
 (defmacro auto-icicle (func)
