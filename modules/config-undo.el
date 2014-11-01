@@ -1,3 +1,4 @@
+(eval-when-compile (require 'evil))
 (add-hook 'first-change-hook
   (lambda () (require 'undo-tree)))
 
