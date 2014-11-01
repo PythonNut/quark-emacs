@@ -10,10 +10,9 @@
     (flx-ido-mode +1)
     (setq
       ido-enable-flex-matching t
+      ido-save-directory-list-file "~/.emacs.d/ido.last"
       ido-use-faces nil)
     (ido-vertical-mode +1)))
-
-(setq ido-save-directory-list-file "~/.emacs.d/ido.last")
 
 (defun ido-goto-symbol (&optional symbol-list)
   "Refresh imenu and jump to a place in the buffer using Ido."
