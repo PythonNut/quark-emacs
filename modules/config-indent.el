@@ -5,4 +5,4 @@
     (diminish 'auto-indent-mode " ⇉")))
 
 (auto-indent-global-mode +1)
-(dtrt-indent-mode +1)
+(add-hook 'find-file-hook 'dtrt-indent-mode)
