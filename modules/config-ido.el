@@ -1,6 +1,9 @@
 (ido-mode +1)
 (eval-when-compile (require 'cl))
 
+(autoload 'smex "smex" "smex" t)
+(global-set-key (kbd "M-x") 'smex)
+
 (with-eval-after-load 'ido
   (progn
     (ido-ubiquitous +1)
