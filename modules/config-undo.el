@@ -4,7 +4,7 @@
 ;; supress XZ messages
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (run-at-time 5 nil (lambda () (message "")))))
+    (run-at-time 1 nil (lambda () (message "")))))
 
 (add-hook 'find-file-hook
   (lambda ()
@@ -46,6 +46,7 @@
     (define-key undo-tree-visualizer-mode-map (kbd "<return>") 'undo-tree-visualizer-quit)
     (define-key undo-tree-visualizer-mode-map (kbd "<up>") 'undo-tree-visualize-undo)
     (define-key undo-tree-visualizer-mode-map (kbd "<down>") 'undo-tree-visualize-redo)
+
     (when (locate-file "xz" exec-path)
       (defadvice undo-tree-make-history-save-file-name
 	(after undo-tree activate)
