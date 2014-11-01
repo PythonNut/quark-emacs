@@ -51,13 +51,13 @@
 			(length indent))
 		    (empty-line-p))))
         ;; now skip ahead to the Nth block with this indentation
-        (setq index (or last-prefix-arg 0))
-        (while (> index 1)
-          (while (and (before-end) (line-indent-ok))
-            (forward-line 1))
-          (while (and (before-end) (not (line-indent-ok)))
-            (forward-line 1))
-          (setq index (1- index)))
+        (let ((index (or last-prefix-arg 0)))
+          (while (> index 1)
+            (while (and (before-end) (line-indent-ok))
+              (forward-line 1))
+            (while (and (before-end) (not (line-indent-ok)))
+              (forward-line 1))
+            (setq index (1- index))))
         (save-excursion
           (when point (goto-char point))
           (let ((start (point)) begin end)
@@ -159,14 +159,14 @@
     (while (and (before-end) (not (comment-anywhere)))
       (forward-line 1))
     (end-of-line)
-    (setq index (or last-prefix-arg 0))
 
-    (while (> index 1)
-      (while (and (before-end) (comment-anywhere))
-        (forward-line 1))
-      (while (and (before-end) (not (comment-anywhere)))
-        (forward-line 1))
-      (setq index (1- index)))
+    (let ((index (or last-prefix-arg 0)))
+      (while (> index 1)
+        (while (and (before-end) (comment-anywhere))
+          (forward-line 1))
+        (while (and (before-end) (not (comment-anywhere)))
+          (forward-line 1))
+        (setq index (1- index))))
 
     (while (and (before-end) (point-in-comment-p))
       (backward-char))
@@ -207,13 +207,13 @@
 	    (while (looking-back "[[:space:]]")
 	      (backward-char))
 	    (point))
-	  (line-end-position))))))
+          (line-end-position))))
 
-(evil-define-text-object evil-indent-i-comment (&optional count beg end type)
-  "Text object describing the block with the same indentation as
+    (evil-define-text-object evil-indent-i-comment (&optional count beg end type)
+      "Text object describing the block with the same indentation as
 the current line."
-  (let ((range (evil-indent--comment-range)))
-    (evil-contract-range (evil-range (second range) (third range) (first range)))))
+      (let ((range (evil-indent--comment-range)))
+        (evil-contract-range (evil-range (second range) (third range) (first range)))))))
 
 (define-key evil-inner-text-objects-map "C" 'evil-indent-i-comment)
 
@@ -285,22 +285,22 @@ the current line."
       (evil-range
 	(progn
 	  (goto-char (min beg end))
-	  (loop do (previous-line) while
+          (loop do (forward-line -1) while
 	    (string-match "^[[:space:]]*$"
 	      (buffer-substring-no-properties
 		(line-beginning-position)
 		(line-end-position))))
-	  (next-line)
+          (forward-line 1)
 	  (point))
 	(progn
 	  (goto-char (max beg end))
-	  (loop do (next-line) while
+          (loop do (forward-line 1) while
 	    (string-match "^[[:space:]]*$"
 	      (buffer-substring-no-properties
 		(line-beginning-position)
 		(line-end-position))))
-	  (previous-line)
-	  (point)) 'line))))
+          (forward-line -1)
+          (point)) 'line))))
 
 (define-key evil-inner-text-objects-map "R" 'evil-i-arbitrary-line-range)
 (define-key evil-outer-text-objects-map "R" 'evil-a-arbitrary-line-range)
@@ -359,7 +359,7 @@ the current line."
   (goto-char beg)
   (evil-visual-state)
   (goto-char end)
-  (call-interactively evilnc-copy-and-comment-lines))
+  (call-interactively 'evilnc-copy-and-comment-lines))
 
 (define-key evil-operator-state-map "gC" 'evil-comment-and-copy-region)
 (define-key evil-normal-state-map "gC" 'evil-comment-and-copy-region)
@@ -418,7 +418,6 @@ the current line."
 
 (define-key evil-operator-state-map "gV" 'evil-eval-region)
 (define-key evil-normal-state-map "gV" 'evil-eval-region)
-
 
 (evil-define-operator evil-align-regexp (beg end type)
   (save-excursion
