@@ -14,26 +14,27 @@
 
       helm-locate
       `((name . "Locate")
-	 (init . helm-locate-set-command)
-	 (candidates-process . helm-locate-init)
-	 (type . file)
-	 (requires-pattern . 3)
-	 (history . ,'helm-file-name-history)
-	 (keymap . ,helm-generic-files-map)
-	 (help-message . helm-generic-file-help-message)
-	 (candidate-number-limit . 999)
-	 (mode-line . helm-generic-file-mode-line-string)))
+         (init . helm-locate-set-command)
+         (candidates-process . helm-locate-init)
+         (type . file)
+         (requires-pattern . 3)
+         (history . ,'helm-file-name-history)
+         (keymap . ,helm-generic-files-map)
+         (help-message . helm-generic-file-help-message)
+         (candidate-number-limit . 999)
+         (mode-line . helm-generic-file-mode-line-string)))
 
     (set-face-attribute 'helm-selection nil :underline 'nil)
 
     (cl-macrolet
       ((add-boring (regex)
-	 `(add-to-list 'helm-boring-file-regexp-list ,regex)))
+         `(add-to-list 'helm-boring-file-regexp-list ,regex)))
       (generate-calls add-boring
-	(
-	  "\\.undo.xz$"
-	  "\\.elc$"
-	  "\\#$")))
+        (
+          "\\.undo.xz$"
+          "\\.elc$"
+          "\\#$"
+          "\\~$")))
 
     (global-set-key (kbd "C-x f") 'ido-find-file)
     (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
