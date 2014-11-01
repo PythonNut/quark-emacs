@@ -109,6 +109,8 @@
         (require 'helm-misc))
       (unless (fboundp 'helm-source-semantic)
         (require 'helm-semantic))
+      (unless (fboundp 'helm-source-do-ag)
+        (require 'helm-ag))
       (unless (fboundp 'helm-source-projectile-files-list)
         (require 'helm-projectile)
         (unless projectile-global-mode-buffers
@@ -136,6 +138,7 @@
                helm-source-files-in-current-dir
                helm-source-bookmarks
                ;; code search
+               helm-source-do-ag
                helm-source-semantic
                helm-source-imenu
                helm-source-occur

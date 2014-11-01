@@ -50,6 +50,7 @@
      matlab-mode
      web-mode
 
+     helm-ag
      diminish
      smooth-scrolling
      framemove
