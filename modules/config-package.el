@@ -115,6 +115,8 @@
 (require 'idle-require)
 (setq idle-require-symbols
   '(
+     whole-line-or-region
+     smex
      icicles
      helm
      helm-ring
