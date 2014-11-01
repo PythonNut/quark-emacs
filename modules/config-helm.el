@@ -149,7 +149,7 @@
                helm-source-bookmarks)
 
             ;; code search
-            (when (locate-file "hunspell" exec-path)
+            (when (locate-file "ag" exec-path)
               '(helm-source-do-ag))
 
             '(
