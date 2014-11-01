@@ -1,4 +1,5 @@
 (eval-when-compile (require 'cl))
+(eval-when-compile (require 'auto-indent-mode))
 
 (add-hook 'auto-indent-global-mode-hook
   (lambda ()

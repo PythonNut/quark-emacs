@@ -1,5 +1,9 @@
 (eval-when-compile (require 'cl))
 
+(eval-when-compile (require 'evil))
+(eval-when-compile (require 'evil-indent-textobject))
+(eval-when-compile (require 'evil-nerd-commenter))
+
 ;;; === Evil motion section ===
 
 (evil-define-motion evil-forward-symbol (count)

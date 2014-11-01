@@ -1,6 +1,9 @@
 (require 'evil)
 (eval-when-compile (require 'cl))
 
+(eval-when-compile (require 'evil))
+(eval-when-compile (require 'evil-leader))
+
 (setq 
   evil-want-C-w-delete nil
   evil-want-C-w-in-emacs-state nil

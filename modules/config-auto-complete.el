@@ -1,5 +1,9 @@
 (require 'auto-complete-config)
+
 (eval-when-compile (require 'cl))
+
+(eval-when-compile (require 'auto-complete))
+(eval-when-compile (require 'auto-complete-config))
 
 (with-eval-after-load 'auto-complete
   (progn
