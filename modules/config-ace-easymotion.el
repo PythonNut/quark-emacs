@@ -22,6 +22,25 @@
     ;; see github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
     (setq ace-jump-mode-scope 'global)
 
+    (defun ace-jump-char-N-lines (&optional n)
+      (interactive "p")
+      (let* ((N (or n (window-body-height)))
+              (query-char (read-char "Query Char:"))
+              (start (save-excursion
+                       (forward-line (- N))
+                       (point)))
+              (stop (save-excursion
+                      (forward-line (1+ N))
+                      (point))))
+        (unwind-protect
+          (condition-case err
+            (progn
+              (narrow-to-region start stop)
+              (evil-ace-jump-char-mode query-char))
+            (error
+              (message (error-message-string err))))
+          (widen))))
+
     (defun realign-cursor ()
       (interactive)
       (save-excursion
@@ -70,29 +89,16 @@
 (key-chord-define evil-insert-state-map "jl" 'evil-ace-jump-line-mode)
 (key-chord-define evil-insert-state-map "jk" 'evil-ace-jump-word-mode)
 (key-chord-define evil-emacs-state-map "jk" 'ace-jump-word-mode)
-(key-chord-define evil-emacs-state-map "jc" 'ace-jump-to-char-within-N-lines)
+(key-chord-define evil-emacs-state-map "jc" 'ace-jump-char-N-lines)
 (key-chord-define evil-emacs-state-map "jl" 'ace-jump-line-mode)
 
-(defun ace-jump-char-N-lines (&optional n)
-  (interactive "p")
-  (let* ((N (or n (window-body-height)))
-          (query-char (read-char "Query Char:"))
-          (start (save-excursion
-                   (forward-line (- N))
-                   (point)))
-          (stop (save-excursion
-                  (forward-line (1+ N))
-                  (point))))
-    (unwind-protect
-      (condition-case err
-        (progn
-          (narrow-to-region start stop)
-          (evil-ace-jump-char-mode query-char))
-        (error
-          (message (error-message-string err))))
-      (widen))))
+(key-chord-define evil-normal-state-map " l" 'evil-ace-jump-line-mode)
+(key-chord-define evil-normal-state-map " n" 'ace-jump-char-N-lines)
+(key-chord-define evil-normal-state-map " b" 'ace-jump-buffer)
+(key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
+(key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
 
-(key-chord-define evil-insert-state-map "jc" 'ace-jump-to-char-within-N-lines)
+(key-chord-define evil-insert-state-map "jc" 'ace-jump-char-N-lines)
 
 (defmacro ace-generic (collector &rest follower)
   "ace jump to candidates of collector using follower."
