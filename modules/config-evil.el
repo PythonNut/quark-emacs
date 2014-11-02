@@ -115,6 +115,12 @@
     (evil-insert-state)
     (cua-set-rectangle-mark)))
 
+(define-key evil-insert-state-map (kbd "C-s")
+  (lambda ()
+    (interactive)
+    (evil-normal-state)
+    (call-interactively 'evil-search-forward)))
+
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-visual-line)
 (setq evil-replace-state-cursor '("#884444" box))
 
