@@ -123,7 +123,7 @@
           (win-start (window-start))
           (win-end (window-end)))
      (save-excursion
-       (call-interactively (quote ,func))
+       (call-interactively ',func)
        (while (when (and
                       (> (1+ (point)) win-start)
                       (< (1+ (point)) win-end)
@@ -131,16 +131,15 @@
                 (push (1+ (point)) points)
                 (setq count (1+ count))
                 (setq
-                  last-command (quote ,func)
-                  this-command (quote ,func))
-                (call-interactively (quote ,func))
+                  last-command ',func
+                  this-command ',func)
+                (call-interactively ',func)
                 t))
        (set-window-start (selected-window) win-start)
        (nreverse points))))
 
 (defmacro ace-motion (func)
   `(evil-define-motion ,(make-symbol (concat "ace-" (symbol-name func))) (count)
-     :type inclusive
      (evil-without-repeat
        (let ((pnt (point))
               (buf (current-buffer)))
