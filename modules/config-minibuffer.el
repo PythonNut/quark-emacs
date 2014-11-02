@@ -2,6 +2,7 @@
 
 (load-library "config-ido")
 (load-library "config-helm")
+(load-library "config-icicles")
 
 ;; bind command to switch to minibuffer
 (defun switch-to-minibuffer-window ()

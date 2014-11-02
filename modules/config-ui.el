@@ -4,7 +4,6 @@
 (load-library "config-line-numbers")
 (load-library "config-parens")
 (load-library "config-ace-easymotion")
-(load-library "config-icicles")
 (load-library "config-undo")
 
 (require 'multiple-cursors)
