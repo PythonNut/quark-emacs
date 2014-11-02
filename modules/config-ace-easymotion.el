@@ -1,6 +1,12 @@
 (require 'noflet)
 (require 'ace-jump-mode)
+
 (eval-when-compile (require 'cl))
+
+(eval-when-compile (require 'noflet))
+(eval-when-compile (require 'ace-jump-mode))
+(eval-when-compile (require 'evil))
+(eval-when-compile (require 'key-chord))
 
 (with-eval-after-load 'ace-jump-mode
   (progn
@@ -21,8 +27,12 @@
       (save-excursion
 	(if (> (rest (nth 6 (posn-at-point)))
 	      (/ (window-body-height) 2))
-	  (progn (previous-line) (next-line))
-	  (progn (next-line) (previous-line)))))
+          (progn
+            (call-interactively 'previous-line)
+            (call-interactively 'next-line))
+          (progn
+            (call-interactively 'next-line)
+            (call-interactively 'previous-line)))))
 
     (defadvice evil-ace-jump-word-mode (after cleanup activate)
       (ignore-errors (call-interactively 'realign-cursor)))
