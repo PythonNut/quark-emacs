@@ -1,5 +1,7 @@
 (require 'linum)
 (eval-when-compile (require 'cl))
+(eval-when-compile (require 'linum))
+(eval-when-compile (require 'linum-relative))
 
 (add-hook 'prog-mode-hook
   (lambda ()
