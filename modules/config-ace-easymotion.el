@@ -59,12 +59,13 @@
 			     (line-beginning-position)) 1))))))))
 
     (ace-jump-mode-enable-mark-sync)
-    (if (< (display-color-cells) 256)
-      (progn
-	(set-face-foreground 'ace-jump-face-background "white")
-	(set-face-background 'ace-jump-face-background "black")
-	(set-face-foreground 'ace-jump-face-foreground "black")
-	(set-face-background 'ace-jump-face-foreground "white")))))
+    (when (and
+            (< (display-color-cells) 256)
+            (not (display-graphic-p)))
+      (set-face-foreground 'ace-jump-face-background "white")
+      (set-face-background 'ace-jump-face-background "black")
+      (set-face-foreground 'ace-jump-face-foreground "black")
+      (set-face-background 'ace-jump-face-foreground "white"))))
 
 (key-chord-define evil-insert-state-map "jl" 'evil-ace-jump-line-mode)
 (key-chord-define evil-insert-state-map "jk" 'evil-ace-jump-word-mode)
