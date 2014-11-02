@@ -15,7 +15,7 @@
     (define-key magit-log-mode-map (kbd "k") 'previous-line)
     (define-key magit-log-mode-map (kbd "j") 'next-line)
     (define-key magit-status-mode-map (kbd "k") 'previous-line)
-    (define-key magit-status-mode-map (kbd "k") 'magit-discard-item)
+    (define-key magit-status-mode-map (kbd "K") 'magit-discard-item)
     (define-key magit-status-mode-map (kbd "j") 'next-line)))
 
 ;; disable regular key chords by switching input methods
