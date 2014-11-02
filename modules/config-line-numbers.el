@@ -1,3 +1,4 @@
+(require 'linum)
 (eval-when-compile (require 'cl))
 
 (add-hook 'prog-mode-hook
