@@ -7,16 +7,18 @@
 (defmacro auto-icicle (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
      (interactive)
-     (if icicle-mode
-       (call-interactively (ad-get-orig-definition ',func) args)
-       (unwind-protect
-         (progn
-           (call-interactively 'icicle-mode +1)
-           ;; (call-interactively ',func)
-           (call-interactively (ad-get-orig-definition ',func) args))
-         (progn
-           (call-interactively 'icicle-mode -1)
-           (message ""))))))
+     (if (called-interactively-p 'any)
+       (if icicle-mode
+         (call-interactively (ad-get-orig-definition ',func) args)
+         (unwind-protect
+           (progn
+             (call-interactively 'icicle-mode +1)
+             ;; (call-interactively ',func)
+             (call-interactively (ad-get-orig-definition ',func) args))
+           (progn
+             (call-interactively 'icicle-mode -1)
+             (message ""))))
+       ad-do-it)))
 
 (defmacro autoload-icicle (func)
   `(autoload ',func "icicles" "autoloaded icicle function" t))
