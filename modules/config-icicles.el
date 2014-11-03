@@ -12,11 +12,11 @@
        (unwind-protect
          (progn
            (call-interactively 'icicle-mode +1)
-	   ;; (call-interactively ',func)
-	   (call-interactively (ad-get-orig-definition ',func) args))
-	 (progn
-	   (call-interactively 'icicle-mode -1)
-	   (message ""))))))
+           ;; (call-interactively ',func)
+           (call-interactively (ad-get-orig-definition ',func) args))
+         (progn
+           (call-interactively 'icicle-mode -1)
+           (message ""))))))
 
 (defmacro autoload-icicle (func)
   `(autoload ',func "icicles" "autoloaded icicle function" t))
