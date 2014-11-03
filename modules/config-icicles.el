@@ -10,8 +10,8 @@
      (if icicle-mode
        (call-interactively (ad-get-orig-definition ',func) args)
        (unwind-protect
-	 (progn
-	   (call-interactively 'icicle-mode +1)
+         (progn
+           (call-interactively 'icicle-mode +1)
 	   ;; (call-interactively ',func)
 	   (call-interactively (ad-get-orig-definition ',func) args))
 	 (progn
