@@ -4,6 +4,8 @@
 (load-library "config-helm")
 (load-library "config-icicles")
 
+(global-set-key (kbd "C-S-s") 'icicle-search-generic)
+
 ;; bind command to switch to minibuffer
 (defun switch-to-minibuffer-window ()
   "switch to minibuffer window (if active)"
