@@ -45,9 +45,6 @@
 (defmacro autoload-icicle (func)
   `(autoload ',func "icicles" "autoloaded icicle function" t))
 
-(defmacro generate-calls-proxy (operator arglist)
-  `(generate-calls ,operator ,(eval arglist)))
-
 (cl-macrolet
   ((setup-icicles (commands)
      `(progn
