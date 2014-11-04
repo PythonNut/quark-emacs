@@ -4,6 +4,27 @@
 (eval-when-compile (require 'icicles))
 (eval-when-compile (load-library "config-modes"))
 
+;; custom hook run when icicles in initialized
+;; (defvar icicle-init-hook nil)
+
+(add-hook 'icicle-init-hook
+  (lambda ()
+    (setq
+      icicle-highlight-lighter-flag nil
+      icicle-max-candidates 300
+      icicle-default-cycling-mode 'apropos
+      icicle-show-multi-completion-flag t
+      icicle-search-highlight-all-current-flag t
+      icicle-command-abbrev-match-all-parts-flag nil
+      icicle-highlight-input-completion-failure-delay 0
+      icicle-Completions-text-scale-decrease 0.2
+      icicle-TAB-completion-methods '(vanilla substring basic)
+      locate-command "locate"
+      icicle-completions-format "vertical"
+      icicle-incremental-completion t
+      icicle-incremental-completion-delay 0.1
+      icicle-show-Completions-initially-flag nil)))
+
 (defmacro auto-icicle (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
      (interactive)
@@ -13,6 +34,7 @@
          (unwind-protect
            (progn
              (call-interactively 'icicle-mode +1)
+             (run-hooks 'icicle-init-hook)
              ;; (call-interactively ',func)
              (call-interactively (ad-get-orig-definition ',func) args))
            (progn
