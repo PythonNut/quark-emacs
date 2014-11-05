@@ -112,6 +112,7 @@
      describe-key
      evil-exit-emacs-state
      handle-select-window
+     handle-switch-frame
      helm-eval-expression
      icicle-goto-marker-or-set-mark-command
      ido-write-file
