@@ -19,6 +19,10 @@
       icicle-highlight-input-completion-failure-delay 0
       icicle-Completions-text-scale-decrease 0.2
       icicle-TAB-completion-methods '(vanilla substring basic)
+      icicle-expand-input-to-common-match 2
+      icicle-apropos-complete-keys (list (kbd "C-i") (kbd "<tab>"))
+      icicle-prefix-complete-keys (list (kbd "<backtab>"))
+      icicle-yank-function 'cua-paste
       locate-command "locate"
       icicle-completions-format "vertical"
       icicle-incremental-completion t
