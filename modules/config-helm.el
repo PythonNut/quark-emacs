@@ -44,7 +44,9 @@
           "\\.undo.xz$"
           "\\.elc$"
           "\\#$"
-          "\\~$")))
+          "\\~$"
+          "\\.zwc.old$"
+          "\\.zwc$")))
 
     (global-set-key (kbd "C-x f") 'ido-find-file)
     (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
