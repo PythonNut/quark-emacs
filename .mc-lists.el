@@ -22,6 +22,7 @@
      ess-smart-S-assign
      eval-and-replace
      eval-last-sexp
+     evil-append-line
      evil-backward-WORD-begin
      evil-backward-char
      evil-backward-sentence
@@ -32,6 +33,8 @@
      evil-delete
      evil-delete-backward-char-and-join
      evil-delete-backward-word
+     evil-delete-char
+     evil-delete-line
      evil-digit-argument-or-evil-beginning-of-line
      evil-emacs-state
      evil-end-of-line
@@ -42,6 +45,7 @@
      evil-first-non-blank
      evil-force-normal-state
      evil-forward-WORD-begin
+     evil-forward-WORD-end
      evil-forward-char
      evil-forward-word-begin
      evil-forward-word-end
