@@ -24,7 +24,7 @@
       icicle-prefix-complete-keys (list (kbd "<backtab>"))
       icicle-yank-function 'cua-paste
       locate-command "locate"
-      icicle-completions-format "vertical"
+      completions-format 'vertical
       icicle-incremental-completion t
       icicle-incremental-completion-delay 0.1
       icicle-show-Completions-initially-flag nil)))
