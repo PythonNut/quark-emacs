@@ -2,15 +2,16 @@
 (require 'helm-imenu)
 (require 'helm-files)
 
-(eval-when-compile (require 'cl))
-(eval-when-compile (require 'cl-lib))
-
-(eval-when-compile (require 'evil))
-(eval-when-compile (require 'helm-semantic))
-(eval-when-compile (require 'helm-imenu))
-(eval-when-compile (require 'helm-ring))
-(eval-when-compile (require 'helm-projectile))
-(eval-when-compile (require 'helm-files))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'cl-lib)
+    (require 'evil)
+    (require 'helm-semantic)
+    (require 'helm-imenu)
+    (require 'helm-ring)
+    (require 'helm-projectile)
+    (require 'helm-files)))
 
 (eval-when-compile (load-library "config-modes"))
 
