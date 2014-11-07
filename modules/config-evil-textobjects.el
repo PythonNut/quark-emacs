@@ -228,11 +228,16 @@ the current line."
 
 (defun evil-make-arbitrary-char-range ()
   (save-excursion
-    (let ((beg (progn (deactivate-mark) (ace-jump-char-mode) (point)))
-	   (end (progn (deactivate-mark) (ace-jump-char-mode) (point))))
-      (if (> beg end)
-	(list beg end)
-        (list end beg)))))
+    (sort (list
+            (progn
+              (deactivate-mark)
+              (call-interactively 'evil-ace-jump-char-mode)
+              (point))
+            (progn
+              (deactivate-mark)
+              (call-interactively 'evil-ace-jump-char-mode)
+              (point)))
+      '<)))
 
 (evil-define-text-object evil-i-arbitrary-char-range (&optional _c _b _e _t)
   "Text object describing the range between two arbitrary points"
@@ -246,8 +251,8 @@ the current line."
   (let ((range (evil-make-arbitrary-char-range)))
     (evil-range (1- (first range)) (1+ (second range)) 'inclusive)))
 
-(define-key evil-inner-text-objects-map "r" 'evil-i-arbitrary-char-range)
-(define-key evil-outer-text-objects-map "r" 'evil-a-arbitrary-char-range)
+(define-key evil-inner-text-objects-map "R" 'evil-i-arbitrary-char-range)
+(define-key evil-outer-text-objects-map "R" 'evil-a-arbitrary-char-range)
 
 (defun evil-ace-jump-line-and-revert ()
   (interactive)
@@ -311,24 +316,8 @@ the current line."
           (forward-line -1)
           (point)) 'line))))
 
-(define-key evil-inner-text-objects-map "R" 'evil-i-arbitrary-line-range)
-(define-key evil-outer-text-objects-map "R" 'evil-a-arbitrary-line-range)
-
-(evil-define-text-object my-evil-next-match (count &optional beg end type)
-  "Select next match."
-  (save-excursion
-    (evil-search-previous 1)
-    (evil-search-next count)
-    (list evil-ex-search-match-beg evil-ex-search-match-end)))
-
-(evil-define-text-object my-evil-previous-match (count &optional beg end type)
-  "Select previous match."
-  (evil-search-next 1)
-  (evil-search-previous count)
-  (list evil-search-match-beg evil-search-match-end))
-
-(define-key evil-outer-text-objects-map "m" 'my-evil-previous-match)
-(define-key evil-inner-text-objects-map "m" 'my-evil-next-match)
+(define-key evil-inner-text-objects-map "r" 'evil-i-arbitrary-line-range)
+(define-key evil-outer-text-objects-map "r" 'evil-a-arbitrary-line-range)
 
 ;; (require 'evil-args)
 (autoload 'evil-inner-arg "evil-args")
