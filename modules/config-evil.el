@@ -1,8 +1,10 @@
 (require 'evil)
-(eval-when-compile (require 'cl))
 
-(eval-when-compile (require 'evil))
-(eval-when-compile (require 'evil-leader))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'evil)
+    (require 'evil-leader)))
 
 (setq 
   evil-want-C-w-delete nil
