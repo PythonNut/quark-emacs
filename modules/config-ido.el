@@ -1,5 +1,9 @@
 (ido-mode +1)
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'ido)
+    (require 'imenu)))
 
 (autoload 'smex "smex" "smex" t)
 (global-set-key (kbd "M-x") 'smex)
