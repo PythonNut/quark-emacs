@@ -21,15 +21,6 @@
 (define-key evil-motion-state-map "H" 'evil-backward-symbol)
 
 ;;; === Evil text object section ===
-(evil-define-text-object evil-a-sexp (count &optional beg end type)
-  (evil-an-object-range count beg end #'sp-forward-sexp #'sp-backward-sexp))
-
-(evil-define-text-object evil-inner-sexp (count &optional beg end type)
-  (evil-inner-object-range count beg end #'sp-forward-sexp #'sp-backward-sexp))
-
-(define-key evil-outer-text-objects-map "e" 'evil-a-sexp)
-(define-key evil-inner-text-objects-map "e" 'evil-inner-sexp)
-
 ;; evil block indentation textobject for Python
 (defun evil-indent--current-indentation ()
   "Return the indentation of the current line. Moves point."
