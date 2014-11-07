@@ -1,4 +1,12 @@
 ;; Automatically save and restore sessions
+
+(eval-when-compile
+  (progn
+    (require 'recentf)
+    (require 'desktop)
+    (require 'saveplace)
+    (require 'savehist)))
+
 (setq
   desktop-dirname             "~/.emacs.d/desktop/"
   desktop-base-file-name      "emacs.desktop"
