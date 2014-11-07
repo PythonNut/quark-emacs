@@ -1,7 +1,9 @@
-(eval-when-compile (require 'cl))
-(eval-when-compile (require 'cl-lib))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'cl-lib)
+    (require 'icicles)))
 
-(eval-when-compile (require 'icicles))
 (eval-when-compile (load-library "config-modes"))
 
 ;; custom hook run when icicles in initialized

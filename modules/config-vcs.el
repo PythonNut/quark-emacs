@@ -1,7 +1,9 @@
 (eval-when-compile (require 'cl))
 
-(eval-when-compile (require 'magit))
-(eval-when-compile (require 'psvn))
+(eval-when-compile
+  (progn
+    (require 'magit)
+    (require 'psvn)))
 
 (evil-set-initial-state 'svn-status-mode 'insert)
 (evil-set-initial-state 'magit-status-mode 'insert)
