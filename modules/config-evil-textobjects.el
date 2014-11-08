@@ -107,33 +107,16 @@
 (define-key evil-outer-text-objects-map "C" 'evil-indent-a-block-end)
 
 ;; evil NERD commenter, commenting awesomeness!
-(autoload 'evilnc-comment-or-uncomment-lines "evil-nerd-commenter")
-(autoload 'evilnc-comment-or-uncomment-to-the-line "evil-nerd-commenter")
-(autoload 'evilnc-copy-and-comment-lines "evil-nerd-commenter")
+(require 'evil-nerd-commenter-autoloads)
 
 (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
 (global-set-key (kbd "C-M-;") 'evilnc-copy-and-comment-lines)
-
-(defun evilnc-comment-or-uncomment-object ()
-  (interactive)
-  (call-interactively 'evil-visual-state)
-  (call-interactively 'evil-indent-i-comment)
-  (call-interactively 'evilnc-comment-or-uncomment-lines))
-
-(defun evilnc-auto-comment ()
-  (interactive)
-  (save-excursion
-    (call-interactively 'evilnc-comment-or-uncomment-lines))
-  (save-excursion
-    (call-interactively 'evilnc-comment-or-uncomment-lines)))
 
 (evil-leader/set-key
   "ci" 'evilnc-comment-or-uncomment-lines
   "cl" 'evilnc-comment-or-uncomment-to-the-line
   "cc" 'evilnc-copy-and-comment-lines
-  "cp" 'evilnc-comment-or-uncomment-paragraphs
-  "ca" 'evilnc-auto-comment
-  "co" 'evilnc-comment-or-uncomment-object)
+  "cp" 'evilnc-comment-or-uncomment-paragraphs)
 
 (defun point-in-comment-p (&optional pt)
   "Determine if the point is inside a comment"
@@ -333,25 +316,10 @@ the current line."
 (define-key evil-outer-text-objects-map "." 'evil-a-sentence)
 
 ;;; === evil operators ===
-(evil-define-operator evil-comment-region (beg end type)
-  (evil-normal-state)
-  (goto-char beg)
-  (evil-visual-state)
-  (goto-char end)
-  (call-interactively 'evilnc-comment-or-uncomment-lines))
-
-(define-key evil-operator-state-map "gc" 'evil-comment-region)
-(define-key evil-normal-state-map "gc" 'evil-comment-region)
-
-(evil-define-operator evil-comment-and-copy-region (beg end type)
-  (evil-normal-state)
-  (goto-char beg)
-  (evil-visual-state)
-  (goto-char end)
-  (call-interactively 'evilnc-copy-and-comment-lines))
-
-(define-key evil-operator-state-map "gC" 'evil-comment-and-copy-region)
-(define-key evil-normal-state-map "gC" 'evil-comment-and-copy-region)
+(autoload 'evilnc-comment-operator "evil-nerd-commenter")
+(autoload 'evilnc-hotkey-comment-operator "evil-nerd-commenter")
+(define-key evil-operator-state-map "gc" 'evilnc-comment-operator)
+(define-key evil-normal-state-map "gc" 'evilnc-comment-operator)
 
 (evil-define-operator evil-macro-on-all-lines (beg end &optional arg)
   (evil-normal-state)
