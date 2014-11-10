@@ -127,7 +127,9 @@
 (setq evil-replace-state-cursor '("#884444" box))
 
 ;; escape out of help mode buffers
-(key-chord-define help-mode-map "jj" 'quit-window)
+(add-hook 'help-mode-hook
+  (lambda ()
+    (key-chord-define help-mode-map "jj" 'quit-window)))
 
 ;; open line and stay in normal mode 
 (defun evil-open-below-normal (arg)
