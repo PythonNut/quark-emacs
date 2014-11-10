@@ -2,6 +2,7 @@
 (eval-when-compile
   (progn
     (require 'cl)
+    (require 'cl-lib)
     (require 'ido)
     (require 'imenu)))
 
@@ -10,7 +11,7 @@
 
 (with-eval-after-load 'ido
   (progn
-    (ido-ubiquitous +1)
+    (ido-ubiquitous-mode +1)
     (flx-ido-mode +1)
     (setq
       ido-enable-flex-matching t
