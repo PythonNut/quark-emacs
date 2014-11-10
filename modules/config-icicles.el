@@ -59,6 +59,7 @@
           (progn
             (run-hooks 'icicle-init-hook)
             (generate-calls auto-icicle ,commands))))))
+
   (setup-icicles
     (
       icicle-add-buffer-candidate
@@ -501,3 +502,5 @@
       ;; icicle-where-is
       ;; icicle-wide-n
       )))
+
+(global-set-key (kbd "C-:") 'icicle-pp-eval-expression)
