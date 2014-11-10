@@ -126,6 +126,9 @@
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-visual-line)
 (setq evil-replace-state-cursor '("#884444" box))
 
+;; escape out of help mode buffers
+(key-chord-define help-mode-map "jj" 'quit-window)
+
 ;; open line and stay in normal mode 
 (defun evil-open-below-normal (arg)
   (interactive "p")
