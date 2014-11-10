@@ -1,4 +1,7 @@
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'evil)))
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
