@@ -1,6 +1,14 @@
 (require 'smartparens-config)
-(eval-when-compile (require 'cl))
-(eval-when-compile (require 'evil))
+
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'evil)
+    (require 'smartrep)
+    (require 'smartparens)
+    (require 'diminish)))
+
+(eval-when-compile (load-library "config-modes"))
 
 (setq
   sp-autoinsert-quote-if-followed-by-closing-pair nil
