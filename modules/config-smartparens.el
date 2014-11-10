@@ -101,20 +101,17 @@
 
 (evil-define-text-object evil-a-previous-thing (count &optional beg end type)
   "Select the range defined by sp-select-previous-thing."
+  (interactive "<c>")
   (evil-previous-thing count beg end type t))
 (evil-define-text-object evil-i-previous-thing (count &optional beg end type)
   "Select the range defined by sp-select-previous-thing."
+  (interactive "<c>")
   (evil-previous-thing count beg end type))
 
 (define-key evil-outer-text-objects-map "N" 'evil-a-previous-thing)
 (define-key evil-inner-text-objects-map "N" 'evil-i-previous-thing)
 
 ;; define top level motions bindings
-(define-key evil-motion-state-map (kbd "M-h") 'evil-backward-sexp)
-(define-key evil-motion-state-map (kbd "M-j") 'evil-enter-sexp)
-(define-key evil-motion-state-map (kbd "M-k") 'evil-backward-up-sexp)
-(define-key evil-motion-state-map (kbd "M-l") 'evil-forward-sexp)
-
 (define-key sp-keymap (kbd "C-M-f") 'evil-forward-sexp)
 (define-key sp-keymap (kbd "C-M-b") 'evil-backward-sexp)
 (define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
