@@ -54,7 +54,7 @@
     (global-set-key (kbd "C-S-X C-S-B") 'icicle-buffer)
 
     (global-set-key (kbd "M-:") 'helm-eval-expression)
-    (global-set-key (kbd "C-c C-s") 'helm-swoop)
+    (global-set-key (kbd "M-s o") 'helm-occur)
 
     (defun my-helm-buffers (&rest arg)
       (interactive)
