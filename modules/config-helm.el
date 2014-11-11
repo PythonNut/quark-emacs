@@ -40,7 +40,7 @@
     (cl-macrolet
       ((add-boring (regex)
          `(add-to-list 'helm-boring-file-regexp-list ,regex)))
-      (generate-calls add-boring
+      (generate-calls-single add-boring
         (
           "\\.undo.xz$"
           "\\.elc$"
