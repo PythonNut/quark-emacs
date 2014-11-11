@@ -54,11 +54,11 @@
 (cl-macrolet
   ((setup-icicles (commands)
      `(progn
-        (generate-calls autoload-icicle ,commands)
+        (generate-calls-single autoload-icicle ,commands)
         (with-eval-after-load 'icicles
           (progn
             (run-hooks 'icicle-init-hook)
-            (generate-calls auto-icicle ,commands))))))
+            (generate-calls-single auto-icicle ,commands))))))
 
   (setup-icicles
     (

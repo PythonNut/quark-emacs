@@ -28,4 +28,8 @@
 ;; basically, a mapcar for macros
 (defmacro generate-calls (operator arglists)
   `(progn
+     ,@(mapcar (lambda (arglist) `(,operator ,@arglist)) arglists)))
+
+(defmacro generate-calls-single (operator arglists)
+  `(progn
      ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
