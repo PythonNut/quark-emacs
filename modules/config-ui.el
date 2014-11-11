@@ -24,6 +24,6 @@
 (add-hook 'before-make-frame-hook
   (lambda ()
     (windmove-default-keybindings 'meta)
-    (unless (fboundp 'framemove)
+    (unless (featurep 'framemove)
       (require 'framemove)
       (setq framemove-hook-into-windmove t))))

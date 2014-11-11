@@ -93,7 +93,7 @@
 (defun isearch-exit-chord (arg)
   (interactive "p")
   (isearch-printing-char)
-  (unless (fboundp 'smartrep-read-event-loop)
+  (unless (featurep 'smartrep)
     (require 'smartrep))
   (run-at-time 0.3 nil 'keyboard-quit)
   (condition-case e
@@ -169,7 +169,7 @@
 
 (defun evil-open-paragraph (arg)
   (interactive "p")
-  (unless (fboundp 'smartrep-read-event-loop)
+  (unless (featurep 'smartrep)
     (require 'smartrep))
   (run-at-time 0.3 nil 'keyboard-quit)
   (let ((blank-line (string-match "^[[:space:]]*$"
