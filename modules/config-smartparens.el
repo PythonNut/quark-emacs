@@ -155,7 +155,7 @@
 
 ;; allow quick repetition since normal state key chains are awkward
 (defun evil-smart-smartparens-move ()
-  (unless (fboundp 'smartrep-read-event-loop)
+  (unless (featurep 'smartrep)
     (require 'smartrep))
   (condition-case e
     (smartrep-read-event-loop
@@ -171,7 +171,7 @@
     (quit nil)))
 
 (defun evil-smart-smartparens-barfslurp ()
-  (unless (fboundp 'smartrep-read-event-loop)
+  (unless (featurep 'smartrep)
     (require 'smartrep))
   (condition-case e
     (smartrep-read-event-loop
