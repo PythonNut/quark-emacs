@@ -9,6 +9,8 @@
   delete-by-moving-to-trash t
   x-stretch-cursor t
   gc-cons-threshold 20000000
+  max-specpdl-size 10000
+  max-lisp-eval-depth 5000
   right-margin-width 0
   left-margin-width 0
   cursor-type 'box
