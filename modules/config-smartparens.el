@@ -56,6 +56,7 @@
 (defun evil-next-thing (count &optional beg end type inclusive)
   (ignore-errors
     (save-excursion
+      (message (concat "prefix was: " (number-to-string count)))
       (call-interactively 'sp-select-next-thing count)
       (if (> (point) (mark))
         (exchange-point-and-mark))
@@ -112,34 +113,45 @@
 (define-key evil-inner-text-objects-map "N" 'evil-i-previous-thing)
 
 ;; define top level motions bindings
-(define-key sp-keymap (kbd "C-M-f") 'evil-forward-sexp)
-(define-key sp-keymap (kbd "C-M-b") 'evil-backward-sexp)
-(define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+(cl-macrolet
+  ((sp-define-bindings (key func)
+     `(progn
+        (define-key sp-keymap ,key ,func)
+        (define-key minibuffer-local-map ,key ,func)
+        (define-key minibuffer-local-ns-map ,key ,func)
+        (define-key minibuffer-local-completion-map ,key ,func)
+        (define-key minibuffer-local-must-match-map ,key ,func))))
 
-(define-key sp-keymap (kbd "C-M-d") 'evil-down-sexp)
-(define-key sp-keymap (kbd "C-M-a") 'evil-backward-down-sexp)
+  (generate-calls sp-define-bindings
+    (
+      ((kbd "C-M-f") 'evil-forward-sexp)
+      ((kbd "C-M-b") 'evil-backward-sexp)
+      ((kbd "C-M-k") 'sp-kill-sexp)
 
-(define-key sp-keymap (kbd "C-M-e") 'evil-up-sexp)
-(define-key sp-keymap (kbd "C-M-u") 'evil-backward-up-sexp)
+      ((kbd "C-M-d") 'evil-down-sexp)
+      ((kbd "C-M-a") 'evil-backward-down-sexp)
 
-(define-key sp-keymap (kbd "C-M-n") 'evil-next-sexp)
-(define-key sp-keymap (kbd "C-M-p") 'evil-previous-sexp)
+      ((kbd "C-M-e") 'evil-up-sexp)
+      ((kbd "C-M-u") 'evil-backward-up-sexp)
 
-(define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+      ((kbd "C-M-n") 'evil-next-sexp)
+      ((kbd "C-M-p") 'evil-previous-sexp)
 
-(define-key sp-keymap (kbd "M-(") 'sp-select-previous-thing)
-(define-key sp-keymap (kbd "M-)") 'sp-select-next-thing)
+      ((kbd "C-M-t") 'sp-transpose-sexp)
 
-(define-key sp-keymap (kbd "C-+") 'sp-rewrap-sexp)
-(define-key sp-keymap (kbd "M-<delete>") 'sp-kill-sexp)
-(define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-kill-sexp)
-(define-key sp-keymap (kbd "S-<backspace>") 'sp-backward-unwrap-sexp)
+      ((kbd "M-(") 'sp-select-previous-thing)
+      ((kbd "M-)") 'sp-select-next-thing)
 
-(define-key sp-keymap (kbd "C-M-,") 'sp-forward-slurp-sexp)
-(define-key sp-keymap (kbd "C-M-.") 'sp-forward-barf-sexp)
+      ((kbd "C-+") 'sp-rewrap-sexp)
+      ((kbd "M-<delete>") 'sp-kill-sexp)
+      ((kbd "M-<backspace>") 'sp-backward-kill-sexp)
+      ((kbd "S-<backspace>") 'sp-backward-unwrap-sexp)
 
-(define-key sp-keymap (kbd "M-<") 'sp-backward-slurp-sexp)
-(define-key sp-keymap (kbd "M->") 'sp-backward-barf-sexp)
+      ((kbd "C-M-,") 'sp-forward-slurp-sexp)
+      ((kbd "C-M-.") 'sp-forward-barf-sexp)
+
+      ((kbd "M-<") 'sp-backward-slurp-sexp)
+      ((kbd "M->") 'sp-backward-barf-sexp))))
 
 ;; allow quick repetition since normal state key chains are awkward
 (defun evil-smart-smartparens-move ()
