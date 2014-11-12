@@ -58,12 +58,14 @@
 
     (defun my-helm-buffers (&rest arg)
       (interactive)
-      (helm-other-buffer
+      (helm
+        :sources
         '(helm-source-buffers-list
            helm-source-recentf
            helm-source-files-in-current-dir
            helm-source-files-in-all-dired
            helm-source-buffer-not-found)
+        :buffer
         "*helm-find-files"))
 
     (global-set-key (kbd "C-x C-b") 'my-helm-buffers)
@@ -71,7 +73,8 @@
 
     (defun my-helm-find-files (&rest arg)
       (interactive)
-      (helm-other-buffer
+      (helm
+        :sources
         '(helm-source-recentf
            helm-source-buffers-list
            helm-source-files-in-current-dir
@@ -80,6 +83,7 @@
            helm-source-locate
            ;; helm-source-tracker-search
            )
+        :buffer
         "*helm-find-files"))
 
     (global-set-key (kbd "C-x C-f") 'my-helm-find-files)
@@ -137,7 +141,8 @@
           'helm-multi-occur-buffer-tick
           (cl-loop for b in bufs
             collect (buffer-chars-modified-tick (get-buffer b))))
-        (helm-other-buffer
+        (helm
+          :sources
           (append '(helm-source-buffers-list)
 
             ;; projectile explodes when not in project
@@ -178,9 +183,10 @@
                ;; fallback
                ;; helm-source-buffer-not-found
                ))
+          :buffer
           "*helm-omni*")))
 
-    (defadvice  evil-paste-pop (around auto-helm-omni activate)
+    (defadvice evil-paste-pop (around auto-helm-omni activate)
       (if (memq last-command
             '(evil-paste-after
                evil-paste-before
