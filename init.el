@@ -1,9 +1,3 @@
-(require 'cl)
-(require 'cl-lib)
-
-(add-to-list 'load-path
-  (concat user-emacs-directory "modules/"))
-
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -18,6 +12,9 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
   )
+
+(add-to-list 'load-path
+  (concat user-emacs-directory "modules/"))
 
 (load-library "config-setq")
 (load-library "config-package")
