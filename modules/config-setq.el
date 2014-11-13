@@ -35,6 +35,8 @@
 (setq-default
   indent-tabs-mode nil)
 
+(put 'set-goal-column 'disabled nil)
+
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 (provide 'config-setq)
