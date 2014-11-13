@@ -116,27 +116,29 @@
      (ace-jump-do "")))
 
 (defmacro ace-motion-collect (func)
-  `(let ((points ())
-          (count 0)
-          (smooth-scroll-margin 0)
-          (scroll-margin 0)
-          (win-start (window-start))
-          (win-end (window-end)))
-     (save-excursion
-       (call-interactively ',func)
-       (while (when (and
-                      (> (1+ (point)) win-start)
-                      (< (1+ (point)) win-end)
-                      (< count (length ace-jump-mode-move-keys)))
-                (push (1+ (point)) points)
-                (setq count (1+ count))
-                (setq
-                  last-command ',func
-                  this-command ',func)
-                (call-interactively ',func)
-                t))
-       (set-window-start (selected-window) win-start)
-       (nreverse points))))
+  `(noflet ((execute-motion ()
+              (setq
+                last-command ',func
+                this-command ',func)
+              (call-interactively ',func)))
+     (let ((points ())
+            (count 0)
+            (smooth-scroll-margin 0)
+            (scroll-margin 0)
+            (win-start (window-start))
+            (win-end (window-end)))
+       (save-excursion
+         (execute-motion)
+         (while (when (and
+                        (> (1+ (point)) win-start)
+                        (< (1+ (point)) win-end)
+                        (< count (length ace-jump-mode-move-keys)))
+                  (push (1+ (point)) points)
+                  (setq count (1+ count))
+                  (execute-motion)
+                  t))
+         (set-window-start (selected-window) win-start)
+         (nreverse points)))))
 
 (defmacro ace-motion (func)
   `(evil-define-motion ,(make-symbol (concat "ace-" (symbol-name func))) (count)
@@ -166,15 +168,15 @@
 (ease-motion "SPC gE" evil-backward-WORD-end)
 
 (ease-motion "SPC h" evil-backward-char)
-(ease-motion "SPC j" evil-next-line)
-(ease-motion "SPC k" evil-previous-line)
+(ease-motion "SPC j" next-line)
+(ease-motion "SPC k" previous-line)
 (ease-motion "SPC l" evil-forward-char)
 
 (ease-motion "SPC H" evil-backward-symbol)
 (ease-motion "SPC L" evil-forward-symbol)
 
-(ease-motion "SPC g j" evil-next-visual-line)
-(ease-motion "SPC g k" evil-previous-visual-line)
+(ease-motion "SPC g j" next-line)
+(ease-motion "SPC g k" previous-line)
 
 (ease-motion "SPC s f" evil-forward-sexp)
 (ease-motion "SPC s b" evil-backward-sexp)
