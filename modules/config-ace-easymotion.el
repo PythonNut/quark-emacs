@@ -1,21 +1,21 @@
 (require 'noflet)
 (require 'ace-jump-mode)
 
-(eval-when-compile (require 'cl))
-
-(eval-when-compile (require 'noflet))
-(eval-when-compile (require 'ace-jump-mode))
-(eval-when-compile (require 'evil))
-(eval-when-compile (require 'key-chord))
+(eval-when-compile
+  (progn
+    (require 'noflet)
+    (require 'ace-jump-mode)
+    (require 'evil)
+    (require 'key-chord)))
 
 (with-eval-after-load 'ace-jump-mode
   (progn
     ;; use letters, numbers and capitals in that order
     (setq ace-jump-mode-move-keys
       (nconc
-	(loop for i from ?a to ?z collect i)
-	(loop for i from ?0 to ?9 collect i)
-	(loop for i from ?A to ?Z collect i))
+        (loop for i from ?a to ?z collect i)
+        (loop for i from ?0 to ?9 collect i)
+        (loop for i from ?A to ?Z collect i))
       ace-jump-mode-case-fold nil)
 
     ;; enable and use the more powerful ACE jump back feature
@@ -44,8 +44,8 @@
     (defun realign-cursor ()
       (interactive)
       (save-excursion
-	(if (> (rest (nth 6 (posn-at-point)))
-	      (/ (window-body-height) 2))
+        (if (> (rest (nth 6 (posn-at-point)))
+              (/ (window-body-height) 2))
           (progn
             (call-interactively 'previous-line)
             (call-interactively 'next-line))
@@ -65,17 +65,17 @@
     ;; jump to appromately the same column
     (defadvice evil-ace-jump-line-mode (around restore-pos activate)
       (let ((cursor (first (nth 6 (posn-at-point))))
-	     (line (- (line-end-position)
-		     (line-beginning-position))))
-	ad-do-it
-	(call-interactively
-	  (lambda ()
-	    ;; (back-to-indentation)
-	    (interactive)
-	    (forward-char
-	      (round (* (/ cursor (max (float line) 1))
-		       (or (- (line-end-position)
-			     (line-beginning-position)) 1))))))))
+             (line (- (line-end-position)
+                     (line-beginning-position))))
+        ad-do-it
+        (call-interactively
+          (lambda ()
+            ;; (back-to-indentation)
+            (interactive)
+            (forward-char
+              (round (* (/ cursor (max (float line) 1))
+                       (or (- (line-end-position)
+                             (line-beginning-position)) 1))))))))
 
     (ace-jump-mode-enable-mark-sync)
     (when (and
