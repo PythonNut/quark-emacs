@@ -110,7 +110,6 @@
 (require 'evil-nerd-commenter)
 
 (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
-(global-set-key (kbd "C-M-;") 'evilnc-copy-and-comment-lines)
 
 (evil-leader/set-key
   "ci" 'evilnc-comment-or-uncomment-lines
