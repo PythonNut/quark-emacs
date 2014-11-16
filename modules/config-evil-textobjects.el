@@ -107,7 +107,7 @@
 (define-key evil-outer-text-objects-map "C" 'evil-indent-a-block-end)
 
 ;; evil NERD commenter, commenting awesomeness!
-(require 'evil-nerd-commenter-autoloads)
+(require 'evil-nerd-commenter)
 
 (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
 (global-set-key (kbd "C-M-;") 'evilnc-copy-and-comment-lines)
