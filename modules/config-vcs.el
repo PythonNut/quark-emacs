@@ -1,7 +1,6 @@
-(eval-when-compile (require 'cl))
-
 (eval-when-compile
   (progn
+    (require 'cl)
     (require 'magit)
     (require 'psvn)))
 
