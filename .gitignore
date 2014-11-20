@@ -1,3 +1,6 @@
+# elpa files
+/elpa
+
 # session backups
 /session*
 
@@ -17,8 +20,13 @@
 
 
 # save last place in files
-/saveplace
+/.saveplace
 
+# recentf file
+/.recentf
+
+# ring save file
+/.savehist
 
 # persistent registers
 /saveregisters.el
@@ -67,6 +75,9 @@ ac-comphist.dat
 /ede-projects.el
 
 
+# desktop files
+/desktop
+
 # misc
 *.undo.xz
 *#
@@ -75,5 +86,3 @@ ac-comphist.dat
 /.elisp-cache-stamp
 /kkrc
 /.python-environments
-/elpa/archives/*/archive-contents
-/elpa/*.txt
