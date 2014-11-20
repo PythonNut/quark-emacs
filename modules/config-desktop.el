@@ -16,7 +16,7 @@
   desktop-files-not-to-save   "^$" ;reload tramp paths
   desktop-load-locked-desktop nil)
 
-(setq save-place-file "~/.emacs.d/saveplace")
+(setq save-place-file "~/.emacs.d/.saveplace")
 (setq-default save-place t)
 
 (add-hook 'find-file-hook
@@ -24,7 +24,7 @@
     (require 'saveplace)))
 
 (setq
-  savehist-file "~/.emacs.d/savehist"
+  savehist-file "~/.emacs.d/.savehist"
   history-length 100
   history-delete-duplicates t
   savehist-save-minibuffer-history 1

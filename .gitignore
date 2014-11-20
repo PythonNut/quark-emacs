@@ -20,13 +20,13 @@
 
 
 # save last place in files
-/saveplace
+/.saveplace
 
 # recentf file
 /.recentf
 
 # ring save file
-/savehist
+/.savehist
 
 # persistent registers
 /saveregisters.el
