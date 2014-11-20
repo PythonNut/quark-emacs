@@ -4,9 +4,16 @@
     (require 'cl)
     (require 'cl-lib)
     (require 'ido)
+    (require 'smex)
     (require 'imenu)))
 
 (autoload 'smex "smex" "smex" t)
+
+(with-eval-after-load 'smex
+  (setq
+   smex-save-file (concat user-emacs-directory
+                          "smex-items")))
+
 (global-set-key (kbd "M-x") 'smex)
 
 (with-eval-after-load 'ido
