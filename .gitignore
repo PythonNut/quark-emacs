@@ -22,6 +22,8 @@
 # save last place in files
 /saveplace
 
+# recentf file
+/.recentf
 
 # ring save file
 /savehist
