@@ -314,6 +314,22 @@ the current line."
 (define-key evil-inner-text-objects-map "." 'evil-inner-sentence)
 (define-key evil-outer-text-objects-map "." 'evil-a-sentence)
 
+(evil-define-text-object evil-i-entire-buffer (&optional _c _b _e _t)
+  "Text object describing the entire buffer excluding empty lines at the end"
+  :type line
+  (evil-range (point-min) (save-excursion
+                            (goto-char (point-max))
+                            (skip-chars-backward " \n\t")
+                            (point)) 'line))
+
+(evil-define-text-object evil-an-entire-buffer (&optional _c _b _e _t)
+  "Text object describing the entire buffer"
+  :type line
+  (evil-range (point-min) (point-max) 'line))
+
+(define-key evil-inner-text-objects-map "e" 'evil-i-entire-buffer)
+(define-key evil-outer-text-objects-map "e" 'evil-an-entire-buffer)
+
 ;;; === evil operators ===
 (autoload 'evilnc-comment-operator "evil-nerd-commenter")
 (autoload 'evilnc-hotkey-comment-operator "evil-nerd-commenter")
@@ -386,3 +402,4 @@ the current line."
 
 (define-key evil-operator-state-map "g|" 'evil-align-regexp)
 (define-key evil-normal-state-map "g|" 'evil-align-regexp)
+
