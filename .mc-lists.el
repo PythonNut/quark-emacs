@@ -47,6 +47,7 @@
      evil-forward-WORD-begin
      evil-forward-WORD-end
      evil-forward-char
+     evil-forward-sexp
      evil-forward-word-begin
      evil-forward-word-end
      evil-goto-line
@@ -76,6 +77,7 @@
      haskell-indentation-delete-backward-char
      icicle-execute-extended-command
      indent-for-tab-command
+     indent-new-comment-line
      iy-go-to-char--command
      jedi:dot-complete
      jump-char-process-char
@@ -101,6 +103,7 @@
      sp-backward-sexp
      sp-backward-unwrap-sexp
      sp-forward-sexp
+     sp-forward-slurp-sexp
      sp-kill-sexp
      sp-remove-active-pair-overlay
      sp-unwrap-sexp
