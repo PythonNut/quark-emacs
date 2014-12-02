@@ -65,8 +65,8 @@
            helm-source-files-in-current-dir
            helm-source-files-in-all-dired
            helm-source-buffer-not-found)
-        :buffer
-        "*helm-find-files"))
+        :fuzzy-match t
+        :buffer "*helm-find-files"))
 
     (global-set-key (kbd "C-x C-b") 'my-helm-buffers)
     (global-set-key (kbd "C-x b") 'ido-switch-buffer)
@@ -83,8 +83,8 @@
            helm-source-locate
            ;; helm-source-tracker-search
            )
-        :buffer
-        "*helm-find-files"))
+        :fuzzy-match t
+        :buffer "*helm-find-files"))
 
     (global-set-key (kbd "C-x C-f") 'my-helm-find-files)
 
@@ -183,8 +183,8 @@
                ;; fallback
                ;; helm-source-buffer-not-found
                ))
-          :buffer
-          "*helm-omni*")))
+          :fuzzy-match t
+          :buffer "*helm-omni*")))
 
     (defadvice evil-paste-pop (around auto-helm-omni activate)
       (if (memq last-command
