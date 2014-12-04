@@ -171,7 +171,7 @@
                helm-source-register
                ;; code construction
                ;; helm-source-regexp
-               helm-source-lacarte
+               ;; helm-source-lacarte
                my-helm-source-evaluation-result)
 
             ;; file location, of which projectile can be a superset
