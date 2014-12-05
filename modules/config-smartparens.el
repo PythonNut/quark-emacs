@@ -259,46 +259,45 @@
     t))
 
 (with-eval-after-load 'smartparens
-  (progn
-    (diminish 'smartparens-mode " σ")
-    (set-face-background 'sp-pair-overlay-face "grey20")
-    (set-face-foreground 'sp-pair-overlay-face "default")
+  (diminish 'smartparens-mode " σ")
+  (set-face-background 'sp-pair-overlay-face "grey20")
+  (set-face-foreground 'sp-pair-overlay-face "default")
 
-    (sp-pair "(" ")" :when '(my-sp-pair-function) :wrap "C-)")
-    (sp-pair "{" "}" :when '(my-sp-pair-function) :wrap "C-}")
-    (sp-pair "[" "]" :when '(my-sp-pair-function) :wrap "C-]")
-    (sp-pair "\"" "\"" :when '(my-sp-pair-function) :wrap "C-\"")
-    (sp-pair "'" "'" :when '(my-sp-pair-function))
+  (sp-pair "(" ")" :when '(my-sp-pair-function) :wrap "C-)")
+  (sp-pair "{" "}" :when '(my-sp-pair-function) :wrap "C-}")
+  (sp-pair "[" "]" :when '(my-sp-pair-function) :wrap "C-]")
+  (sp-pair "\"" "\"" :when '(my-sp-pair-function) :wrap "C-\"")
+  (sp-pair "'" "'" :when '(my-sp-pair-function))
 
-    (let ((my-c-modes
-	    '('c++-mode
-	       'java-mode
-	       'c-mode
-	       'css-mode
-	       'scss-mode
-	       'web-mode
-	       'js2-mode
-	       'js3-mode)))
+  (let ((my-c-modes
+          '('c++-mode
+             'java-mode
+             'c-mode
+             'css-mode
+             'scss-mode
+             'web-mode
+             'js2-mode
+             'js3-mode)))
 
-      (while my-c-modes
-	(sp-local-pair (car my-c-modes) "{" nil :post-handlers
-	  '(:add
-	     ("||\n[i]" "RET")
-	     ("| " "SPC")))
-	(setq my-c-modes (cdr my-c-modes))))
+    (while my-c-modes
+      (sp-local-pair (car my-c-modes) "{" nil :post-handlers
+        '(:add
+           ("||\n[i]" "RET")
+           ("| " "SPC")))
+      (setq my-c-modes (cdr my-c-modes))))
 
-    (define-key evil-insert-state-map (kbd "C-]") 'nil)
-    (define-key evil-normal-state-map (kbd "C-]") 'nil)
-    (define-key evil-motion-state-map (kbd "C-]") 'nil)
-    (define-key evil-emacs-state-map (kbd "C-]") 'nil)
+  (define-key evil-insert-state-map (kbd "C-]") 'nil)
+  (define-key evil-normal-state-map (kbd "C-]") 'nil)
+  (define-key evil-motion-state-map (kbd "C-]") 'nil)
+  (define-key evil-emacs-state-map (kbd "C-]") 'nil)
 
-    ;; disable "'" pairing in text mode, as it's often an apostrophe
-    (add-hook 'text-mode-hook
-      (lambda ()
-	(sp-local-pair major-mode "'" nil :actions nil)))
+  ;; disable "'" pairing in text mode, as it's often an apostrophe
+  (add-hook 'text-mode-hook
+    (lambda ()
+      (sp-local-pair major-mode "'" nil :actions nil)))
 
-    (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
-    (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))))
+  (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+  (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p)))
 
 (add-hook 'LaTeX-mode-hook
   (lambda ()

@@ -56,9 +56,8 @@
      `(progn
         (generate-calls-single autoload-icicle ,commands)
         (with-eval-after-load 'icicles
-          (progn
-            (run-hooks 'icicle-init-hook)
-            (generate-calls-single auto-icicle ,commands))))))
+          (run-hooks 'icicle-init-hook)
+          (generate-calls-single auto-icicle ,commands)))))
 
   (setup-icicles
     (

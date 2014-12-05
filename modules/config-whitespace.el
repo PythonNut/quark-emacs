@@ -22,9 +22,8 @@
 
 ;; ws-butler also load highlight-changes-mode
 (with-eval-after-load 'ws-butler
-  (progn
-    ;; (diminish 'ws-butler-global-mode)
-    (diminish 'ws-butler-mode " β")))
+  ;; (diminish 'ws-butler-global-mode)
+  (diminish 'ws-butler-mode " β"))
 
 (add-hook 'highlight-changes-mode-hook
   (lambda ()

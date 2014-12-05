@@ -94,7 +94,6 @@
 
 (key-chord-define evil-normal-state-map " l" 'evil-ace-jump-line-mode)
 (key-chord-define evil-normal-state-map " n" 'ace-jump-char-N-lines)
-(key-chord-define evil-normal-state-map " b" 'ace-jump-buffer)
 (key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
 (key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
 

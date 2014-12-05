@@ -11,13 +11,12 @@
   'magit-ido-completing-read)
 
 (with-eval-after-load 'magit
-  (progn
-    (diminish 'magit-auto-revert-mode " ⥀")
-    (define-key magit-log-mode-map (kbd "k") 'previous-line)
-    (define-key magit-log-mode-map (kbd "j") 'next-line)
-    (define-key magit-status-mode-map (kbd "k") 'previous-line)
-    (define-key magit-status-mode-map (kbd "K") 'magit-discard-item)
-    (define-key magit-status-mode-map (kbd "j") 'next-line)))
+  (diminish 'magit-auto-revert-mode " ⥀")
+  (define-key magit-log-mode-map (kbd "k") 'previous-line)
+  (define-key magit-log-mode-map (kbd "j") 'next-line)
+  (define-key magit-status-mode-map (kbd "k") 'previous-line)
+  (define-key magit-status-mode-map (kbd "K") 'magit-discard-item)
+  (define-key magit-status-mode-map (kbd "j") 'next-line))
 
 ;; disable regular key chords by switching input methods
 (add-hook 'magit-status-mode-hook
@@ -31,7 +30,6 @@
 (autoload 'svn-status "psvn")
 
 (with-eval-after-load 'psvn
-  (progn
-    (setq svn-status-verbose nil)))
+  (setq svn-status-verbose nil))
 
 (global-set-key (kbd "C-c C-c s") 'svn-status)

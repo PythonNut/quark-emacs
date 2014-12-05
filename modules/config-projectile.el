@@ -4,6 +4,5 @@
 (projectile-global-mode +1)
 
 (with-eval-after-load 'projectile
-  (progn
-    (setq projectile-mode-line
-      '(:eval (format " ↠")))))
+  (setq projectile-mode-line
+    '(:eval (format " ↠"))))

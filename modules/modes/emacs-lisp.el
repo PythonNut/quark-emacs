@@ -10,5 +10,4 @@
     (setq mode-name "λ")))
 
 (with-eval-after-load 'aggressive-indent
-  (progn
-    (diminish 'aggressive-indent-mode " ⇶")))
+  (diminish 'aggressive-indent-mode " ⇶"))
