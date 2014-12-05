@@ -13,6 +13,11 @@
   ;; If there is more than one, they won't work right.
   )
 
+(when (version< emacs-version "24.4")
+  (defmacro with-eval-after-load (thing &rest sexps)
+    `(eval-after-load ,thing
+      '(progn ,@sexps))))
+
 (add-to-list 'load-path
   (concat user-emacs-directory "modules/"))
 
