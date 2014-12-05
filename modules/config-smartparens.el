@@ -194,16 +194,16 @@
   (call-interactively 'evil-down-sexp args)
   (evil-smart-smartparens-move))
 
-(evil-define-command evil-smart-backwards-down-sexp (&rest args)
-  (call-interactively 'evil-backwards-down-sexp args)
+(evil-define-command evil-smart-backward-down-sexp (&rest args)
+  (call-interactively 'evil-backward-down-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-up-sexp (&rest args)
   (call-interactively 'evil-up-sexp args)
   (evil-smart-smartparens-move))
 
-(evil-define-command evil-smart-backwards-up-sexp (&rest args)
-  (call-interactively 'evil-backwards-up-sexp args)
+(evil-define-command evil-smart-backward-up-sexp (&rest args)
+  (call-interactively 'evil-backward-up-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-next-sexp (&rest args)
