@@ -7,15 +7,6 @@
     (require 'smex)
     (require 'imenu)))
 
-(autoload 'smex "smex" "smex" t)
-
-(with-eval-after-load 'smex
-  (setq
-   smex-save-file (concat user-emacs-directory
-                          "smex-items")))
-
-(global-set-key (kbd "M-x") 'smex)
-
 (with-eval-after-load 'ido
   (progn
     (ido-ubiquitous-mode +1)
@@ -25,6 +16,15 @@
       ido-save-directory-list-file "~/.emacs.d/ido.last"
       ido-use-faces nil)
     (ido-vertical-mode +1)))
+
+(autoload 'smex "smex" "smex" t)
+(with-eval-after-load 'smex
+  (setq smex-save-file
+    (concat
+      user-emacs-directory
+      "smex-items")))
+
+(global-set-key (kbd "M-x") 'smex)
 
 (defun ido-goto-symbol (&optional symbol-list)
   "Refresh imenu and jump to a place in the buffer using Ido."
