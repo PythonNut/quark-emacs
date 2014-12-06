@@ -1,6 +1,4 @@
 (require 'helm-config)
-(require 'helm-imenu)
-(require 'helm-files)
 
 (eval-when-compile
   (progn
@@ -15,14 +13,8 @@
 
 (eval-when-compile (load-library "config-modes"))
 
-(with-eval-after-load 'helm-config
-  (setq
-    helm-locate-command "locate %s -r %s -be -l 500"
-    helm-ff-transformer-show-only-basename nil
-    helm-buffers-fuzzy-matching t
-    helm-ff-newfile-prompt-p 'nil
-
-    helm-locate
+(with-eval-after-load 'helm-files
+  (setq helm-locate
     `((name . "Locate")
        (init . helm-locate-set-command)
        (candidates-process . helm-locate-init)
@@ -32,7 +24,14 @@
        (keymap . ,helm-generic-files-map)
        (help-message . helm-generic-file-help-message)
        (candidate-number-limit . 999)
-       (mode-line . helm-generic-file-mode-line-string)))
+       (mode-line . helm-generic-file-mode-line-string))))
+
+(with-eval-after-load 'helm-config
+  (setq
+    helm-locate-command "locate %s -r %s -be -l 500"
+    helm-ff-transformer-show-only-basename nil
+    helm-buffers-fuzzy-matching t
+    helm-ff-newfile-prompt-p 'nil)
 
   (set-face-attribute 'helm-selection nil :underline 'nil)
 
