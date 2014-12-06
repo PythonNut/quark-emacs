@@ -1,4 +1,6 @@
 (ido-mode +1)
+(ido-ubiquitous-mode +1)
+
 (eval-when-compile
   (progn
     (require 'cl)
@@ -7,9 +9,8 @@
     (require 'smex)
     (require 'imenu)))
 
-(with-eval-after-load 'ido
-  (progn
-    (ido-ubiquitous-mode +1)
+(add-hook 'ido-minibuffer-setup-hook
+  (lambda ()
     (flx-ido-mode +1)
     (setq
       ido-enable-flex-matching t
