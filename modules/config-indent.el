@@ -9,8 +9,9 @@
 (auto-indent-global-mode +1)
 (add-hook 'find-file-hook 'dtrt-indent-mode)
 
-(with-eval-after-load 'smie
-  (add-hook 'change-major-mode-hook
-    (lambda ()
-      (unless (eq smie-grammar 'unset)
-        (smie-config-guess)))))
+(defun smie-auto-guess ()
+  (when (featurep 'smie)
+    (unless (eq smie-grammar 'unset)
+      (smie-config-guess))))
+
+(add-hook 'after-change-major-mode-hook 'smie-auto-guess)
