@@ -121,6 +121,8 @@
      smex
      icicles
      helm
+     helm-files
+     helm-grep
      helm-ring
      helm-projectile
      helm-semantic

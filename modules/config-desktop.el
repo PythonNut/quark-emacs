@@ -25,6 +25,7 @@
 
 (setq
   savehist-file "~/.emacs.d/.savehist"
+  savehist-autosave-interval 60
   history-length 100
   history-delete-duplicates t
   savehist-save-minibuffer-history 1
