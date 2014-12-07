@@ -299,10 +299,3 @@
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
   (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p)))
 
-(add-hook 'LaTeX-mode-hook
-  (lambda ()
-    (require 'smartparens-latex)))
-
-(add-hook 'sgml-mode-hook
-  (lambda ()
-    (require 'smartparens-html)))
