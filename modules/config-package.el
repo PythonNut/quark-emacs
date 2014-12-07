@@ -36,6 +36,7 @@
      evil-exchange
      evil-terminal-cursor-changer
      evil-visualstar
+     evil-easymotion
 
      ;; major modes
      idris-mode
