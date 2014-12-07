@@ -76,3 +76,6 @@
             (add-to-list 'name-and-pos (cons name position))))))))
 
 (global-set-key (kbd "M-=") 'ido-goto-symbol)
+
+(global-set-key (kbd "C-M-s") 'flx-isearch-forward)
+(global-set-key (kbd "C-M-r") 'flx-isearch-backward)

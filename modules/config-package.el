@@ -55,6 +55,7 @@
      web-mode
 
      helm-ag
+     helm-projectile
      diminish
      smooth-scrolling
      framemove
@@ -89,8 +90,7 @@
      auto-complete
      flycheck
      flyspell
-     helm-projectile
-     iflipb)
+     flx-isearch)
   "List of packages needs to be installed at launch")
 
 (defun has-package-not-installed ()
