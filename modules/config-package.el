@@ -119,6 +119,9 @@
 (setq idle-require-symbols
   '(
      projectile
+     ido-flx
+     ido-vertical-mode
+
      helm
      helm-files
      helm-grep
@@ -126,11 +129,11 @@
      helm-projectile
      helm-semantic
      helm-ag
+
      smex
      icicles
      magit
-     whole-line-or-region
-     ))
+     whole-line-or-region))
 
 (add-hook 'emacs-startup-hook 'idle-require-mode)
 (add-hook 'idle-require-mode-hook
