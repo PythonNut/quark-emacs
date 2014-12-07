@@ -8,6 +8,16 @@
     (when window-system
       (linum-mode +1))))
 
+(defun find-file-check-large-file ()
+  "If a file is over a given size, make the buffer read only."
+  (when (> (buffer-size) (* 1048576 5))
+    (buffer-disable-undo)
+    (size-indication-mode +1)
+    (adaptive-wrap-prefix-mode -1)
+    (linum-mode -1)))
+
+(add-hook 'find-file-hooks 'find-file-check-large-file)
+
 (with-eval-after-load 'linum
   (set-face-background 'linum 'nil)
   (set-face-foreground 'linum "grey51")
