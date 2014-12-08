@@ -36,6 +36,12 @@
 
 (savehist-mode 1)
 
+;; text properties severely bloat the kill-ring so delete them
+(defun unpropertize-kill-ring ()
+  (setq kill-ring (mapcar 'substring-no-properties kill-ring)))
+
+(add-hook 'kill-emacs-hook 'unpropertize-kill-ring)
+
 ;; remember more recent files
 (setq
   recentf-save-file (concat user-emacs-directory ".recentf")
