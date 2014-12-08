@@ -119,7 +119,7 @@
 (setq idle-require-symbols
   '(
      projectile
-     ido-flx
+     flx-ido
      ido-vertical-mode
 
      helm
