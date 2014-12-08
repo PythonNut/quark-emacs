@@ -133,9 +133,22 @@
      smex
      icicles
      magit
+     magit-filenotify
+     psvn
+     windmove
+     framemove
+     easy-kill
+     flx-isearch
+     ace-jump-mode
+     ws-butler
      whole-line-or-region))
 
-(add-hook 'emacs-startup-hook 'idle-require-mode)
-(add-hook 'idle-require-mode-hook
-  (lambda ()
-    (diminish 'idle-require-mode " ⟳")))
+(if (daemonp)
+  (progn
+    (message "loading symbols for server")
+    (mapc 'require idle-require-symbols))
+
+  (add-hook 'emacs-startup-hook 'idle-require-mode)
+  (add-hook 'idle-require-mode-hook
+    (lambda ()
+      (diminish 'idle-require-mode " ⟳"))))
