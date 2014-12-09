@@ -47,3 +47,5 @@
   recentf-save-file (concat user-emacs-directory ".recentf")
   recentf-max-saved-items 200
   recentf-max-menu-items 30)
+
+(provide 'config-desktop)

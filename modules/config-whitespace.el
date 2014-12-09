@@ -1,6 +1,11 @@
-(load-library "config-indent")
-(load-library "config-wrap")
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'auto-indent-mode)
+    (require 'diminish)))
+
+(require 'config-indent)
+(require 'config-wrap)
 
 ;; always ensure UTF-8
 (defun cleanup-buffer-safe ()
@@ -28,3 +33,5 @@
 (add-hook 'highlight-changes-mode-hook
   (lambda ()
     (diminish 'highlight-changes-mode)))
+
+(provide 'config-whitespace)

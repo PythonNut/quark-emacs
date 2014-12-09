@@ -1,4 +1,7 @@
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'key-chord)))
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -33,3 +36,21 @@
 (defmacro generate-calls-single (operator arglists)
   `(progn
      ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
+
+;; disable annoying "blah got redefined" messages
+;; (defadvice ad--defalias-fset (around supress-messages activate)
+;;   (require 'noflet)
+;;   (noflet ((message (&rest args)))
+;;     ad-do-it))
+
+(key-chord-mode +1)
+
+(defun enable-debugging ()
+  (interactive)
+  (setq debug-on-error t))
+
+(defun disable-debugging ()
+  (interactive)
+  (setq debug-on-error nil))
+
+(provide 'config-modes)

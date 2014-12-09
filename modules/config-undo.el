@@ -66,3 +66,5 @@
         (set-marker p nil)
         (set-marker m nil))
       ad-do-it)))
+
+(provide 'config-undo)

@@ -48,3 +48,5 @@
 
 ;; save buffers on blur
 (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+
+(provide 'config-safety)

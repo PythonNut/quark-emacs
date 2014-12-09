@@ -36,3 +36,5 @@
     popup-use-optimized-column-computation nil)
 
   (add-to-list 'ac-trigger-commands 'backwards-kill-char))
+
+(provide 'config-auto-complete)

@@ -6,6 +6,7 @@
     (require 'cl)
     (require 'cl-lib)
     (require 'ido)
+    (require 'ido-ubiquitous)
     (require 'smex)
     (require 'imenu)))
 
@@ -79,3 +80,5 @@
 
 (global-set-key (kbd "C-M-s") 'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") 'flx-isearch-backward)
+
+(provide 'config-ido)

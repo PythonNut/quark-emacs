@@ -204,5 +204,7 @@
     (interactive)
     (message "use u.")))
 
-(load-library "config-evil-modules")
-(load-library "config-evil-textobjects")
+(require 'config-evil-modules)
+(require 'config-evil-textobjects)
+
+(provide 'config-evil)

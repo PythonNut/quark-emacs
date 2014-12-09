@@ -403,3 +403,4 @@ the current line."
 (define-key evil-operator-state-map "g|" 'evil-align-regexp)
 (define-key evil-normal-state-map "g|" 'evil-align-regexp)
 
+(provide 'config-evil-textobjects)

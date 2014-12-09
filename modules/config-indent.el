@@ -15,3 +15,5 @@
       (smie-config-guess))))
 
 (add-hook 'after-change-major-mode-hook 'smie-auto-guess)
+
+(provide 'config-indent)

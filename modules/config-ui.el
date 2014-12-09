@@ -1,12 +1,23 @@
-(eval-when-compile (require 'cl-lib))
+(eval-when-compile
+  (progn
+    (require 'cl-lib)
+    (require 'key-chord)
+    (require 'evil)
+    (require 'diminish)
+    (require 'evil-easymotion)
+    (require 'config-modes)))
 
-(load-library "config-scroll")
-(load-library "config-line-numbers")
-(load-library "config-parens")
-(load-library "config-ace-easymotion")
-(load-library "config-undo")
+(require 'config-scroll)
+(require 'config-line-numbers)
+(require 'config-parens)
+(require 'config-ace-easymotion)
+(require 'config-undo)
+;; (load-library "config-ace-easymotion")
 
-(eval-when-compile (load-library "config-modes"))
+(eval-when-compile
+  (progn
+    (require 'key-chord)
+    (require 'config-modes)))
 
 (cl-macrolet
   ((autoload-multiple-cursors (func)
@@ -65,3 +76,5 @@
     (unless (featurep 'framemove)
       (require 'framemove)
       (setq framemove-hook-into-windmove t))))
+
+(provide 'config-ui)

@@ -57,3 +57,5 @@
       (interactive)
       (if linum-mode (linum-relative-toggle)
         (linum-mode +1)))))
+
+(provide 'config-line-numbers)

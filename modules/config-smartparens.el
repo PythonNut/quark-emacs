@@ -4,11 +4,11 @@
   (progn
     (require 'cl)
     (require 'evil)
+    (require 'key-chord)
     (require 'smartrep)
     (require 'smartparens)
-    (require 'diminish)))
-
-(eval-when-compile (load-library "config-modes"))
+    (require 'diminish)
+    (require 'config-modes)))
 
 (setq
   sp-autoinsert-quote-if-followed-by-closing-pair nil
@@ -304,3 +304,4 @@
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
   (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p)))
 
+(provide 'config-smartparens)

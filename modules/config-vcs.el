@@ -30,3 +30,5 @@
   (setq svn-status-verbose nil))
 
 (global-set-key (kbd "C-c C-c s") 'svn-status)
+
+(provide 'config-vcs)

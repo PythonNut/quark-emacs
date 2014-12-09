@@ -2,9 +2,10 @@
   (progn
     (require 'cl)
     (require 'cl-lib)
+    (require 'key-chord)
     (require 'icicles)))
 
-(eval-when-compile (load-library "config-modes"))
+(eval-when-compile (require 'config-modes))
 
 ;; custom hook run when icicles in initialized
 ;; (defvar icicle-init-hook nil)
@@ -503,3 +504,5 @@
       )))
 
 (global-set-key (kbd "C-:") 'icicle-pp-eval-expression)
+
+(provide 'config-icicles)

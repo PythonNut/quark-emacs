@@ -2,10 +2,11 @@
   (progn
     (require 'cl)
     (require 'cl-lib)
+    (require 'key-chord)
     (require 'evil)
     (require 'helm)))
 
-(eval-when-compile (load-library "config-modes"))
+(eval-when-compile (require 'config-modes))
 
 (with-eval-after-load 'helm-files
   (setq helm-locate
@@ -195,3 +196,5 @@
 (define-key evil-emacs-state-map (kbd "C-c C-o") 'my-helm-omni)
 (define-key evil-motion-state-map (kbd "C-c C-o") 'my-helm-omni)
 (define-key evil-replace-state-map (kbd "C-c C-o") 'my-helm-omni)
+
+(provide 'config-helm)

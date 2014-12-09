@@ -20,3 +20,5 @@
     (if (< (window-body-height) 10)
       (setq scroll-margin (max 0 (1-  (/ (window-body-height) 2))))
       (setq scroll-margin 5))))
+
+(provide 'config-scroll)

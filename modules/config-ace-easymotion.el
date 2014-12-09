@@ -59,7 +59,7 @@
   (defadvice evil-ace-jump-line-mode (after realign activate)
     (ignore-errors (call-interactively 'realign-cursor)))
 
-  ;; jump to appromately the same column
+  ;; jump to approximately the same column
   (defadvice evil-ace-jump-line-mode (around restore-pos activate)
     (let ((cursor (first (nth 6 (posn-at-point))))
            (line (- (line-end-position)
@@ -81,32 +81,34 @@
     (set-face-foreground 'ace-jump-face-background "white")
     (set-face-background 'ace-jump-face-background "black")
     (set-face-foreground 'ace-jump-face-foreground "black")
-    (set-face-background 'ace-jump-face-foreground "white")))
+    (set-face-background 'ace-jump-face-foreground "white"))
 
-(key-chord-define evil-insert-state-map "jl" 'evil-ace-jump-line-mode)
-(key-chord-define evil-insert-state-map "jk" 'evil-ace-jump-word-mode)
-(key-chord-define evil-emacs-state-map "jk" 'ace-jump-word-mode)
-(key-chord-define evil-emacs-state-map "jc" 'ace-jump-char-N-lines)
-(key-chord-define evil-emacs-state-map "jl" 'ace-jump-line-mode)
+  (key-chord-define evil-insert-state-map "jl" 'evil-ace-jump-line-mode)
+  (key-chord-define evil-insert-state-map "jk" 'evil-ace-jump-word-mode)
+  (key-chord-define evil-emacs-state-map "jk" 'ace-jump-word-mode)
+  (key-chord-define evil-emacs-state-map "jc" 'ace-jump-char-N-lines)
+  (key-chord-define evil-emacs-state-map "jl" 'ace-jump-line-mode)
 
-(key-chord-define evil-normal-state-map " l" 'evil-ace-jump-line-mode)
-(key-chord-define evil-normal-state-map " n" 'ace-jump-char-N-lines)
-(key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
-(key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
+  (key-chord-define evil-normal-state-map " l" 'evil-ace-jump-line-mode)
+  (key-chord-define evil-normal-state-map " n" 'ace-jump-char-N-lines)
+  (key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
+  (key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
 
-(key-chord-define evil-insert-state-map "jc" 'ace-jump-char-N-lines)
+  (key-chord-define evil-insert-state-map "jc" 'ace-jump-char-N-lines)
 
-(require 'evil-easymotion)
-(evilem-default-keybindings "SPC")
-(evilem-define (kbd "SPC s f") 'evil-forward-sexp)
-(evilem-define (kbd "SPC s b") 'evil-backward-sexp)
-(evilem-define (kbd "SPC s d") 'evil-down-sexp)
-(evilem-define (kbd "SPC s D") 'evil-backward-down-sexp)
-(evilem-define (kbd "SPC s e") 'evil-up-sexp)
-(evilem-define (kbd "SPC s U") 'evil-backward-up-sexp)
-(evilem-define (kbd "SPC s n") 'evil-next-sexp)
-(evilem-define (kbd "SPC s p") 'evil-previous-sexp)
+  (require 'evil-easymotion)
+  (evilem-default-keybindings "SPC")
+  (evilem-define (kbd "SPC s f") 'evil-forward-sexp)
+  (evilem-define (kbd "SPC s b") 'evil-backward-sexp)
+  (evilem-define (kbd "SPC s d") 'evil-down-sexp)
+  (evilem-define (kbd "SPC s D") 'evil-backward-down-sexp)
+  (evilem-define (kbd "SPC s e") 'evil-up-sexp)
+  (evilem-define (kbd "SPC s U") 'evil-backward-up-sexp)
+  (evilem-define (kbd "SPC s n") 'evil-next-sexp)
+  (evilem-define (kbd "SPC s p") 'evil-previous-sexp)
 
-;; currently broken
-(evilem-define (kbd "SPC L") 'evil-forward-symbol)
-(evilem-define (kbd "SPC H") 'evil-backward-symbol)
+  ;; currently broken
+  (evilem-define (kbd "SPC L") 'evil-forward-symbol)
+  (evilem-define (kbd "SPC H") 'evil-backward-symbol))
+
+(provide 'config-ace-easymotion)

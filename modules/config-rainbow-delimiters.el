@@ -121,3 +121,5 @@
       (rainbow-delimiters-off-maybe))))
 
 (run-with-idle-timer 0.1 t 'rainbow-delimiters-focus-off-maybe)
+
+(provide 'config-rainbow-delimiters)

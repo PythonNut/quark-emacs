@@ -124,3 +124,4 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
     (lambda ()
       (xterm-mouse-mode -1))))
 
+(provide 'config-paste)

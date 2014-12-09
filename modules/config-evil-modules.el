@@ -27,3 +27,5 @@
 ;; Also change cursor colors in a terminal
 (unless (display-graphic-p)
   (require 'evil-terminal-cursor-changer))
+
+(provide 'config-evil-modules)

@@ -152,3 +152,5 @@
   (add-hook 'idle-require-mode-hook
     (lambda ()
       (diminish 'idle-require-mode " ⟳"))))
+
+(provide 'config-package)

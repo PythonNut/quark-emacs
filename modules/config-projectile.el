@@ -2,7 +2,8 @@
   (progn
     (require 'cl-lib)
     (require 'projectile)
-    (load-library "config-modes")))
+    (require 'key-chord)
+    (require 'config-modes)))
 
 (with-eval-after-load 'projectile
   (require 'magit)
@@ -53,3 +54,5 @@
       ("v" 'projectile-vc)
       ("z" 'projectile-cache-current-file)
       ("ESC" 'projectile-project-buffers-other-buffer))))
+
+(provide 'config-projectile)

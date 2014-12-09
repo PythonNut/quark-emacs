@@ -1,8 +1,8 @@
 (eval-when-compile (require 'cl))
 
-(load-library "config-ido")
-(load-library "config-helm")
-(load-library "config-icicles")
+(require 'config-ido)
+(require 'config-helm)
+(require 'config-icicles)
 
 (global-set-key (kbd "C-S-s") 'icicle-search-generic)
 
@@ -31,3 +31,5 @@
 (minibuffer-depth-indicate-mode t)
 
 (define-key evil-normal-state-map (kbd "SPC SPC") 'smex)
+
+(provide 'config-minibuffer)

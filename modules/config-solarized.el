@@ -5,3 +5,5 @@
 
 (set-face-background 'mode-line-inactive "#555753")
 (set-face-foreground 'mode-line-inactive "#eeeeec")
+
+(provide 'config-solarized)

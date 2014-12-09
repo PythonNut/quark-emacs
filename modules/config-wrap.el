@@ -6,3 +6,5 @@
 (add-hook 'visual-line-mode-hook
   (lambda ()
     (diminish 'visual-line-mode)))
+
+(provide 'config-wrap)
