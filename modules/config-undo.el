@@ -1,11 +1,15 @@
-(eval-when-compile (require 'evil))
+(eval-when-compile
+  (progn
+    (require 'evil)
+    (require 'undo-tree)))
+
 (add-hook 'first-change-hook
   (lambda () (require 'undo-tree)))
 
 ;; supress XZ messages
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (run-at-time 1 nil (lambda () (message "")))))
+    (run-at-time 3 nil (lambda () (message "")))))
 
 (add-hook 'find-file-hook
   (lambda ()
