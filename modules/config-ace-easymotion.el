@@ -3,6 +3,7 @@
 (eval-when-compile
   (progn
     (require 'ace-jump-mode)
+    (require 'noflet)
     (require 'evil)
     (require 'key-chord)))
 
@@ -94,21 +95,21 @@
   (key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
   (key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
 
-  (key-chord-define evil-insert-state-map "jc" 'ace-jump-char-N-lines)
+  (key-chord-define evil-insert-state-map "jc" 'ace-jump-char-N-lines))
 
-  (require 'evil-easymotion)
-  (evilem-default-keybindings "SPC")
-  (evilem-define (kbd "SPC s f") 'evil-forward-sexp)
-  (evilem-define (kbd "SPC s b") 'evil-backward-sexp)
-  (evilem-define (kbd "SPC s d") 'evil-down-sexp)
-  (evilem-define (kbd "SPC s D") 'evil-backward-down-sexp)
-  (evilem-define (kbd "SPC s e") 'evil-up-sexp)
-  (evilem-define (kbd "SPC s U") 'evil-backward-up-sexp)
-  (evilem-define (kbd "SPC s n") 'evil-next-sexp)
-  (evilem-define (kbd "SPC s p") 'evil-previous-sexp)
+(require 'evil-easymotion)
+(eval-when-compile (require 'evil-easymotion))
+(evilem-default-keybindings "SPC")
+(evilem-define (kbd "SPC s f") 'evil-forward-sexp)
+(evilem-define (kbd "SPC s b") 'evil-backward-sexp)
+(evilem-define (kbd "SPC s d") 'evil-down-sexp)
+(evilem-define (kbd "SPC s D") 'evil-backward-down-sexp)
+(evilem-define (kbd "SPC s e") 'evil-up-sexp)
+(evilem-define (kbd "SPC s U") 'evil-backward-up-sexp)
+(evilem-define (kbd "SPC s n") 'evil-next-sexp)
+(evilem-define (kbd "SPC s p") 'evil-previous-sexp)
 
-  ;; currently broken
-  (evilem-define (kbd "SPC L") 'evil-forward-symbol)
-  (evilem-define (kbd "SPC H") 'evil-backward-symbol))
-
+;; currently broken
+(evilem-define (kbd "SPC L") 'evil-forward-symbol)
+(evilem-define (kbd "SPC H") 'evil-backward-symbol)
 (provide 'config-ace-easymotion)
