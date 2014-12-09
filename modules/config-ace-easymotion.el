@@ -1,9 +1,7 @@
-(require 'noflet)
 (require 'ace-jump-mode)
 
 (eval-when-compile
   (progn
-    (require 'noflet)
     (require 'ace-jump-mode)
     (require 'evil)
     (require 'key-chord)))
