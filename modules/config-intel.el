@@ -1,10 +1,9 @@
 ;; enable semantic code LALR(1) parser
 (add-hook 'prog-mode-hook 'semantic-mode)
 (with-eval-after-load 'semantic
-  (progn
-    (global-semanticdb-minor-mode +1)
-    (global-semantic-idle-scheduler-mode +1)
-    (global-semantic-idle-summary-mode +1)))
+  (global-semanticdb-minor-mode +1)
+  (global-semantic-idle-scheduler-mode +1)
+  (global-semantic-idle-summary-mode +1))
 
 ;;; ====================================
 ;;; flycheck - real-time syntax checking
@@ -64,15 +63,15 @@
 ;;; =======================================
 ;; text mode
 (with-eval-after-load 'flyspell-mode
+  (add-hook 'flyspell-mode-hook
+    (lambda ()
+      (diminish 'flyspell-mode " ῶ")
+      (diminish 'flyspell-mode " ῶ")))
+
   (when (locate-file "hunspell" exec-path)
     (setq ispell-program-name "hunspell")
     (add-to-list 'ispell-extra-args "--sug-mode=ultra"))
   (set 'flyspell-issue-message-flag nil))
-
-(add-hook 'flyspell-mode-hook
-  (lambda ()
-    (diminish 'flyspell-mode " ῶ")
-    (diminish 'flyspell-mode " ῶ")))
 
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
