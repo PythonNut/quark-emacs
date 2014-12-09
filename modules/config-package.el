@@ -131,9 +131,11 @@
      helm-ag
 
      smex
-     icicles
      magit
      magit-filenotify
+     multiple-cursors
+     psvn
+     icicles
      psvn
      windmove
      framemove
