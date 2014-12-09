@@ -17,6 +17,7 @@
   indent-tabs-mode nil
   tab-width 4
   kkc-init-file-name "~/.emacs.d/kkrc"
+  echo-keystrokes 0.4
   jit-lock-defer-time 0.04
   jit-lock-stealth-time 0.2
   jit-lock-stealth-nice 0.1
