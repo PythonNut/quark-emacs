@@ -51,7 +51,7 @@
 
 (defun my-helm-buffers (&rest arg)
   (interactive)
-  (unless (featurep 'helm-buffer)
+  (unless (featurep 'helm-buffers)
     (require 'helm-buffers))
   (unless (featurep 'helm-files)
     (require 'helm-files))
@@ -63,7 +63,7 @@
        helm-source-files-in-all-dired
        helm-source-buffer-not-found)
     :fuzzy-match t
-    :buffer "*helm-find-files"))
+    :buffer "*helm-find-buffers"))
 
 (global-set-key (kbd "C-x C-b") 'my-helm-buffers)
 (global-set-key (kbd "C-x b") 'ido-switch-buffer)
