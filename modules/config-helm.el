@@ -42,6 +42,11 @@
 
   (set-face-attribute 'helm-selection nil :underline 'nil))
 
+(with-eval-after-load 'helm-buffers
+  (unless helm-source-buffers-list
+    (setq helm-source-buffers-list
+      (helm-make-source "Buffers" 'helm-source-buffers))))
+
 (global-set-key (kbd "C-x f") 'ido-find-file)
 (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
 (global-set-key (kbd "C-S-X C-S-B") 'icicle-buffer)
