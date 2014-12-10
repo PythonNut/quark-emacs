@@ -53,6 +53,7 @@
      julia-mode
      matlab-mode
      web-mode
+     jedi
 
      helm-ag
      helm-projectile
