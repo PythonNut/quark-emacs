@@ -3,12 +3,8 @@
 (eval-when-compile (require 'auto-complete))
 (eval-when-compile (require 'auto-complete-config))
 
-(add-hook 'first-change-hook
-  (lambda () (require 'auto-complete-config)))
-
 (with-eval-after-load 'auto-complete
   (diminish 'auto-complete-mode " ⇝")
-  (global-auto-complete-mode +1)
   (ac-config-default)
   (ac-flyspell-workaround)
   (ac-linum-workaround)
