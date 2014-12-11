@@ -1,6 +1,3 @@
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
-
 ;; polyfill with-eval-after-load
 (when (version< emacs-version "24.4")
   (defmacro with-eval-after-load (thing &rest sexps)
@@ -24,6 +21,9 @@
   (message str)
   (ad-enable-advice 'message 'around 'supress-messages)
   (ad-activate 'message))
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
 (message-force "[               ]")
 (require 'config-setq)
