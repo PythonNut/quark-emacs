@@ -1,7 +1,8 @@
 (eval-when-compile
   (progn
     (require 'cl)
-    (require 'evil)))
+    (require 'evil)
+    (require 'evil-nerd-commenter)))
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
@@ -27,5 +28,14 @@
 ;; Also change cursor colors in a terminal
 (unless (display-graphic-p)
   (require 'evil-terminal-cursor-changer))
+
+;; evil NERD commenter, commenting awesomeness!
+(global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+
+(evil-leader/set-key
+  "ci" 'evilnc-comment-or-uncomment-lines
+  "cl" 'evilnc-comment-or-uncomment-to-the-line
+  "cc" 'evilnc-copy-and-comment-lines
+  "cp" 'evilnc-comment-or-uncomment-paragraphs)
 
 (provide 'config-evil-modules)

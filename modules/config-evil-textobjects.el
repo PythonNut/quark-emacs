@@ -5,7 +5,6 @@
     (require 'evil)
     (require 'evil-leader)
     (require 'evil-indent-textobject)
-    (require 'evil-nerd-commenter)
     (require 'smartparens)
     (require 'ace-jump-mode)))
 
@@ -105,17 +104,6 @@
 (define-key evil-inner-text-objects-map "c" 'evil-indent-i-block)
 (define-key evil-outer-text-objects-map "c" 'evil-indent-a-block)
 (define-key evil-outer-text-objects-map "C" 'evil-indent-a-block-end)
-
-;; evil NERD commenter, commenting awesomeness!
-(require 'evil-nerd-commenter)
-
-(global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
-
-(evil-leader/set-key
-  "ci" 'evilnc-comment-or-uncomment-lines
-  "cl" 'evilnc-comment-or-uncomment-to-the-line
-  "cc" 'evilnc-copy-and-comment-lines
-  "cp" 'evilnc-comment-or-uncomment-paragraphs)
 
 (defun point-in-comment-p (&optional pt)
   "Determine if the point is inside a comment"
