@@ -22,7 +22,6 @@
 (define-key evil-visual-state-map "gX" 'evil-exchange-cancel)
 
 ;; Evil surround, easily change surrounding chars
-(require 'evil-surround)
 (global-evil-surround-mode +1)
 
 ;; Also change cursor colors in a terminal
@@ -33,9 +32,7 @@
 (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
 
 (evil-leader/set-key
-  "ci" 'evilnc-comment-or-uncomment-lines
   "cl" 'evilnc-comment-or-uncomment-to-the-line
-  "cc" 'evilnc-copy-and-comment-lines
-  "cp" 'evilnc-comment-or-uncomment-paragraphs)
+  "cc" 'evilnc-copy-and-comment-lines)
 
 (provide 'config-evil-modules)
