@@ -69,10 +69,11 @@
 ;;; Flyspell - inline real time spell check
 ;;; =======================================
 ;; text mode
-(with-eval-after-load 'flyspell-mode
+(with-eval-after-load 'flyspell
   (add-hook 'flyspell-mode-hook
     (lambda ()
-      (diminish 'flyspell-mode " ῶ")
+      (define-key flyspell-mode-map (kbd "C-.") nil)
+      (define-key flyspell-mode-map (kbd "C-,") nil)
       (diminish 'flyspell-mode " ῶ")))
 
   (when (locate-file "hunspell" exec-path)
