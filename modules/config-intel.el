@@ -1,3 +1,10 @@
+(eval-when-compile
+  (progn
+    (require 's)
+    (require 'semantic)
+    (require 'flycheck)
+    (require 'flyspell)))
+
 ;; enable semantic code LALR(1) parser
 (add-hook 'prog-mode-hook 'semantic-mode)
 (with-eval-after-load 'semantic
@@ -9,8 +16,8 @@
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
 
-(add-hook 'prog-mode-hook (lambda () (require 'flycheck)))
-(add-hook 'text-mode-hook (lambda () (require 'flycheck)))
+(add-hook 'prog-mode-hook (lambda () (global-flycheck-mode +1)))
+(add-hook 'text-mode-hook (lambda () (global-flycheck-mode +1)))
 
 (with-eval-after-load 'flycheck
   (defun my-display-error-messages-condensed (errors)
@@ -56,7 +63,7 @@
                   (`suspicious "?"))))
       (concat " ✓" text)))
   ;; (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
-  (global-flycheck-mode +1))
+  )
 
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
