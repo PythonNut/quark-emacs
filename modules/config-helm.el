@@ -145,7 +145,9 @@
       (projectile-global-mode +1)))
 
   (helm-occur-init-source)
-  (let ((bufs (list (buffer-name (current-buffer)))))
+  (let ((bufs (list (buffer-name (current-buffer))))
+         (projectile-root (ignore-errors (projectile-project-p))))
+
     (helm-attrset 'moccur-buffers bufs helm-source-occur)
     (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
     (helm-set-local-variable 'helm-multi-occur-buffer-tick
@@ -156,7 +158,7 @@
       (append '(helm-source-buffers-list)
 
         ;; projectile explodes when not in project
-        (when (ignore-errors (projectile-project-root))
+        (when projectile-root
           '(helm-source-projectile-recentf-list
              helm-source-projectile-files-list
              helm-source-projectile-buffers-list))
@@ -183,7 +185,7 @@
            my-helm-source-evaluation-result)
 
         ;; file location, of which projectile can be a superset
-        (unless (ignore-errors (projectile-project-root))
+        (unless projectile-root
           '(helm-source-findutils))
 
         '(helm-source-locate
