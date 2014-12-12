@@ -17,82 +17,82 @@
 
 ;; Guarantee all packages are installed on start
 (defvar packages-list
-  '(icicles
-     solarized-theme
-
+  '(
      ;; ido based packages
-     smex
      flx-ido
-     ido-vertical-mode
      ido-ubiquitous
+     ido-vertical-mode
+     smex
 
      ;; evil based modes
      evil
+     evil-easymotion
+     evil-exchange
+     evil-indent-textobject
      evil-leader
      evil-nerd-commenter
-     evil-indent-textobject
-     evil-surround
      evil-org
-     evil-exchange
+     evil-surround
      evil-terminal-cursor-changer
      evil-visualstar
-     evil-easymotion
 
      ;; major modes
-     idris-mode
-     haskell-mode
-     livescript-mode
-     scss-mode
-     sass-mode
-     less-css-mode
-     markdown-mode
-     js2-mode
-     cython-mode
      coffee-mode
+     cython-mode
      dart-mode
-     julia-mode
-     matlab-mode
-     web-mode
+     haskell-mode
+     idris-mode
      jedi
+     js2-mode
+     julia-mode
+     less-css-mode
+     livescript-mode
+     markdown-mode
+     matlab-mode
+     sass-mode
+     scss-mode
+     web-mode
 
-     traad
-     helm-ag
-     helm-projectile
-     diminish
-     smooth-scrolling
-     framemove
+     ace-jump-mode
+     adaptive-wrap
      aggressive-indent
      auto-async-byte-compile
+     auto-complete
+     auto-indent-mode
+     diminish
+     dtrt-indent
+     easy-kill
+     flx-isearch
+     flycheck
+     flyspell
+     framemove
      gitattributes-mode
      gitconfig-mode
      gitignore-mode
-     idle-require
-     multiple-cursors
-     ace-jump-mode
-     noflet
+     helm-ag
+     helm-projectile
      hexrgb
-     rainbow-delimiters
-     smartparens
+     icicles
+     idle-require
+     key-chord
+     lacarte
+     linum-relative
+     load-dir
      magit
      magit-filenotify
+     multiple-cursors
+     noflet
      psvn
-     linum-relative
-     ws-butler
-     dtrt-indent
-     adaptive-wrap
-     xclip
-     easy-kill
-     load-dir
-     auto-indent-mode
-     lacarte
+     rainbow-delimiters
+     smartparens
      smartrep
+     smooth-scrolling
+     solarized-theme
+     traad
      whole-line-or-region
      wide-n
-     key-chord
-     auto-complete
-     flycheck
-     flyspell
-     flx-isearch)
+     ws-butler
+     xclip)
   "List of packages needs to be installed at launch")
 
 (defun has-package-not-installed ()
