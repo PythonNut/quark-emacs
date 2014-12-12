@@ -37,18 +37,26 @@
      evil-visualstar
 
      ;; major modes
+     bbcode-mode
      coffee-mode
+     crontab-mode
+     csharp-mode
+     csv-mode
      cython-mode
      dart-mode
+     fasm-mode
      haskell-mode
      idris-mode
      jedi
      js2-mode
+     json-mode
      julia-mode
      less-css-mode
      livescript-mode
      markdown-mode
      matlab-mode
+     php-mode
+     pkgbuild-mode
      sass-mode
      scss-mode
      web-mode
@@ -73,6 +81,7 @@
      helm-projectile
      hexrgb
      icicles
+     impatient-mode
      idle-require
      key-chord
      lacarte
