@@ -55,6 +55,7 @@
      web-mode
      jedi
 
+     traad
      helm-ag
      helm-projectile
      diminish
