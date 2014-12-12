@@ -64,10 +64,8 @@
 
 (defun my-helm-buffers (&rest arg)
   (interactive)
-  (unless (featurep 'helm-buffers)
-    (require 'helm-buffers))
-  (unless (featurep 'helm-files)
-    (require 'helm-files))
+  (unless (featurep 'helm-buffers) (require 'helm-buffers))
+  (unless (featurep 'helm-files) (require 'helm-files))
   (helm
     :sources
     '(helm-source-buffers-list
@@ -83,8 +81,8 @@
 
 (defun my-helm-find-files (&rest arg)
   (interactive)
-  (unless (featurep 'helm-files)
-    (require 'helm-files))
+  (unless (featurep 'helm-buffers) (require 'helm-buffers))
+  (unless (featurep 'helm-files) (require 'helm-files))
   (helm
     :sources
     '(helm-source-recentf
@@ -131,14 +129,10 @@
 
 (defun my-helm-omni (&rest arg)
   (interactive)
-  (unless (featurep 'helm-files)
-    (require 'helm-files))
-  (unless (featurep 'helm-ring)
-    (require 'helm-ring))
-  (unless (featurep 'helm-misc)
-    (require 'helm-misc))
-  (unless (featurep 'helm-semantic)
-    (require 'helm-semantic))
+  (unless (featurep 'helm-files) (require 'helm-files))
+  (unless (featurep 'helm-ring) (require 'helm-ring))
+  (unless (featurep 'helm-misc) (require 'helm-misc))
+  (unless (featurep 'helm-semantic) (require 'helm-semantic))
   (when (or
           (locate-file "ag" exec-path)
           (locate-file "ack" exec-path)
