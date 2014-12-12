@@ -10,6 +10,4 @@
     (jedi:setup)))
 
 (with-eval-after-load 'python
-  (setq
-    jedi:use-shortcuts t
-    jedi:install-imenu t))
+  (setq jedi:use-shortcuts t))
