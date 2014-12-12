@@ -2,6 +2,7 @@
   (lambda ()
     (adaptive-wrap-prefix-mode -1)
     (visual-line-mode -1)
+    (eshell-smart-initialize)
     (make-local-variable 'scroll-margin)
     (make-local-variable 'smooth-scroll-margin)
     (setq
@@ -9,7 +10,12 @@
       smooth-scroll-margin 0)))
 
 (with-eval-after-load 'eshell
+  (require 'em-smart)
   (setq
+    eshell-where-to-jump 'begin
+    eshell-review-quick-commands nil
+    eshell-smart-space-goes-to-end t
+
     eshell-scroll-to-bottom-on-input t
     eshell-scroll-show-maximum-output nil
     eshell-cp-interactive-query t
