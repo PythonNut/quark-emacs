@@ -47,6 +47,14 @@
     (setq helm-source-buffers-list
       (helm-make-source "Buffers" 'helm-source-buffers))))
 
+;; adaptively fallback to ack and ack-grep
+(with-eval-after-load 'helm-ag
+  (unless (locate-file "ag" exec-path)
+    (if (locate-file "ack" exec-path)
+      (setq helm-ag-base-command "ack --nocolor --nogroup")
+      (when (locate-file "ack-grep" exec-path)
+        (setq helm-ag-base-command "ack-grep --nocolor --nogroup")))))
+
 (global-set-key (kbd "C-x f") 'ido-find-file)
 (global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
 (global-set-key (kbd "C-S-X C-S-B") 'icicle-buffer)
@@ -123,15 +131,18 @@
 
 (defun my-helm-omni (&rest arg)
   (interactive)
-  (unless (featurep 'helm-grep)
-    (require 'helm-grep))
+  (unless (featurep 'helm-files)
+    (require 'helm-files))
   (unless (featurep 'helm-ring)
     (require 'helm-ring))
   (unless (featurep 'helm-misc)
     (require 'helm-misc))
   (unless (featurep 'helm-semantic)
     (require 'helm-semantic))
-  (when (locate-file "ag" exec-path)
+  (when (or
+          (locate-file "ag" exec-path)
+          (locate-file "ack" exec-path)
+          (locate-file "ack-grep" exec-path))
     (unless (featurep 'helm-ag)
       (require 'helm-ag)))
   (unless (featurep 'helm-projectile)
@@ -143,8 +154,7 @@
   (let ((bufs (list (buffer-name (current-buffer)))))
     (helm-attrset 'moccur-buffers bufs helm-source-occur)
     (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
-    (helm-set-local-variable
-      'helm-multi-occur-buffer-tick
+    (helm-set-local-variable 'helm-multi-occur-buffer-tick
       (cl-loop for b in bufs
         collect (buffer-chars-modified-tick (get-buffer b))))
     (helm
@@ -164,7 +174,10 @@
            helm-source-bookmarks)
 
         ;; code search
-        (when (locate-file "ag" exec-path)
+        (when (or
+                (locate-file "ag" exec-path)
+                (locate-file "ack" exec-path)
+                (locate-file "ack-grep" exec-path))
           '(helm-source-do-ag))
 
         '(
