@@ -3,9 +3,8 @@
     (require 'cl)
     (require 'cl-lib)
     (require 'key-chord)
-    (require 'icicles)))
-
-(eval-when-compile (require 'config-modes))
+    (require 'icicles)
+    (require 'config-modes)))
 
 ;; custom hook run when icicles in initialized
 ;; (defvar icicle-init-hook nil)
@@ -42,7 +41,6 @@
            (progn
              (call-interactively 'icicle-mode +1)
              (run-hooks 'icicle-init-hook)
-             ;; (call-interactively ',func)
              (call-interactively (ad-get-orig-definition ',func) args))
            (progn
              (call-interactively 'icicle-mode -1)

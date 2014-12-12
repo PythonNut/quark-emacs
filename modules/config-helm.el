@@ -4,9 +4,8 @@
     (require 'cl-lib)
     (require 'key-chord)
     (require 'evil)
-    (require 'helm)))
-
-(eval-when-compile (require 'config-modes))
+    (require 'helm)
+    (require 'config-modes)))
 
 (with-eval-after-load 'helm-files
   (setq helm-locate

@@ -22,8 +22,8 @@
   (ad-enable-advice 'message 'around 'supress-messages)
   (ad-activate 'message))
 
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+
+(load (setq custom-file "~/.emacs.d/custom.el"))
 
 (message-force "[               ]")
 (require 'config-setq)

@@ -102,6 +102,7 @@
      sp--self-insert-command
      sp-backward-sexp
      sp-backward-unwrap-sexp
+     sp-forward-barf-sexp
      sp-forward-sexp
      sp-forward-slurp-sexp
      sp-kill-sexp
@@ -129,6 +130,7 @@
      my-helm-find-files
      projectile-switch-project
      python-shell-send-buffer
+     save-buffers-kill-terminal
      scroll-bar-mode
      scroll-bar-toolkit-scroll
      smex
