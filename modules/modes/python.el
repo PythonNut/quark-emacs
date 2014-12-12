@@ -11,3 +11,13 @@
 
 (with-eval-after-load 'python
   (setq jedi:use-shortcuts t))
+
+(defun helm-traad-commands ()
+  (interactive)
+  (minibuffer-with-setup-hook
+    (lambda ()
+      (insert "traad-"))
+    (call-interactively 'helm-M-x)))
+
+(evil-leader/set-key
+  "t" 'helm-traad-commands)

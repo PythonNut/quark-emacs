@@ -506,4 +506,14 @@
 (define-key evil-normal-state-map (kbd "<backtab>") 'icicle-complete-keys)
 (define-key evil-insert-state-map (kbd "<backtab>") 'icicle-complete-keys)
 
+(defun helm-icicles-commands ()
+  (interactive)
+  (minibuffer-with-setup-hook
+    (lambda ()
+      (insert "icicle-"))
+    (call-interactively 'helm-M-x)))
+
+(evil-leader/set-key
+  "i" 'helm-icicles-commands)
+
 (provide 'config-icicles)

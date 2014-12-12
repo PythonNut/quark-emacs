@@ -8,7 +8,10 @@
     (require 'config-modes)))
 
 (with-eval-after-load 'helm-files
-  (setq helm-locate
+  (setq
+    helm-recentf-fuzzy-match t
+    helm-locate-fuzzy-match t
+    helm-locate
     `((name . "Locate")
        (init . helm-locate-set-command)
        (candidates-process . helm-locate-init)
@@ -34,6 +37,7 @@
 
 (with-eval-after-load 'helm
   (setq
+    helm-M-x-fuzzy-match t
     helm-locate-command "locate %s -r %s -be -l 500"
     helm-ff-transformer-show-only-basename nil
     helm-buffers-fuzzy-matching t
@@ -202,6 +206,17 @@
            evil-visual-paste))
     ad-do-it
     (call-interactively 'my-helm-omni)))
+
+
+(defun helm-helm-commands ()
+  (interactive)
+  (minibuffer-with-setup-hook
+    (lambda ()
+      (insert "helm-"))
+    (call-interactively 'helm-M-x)))
+
+(evil-leader/set-key
+  "h" 'helm-helm-commands)
 
 (global-set-key (kbd "C-c C-o") 'my-helm-omni)
 (define-key evil-normal-state-map (kbd "C-c C-o") 'my-helm-omni)
