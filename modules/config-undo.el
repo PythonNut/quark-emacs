@@ -11,10 +11,6 @@
   (lambda ()
     (run-at-time 3 nil (lambda () (message "")))))
 
-(add-hook 'find-file-hook
-  (lambda ()
-    (run-at-time 1 nil (lambda () (message "")))))
-
 (with-eval-after-load 'evil
   (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
     'undo-tree-visualizer-toggle-timestamps)
@@ -54,6 +50,10 @@
     (defadvice undo-tree-make-history-save-file-name
       (after undo-tree activate)
       (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz"))))
+
+  (defadvice undo-tree-load-history (around quiet-compress activate)
+    (let ((jka-compr-verbose nil))
+      ad-do-it))
 
   ;; Keep region when undoing in region
   (defadvice undo-tree-undo (around keep-region activate)
