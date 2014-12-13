@@ -14,10 +14,10 @@
 
 (with-eval-after-load 'git-gutter+
   ;; leave highlighting to diff-hl
-  (progn
-    (setq git-gutter+-view-diff-function (lambda (&rest args))
-      git-gutter+-clear-function (lambda (&rest args))
-      git-gutter+-window-config-change-function nil)))
+  (diminish 'git-gutter+-mode)
+  (setq git-gutter+-view-diff-function (lambda (&rest args))
+    git-gutter+-clear-function (lambda (&rest args))
+    git-gutter+-window-config-change-function nil))
 
 (with-eval-after-load 'diff-hl
   (setq diff-hl-draw-borders nil))
