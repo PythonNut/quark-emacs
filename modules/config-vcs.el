@@ -19,9 +19,10 @@
   (add-hook 'magit-status-mode-hook
     (lambda ()
       (set-input-method "TeX")
-      (require 'magit-filenotify)
-      (diminish 'magit-filenotify-mode)
-      (magit-filenotify-mode +1))))
+      (unless (version< emacs-version "24.4")
+        (require 'magit-filenotify)
+        (diminish 'magit-filenotify-mode)
+        (magit-filenotify-mode +1)))))
 
 ;; and psvn for svn not-so-awesomeness
 
