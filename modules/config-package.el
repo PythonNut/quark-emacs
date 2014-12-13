@@ -129,32 +129,24 @@
 (require 'idle-require)
 (setq idle-require-symbols
   '(
-     projectile
-     flx-ido
-     ido-vertical-mode
-
-     helm
      helm-files
-     helm-grep
      helm-ring
      helm-projectile
      helm-semantic
      helm-ag
+     icicles
 
-     smex
      magit
      magit-filenotify
      multiple-cursors
-     psvn
-     icicles
-     psvn
      windmove
      framemove
      easy-kill
      flx-isearch
      ace-jump-mode
-     ws-butler
-     whole-line-or-region))
+     whole-line-or-region
+     smex
+     psvn))
 
 (if (daemonp)
   (progn
