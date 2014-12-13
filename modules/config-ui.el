@@ -77,4 +77,6 @@
       (require 'framemove)
       (setq framemove-hook-into-windmove t))))
 
+(global-set-key (kbd "C-.") 'er/expand-region)
+
 (provide 'config-ui)

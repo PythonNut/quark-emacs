@@ -70,6 +70,7 @@
      diminish
      dtrt-indent
      easy-kill
+     expand-region
      flx-isearch
      flycheck
      flyspell
