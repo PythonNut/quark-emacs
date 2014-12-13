@@ -21,4 +21,9 @@
       (setq scroll-margin (max 0 (1-  (/ (window-body-height) 2))))
       (setq scroll-margin 5))))
 
+(global-set-key (kbd "<left-margin> <mouse-5>")
+  (kbd "<mouse-5> <mouse-5> <mouse-5>"))
+(global-set-key (kbd "<left-margin> <mouse-4>")
+  (kbd "<mouse-4> <mouse-4> <mouse-4>"))
+
 (provide 'config-scroll)
