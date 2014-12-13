@@ -5,6 +5,7 @@
 
 (add-hook 'python-mode-hook
   (lambda ()
+    (python-indent-guess-indent-offset)
     (add-to-list 'evil-overriding-maps 'jedi-mode-map)
     (evil-define-key 'normal jedi-mode-map (kbd "gd") 'jedi:goto-definition)
     (jedi:setup)))
