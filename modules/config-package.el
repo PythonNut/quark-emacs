@@ -67,6 +67,7 @@
      auto-async-byte-compile
      auto-complete
      auto-indent-mode
+     diff-hl
      diminish
      dtrt-indent
      easy-kill
@@ -75,6 +76,7 @@
      flycheck
      flyspell
      framemove
+     git-gutter+
      gitattributes-mode
      gitconfig-mode
      gitignore-mode
