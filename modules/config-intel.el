@@ -56,8 +56,8 @@
                       (let ((error-counts (flycheck-count-errors
                                             flycheck-current-errors)))
                         (format ":%s/%s"
-                          (or (cdr (assq 'error error-counts)) 0)
-                          (or (cdr (assq 'warning error-counts)) 0)))
+                          (or (cdr (assq 'error error-counts)) "")
+                          (or (cdr (assq 'warning error-counts)) "")))
                       ""))
                   (`interrupted "-")
                   (`suspicious "?"))))
