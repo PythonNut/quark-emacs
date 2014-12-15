@@ -41,9 +41,9 @@
     helm-locate-command "locate %s -r %s -be -l 500"
     helm-ff-transformer-show-only-basename nil
     helm-buffers-fuzzy-matching t
-    helm-ff-newfile-prompt-p 'nil)
+    helm-ff-newfile-prompt-p nil)
 
-  (set-face-attribute 'helm-selection nil :underline 'nil))
+  (set-face-attribute 'helm-selection nil :underline nil))
 
 (with-eval-after-load 'helm-buffers
   (unless helm-source-buffers-list

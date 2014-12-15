@@ -291,10 +291,10 @@
            ("| " "SPC")))
       (setq my-c-modes (cdr my-c-modes))))
 
-  (define-key evil-insert-state-map (kbd "C-]") 'nil)
-  (define-key evil-normal-state-map (kbd "C-]") 'nil)
-  (define-key evil-motion-state-map (kbd "C-]") 'nil)
-  (define-key evil-emacs-state-map (kbd "C-]") 'nil)
+  (define-key evil-insert-state-map (kbd "C-]") nil)
+  (define-key evil-normal-state-map (kbd "C-]") nil)
+  (define-key evil-motion-state-map (kbd "C-]") nil)
+  (define-key evil-emacs-state-map (kbd "C-]") nil)
 
   ;; disable "'" pairing in text mode, as it's often an apostrophe
   (add-hook 'text-mode-hook

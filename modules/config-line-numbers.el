@@ -19,7 +19,7 @@
 (add-hook 'find-file-hooks 'find-file-check-large-file)
 
 (with-eval-after-load 'linum
-  (set-face-background 'linum 'nil)
+  (set-face-background 'linum nil)
   (set-face-foreground 'linum "grey51")
   (setq linum-delay t)
 
