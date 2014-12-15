@@ -12,6 +12,15 @@
   (global-semantic-idle-scheduler-mode +1)
   (global-semantic-idle-summary-mode +1))
 
+(defadvice semantic-idle-summary-idle-function (around show-flycheck-error activate)
+  (if (and
+        (featurep 'flycheck)
+        flycheck-mode
+        (progn (require 's)
+          (flycheck-overlay-errors-at (point))))
+    (flycheck-display-error-at-point)
+    ad-do-it))
+
 ;;; ====================================
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
