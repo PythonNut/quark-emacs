@@ -11,7 +11,9 @@
     (jedi:setup)))
 
 (with-eval-after-load 'python
-  (setq jedi:use-shortcuts t))
+  (setq
+    jedi:use-shortcuts t
+    jedi:complete-on-dot t))
 
 (defun helm-traad-commands ()
   (interactive)
