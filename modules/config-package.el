@@ -86,6 +86,7 @@
      helm-projectile
      hexrgb
      icicles
+     idomenu
      impatient-mode
      idle-require
      key-chord
