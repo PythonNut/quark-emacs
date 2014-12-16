@@ -57,9 +57,11 @@
 (require 'config-solarized)
 (message-force "[===============]")
 
-(setq load-dirs (concat
-                  user-emacs-directory
-                  "modules/modes/"))
+(setq
+  load-dir-debug nil
+  load-dirs (concat
+              user-emacs-directory
+              "modules/modes/"))
 
 (ad-disable-advice 'load 'before 'quiet-loading)
 (ad-activate 'load)
