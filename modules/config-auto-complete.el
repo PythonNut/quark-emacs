@@ -7,7 +7,7 @@
   (lambda () (require 'auto-complete-config)))
 
 (with-eval-after-load 'auto-complete
-  (diminish 'auto-complete-mode " ⇝")
+  (diminish 'auto-complete-mode " α")
   (ac-config-default)
   (ac-flyspell-workaround)
   (ac-linum-workaround)

@@ -43,4 +43,19 @@
 (with-eval-after-load 'evil-matchit
   (evilmi-init-plugins))
 
+(autoload 'evil-inner-arg "evil-args")
+(autoload 'evil-outer-arg "evil-args")
+(autoload 'evil-forward-arg "evil-args")
+(autoload 'evil-backward-arg "evil-args")
+
+(define-key evil-inner-text-objects-map "a" #'evil-inner-arg)
+(define-key evil-outer-text-objects-map "a" #'evil-outer-arg)
+
+;; (define-key evil-normal-state-map "L" #'evil-forward-arg)
+;; (define-key evil-normal-state-map "H" #'evil-backward-arg)
+;; (define-key evil-motion-state-map "L" #'evil-forward-arg)
+;; (define-key evil-motion-state-map "H" #'evil-backward-arg)
+
+(define-key evil-normal-state-map "K" #'evil-jump-out-args)
+
 (provide 'config-evil-modules)
