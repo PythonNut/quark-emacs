@@ -35,4 +35,12 @@
   "cl" #'evilnc-comment-or-uncomment-to-the-line
   "cc" #'evilnc-copy-and-comment-lines)
 
+;; evil matchit, jump between matching tags and keywords
+(define-key evil-normal-state-map "%" #'evilmi-jump-items)
+(define-key evil-inner-text-objects-map "%" #'evilmi-text-object)
+(define-key evil-outer-text-objects-map "%" #'evilmi-text-object)
+
+(with-eval-after-load 'evil-matchit
+  (evilmi-init-plugins))
+
 (provide 'config-evil-modules)

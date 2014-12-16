@@ -30,6 +30,7 @@
      evil-exchange
      evil-indent-textobject
      evil-leader
+     evil-matchit
      evil-nerd-commenter
      evil-org
      evil-surround
