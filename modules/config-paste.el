@@ -101,20 +101,20 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-insert-state-map (kbd "C-w") nil)
 
 (define-key evil-insert-state-map
-  (kbd "<remap> <kill-region>") 'my-wlr-cua-cut-region)
+  (kbd "<remap> <kill-region>") #'my-wlr-cua-cut-region)
 (define-key evil-insert-state-map
-  (kbd "<remap> <kill-ring-save>") 'easy-kill)
+  (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-normal-state-map
-  (kbd "<remap> <kill-ring-save>") 'easy-kill)
+  (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-insert-state-map
-  (kbd "C-y") 'whole-line-or-region-yank-cua)
+  (kbd "C-y") #'whole-line-or-region-yank-cua)
 
 (define-key evil-emacs-state-map
-  (kbd "<remap> <kill-region>") 'my-wlr-cua-cut-region)
+  (kbd "<remap> <kill-region>") #'my-wlr-cua-cut-region)
 (define-key evil-emacs-state-map
-  (kbd "<remap> <kill-ring-save>") 'easy-kill)
+  (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-emacs-state-map
-  (kbd "C-y") 'whole-line-or-region-yank-cua)
+  (kbd "C-y") #'whole-line-or-region-yank-cua)
 
 (unless (display-graphic-p)
   (when (locate-file "xclip" exec-path)

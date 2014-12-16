@@ -24,45 +24,45 @@
      `(autoload ,func "multiple-cursors")))
   (generate-calls-single autoload-multiple-cursors
     (
-      'mc/mark-lines
-      'mc/mark-next-lines
-      'mc/mark-previous-lines
-      'mc/unmark-next-like-this
-      'mc/unmark-previous-like-this
-      'mc/skip-to-previous-like-this
-      'mc/mark-all-like-this
-      'mc/mark-all-words-like-this
-      'mc/mark-all-symbols-like-this
-      'mc/mark-all-in-region
-      'mc/mark-all-in-region-regexp
-      'mc/mark-more-like-this-extended
-      'mc/mmlte--up
-      'mc/mmlte--down
-      'mc/mmlte--left
-      'mc/mmlte--right
-      'mc/mark-all-like-this-dwim
-      'mc/mark-all-dwim
-      'mc/mark-all-like-this-in-defun
-      'mc/mark-all-words-like-this-in-defun
-      'mc/mark-all-symbols-like-this-in-defun
-      'mc/add-cursor-on-click
-      'mc/mark-sgml-tag-pair
-      'mc/mark-pop
-      'set-rectangular-region-anchor
-      'rrm/switch-to-multiple-cursors
-      'mc/insert-numbers
-      'mc/reverse-regions
-      'mc/sort-regions
-      'hum/keyboard-quit
-      'mc-hide-unmatched-lines-mode
+      #'mc/mark-lines
+      #'mc/mark-next-lines
+      #'mc/mark-previous-lines
+      #'mc/unmark-next-like-this
+      #'mc/unmark-previous-like-this
+      #'mc/skip-to-previous-like-this
+      #'mc/mark-all-like-this
+      #'mc/mark-all-words-like-this
+      #'mc/mark-all-symbols-like-this
+      #'mc/mark-all-in-region
+      #'mc/mark-all-in-region-regexp
+      #'mc/mark-more-like-this-extended
+      #'mc/mmlte--up
+      #'mc/mmlte--down
+      #'mc/mmlte--left
+      #'mc/mmlte--right
+      #'mc/mark-all-like-this-dwim
+      #'mc/mark-all-dwim
+      #'mc/mark-all-like-this-in-defun
+      #'mc/mark-all-words-like-this-in-defun
+      #'mc/mark-all-symbols-like-this-in-defun
+      #'mc/add-cursor-on-click
+      #'mc/mark-sgml-tag-pair
+      #'mc/mark-pop
+      #'set-rectangular-region-anchor
+      #'rrm/switch-to-multiple-cursors
+      #'mc/insert-numbers
+      #'mc/reverse-regions
+      #'mc/sort-regions
+      #'hum/keyboard-quit
+      #'mc-hide-unmatched-lines-mode
       )))
 
-(global-set-key (kbd "C-c l") 'mc/edit-lines)
-(global-set-key (kbd "C-c a") 'mc/mark-all-like-this-dwim)
-(global-set-key (kbd "C-c s") 'mc/mark-all-in-region)
-(global-set-key (kbd "C-c M") 'mc/mark-pop)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c l") #'mc/edit-lines)
+(global-set-key (kbd "C-c a") #'mc/mark-all-like-this-dwim)
+(global-set-key (kbd "C-c s") #'mc/mark-all-in-region)
+(global-set-key (kbd "C-c M") #'mc/mark-pop)
+(global-set-key (kbd "C->") #'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") #'mc/mark-previous-like-this)
 
 ;; directional window movement
 (add-hook 'window-configuration-change-hook
@@ -77,7 +77,7 @@
       (require 'framemove)
       (setq framemove-hook-into-windmove t))))
 
-(global-set-key (kbd "C-.") 'er/expand-region)
+(global-set-key (kbd "C-.") #'er/expand-region)
 
 (defun previous-buffer-smart ()
   "A `smartrep' enabled previous-buffer"
@@ -86,8 +86,8 @@
   (previous-buffer)
   (condition-case e
     (smartrep-read-event-loop
-      '(("<left>" . 'previous-buffer-smart)
-         ("<right>" . 'next-buffer-smart)))
+      '(("<left>" . #'previous-buffer-smart)
+         ("<right>" . #'next-buffer-smart)))
     (quit nil)))
 
 (defun next-buffer-smart ()
@@ -97,11 +97,11 @@
   (next-buffer)
   (condition-case e
     (smartrep-read-event-loop
-      '(("<left>" . 'previous-buffer-smart)
-         ("<right>" . 'next-buffer-smart)))
+      '(("<left>" . #'previous-buffer-smart)
+         ("<right>" . #'next-buffer-smart)))
     (quit nil)))
 
-(global-set-key (kbd "C-x <left>") 'previous-buffer-smart)
-(global-set-key (kbd "C-x <right>") 'next-buffer-smart)
+(global-set-key (kbd "C-x <left>") #'previous-buffer-smart)
+(global-set-key (kbd "C-x <right>") #'next-buffer-smart)
 
 (provide 'config-ui)

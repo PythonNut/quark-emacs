@@ -158,7 +158,7 @@
     (message "loading symbols for server")
     (mapc 'require idle-require-symbols))
 
-  (add-hook 'emacs-startup-hook 'idle-require-mode)
+  (add-hook 'emacs-startup-hook #'idle-require-mode)
   (add-hook 'idle-require-mode-hook
     (lambda ()
       (diminish 'idle-require-mode " ⟳"))))

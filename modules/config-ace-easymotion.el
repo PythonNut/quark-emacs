@@ -45,20 +45,20 @@
       (if (> (rest (nth 6 (posn-at-point)))
             (/ (window-body-height) 2))
         (progn
-          (call-interactively 'previous-line)
-          (call-interactively 'next-line))
+          (call-interactively #'previous-line)
+          (call-interactively #'next-line))
         (progn
-          (call-interactively 'next-line)
-          (call-interactively 'previous-line)))))
+          (call-interactively #'next-line)
+          (call-interactively #'previous-line)))))
 
   (defadvice evil-ace-jump-word-mode (after cleanup activate)
-    (ignore-errors (call-interactively 'realign-cursor)))
+    (ignore-errors (call-interactively #'realign-cursor)))
 
   (defadvice evil-ace-jump-char-mode (after cleanup activate)
-    (ignore-errors (call-interactively 'realign-cursor)))
+    (ignore-errors (call-interactively #'realign-cursor)))
 
   (defadvice evil-ace-jump-line-mode (after realign activate)
-    (ignore-errors (call-interactively 'realign-cursor)))
+    (ignore-errors (call-interactively #'realign-cursor)))
 
   ;; jump to approximately the same column
   (defadvice evil-ace-jump-line-mode (around restore-pos activate)
@@ -84,18 +84,18 @@
     (set-face-foreground 'ace-jump-face-foreground "black")
     (set-face-background 'ace-jump-face-foreground "white"))
 
-  (key-chord-define evil-insert-state-map "jl" 'evil-ace-jump-line-mode)
-  (key-chord-define evil-insert-state-map "jk" 'evil-ace-jump-word-mode)
-  (key-chord-define evil-emacs-state-map "jk" 'ace-jump-word-mode)
-  (key-chord-define evil-emacs-state-map "jc" 'ace-jump-char-N-lines)
-  (key-chord-define evil-emacs-state-map "jl" 'ace-jump-line-mode)
+  (key-chord-define evil-insert-state-map "jl" #'evil-ace-jump-line-mode)
+  (key-chord-define evil-insert-state-map "jk" #'evil-ace-jump-word-mode)
+  (key-chord-define evil-emacs-state-map "jk" #'ace-jump-word-mode)
+  (key-chord-define evil-emacs-state-map "jc" #'ace-jump-char-N-lines)
+  (key-chord-define evil-emacs-state-map "jl" #'ace-jump-line-mode)
 
-  (key-chord-define evil-normal-state-map " l" 'evil-ace-jump-line-mode)
-  (key-chord-define evil-normal-state-map " n" 'ace-jump-char-N-lines)
-  (key-chord-define evil-normal-state-map " c" 'evil-ace-jump-char-mode)
-  (key-chord-define evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
+  (key-chord-define evil-normal-state-map " l" #'evil-ace-jump-line-mode)
+  (key-chord-define evil-normal-state-map " n" #'ace-jump-char-N-lines)
+  (key-chord-define evil-normal-state-map " c" #'evil-ace-jump-char-mode)
+  (key-chord-define evil-normal-state-map " t" #'evil-ace-jump-char-to-mode)
 
-  (key-chord-define evil-insert-state-map "jc" 'ace-jump-char-N-lines))
+  (key-chord-define evil-insert-state-map "jc" #'ace-jump-char-N-lines))
 
 (require 'evil-easymotion)
 (eval-when-compile (require 'evil-easymotion))

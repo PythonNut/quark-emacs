@@ -16,8 +16,8 @@
 (evil-define-motion evil-backward-symbol (count)
   (sp-backward-symbol count))
 
-(define-key evil-motion-state-map "L" 'evil-forward-symbol)
-(define-key evil-motion-state-map "H" 'evil-backward-symbol)
+(define-key evil-motion-state-map "L" #'evil-forward-symbol)
+(define-key evil-motion-state-map "H" #'evil-backward-symbol)
 
 ;;; === Evil text object section ===
 ;; evil block indentation textobject for Python
@@ -101,9 +101,9 @@
         (forward-line 1)
         (point-at-eol)) 'line)))
 
-(define-key evil-inner-text-objects-map "c" 'evil-indent-i-block)
-(define-key evil-outer-text-objects-map "c" 'evil-indent-a-block)
-(define-key evil-outer-text-objects-map "C" 'evil-indent-a-block-end)
+(define-key evil-inner-text-objects-map "c" #'evil-indent-i-block)
+(define-key evil-outer-text-objects-map "c" #'evil-indent-a-block)
+(define-key evil-outer-text-objects-map "C" #'evil-indent-a-block-end)
 
 (defun point-in-comment-p (&optional pt)
   "Determine if the point is inside a comment"
@@ -185,18 +185,18 @@ the current line."
       (let ((range (evil-indent--comment-range)))
         (evil-contract-range (evil-range (second range) (third range) (first range)))))))
 
-(define-key evil-inner-text-objects-map "C" 'evil-indent-i-comment)
+(define-key evil-inner-text-objects-map "C" #'evil-indent-i-comment)
 
 (defun evil-make-arbitrary-char-range ()
   (save-excursion
     (sort (list
             (progn
               (deactivate-mark)
-              (call-interactively 'evil-ace-jump-char-mode)
+              (call-interactively #'evil-ace-jump-char-mode)
               (point))
             (progn
               (deactivate-mark)
-              (call-interactively 'evil-ace-jump-char-mode)
+              (call-interactively #'evil-ace-jump-char-mode)
               (point)))
       '<)))
 
@@ -212,8 +212,8 @@ the current line."
   (let ((range (evil-make-arbitrary-char-range)))
     (evil-range (1- (first range)) (1+ (second range)) 'inclusive)))
 
-(define-key evil-inner-text-objects-map "R" 'evil-i-arbitrary-char-range)
-(define-key evil-outer-text-objects-map "R" 'evil-a-arbitrary-char-range)
+(define-key evil-inner-text-objects-map "R" #'evil-i-arbitrary-char-range)
+(define-key evil-outer-text-objects-map "R" #'evil-a-arbitrary-char-range)
 
 (defun evil-ace-jump-line-and-revert ()
   (interactive)
@@ -242,8 +242,8 @@ the current line."
     (let ((beg (evil-ace-jump-line-and-revert))
            (end (evil-ace-jump-line-and-revert)))
       (if (> beg end)
-        (evil-range beg end 'line)
-        (evil-range end beg 'line)))))
+        (evil-range beg end #'line)
+        (evil-range end beg #'line)))))
 
 (evil-define-text-object evil-a-arbitrary-line-range (&optional _c _b _e _t)
   :type line
@@ -277,8 +277,8 @@ the current line."
           (forward-line -1)
           (point)) 'line))))
 
-(define-key evil-inner-text-objects-map "r" 'evil-i-arbitrary-line-range)
-(define-key evil-outer-text-objects-map "r" 'evil-a-arbitrary-line-range)
+(define-key evil-inner-text-objects-map "r" #'evil-i-arbitrary-line-range)
+(define-key evil-outer-text-objects-map "r" #'evil-a-arbitrary-line-range)
 
 ;; (require 'evil-args)
 (autoload 'evil-inner-arg "evil-args")
@@ -286,21 +286,21 @@ the current line."
 (autoload 'evil-forward-arg "evil-args")
 (autoload 'evil-backward-arg "evil-args")
 
-(define-key evil-inner-text-objects-map "a" 'evil-inner-arg)
-(define-key evil-outer-text-objects-map "a" 'evil-outer-arg)
+(define-key evil-inner-text-objects-map "a" #'evil-inner-arg)
+(define-key evil-outer-text-objects-map "a" #'evil-outer-arg)
 
-;; (define-key evil-normal-state-map "L" 'evil-forward-arg)
-;; (define-key evil-normal-state-map "H" 'evil-backward-arg)
-;; (define-key evil-motion-state-map "L" 'evil-forward-arg)
-;; (define-key evil-motion-state-map "H" 'evil-backward-arg)
+;; (define-key evil-normal-state-map "L" #'evil-forward-arg)
+;; (define-key evil-normal-state-map "H" #'evil-backward-arg)
+;; (define-key evil-motion-state-map "L" #'evil-forward-arg)
+;; (define-key evil-motion-state-map "H" #'evil-backward-arg)
 
-(define-key evil-normal-state-map "K" 'evil-jump-out-args)
+(define-key evil-normal-state-map "K" #'evil-jump-out-args)
 
-(define-key evil-inner-text-objects-map "s" 'evil-inner-symbol)
-(define-key evil-outer-text-objects-map "s" 'evil-a-symbol)
+(define-key evil-inner-text-objects-map "s" #'evil-inner-symbol)
+(define-key evil-outer-text-objects-map "s" #'evil-a-symbol)
 
-(define-key evil-inner-text-objects-map "." 'evil-inner-sentence)
-(define-key evil-outer-text-objects-map "." 'evil-a-sentence)
+(define-key evil-inner-text-objects-map "." #'evil-inner-sentence)
+(define-key evil-outer-text-objects-map "." #'evil-a-sentence)
 
 (evil-define-text-object evil-i-entire-buffer (&optional _c _b _e _t)
   "Text object describing the entire buffer excluding empty lines at the end"
@@ -315,14 +315,14 @@ the current line."
   :type line
   (evil-range (point-min) (point-max) 'line))
 
-(define-key evil-inner-text-objects-map "e" 'evil-i-entire-buffer)
-(define-key evil-outer-text-objects-map "e" 'evil-an-entire-buffer)
+(define-key evil-inner-text-objects-map "e" #'evil-i-entire-buffer)
+(define-key evil-outer-text-objects-map "e" #'evil-an-entire-buffer)
 
 ;;; === evil operators ===
 (autoload 'evilnc-comment-operator "evil-nerd-commenter")
 (autoload 'evilnc-hotkey-comment-operator "evil-nerd-commenter")
-(define-key evil-operator-state-map "gc" 'evilnc-comment-operator)
-(define-key evil-normal-state-map "gc" 'evilnc-comment-operator)
+(define-key evil-operator-state-map "gc" #'evilnc-comment-operator)
+(define-key evil-normal-state-map "gc" #'evilnc-comment-operator)
 
 (evil-define-operator evil-macro-on-all-lines (beg end &optional arg)
   (evil-normal-state)
@@ -334,8 +334,8 @@ the current line."
       (single-key-description
         (read-char "What macro?")))))
 
-(define-key evil-operator-state-map "gl" 'evil-macro-on-all-lines)
-(define-key evil-normal-state-map "gl" 'evil-macro-on-all-lines)
+(define-key evil-operator-state-map "gl" #'evil-macro-on-all-lines)
+(define-key evil-normal-state-map "gl" #'evil-macro-on-all-lines)
 
 (require 'wide-n)
 
@@ -348,7 +348,7 @@ the current line."
       (narrow-to-region start end))
     (switch-to-buffer buf)))
 
-(global-set-key (kbd "C-x n i") 'narrow-to-region-indirect)
+(global-set-key (kbd "C-x n i") #'narrow-to-region-indirect)
 
 (evil-define-operator evil-narrow-indirect (beg end type)
   "Indirectly narrow the region from BEG to END."
@@ -362,10 +362,10 @@ the current line."
   (evil-normal-state)
   (narrow-to-region beg end))
 
-(define-key evil-operator-state-map "gn" 'evil-narrow-region)
-(define-key evil-normal-state-map "gn" 'evil-narrow-region)
-(define-key evil-operator-state-map "gN" 'evil-narrow-indirect)
-(define-key evil-normal-state-map "gN" 'evil-narrow-indirect)
+(define-key evil-operator-state-map "gn" #'evil-narrow-region)
+(define-key evil-normal-state-map "gn" #'evil-narrow-region)
+(define-key evil-operator-state-map "gN" #'evil-narrow-indirect)
+(define-key evil-normal-state-map "gN" #'evil-narrow-indirect)
 
 (evil-define-operator evil-eval-region (beg end type)
   (save-excursion
@@ -376,8 +376,8 @@ the current line."
     (eval-region beg end)
     (evil-normal-state)))
 
-(define-key evil-operator-state-map "gV" 'evil-eval-region)
-(define-key evil-normal-state-map "gV" 'evil-eval-region)
+(define-key evil-operator-state-map "gV" #'evil-eval-region)
+(define-key evil-normal-state-map "gV" #'evil-eval-region)
 
 (evil-define-operator evil-align-regexp (beg end type)
   (save-excursion
@@ -385,10 +385,10 @@ the current line."
     (goto-char beg)
     (evil-visual-state)
     (goto-char end)
-    (call-interactively 'align-regexp)
+    (call-interactively #'align-regexp)
     (evil-normal-state)))
 
-(define-key evil-operator-state-map "g|" 'evil-align-regexp)
-(define-key evil-normal-state-map "g|" 'evil-align-regexp)
+(define-key evil-operator-state-map "g|" #'evil-align-regexp)
+(define-key evil-normal-state-map "g|" #'evil-align-regexp)
 
 (provide 'config-evil-textobjects)

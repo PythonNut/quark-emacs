@@ -19,10 +19,10 @@
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 
-(add-hook 'before-save-hook 'cleanup-buffer-safe)
+(add-hook 'before-save-hook #'cleanup-buffer-safe)
 
 ;; autoload ws-butler on file open
-(add-hook 'find-file-hooks 'ws-butler-global-mode)
+(add-hook 'find-file-hooks #'ws-butler-global-mode)
 (setq require-final-newline t)
 
 ;; ws-butler also load highlight-changes-mode

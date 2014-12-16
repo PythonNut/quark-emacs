@@ -3,8 +3,8 @@
 
 ;; the equivalent of a global mode, but does not
 ;; turn on for odd non-programming modes
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'text-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'text-mode-hook #'rainbow-delimiters-mode)
 
 (defun rainbow-wash-out-color (color &optional amount)
   "Return a color string specifying a washed-out version of COLOR."

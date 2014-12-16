@@ -79,8 +79,8 @@
   "Select the range defined by sp-select-next-thing."
   (evil-next-thing count beg end type))
 
-(define-key evil-outer-text-objects-map "n" 'evil-a-next-thing)
-(define-key evil-inner-text-objects-map "n" 'evil-i-next-thing)
+(define-key evil-outer-text-objects-map "n" #'evil-a-next-thing)
+(define-key evil-inner-text-objects-map "n" #'evil-i-next-thing)
 
 (defun evil-previous-thing (count &optional beg end type inclusive)
   (ignore-errors
@@ -109,8 +109,8 @@
   (interactive "<c>")
   (evil-previous-thing count beg end type))
 
-(define-key evil-outer-text-objects-map "N" 'evil-a-previous-thing)
-(define-key evil-inner-text-objects-map "N" 'evil-i-previous-thing)
+(define-key evil-outer-text-objects-map "N" #'evil-a-previous-thing)
+(define-key evil-inner-text-objects-map "N" #'evil-i-previous-thing)
 
 ;; define top level motions bindings
 (cl-macrolet
@@ -124,34 +124,34 @@
 
   (generate-calls sp-define-bindings
     (
-      ((kbd "C-M-f") 'evil-forward-sexp)
-      ((kbd "C-M-b") 'evil-backward-sexp)
-      ((kbd "C-M-k") 'sp-kill-sexp)
+      ((kbd "C-M-f") #'evil-forward-sexp)
+      ((kbd "C-M-b") #'evil-backward-sexp)
+      ((kbd "C-M-k") #'sp-kill-sexp)
 
-      ((kbd "C-M-d") 'evil-down-sexp)
-      ((kbd "C-M-a") 'evil-backward-down-sexp)
+      ((kbd "C-M-d") #'evil-down-sexp)
+      ((kbd "C-M-a") #'evil-backward-down-sexp)
 
-      ((kbd "C-M-e") 'evil-up-sexp)
-      ((kbd "C-M-u") 'evil-backward-up-sexp)
+      ((kbd "C-M-e") #'evil-up-sexp)
+      ((kbd "C-M-u") #'evil-backward-up-sexp)
 
-      ((kbd "C-M-n") 'evil-next-sexp)
-      ((kbd "C-M-p") 'evil-previous-sexp)
+      ((kbd "C-M-n") #'evil-next-sexp)
+      ((kbd "C-M-p") #'evil-previous-sexp)
 
-      ((kbd "C-M-t") 'sp-transpose-sexp)
+      ((kbd "C-M-t") #'sp-transpose-sexp)
 
-      ((kbd "M-(") 'sp-select-previous-thing)
-      ((kbd "M-)") 'sp-select-next-thing)
+      ((kbd "M-(") #'sp-select-previous-thing)
+      ((kbd "M-)") #'sp-select-next-thing)
 
-      ((kbd "C-+") 'sp-rewrap-sexp)
-      ((kbd "M-<delete>") 'sp-kill-sexp)
-      ((kbd "M-<backspace>") 'sp-backward-kill-sexp)
-      ((kbd "S-<backspace>") 'sp-backward-unwrap-sexp)
+      ((kbd "C-+") #'sp-rewrap-sexp)
+      ((kbd "M-<delete>") #'sp-kill-sexp)
+      ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
+      ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
 
-      ((kbd "C-M-,") 'sp-forward-slurp-sexp)
-      ((kbd "C-M-.") 'sp-forward-barf-sexp)
+      ((kbd "C-M-,") #'sp-forward-slurp-sexp)
+      ((kbd "C-M-.") #'sp-forward-barf-sexp)
 
-      ((kbd "M-<") 'sp-backward-slurp-sexp)
-      ((kbd "M->") 'sp-backward-barf-sexp))))
+      ((kbd "M-<") #'sp-backward-slurp-sexp)
+      ((kbd "M->") #'sp-backward-barf-sexp))))
 
 ;; allow quick repetition since normal state key chains are awkward
 (defun evil-smart-smartparens-move ()
@@ -159,15 +159,15 @@
     (require 'smartrep))
   (condition-case e
     (smartrep-read-event-loop
-      '(("f" . 'evil-smart-forward-sexp)
-         ("b" . 'evil-smart-backward-sexp)
-         ("d" . 'evil-smart-down-sexp)
-         ("D" . 'evil-smart-backward-down-sexp)
-         ("e" . 'evil-smart-up-sexp)
-         ("U" . 'evil-smart-backward-up-sexp)
-         ("n" . 'evil-smart-next-sexp)
-         ("p" . 'evil-smart-previous-sexp)
-         ("<return>" . 'keyboard-quit)))
+      '(("f" . #'evil-smart-forward-sexp)
+         ("b" . #'evil-smart-backward-sexp)
+         ("d" . #'evil-smart-down-sexp)
+         ("D" . #'evil-smart-backward-down-sexp)
+         ("e" . #'evil-smart-up-sexp)
+         ("U" . #'evil-smart-backward-up-sexp)
+         ("n" . #'evil-smart-next-sexp)
+         ("p" . #'evil-smart-previous-sexp)
+         ("<return>" . #'keyboard-quit)))
     (quit nil)))
 
 (defun evil-smart-smartparens-barfslurp ()
@@ -175,60 +175,60 @@
     (require 'smartrep))
   (condition-case e
     (smartrep-read-event-loop
-      '(("," . 'sp-smart-forward-slurp-sexp)
-         ("." . 'sp-smart-forward-barf-sexp)
-         ("<" . 'sp-smart-backward-slurp-sexp)
-         (">" . 'sp-smart-backward-barf-sexp)
-         ("<return>" . 'keyboard-quit)))
+      '(("," . #'sp-smart-forward-slurp-sexp)
+         ("." . #'sp-smart-forward-barf-sexp)
+         ("<" . #'sp-smart-backward-slurp-sexp)
+         (">" . #'sp-smart-backward-barf-sexp)
+         ("<return>" . #'keyboard-quit)))
     (quit nil)))
 
 (evil-define-command evil-smart-forward-sexp (&rest args)
-  (call-interactively 'evil-forward-sexp args)
+  (call-interactively #'evil-forward-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-backward-sexp (&rest args)
-  (call-interactively 'evil-backward-sexp args)
+  (call-interactively #'evil-backward-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-down-sexp (&rest args)
-  (call-interactively 'evil-down-sexp args)
+  (call-interactively #'evil-down-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-backward-down-sexp (&rest args)
-  (call-interactively 'evil-backward-down-sexp args)
+  (call-interactively #'evil-backward-down-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-up-sexp (&rest args)
-  (call-interactively 'evil-up-sexp args)
+  (call-interactively #'evil-up-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-backward-up-sexp (&rest args)
-  (call-interactively 'evil-backward-up-sexp args)
+  (call-interactively #'evil-backward-up-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-next-sexp (&rest args)
-  (call-interactively 'evil-next-sexp args)
+  (call-interactively #'evil-next-sexp args)
   (evil-smart-smartparens-move))
 
 (evil-define-command evil-smart-previous-sexp (&rest args)
-  (call-interactively 'evil-previous-sexp args)
+  (call-interactively #'evil-previous-sexp args)
   (evil-smart-smartparens-move))
 
 
 (evil-define-command sp-smart-forward-slurp-sexp ()
-  (call-interactively 'sp-forward-slurp-sexp)
+  (call-interactively #'sp-forward-slurp-sexp)
   (evil-smart-smartparens-barfslurp))
 
 (evil-define-command sp-smart-forward-barf-sexp ()
-  (call-interactively 'sp-forward-barf-sexp)
+  (call-interactively #'sp-forward-barf-sexp)
   (evil-smart-smartparens-barfslurp))
 
 (evil-define-command sp-smart-backward-slurp-sexp ()
-  (call-interactively 'sp-backward-slurp-sexp)
+  (call-interactively #'sp-backward-slurp-sexp)
   (evil-smart-smartparens-barfslurp))
 
 (evil-define-command sp-smart-backward-barf-sexp ()
-  (call-interactively 'sp-backward-barf-sexp)
+  (call-interactively #'sp-backward-barf-sexp)
   (evil-smart-smartparens-barfslurp))
 
 ;; evil normal mode bindings
@@ -239,23 +239,23 @@
         (define-key evil-normal-state-map ,key ,func))))
   (generate-calls sp-define-bindings
     (
-      ((kbd "g s") 'sp-sexp-ops)
-      ((kbd "g s f") 'evil-smart-forward-sexp)
-      ((kbd "g s b") 'evil-smart-backward-sexp)
-      ((kbd "g s d") 'evil-smart-down-sexp)
-      ((kbd "g s D") 'evil-smart-backward-down-sexp)
-      ((kbd "g s e") 'evil-smart-up-sexp)
-      ((kbd "g s U") 'evil-smart-backward-up-sexp)
-      ((kbd "g s n") 'evil-smart-next-sexp)
-      ((kbd "g s p") 'evil-smart-previous-sexp)
-      ((kbd "g s k") 'sp-kill-sexp)
-      ((kbd "g s K") 'sp-backward-kill-sexp)
-      ((kbd "g s w") 'sp-unwrap-sexp)
-      ((kbd "g s W") 'sp-backward-unwrap-sexp)
-      ((kbd "g s ,") 'sp-smart-forward-slurp-sexp)
-      ((kbd "g s .") 'sp-smart-forward-barf-sexp)
-      ((kbd "g s <") 'sp-smart-backward-slurp-sexp)
-      ((kbd "g s >") 'sp-smart-backward-barf-sexp))))
+      ((kbd "g s") #'sp-sexp-ops)
+      ((kbd "g s f") #'evil-smart-forward-sexp)
+      ((kbd "g s b") #'evil-smart-backward-sexp)
+      ((kbd "g s d") #'evil-smart-down-sexp)
+      ((kbd "g s D") #'evil-smart-backward-down-sexp)
+      ((kbd "g s e") #'evil-smart-up-sexp)
+      ((kbd "g s U") #'evil-smart-backward-up-sexp)
+      ((kbd "g s n") #'evil-smart-next-sexp)
+      ((kbd "g s p") #'evil-smart-previous-sexp)
+      ((kbd "g s k") #'sp-kill-sexp)
+      ((kbd "g s K") #'sp-backward-kill-sexp)
+      ((kbd "g s w") #'sp-unwrap-sexp)
+      ((kbd "g s W") #'sp-backward-unwrap-sexp)
+      ((kbd "g s ,") #'sp-smart-forward-slurp-sexp)
+      ((kbd "g s .") #'sp-smart-forward-barf-sexp)
+      ((kbd "g s <") #'sp-smart-backward-slurp-sexp)
+      ((kbd "g s >") #'sp-smart-backward-barf-sexp))))
 
 (defun my-sp-pair-function (id action context)
   (if (eq action 'insert)

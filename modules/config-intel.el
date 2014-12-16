@@ -6,11 +6,11 @@
     (require 'flyspell)))
 
 ;; enable semantic code LALR(1) parser
-(add-hook 'prog-mode-hook 'semantic-mode)
-(with-eval-after-load 'semantic
-  (global-semanticdb-minor-mode +1)
-  (global-semantic-idle-scheduler-mode +1)
-  (global-semantic-idle-summary-mode +1))
+;; (add-hook 'prog-mode-hook #'semantic-mode)
+;; (with-eval-after-load 'semantic
+;;   (global-semanticdb-minor-mode +1)
+;;   (global-semantic-idle-scheduler-mode +1)
+;;   (global-semantic-idle-summary-mode +1))
 
 (defadvice semantic-idle-summary-idle-function (around show-flycheck-error activate)
   (if (and
@@ -25,8 +25,8 @@
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
 
-(add-hook 'prog-mode-hook (lambda () (global-flycheck-mode +1)))
-(add-hook 'text-mode-hook (lambda () (global-flycheck-mode +1)))
+(add-hook 'prog-mode-hook #'global-flycheck-mode +1)
+(add-hook 'text-mode-hook #'global-flycheck-mode +1)
 
 (with-eval-after-load 'flycheck
   (defun my-display-error-messages-condensed (errors)
@@ -90,7 +90,7 @@
     (add-to-list 'ispell-extra-args "--sug-mode=ultra"))
   (set 'flyspell-issue-message-flag nil))
 
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'text-mode-hook #'flyspell-mode)
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
 (provide 'config-intel)

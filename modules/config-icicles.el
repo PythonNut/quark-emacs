@@ -24,7 +24,7 @@
       icicle-expand-input-to-common-match 2
       icicle-apropos-complete-keys (list (kbd "C-i") (kbd "<tab>"))
       icicle-prefix-complete-keys (list (kbd "<backtab>"))
-      icicle-yank-function 'cua-paste
+      icicle-yank-function #'cua-paste
       locate-command "locate"
       completions-format 'vertical
       icicle-incremental-completion t
@@ -39,11 +39,11 @@
          (call-interactively (ad-get-orig-definition ',func) args)
          (unwind-protect
            (progn
-             (call-interactively 'icicle-mode +1)
+             (call-interactively #'icicle-mode +1)
              (run-hooks 'icicle-init-hook)
              (call-interactively (ad-get-orig-definition ',func) args))
            (progn
-             (call-interactively 'icicle-mode -1)
+             (call-interactively #'icicle-mode -1)
              (message ""))))
        ad-do-it)))
 
@@ -501,19 +501,19 @@
       ;; icicle-wide-n
       )))
 
-(global-set-key (kbd "C-:") 'icicle-pp-eval-expression)
-(global-set-key (kbd "<backtab>") 'icicle-complete-keys)
-(define-key evil-normal-state-map (kbd "<backtab>") 'icicle-complete-keys)
-(define-key evil-insert-state-map (kbd "<backtab>") 'icicle-complete-keys)
+(global-set-key (kbd "C-:") #'icicle-pp-eval-expression)
+(global-set-key (kbd "<backtab>") #'icicle-complete-keys)
+(define-key evil-normal-state-map (kbd "<backtab>") #'icicle-complete-keys)
+(define-key evil-insert-state-map (kbd "<backtab>") #'icicle-complete-keys)
 
 (defun helm-icicles-commands ()
   (interactive)
   (minibuffer-with-setup-hook
     (lambda ()
       (insert "icicle-"))
-    (call-interactively 'helm-M-x)))
+    (call-interactively #'helm-M-x)))
 
 (evil-leader/set-key
-  "i" 'helm-icicles-commands)
+  "i" #'helm-icicles-commands)
 
 (provide 'config-icicles)

@@ -26,7 +26,7 @@
       user-emacs-directory
       "smex-items")))
 
-(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-x") #'smex)
 
 (defun ido-goto-symbol (&optional symbol-list)
   "Refresh imenu and jump to a place in the buffer using Ido."
@@ -76,9 +76,9 @@
             (add-to-list 'symbol-names name)
             (add-to-list 'name-and-pos (cons name position))))))))
 
-(global-set-key (kbd "M-=") 'ido-goto-symbol)
+(global-set-key (kbd "M-=") #'ido-goto-symbol)
 
-(global-set-key (kbd "C-M-s") 'flx-isearch-forward)
-(global-set-key (kbd "C-M-r") 'flx-isearch-backward)
+(global-set-key (kbd "C-M-s") #'flx-isearch-forward)
+(global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
 (provide 'config-ido)

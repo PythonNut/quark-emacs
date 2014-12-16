@@ -4,7 +4,8 @@
   (progn
     (require 'cl)
     (require 'evil)
-    (require 'evil-leader)))
+    (require 'evil-leader)
+    (require 'evil-surround)))
 
 (setq 
   evil-want-C-w-delete nil
@@ -26,41 +27,41 @@
   evil-leader/leader "," 
   evil-leader/in-all-states t)
 
-(define-key evil-normal-state-map (kbd "<down>") 'evil-next-visual-line)
-(define-key evil-motion-state-map (kbd "<up>") 'evil-previous-visual-line)
-(define-key evil-motion-state-map (kbd "<down>") 'evil-next-visual-line)
-(define-key evil-normal-state-map (kbd "<up>") 'evil-previous-visual-line)
+(define-key evil-normal-state-map (kbd "<down>") #'evil-next-visual-line)
+(define-key evil-motion-state-map (kbd "<up>") #'evil-previous-visual-line)
+(define-key evil-motion-state-map (kbd "<down>") #'evil-next-visual-line)
+(define-key evil-normal-state-map (kbd "<up>") #'evil-previous-visual-line)
 
-(key-chord-define evil-insert-state-map  "jj" 'evil-normal-state)
-(key-chord-define evil-replace-state-map "jj" 'evil-normal-state)
-(key-chord-define evil-emacs-state-map   "jj" 'evil-normal-state)
+(key-chord-define evil-insert-state-map  "jj" #'evil-normal-state)
+(key-chord-define evil-replace-state-map "jj" #'evil-normal-state)
+(key-chord-define evil-emacs-state-map   "jj" #'evil-normal-state)
 
-(key-chord-define evil-insert-state-map  "kk" 'evil-normal-state)
-(key-chord-define evil-replace-state-map "kk" 'evil-normal-state)
-(key-chord-define evil-emacs-state-map   "kk" 'evil-normal-state)
+(key-chord-define evil-insert-state-map  "kk" #'evil-normal-state)
+(key-chord-define evil-replace-state-map "kk" #'evil-normal-state)
+(key-chord-define evil-emacs-state-map   "kk" #'evil-normal-state)
 
-(key-chord-define evil-insert-state-map ";'" 'evil-ex)
-(key-chord-define evil-emacs-state-map ";'" 'evil-ex)
+(key-chord-define evil-insert-state-map ";'" #'evil-ex)
+(key-chord-define evil-emacs-state-map ";'" #'evil-ex)
 
-(global-set-key (kbd "C-<backspace>") 'evil-delete-backward-word)
+(global-set-key (kbd "C-<backspace>") #'evil-delete-backward-word)
 
 ;; Esc quits from everything
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key evil-motion-state-map [escape] 'evil-normal-state)
-(define-key evil-operator-state-map [escape] 'evil-normal-state)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+(define-key evil-normal-state-map [escape] #'keyboard-quit)
+(define-key evil-visual-state-map [escape] #'keyboard-quit)
+(define-key evil-motion-state-map [escape] #'evil-normal-state)
+(define-key evil-operator-state-map [escape] #'evil-normal-state)
+(define-key minibuffer-local-map [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-ns-map [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-completion-map [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-must-match-map [escape] #'minibuffer-keyboard-quit)
+(define-key minibuffer-local-isearch-map [escape] #'minibuffer-keyboard-quit)
 
 ;; define a key to switch to emacs state
-(define-key evil-insert-state-map (kbd "C-M-z") 'evil-emacs-state)
-(define-key evil-emacs-state-map (kbd "C-M-z") 'evil-insert-state)
-(define-key evil-normal-state-map (kbd "C-M-z") 'evil-insert-state)
-(define-key evil-motion-state-map (kbd "C-M-z") 'evil-insert-state)
-(define-key evil-visual-state-map (kbd "C-M-z") 'evil-insert-state)
+(define-key evil-insert-state-map (kbd "C-M-z") #'evil-emacs-state)
+(define-key evil-emacs-state-map (kbd "C-M-z") #'evil-insert-state)
+(define-key evil-normal-state-map (kbd "C-M-z") #'evil-insert-state)
+(define-key evil-motion-state-map (kbd "C-M-z") #'evil-insert-state)
+(define-key evil-visual-state-map (kbd "C-M-z") #'evil-insert-state)
 
 ;; indent pasted regions in evil
 (defadvice evil-paste-before (around auto-indent activate)
@@ -95,15 +96,15 @@
   (isearch-printing-char)
   (unless (featurep 'smartrep)
     (require 'smartrep))
-  (run-at-time 0.3 nil 'keyboard-quit)
+  (run-at-time 0.3 nil #'keyboard-quit)
   (condition-case e
     (smartrep-read-event-loop
       '(("j" . isearch-exit-chord-worker)
          ("k" . isearch-exit-chord-worker)))
     (quit nil)))
 
-(define-key isearch-mode-map "j" 'isearch-exit-chord)
-(define-key isearch-mode-map "k" 'isearch-exit-chord)
+(define-key isearch-mode-map "j" #'isearch-exit-chord)
+(define-key isearch-mode-map "k" #'isearch-exit-chord)
 
 ;; switch to insert state if I set an emacs-style mark
 (define-key evil-normal-state-map (kbd "C-SPC")
@@ -123,7 +124,7 @@
     (evil-normal-state)
     (call-interactively 'evil-search-forward)))
 
-(define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-visual-line)
+(define-key evil-insert-state-map (kbd "C-e") #'evil-end-of-visual-line)
 (setq evil-replace-state-cursor '("#884444" box))
 
 ;; escape out of help mode buffers
@@ -144,14 +145,14 @@
   (evil-normal-state)
   (message ""))
 
-(define-key evil-normal-state-map (kbd "[ <SPC>") 'evil-open-above-normal)
-(define-key evil-normal-state-map (kbd "] <SPC>") 'evil-open-below-normal)
+(define-key evil-normal-state-map (kbd "[ <SPC>") #'evil-open-above-normal)
+(define-key evil-normal-state-map (kbd "] <SPC>") #'evil-open-below-normal)
 
 ;; bind a fallback keybind to goto normal state
-(define-key evil-insert-state-map (kbd "C-j") 'evil-normal-state)
-(define-key evil-emacs-state-map (kbd "C-j") 'evil-normal-state)
-(define-key evil-visual-state-map (kbd "C-j") 'evil-normal-state)
-(define-key evil-replace-state-map (kbd "C-j") 'evil-normal-state)
+(define-key evil-insert-state-map (kbd "C-j") #'evil-normal-state)
+(define-key evil-emacs-state-map (kbd "C-j") #'evil-normal-state)
+(define-key evil-visual-state-map (kbd "C-j") #'evil-normal-state)
+(define-key evil-replace-state-map (kbd "C-j") #'evil-normal-state)
 
 ;; let oo open a new paragraph
 (defun evil-open-paragraph-full (arg)
@@ -171,7 +172,7 @@
   (interactive "p")
   (unless (featurep 'smartrep)
     (require 'smartrep))
-  (run-at-time 0.3 nil 'keyboard-quit)
+  (run-at-time 0.3 nil #'keyboard-quit)
   (let ((blank-line (string-match "^[[:space:]]*$"
                       (buffer-substring-no-properties
                         (line-beginning-position)
@@ -188,17 +189,17 @@
           '(("o" . evil-open-paragraph-full)))
         (quit nil)))))
 
-(define-key evil-normal-state-map "o" 'evil-open-paragraph)
+(define-key evil-normal-state-map "o" #'evil-open-paragraph)
 
 ;; let Y == y$, similar to D = d$ 
 (defun evil-yank-to-end-of-line ()
   (interactive)
   (evil-yank (point) (point-at-eol)))
 
-(define-key evil-normal-state-map "Y" 'evil-yank-to-end-of-line)
+(define-key evil-normal-state-map "Y" #'evil-yank-to-end-of-line)
 
 ;; break bad undo habits
-(define-key evil-normal-state-map "U" 'undo-tree-visualize)
+(define-key evil-normal-state-map "U" #'undo-tree-visualize)
 (define-key evil-normal-state-map (kbd "C-z")
   (lambda ()
     (interactive)

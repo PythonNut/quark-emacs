@@ -16,7 +16,7 @@
     (adaptive-wrap-prefix-mode -1)
     (linum-mode -1)))
 
-(add-hook 'find-file-hooks 'find-file-check-large-file)
+(add-hook 'find-file-hooks #'find-file-check-large-file)
 
 (with-eval-after-load 'linum
   (set-face-background 'linum nil)

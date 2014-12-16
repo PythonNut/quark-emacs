@@ -7,7 +7,7 @@
   (lambda ()
     (python-indent-guess-indent-offset)
     (add-to-list 'evil-overriding-maps 'jedi-mode-map)
-    (evil-define-key 'normal jedi-mode-map (kbd "gd") 'jedi:goto-definition)
+    (evil-define-key 'normal jedi-mode-map (kbd "gd") #'jedi:goto-definition)
     (jedi:setup)))
 
 (with-eval-after-load 'python
@@ -20,7 +20,7 @@
   (minibuffer-with-setup-hook
     (lambda ()
       (insert "traad-"))
-    (call-interactively 'helm-M-x)))
+    (call-interactively #'helm-M-x)))
 
 (evil-leader/set-key
-  "t" 'helm-traad-commands)
+  "t" #'helm-traad-commands)

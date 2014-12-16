@@ -58,12 +58,12 @@
       (when (locate-file "ack-grep" exec-path)
         (setq helm-ag-base-command "ack-grep --nocolor --nogroup")))))
 
-(global-set-key (kbd "C-x f") 'ido-find-file)
-(global-set-key (kbd "C-S-x C-S-f") 'icicle-find-file)
-(global-set-key (kbd "C-S-X C-S-B") 'icicle-buffer)
+(global-set-key (kbd "C-x f") #'ido-find-file)
+(global-set-key (kbd "C-S-x C-S-f") #'icicle-find-file)
+(global-set-key (kbd "C-S-X C-S-B") #'icicle-buffer)
 
-(global-set-key (kbd "M-:") 'helm-eval-expression)
-(global-set-key (kbd "M-s o") 'helm-occur)
+(global-set-key (kbd "M-:") #'helm-eval-expression)
+(global-set-key (kbd "M-s o") #'helm-occur)
 
 (defun my-helm-buffers (&rest arg)
   (interactive)
@@ -79,8 +79,8 @@
     :fuzzy-match t
     :buffer "*helm-find-buffers"))
 
-(global-set-key (kbd "C-x C-b") 'my-helm-buffers)
-(global-set-key (kbd "C-x b") 'ido-switch-buffer)
+(global-set-key (kbd "C-x C-b") #'my-helm-buffers)
+(global-set-key (kbd "C-x b") #'ido-switch-buffer)
 
 (defun my-helm-find-files (&rest arg)
   (interactive)
@@ -205,15 +205,14 @@
            evil-paste-before
            evil-visual-paste))
     ad-do-it
-    (call-interactively 'my-helm-omni)))
-
+    (call-interactively #'my-helm-omni)))
 
 (defun helm-helm-commands ()
   (interactive)
   (minibuffer-with-setup-hook
     (lambda ()
       (insert "helm-"))
-    (call-interactively 'helm-M-x)))
+    (call-interactively #'helm-M-x)))
 
 (defun helm-modes ()
   (interactive)
@@ -221,17 +220,17 @@
     (lambda ()
       (insert ".*-mode")
       (beginning-of-visual-line))
-    (call-interactively 'helm-M-x)))
+    (call-interactively #'helm-M-x)))
 
 (evil-leader/set-key
-  "h" 'helm-helm-commands
-  "m" 'helm-modes)
+  "h" #'helm-helm-commands
+  "m" #'helm-modes)
 
-(global-set-key (kbd "C-c C-o") 'my-helm-omni)
-(define-key evil-normal-state-map (kbd "C-c C-o") 'my-helm-omni)
-(define-key evil-insert-state-map (kbd "C-c C-o") 'my-helm-omni)
-(define-key evil-emacs-state-map (kbd "C-c C-o") 'my-helm-omni)
-(define-key evil-motion-state-map (kbd "C-c C-o") 'my-helm-omni)
-(define-key evil-replace-state-map (kbd "C-c C-o") 'my-helm-omni)
+(global-set-key (kbd "C-c C-o") #'my-helm-omni)
+(define-key evil-normal-state-map (kbd "C-c C-o") #'my-helm-omni)
+(define-key evil-insert-state-map (kbd "C-c C-o") #'my-helm-omni)
+(define-key evil-emacs-state-map (kbd "C-c C-o") #'my-helm-omni)
+(define-key evil-motion-state-map (kbd "C-c C-o") #'my-helm-omni)
+(define-key evil-replace-state-map (kbd "C-c C-o") #'my-helm-omni)
 
 (provide 'config-helm)
