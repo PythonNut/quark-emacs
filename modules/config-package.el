@@ -26,6 +26,7 @@
 
      ;; evil based modes
      evil
+     evil-args
      evil-easymotion
      evil-exchange
      evil-indent-textobject
