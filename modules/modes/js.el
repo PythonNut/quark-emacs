@@ -9,6 +9,10 @@
 (add-hook 'js2-mode-hook 'ac-js2-mode)
 
 (with-eval-after-load 'js2-mode
+  (set-face-foreground 'js2-external-variable
+    (face-foreground 'default))
+  (set-face-attribute 'js2-external-variable nil :weight 'extra-bold)
+  (set-face-attribute 'js2-external-variable nil :underline t)
   (js2r-add-keybindings-with-prefix "C-c C-r")
   (setq
     ac-js2-evaluate-calls t
