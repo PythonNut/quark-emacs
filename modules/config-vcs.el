@@ -42,6 +42,15 @@
         (diminish 'magit-filenotify-mode)
         (magit-filenotify-mode +1)))))
 
+(with-eval-after-load 'git-commit-mode
+  (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup))
+
+(with-eval-after-load 'ac-ispell
+  (ac-ispell-setup)
+  (set-face-foreground 'ac-ispell-fuzzy-candidate-face
+    (face-foreground 'default))
+  (setq ispell-alternate-dictionary "/usr/share/dict/words"))
+
 ;; and psvn for svn not-so-awesomeness
 
 (with-eval-after-load 'psvn

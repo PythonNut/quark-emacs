@@ -63,6 +63,7 @@
      scss-mode
      web-mode
 
+     ac-ispell
      ac-js2
      ace-jump-mode
      adaptive-wrap
