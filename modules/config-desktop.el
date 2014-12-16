@@ -2,10 +2,12 @@
 
 (eval-when-compile
   (progn
+    (require 'key-chord)
     (require 'recentf)
     (require 'desktop)
     (require 'saveplace)
-    (require 'savehist)))
+    (require 'savehist)
+    (require 'config-modes)))
 
 (setq
   desktop-dirname             "~/.emacs.d/desktop/"
@@ -36,16 +38,31 @@
 
 (savehist-mode 1)
 
-;; text properties severely bloat the kill-ring so delete them
-(defun unpropertize-kill-ring ()
-  (setq kill-ring (mapcar #'substring-no-properties kill-ring)))
+;; text properties severely bloat the history so delete them
+(defun unpropertize-savehist ()
+  (cl-macrolet
+    ((unpropertize-list (list)
+       `(progn
+          (setq ,list
+            (mapcar #'substring-no-properties ,list)))))
 
-(add-hook 'kill-emacs-hook #'unpropertize-kill-ring)
+    (generate-calls-single unpropertize-list
+      (
+        kill-ring
+        minibuffer-history
+        helm-grep-history
+        file-name-history
+        read-expression-history
+        extended-command-history
+        evil-ex-history))))
+
+(add-hook 'kill-emacs-hook #'unpropertize-savehist)
 
 ;; remember more recent files
 (setq
   recentf-save-file (concat user-emacs-directory ".recentf")
   recentf-max-saved-items 200
   recentf-max-menu-items 30)
+
 
 (provide 'config-desktop)
