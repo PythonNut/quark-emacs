@@ -39,6 +39,22 @@
   (rainbow-wash-out-face 'rainbow-delimiters-depth-8-face arg)
   (rainbow-wash-out-face 'rainbow-delimiters-depth-9-face arg))
 
+(defun rainbow-define-faces ()
+  (interactive)
+  (set-face-foreground 'rainbow-delimiters-depth-1-face "#93a1a1")
+  (set-face-foreground 'rainbow-delimiters-depth-2-face "#cb4b16")
+  (set-face-foreground 'rainbow-delimiters-depth-3-face "#6c71c4")
+  (set-face-foreground 'rainbow-delimiters-depth-4-face "#93a1a1")
+  (set-face-foreground 'rainbow-delimiters-depth-5-face "#859900")
+  (set-face-foreground 'rainbow-delimiters-depth-6-face "#258bd2")
+  (set-face-foreground 'rainbow-delimiters-depth-7-face "#d33682")
+  (set-face-foreground 'rainbow-delimiters-depth-8-face "#6c71c4")
+  (set-face-foreground 'rainbow-delimiters-depth-9-face "#2aa198")
+  (rainbow-delimiters-wash 2))
+
+;; currently solarized colors
+(add-hook 'after-change-major-mode-hook #'rainbow-define-faces)
+
 ;; punch the color
 (defun rainbow-delimiters-saturate (face &optional degree)
   (require 'hexrgb)
@@ -59,20 +75,6 @@
   (rainbow-delimiters-saturate 'rainbow-delimiters-depth-7-face arg)
   (rainbow-delimiters-saturate 'rainbow-delimiters-depth-8-face arg)
   (rainbow-delimiters-saturate 'rainbow-delimiters-depth-9-face arg))
-
-;; currently solarized colors
-(add-hook 'rainbow-delimiters-mode-hook
-  (lambda ()
-    (set-face-foreground 'rainbow-delimiters-depth-1-face "#93a1a1")
-    (set-face-foreground 'rainbow-delimiters-depth-2-face "#cb4b16")
-    (set-face-foreground 'rainbow-delimiters-depth-3-face "#6c71c4")
-    (set-face-foreground 'rainbow-delimiters-depth-4-face "#93a1a1")
-    (set-face-foreground 'rainbow-delimiters-depth-5-face "#859900")
-    (set-face-foreground 'rainbow-delimiters-depth-6-face "#258bd2")
-    (set-face-foreground 'rainbow-delimiters-depth-7-face "#d33682")
-    (set-face-foreground 'rainbow-delimiters-depth-8-face "#6c71c4")
-    (set-face-foreground 'rainbow-delimiters-depth-9-face "#2aa198")
-    (rainbow-delimiters-wash 2)))
 
 (defvar rainbow-delimiters-switch nil)
 
