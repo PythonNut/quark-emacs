@@ -3,17 +3,6 @@
     (require 'cl)
     (require 'key-chord)))
 
-(defun really-kill-emacs ()
-  "Like `kill-emacs', but ignores `kill-emacs-hook'."
-  (interactive)
-  (let (kill-emacs-hook)
-    (kill-emacs)))
-
-(defun brutally-kill-emacs ()
-  "Use `call-process' to send ourselves a KILL signal."
-  (interactive)
-  (call-process "kill" nil nil nil "-9" (number-to-string (emacs-pid))))
-
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
@@ -63,5 +52,16 @@
 (defun disable-debugging ()
   (interactive)
   (setq debug-on-error nil))
+
+(defun really-kill-emacs ()
+  "Like `kill-emacs', but ignores `kill-emacs-hook'."
+  (interactive)
+  (let (kill-emacs-hook)
+    (kill-emacs)))
+
+(defun brutally-kill-emacs ()
+  "Use `call-process' to send ourselves a KILL signal."
+  (interactive)
+  (call-process "kill" nil nil nil "-9" (number-to-string (emacs-pid))))
 
 (provide 'config-modes)
