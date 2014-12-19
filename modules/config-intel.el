@@ -1,6 +1,7 @@
 (eval-when-compile
   (progn
     (require 's)
+    (require 'noflet)
     (require 'semantic)
     (require 'flycheck)
     (require 'flyspell)))
@@ -79,6 +80,13 @@
 ;;; =======================================
 ;; text mode
 (with-eval-after-load 'flyspell
+  (defadvice ispell-init-process (around hide-startup activate)
+    (noflet ((message (&rest args)))
+      ad-do-it))
+
+  (setq
+    flyspell-issue-message-flag nil
+    flyspell-issue-welcome-flag nil)
   (add-hook 'flyspell-mode-hook
     (lambda ()
       (define-key flyspell-mode-map (kbd "C-.") nil)
