@@ -6,11 +6,6 @@
 (add-hook 'first-change-hook
   (lambda () (require 'undo-tree)))
 
-;; supress XZ messages
-(add-hook 'emacs-startup-hook
-  (lambda ()
-    (run-at-time 3 nil (lambda () (message "")))))
-
 (with-eval-after-load 'evil
   (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
     #'undo-tree-visualizer-toggle-timestamps)

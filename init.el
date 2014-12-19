@@ -3,6 +3,10 @@
   (defmacro with-eval-after-load (thing &rest sexps)
     `(eval-after-load ,thing '(progn ,@sexps))))
 
+;; supress the GNU spam
+(setq inhibit-startup-echo-area-message "pythonnut")
+(add-hook 'emacs-startup-hook (lambda () (message "")))
+
 (add-to-list 'load-path
   (concat user-emacs-directory "modules/"))
 
