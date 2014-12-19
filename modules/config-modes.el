@@ -3,15 +3,9 @@
     (require 'cl)
     (require 'key-chord)))
 
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(blink-cursor-mode -1)
-(auto-compression-mode +1)
-(transient-mark-mode +1)
-(delete-selection-mode +1)
 (global-hl-line-mode +1)
-(column-number-mode +1)
+
+(add-hook 'fine-file-hook 'auto-compression-mode)
 
 ;; encryption mode
 (setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
