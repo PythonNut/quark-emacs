@@ -42,6 +42,9 @@
         (diminish 'magit-filenotify-mode)
         (magit-filenotify-mode +1)))))
 
+(evil-leader/set-key
+  "m" #'magit-key-mode-popup-dispatch)
+
 (with-eval-after-load 'git-commit-mode
   (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup))
 
