@@ -214,17 +214,9 @@
       (insert "helm-"))
     (call-interactively #'helm-M-x)))
 
-(defun helm-modes ()
-  (interactive)
-  (minibuffer-with-setup-hook
-    (lambda ()
-      (insert ".*-mode")
-      (beginning-of-visual-line))
-    (call-interactively #'helm-M-x)))
 
 (evil-leader/set-key
-  "h" #'helm-helm-commands
-  "m" #'helm-modes)
+  "h" #'helm-helm-commands)
 
 (global-set-key (kbd "C-c C-o") #'my-helm-omni)
 (define-key evil-normal-state-map (kbd "C-c C-o") #'my-helm-omni)
