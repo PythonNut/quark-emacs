@@ -7,6 +7,8 @@
     (require 'desktop)
     (require 'saveplace)
     (require 'savehist)
+    (require 'helm-grep)
+    (require 'evil-ex)
     (require 'config-modes)))
 
 (setq
@@ -42,7 +44,7 @@
 (defun unpropertize-savehist ()
   (cl-macrolet
     ((unpropertize-list (list)
-       `(progn
+       `(ignore-errors
           (setq ,list
             (mapcar #'substring-no-properties ,list)))))
 
