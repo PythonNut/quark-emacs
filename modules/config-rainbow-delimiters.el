@@ -1,5 +1,10 @@
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'smartparens)
+    (require 'hexrgb)))
+
 (require 'rainbow-delimiters)
-(eval-when-compile (require 'cl))
 
 ;; the equivalent of a global mode, but does not
 ;; turn on for odd non-programming modes
@@ -56,7 +61,7 @@
 
 ;; punch the color
 (defun rainbow-delimiters-saturate (face &optional degree)
-  (require 'hexrgb)
+  (unless (featurep 'hexrgb) (require 'hexrgb))
   "Adjust the saturation of the given face by the given degree"
   (set-face-foreground face
     (hexrgb-increment-saturation
