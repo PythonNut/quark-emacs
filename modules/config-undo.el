@@ -20,8 +20,12 @@
   (key-chord-define evil-emacs-state-map "uu" #'undo-tree-visualize)
   (key-chord-define evil-insert-state-map "uu" #'undo-tree-visualize)
 
+  (define-key evil-visual-state-map "u" #'undo-tree-undo)
+
   (global-set-key (kbd "M-_") #'undo-tree-redo)
   (setq undo-tree-auto-save-history t)
+
+  (add-to-list 'evil-overriding-maps 'undo-tree-visualizer-mode-map)
 
   (define-key undo-tree-visualizer-mode-map "C-g" #'undo-tree-visualizer-quit)
   (define-key undo-tree-visualizer-mode-map (kbd "<escape>") #'undo-tree-visualizer-quit)
@@ -30,25 +34,14 @@
   (define-key undo-tree-visualizer-mode-map (kbd "<down>") #'undo-tree-visualize-redo)
 
   ;; compress undo with xz
-  (key-chord-define evil-emacs-state-map "uu" #'undo-tree-visualize)
-
-  (global-set-key (kbd "M-_") #'undo-tree-redo)
-  (setq undo-tree-auto-save-history t)
-
-  (define-key undo-tree-visualizer-mode-map "C-g" #'undo-tree-visualizer-quit)
-  (define-key undo-tree-visualizer-mode-map (kbd "<escape>") #'undo-tree-visualizer-quit)
-  (define-key undo-tree-visualizer-mode-map (kbd "<return>") #'undo-tree-visualizer-quit)
-  (define-key undo-tree-visualizer-mode-map (kbd "<up>") #'undo-tree-visualize-undo)
-  (define-key undo-tree-visualizer-mode-map (kbd "<down>") #'undo-tree-visualize-redo)
-
   (when (locate-file "xz" exec-path)
     (defadvice undo-tree-make-history-save-file-name
       (after undo-tree activate)
-      (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz"))))
+      (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz")))
 
-  (defadvice undo-tree-load-history (around quiet-compress activate)
-    (let ((jka-compr-verbose nil))
-      ad-do-it))
+    (defadvice undo-tree-load-history (around quiet-compress activate)
+      (let ((jka-compr-verbose nil))
+        ad-do-it)))
 
   ;; Keep region when undoing in region
   (defadvice undo-tree-undo (around keep-region activate)
