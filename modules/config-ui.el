@@ -12,12 +12,11 @@
 (require 'config-parens)
 (require 'config-ace-easymotion)
 (require 'config-undo)
-;; (load-library "config-ace-easymotion")
 
-(eval-when-compile
-  (progn
-    (require 'key-chord)
-    (require 'config-modes)))
+(require 'config-smartparens)
+(require 'config-rainbow-delimiters)
+
+(show-paren-mode +1)
 
 (cl-macrolet
   ((autoload-multiple-cursors (func)
