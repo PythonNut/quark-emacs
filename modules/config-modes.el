@@ -5,7 +5,7 @@
 
 (global-hl-line-mode +1)
 
-(add-hook 'fine-file-hook 'auto-compression-mode)
+(add-hook 'find-file-hook 'auto-compression-mode)
 
 ;; encryption mode
 (setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
