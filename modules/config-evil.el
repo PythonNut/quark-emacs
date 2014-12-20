@@ -191,12 +191,7 @@
 
 (define-key evil-normal-state-map "o" #'evil-open-paragraph)
 
-;; break bad undo habits
 (define-key evil-normal-state-map "U" #'undo-tree-visualize)
-(define-key evil-normal-state-map (kbd "C-z")
-  (lambda ()
-    (interactive)
-    (message "use u.")))
 
 (require 'config-evil-modules)
 (require 'config-evil-textobjects)
