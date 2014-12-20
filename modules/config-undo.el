@@ -27,11 +27,11 @@
 
   (add-to-list 'evil-overriding-maps 'undo-tree-visualizer-mode-map)
 
-  (define-key undo-tree-visualizer-mode-map "C-g" #'undo-tree-visualizer-quit)
-  (define-key undo-tree-visualizer-mode-map (kbd "<escape>") #'undo-tree-visualizer-quit)
-  (define-key undo-tree-visualizer-mode-map (kbd "<return>") #'undo-tree-visualizer-quit)
-  (define-key undo-tree-visualizer-mode-map (kbd "<up>") #'undo-tree-visualize-undo)
-  (define-key undo-tree-visualizer-mode-map (kbd "<down>") #'undo-tree-visualize-redo)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map "C-g" #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<escape>") #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<return>") #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<up>") #'undo-tree-visualize-undo)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<down>") #'undo-tree-visualize-redo)
 
   ;; compress undo with xz
   (when (locate-file "xz" exec-path)
