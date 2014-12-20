@@ -5,7 +5,19 @@
     (require 'diminish)))
 
 (require 'config-indent)
-(require 'config-wrap)
+
+(require 'adaptive-wrap)
+
+(setq
+  adaptive-wrap-extra-indent 2
+  line-move-visual t)
+
+(add-hook 'visual-line-mode-hook
+  (lambda ()
+    (adaptive-wrap-prefix-mode +1)
+    (diminish 'visual-line-mode)))
+
+(global-visual-line-mode +1)
 
 ;; always ensure UTF-8
 (defun cleanup-buffer-safe ()
