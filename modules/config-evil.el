@@ -191,13 +191,6 @@
 
 (define-key evil-normal-state-map "o" #'evil-open-paragraph)
 
-;; let Y == y$, similar to D = d$ 
-(defun evil-yank-to-end-of-line ()
-  (interactive)
-  (evil-yank (point) (point-at-eol)))
-
-(define-key evil-normal-state-map "Y" #'evil-yank-to-end-of-line)
-
 ;; break bad undo habits
 (define-key evil-normal-state-map "U" #'undo-tree-visualize)
 (define-key evil-normal-state-map (kbd "C-z")
