@@ -236,8 +236,8 @@
       (single-key-description
         (read-char "What macro?")))))
 
-(define-key evil-operator-state-map "gl" #'evil-macro-on-all-lines)
-(define-key evil-normal-state-map "gl" #'evil-macro-on-all-lines)
+(define-key evil-operator-state-map "g@" #'evil-macro-on-all-lines)
+(define-key evil-normal-state-map "g@" #'evil-macro-on-all-lines)
 
 (require 'wide-n)
 
