@@ -148,12 +148,6 @@
 (define-key evil-normal-state-map (kbd "[ <SPC>") #'evil-open-above-normal)
 (define-key evil-normal-state-map (kbd "] <SPC>") #'evil-open-below-normal)
 
-;; bind a fallback keybind to goto normal state
-(define-key evil-insert-state-map (kbd "C-j") #'evil-normal-state)
-(define-key evil-emacs-state-map (kbd "C-j") #'evil-normal-state)
-(define-key evil-visual-state-map (kbd "C-j") #'evil-normal-state)
-(define-key evil-replace-state-map (kbd "C-j") #'evil-normal-state)
-
 ;; let oo open a new paragraph
 (defun evil-open-paragraph-full (arg)
   (interactive "p")
