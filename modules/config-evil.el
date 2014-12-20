@@ -7,25 +7,24 @@
     (require 'evil-leader)
     (require 'evil-surround)))
 
-(setq 
+(require 'evil-leader)
+
+(setq
   evil-want-C-w-delete nil
   evil-want-C-w-in-emacs-state nil
   evil-ex-complete-emacs-commands t
   evil-want-fine-undo t
   evil-search-module 'evil-search
+  evil-magic 'very-magic
 
-  evil-magic 'very-magic)
+  evil-leader/leader ","
+  evil-leader/in-all-states t)
 
 (setq-default
   evil-symbol-word-search t)
 
 (evil-mode +1)
-
-(require 'evil-leader)
 (global-evil-leader-mode +1)
-(setq 
-  evil-leader/leader "," 
-  evil-leader/in-all-states t)
 
 (define-key evil-normal-state-map (kbd "<down>") #'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") #'evil-previous-visual-line)
