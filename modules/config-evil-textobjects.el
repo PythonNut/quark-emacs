@@ -239,8 +239,6 @@
 (define-key evil-operator-state-map "g@" #'evil-macro-on-all-lines)
 (define-key evil-normal-state-map "g@" #'evil-macro-on-all-lines)
 
-(require 'wide-n)
-
 (defun narrow-to-region-indirect (start end)
   "Restrict editing in this buffer to the current region, indirectly."
   (interactive "r")

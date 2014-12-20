@@ -108,7 +108,6 @@
      solarized-theme
      traad
      whole-line-or-region
-     wide-n
      ws-butler
      xclip)
   "List of packages needs to be installed at launch")
