@@ -12,7 +12,6 @@
                  (face-attribute 'default :foreground)))
          (col (color-values color))
          (list nil))
-    (unless amount (setq degree 2))
     (while col
       (push (/ (/ (+ (or (pop col) 128)
                     (* amount (or (pop basec) 128)))
