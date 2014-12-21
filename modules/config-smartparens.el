@@ -129,10 +129,10 @@
       ((kbd "C-M-k") #'sp-kill-sexp)
 
       ((kbd "C-M-d") #'evil-down-sexp)
-      ((kbd "C-M-a") #'evil-backward-down-sexp)
+      ((kbd "C-M-S-d") #'evil-backward-down-sexp)
 
-      ((kbd "C-M-e") #'evil-up-sexp)
-      ((kbd "C-M-u") #'evil-backward-up-sexp)
+      ((kbd "C-M-u") #'evil-up-sexp)
+      ((kbd "C-M-S-u") #'evil-backward-up-sexp)
 
       ((kbd "C-M-n") #'evil-next-sexp)
       ((kbd "C-M-p") #'evil-previous-sexp)
@@ -146,6 +146,9 @@
       ((kbd "M-<delete>") #'sp-kill-sexp)
       ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
       ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
+
+      ((kbd "C-M-a") #'sp-absorb-sexp)
+      ((kbd "C-M-e") #'sp-emit-sexp)
 
       ((kbd "C-M-,") #'sp-forward-slurp-sexp)
       ((kbd "C-M-.") #'sp-forward-barf-sexp)
@@ -163,7 +166,7 @@
          ("b" . #'evil-smart-backward-sexp)
          ("d" . #'evil-smart-down-sexp)
          ("D" . #'evil-smart-backward-down-sexp)
-         ("e" . #'evil-smart-up-sexp)
+         ("u" . #'evil-smart-up-sexp)
          ("U" . #'evil-smart-backward-up-sexp)
          ("n" . #'evil-smart-next-sexp)
          ("p" . #'evil-smart-previous-sexp)
@@ -244,7 +247,7 @@
       ((kbd "g s b") #'evil-smart-backward-sexp)
       ((kbd "g s d") #'evil-smart-down-sexp)
       ((kbd "g s D") #'evil-smart-backward-down-sexp)
-      ((kbd "g s e") #'evil-smart-up-sexp)
+      ((kbd "g s u") #'evil-smart-up-sexp)
       ((kbd "g s U") #'evil-smart-backward-up-sexp)
       ((kbd "g s n") #'evil-smart-next-sexp)
       ((kbd "g s p") #'evil-smart-previous-sexp)
@@ -252,7 +255,10 @@
       ((kbd "g s K") #'sp-backward-kill-sexp)
       ((kbd "g s w") #'sp-unwrap-sexp)
       ((kbd "g s W") #'sp-backward-unwrap-sexp)
-      ((kbd "g s ,") #'sp-smart-forward-slurp-sexp)
+      ((kbd "g s s") #'sp-split-sexp)
+      ((kbd "g s j") #'sp-join-sexp)
+      ((kbd "g s a") #'sp-absorb-sexp)
+      ((kbd "g s e") #'sp-emit-sexp)
       ((kbd "g s .") #'sp-smart-forward-barf-sexp)
       ((kbd "g s <") #'sp-smart-backward-slurp-sexp)
       ((kbd "g s >") #'sp-smart-backward-barf-sexp))))
