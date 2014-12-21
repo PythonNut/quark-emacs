@@ -27,11 +27,21 @@
 
   (add-to-list 'evil-overriding-maps 'undo-tree-visualizer-mode-map)
 
-  (evil-define-key 'motion undo-tree-visualizer-mode-map "C-g" #'undo-tree-visualizer-quit)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<escape>") #'undo-tree-visualizer-quit)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<return>") #'undo-tree-visualizer-quit)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<up>") #'undo-tree-visualize-undo)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "<down>") #'undo-tree-visualize-redo)
+  ;; visual line wrapping breaks the 
+  (add-hook 'undo-tree-visualizer-mode-hook
+    (lambda ()
+      (visual-line-mode -1)))
+
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    "C-g" #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<escape>") #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<return>") #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<up>") #'undo-tree-visualize-undo)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<down>") #'undo-tree-visualize-redo)
 
   ;; compress undo with xz
   (when (locate-file "xz" exec-path)
