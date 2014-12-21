@@ -18,6 +18,7 @@
      cua-paste-pop
      delete-horizontal-space
      easy-kill
+     electric-newline-and-maybe-indent
      end-of-visual-line
      ess-smart-S-assign
      eval-and-replace
@@ -39,6 +40,7 @@
      evil-emacs-state
      evil-end-of-line
      evil-end-of-visual-line
+     evil-execute-in-normal-state
      evil-exit-visual-state
      evil-fastnav-forward-to
      evil-find-char-to
@@ -100,8 +102,10 @@
      smart-newline
      sp--cua-replace-region
      sp--self-insert-command
+     sp-absorb-sexp
      sp-backward-sexp
      sp-backward-unwrap-sexp
+     sp-emit-sexp
      sp-forward-barf-sexp
      sp-forward-sexp
      sp-forward-slurp-sexp
