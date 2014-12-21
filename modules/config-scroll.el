@@ -7,6 +7,7 @@
   mouse-wheel-follow-mouse t
   smooth-scroll-margin 5
   scroll-margin 5
+  scroll-step 1
   auto-window-vscroll nil
   scroll-conservatively 1000)
 
