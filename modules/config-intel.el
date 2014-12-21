@@ -80,6 +80,7 @@
 ;;; =======================================
 ;; text mode
 (with-eval-after-load 'flyspell
+  (require 'noflet)
   (defadvice ispell-init-process (around hide-startup activate)
     (noflet ((message (&rest args)))
       ad-do-it))
