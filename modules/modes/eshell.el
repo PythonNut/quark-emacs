@@ -6,6 +6,7 @@
     (eshell-smart-initialize)
     (make-local-variable 'scroll-margin)
     (make-local-variable 'smooth-scroll-margin)
+    (set-input-method "TeX")
     (setq
       global-hl-line-mode nil
       scroll-margin 0
@@ -30,7 +31,7 @@
   (lambda ()
     (adaptive-wrap-prefix-mode -1)
     (visual-line-mode -1)
-
+    (set-input-method "TeX")
     (make-variable-buffer-local 'global-hl-line-mode)
     (setq
       global-hl-line-mode nil)))
