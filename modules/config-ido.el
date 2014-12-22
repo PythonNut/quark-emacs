@@ -1,25 +1,21 @@
+(eval-when-compile (require 'ido-ubiquitous))
+
 (ido-mode +1)
 (ido-ubiquitous-mode +1)
 
-(eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'cl-lib)
-    (require 'ido)
-    (require 'ido-ubiquitous)
-    (require 'smex)
-    (require 'imenu)))
+(with-eval-after-load 'ido
+  (setq
+    ido-enable-flex-matching t
+    ido-save-directory-list-file "~/.emacs.d/ido.last"
+    ido-use-faces nil))
 
 (add-hook 'ido-minibuffer-setup-hook
   (lambda ()
-    (flx-ido-mode +1)
-    (setq
-      ido-enable-flex-matching t
-      ido-save-directory-list-file "~/.emacs.d/ido.last"
-      ido-use-faces nil)
-    (ido-vertical-mode +1)))
+    (unless (featurep 'flx-ido)
+      (flx-ido-mode +1))
+    (unless (featurep 'ido-vertical-mode)
+      (ido-vertical-mode +1))))
 
-(autoload 'smex "smex" "smex" t)
 (with-eval-after-load 'smex
   (setq smex-save-file
     (concat
