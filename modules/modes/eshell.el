@@ -3,6 +3,8 @@
     (adaptive-wrap-prefix-mode -1)
     (visual-line-mode -1)
     (make-variable-buffer-local 'global-hl-line-mode)
+    (make-variable-buffer-local 'scroll-margin)
+    (make-variable-buffer-local 'smooth-scroll-margin)
     (eshell-smart-initialize)
     (make-local-variable 'scroll-margin)
     (make-local-variable 'smooth-scroll-margin)
@@ -33,5 +35,9 @@
     (visual-line-mode -1)
     (set-input-method "TeX")
     (make-variable-buffer-local 'global-hl-line-mode)
+    (make-variable-buffer-local 'scroll-margin)
+    (make-variable-buffer-local 'smooth-scroll-margin)
     (setq
-      global-hl-line-mode nil)))
+      global-hl-line-mode nil
+      scroll-margin 0
+      smooth-scroll-margin 0)))
