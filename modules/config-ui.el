@@ -106,7 +106,8 @@
         '(("C-S-<iso-lefttab>" . #'iflipb-previous-buffer-smart)
            ("S-<iso-lefttab>"  . #'iflipb-previous-buffer-smart)
            ("<C-tab>"          . #'iflipb-next-buffer-smart)
-           ("<tab>"            . #'iflipb-next-buffer-smart)))
+           ("<tab>"            . #'iflipb-next-buffer-smart)
+           ("<return>"         . #'keyboard-quit)))
       (quit nil))))
 
 (defun iflipb-previous-buffer-smart ()
@@ -120,7 +121,8 @@
         '(("C-S-<iso-lefttab>" . #'iflipb-previous-buffer-smart)
            ("S-<iso-lefttab>"  . #'iflipb-previous-buffer-smart)
            ("<C-tab>"          . #'iflipb-next-buffer-smart)
-           ("<tab>"            . #'iflipb-next-buffer-smart)))
+           ("<tab>"            . #'iflipb-next-buffer-smart)
+           ("<return>"         . #'keyboard-quit)))
       (quit nil))))
 
 (global-set-key (kbd "<C-tab>") 'iflipb-next-buffer-smart)

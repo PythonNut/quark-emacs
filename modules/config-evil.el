@@ -192,7 +192,8 @@
         '(("h"  . #'evil-window-left-smart)
            ("j" . #'evil-window-down-smart)
            ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)))
+           ("l" . #'evil-window-right-smart)
+           ("<return>" . #'keyboard-quit)))
       (quit nil))))
 
 (evil-define-command evil-window-down-smart ()
@@ -206,7 +207,8 @@
         '(("h"  . #'evil-window-left-smart)
            ("j" . #'evil-window-down-smart)
            ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)))
+           ("l" . #'evil-window-right-smart)
+           ("<return>" . #'keyboard-quit)))
       (quit nil))))
 
 (evil-define-command evil-window-up-smart ()
@@ -220,7 +222,8 @@
         '(("h"  . #'evil-window-left-smart)
            ("j" . #'evil-window-down-smart)
            ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)))
+           ("l" . #'evil-window-right-smart)
+           ("<return>" . #'keyboard-quit)))
       (quit nil))))
 
 (evil-define-command evil-window-right-smart ()
@@ -234,7 +237,8 @@
         '(("h"  . #'evil-window-left-smart)
            ("j" . #'evil-window-down-smart)
            ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)))
+           ("l" . #'evil-window-right-smart)
+           ("<return>" . #'keyboard-quit)))
       (quit nil))))
 
 (define-key evil-normal-state-map (kbd "C-w h") 'evil-window-left-smart)
