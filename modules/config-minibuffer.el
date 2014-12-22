@@ -41,4 +41,11 @@
 
 (define-key evil-normal-state-map (kbd "SPC SPC") #'smex)
 
+;; hl-line-mode breaks minibuffer in TTY
+(add-hook 'minibuffer-setup-hook
+  (lambda ()
+    (make-variable-buffer-local 'global-hl-line-mode)
+    (setq global-hl-line-mode nil)))
+
+
 (provide 'config-minibuffer)
