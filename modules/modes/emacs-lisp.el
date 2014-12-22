@@ -4,6 +4,12 @@
   (interactive)
   (find-function (function-called-at-point)))
 
+(defun replace-last-sexp ()
+  (interactive)
+  (let ((value (eval (preceding-sexp))))
+    (kill-sexp -1)
+    (insert (format "%S" value))))
+
 (add-hook 'emacs-lisp-mode-hook
   (lambda ()
     (setq
@@ -14,7 +20,7 @@
     (aggressive-indent-mode +1)
     (require 'auto-async-byte-compile)
     (auto-async-byte-compile-mode +1)
-
+    (local-set-key (kbd "C-c e") 'replace-last-sexp)
     (local-set-key (kbd "M-.") #'emacs-lisp-goto-definition)
     (local-set-key (kbd "M-,") #'evil-jump-backward)
     (evil-define-key 'normal (current-local-map) "gd" #'emacs-lisp-goto-definition)))
