@@ -9,6 +9,7 @@
     (make-local-variable 'scroll-margin)
     (make-local-variable 'smooth-scroll-margin)
     (set-input-method "TeX")
+    (local-set-key (kbd "C-l") #'eshell/clear)
     (setq
       global-hl-line-mode nil
       scroll-margin 0
@@ -16,6 +17,11 @@
 
 (with-eval-after-load 'eshell
   (require 'em-smart)
+
+  (defun eshell/clear ()
+    (interactive)
+    (let ((inhibit-read-only t)) (erase-buffer)))
+
   (setq
     eshell-where-to-jump 'begin
     eshell-review-quick-commands nil
