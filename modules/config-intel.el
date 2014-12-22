@@ -31,6 +31,7 @@
 
 (with-eval-after-load 'flycheck
   (defun my-display-error-messages-condensed (errors)
+    (unless (featurep 's) (require 's))
     (-when-let (messages (-keep #'flycheck-error-message errors))
       (when (flycheck-may-use-echo-area-p)
         (display-message-or-buffer (s-join "\n" messages)
