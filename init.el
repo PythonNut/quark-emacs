@@ -4,7 +4,9 @@
     `(eval-after-load ,thing '(progn ,@sexps))))
 
 ;; supress the GNU spam
-(setq inhibit-startup-echo-area-message "pythonnut")
+(setq
+  inhibit-startup-echo-area-message "pythonnut"
+  load-prefer-newer t)
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
 (add-to-list 'load-path
