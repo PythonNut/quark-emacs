@@ -8,12 +8,11 @@
 
 (require 'adaptive-wrap)
 
-(setq
-  adaptive-wrap-extra-indent 2
-  line-move-visual t)
-
 (add-hook 'visual-line-mode-hook
   (lambda ()
+    (setq
+      adaptive-wrap-extra-indent 2
+      line-move-visual t)
     (adaptive-wrap-prefix-mode +1)
     (diminish 'visual-line-mode)))
 
