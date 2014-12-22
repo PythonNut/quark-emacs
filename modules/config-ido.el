@@ -16,12 +16,15 @@
     ido-save-directory-list-file "~/.emacs.d/ido.last"
     ido-use-faces nil))
 
-(add-hook 'ido-minibuffer-setup-hook
-  (lambda ()
-    (unless (featurep 'flx-ido)
-      (flx-ido-mode +1))
-    (unless (featurep 'ido-vertical-mode)
-      (ido-vertical-mode +1))))
+(defun ido-onetime-setup ()
+  (unless (featurep 'flx-ido)
+    (flx-ido-mode +1))
+  (unless (featurep 'ido-vertical-mode)
+    (ido-vertical-mode +1))
+
+  (remove-hook 'ido-minibuffer-setup-hook 'ido-onetime-setup))
+
+(add-hook 'ido-minibuffer-setup-hook 'ido-onetime-setup)
 
 (with-eval-after-load 'smex
   (setq smex-save-file
