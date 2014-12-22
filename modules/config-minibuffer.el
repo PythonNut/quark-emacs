@@ -32,7 +32,14 @@
   enable-recursive-minibuffers t
   resize-mini-windows t)
 
-(minibuffer-depth-indicate-mode t)
+(defun turn-on-minibuffer-depth-indicate-mode ()
+  (unless (featurep 'mb-depth)
+    (minibuffer-depth-indicate-mode t))
+  (remove-hook 'minibuffer-setup-hook
+    'turn-on-minibuffer-depth-indicate-mode))
+
+(add-hook 'minibuffer-setup-hook
+  'turn-on-minibuffer-depth-indicate-mode)
 
 (define-key evil-normal-state-map (kbd "SPC SPC") #'smex)
 
