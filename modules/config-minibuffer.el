@@ -12,8 +12,9 @@
 (defun switch-to-minibuffer-window ()
   "switch to minibuffer window (if active)"
   (interactive)
-  (when (active-minibuffer-window)
-    (select-window (active-minibuffer-window))))
+  (if (active-minibuffer-window)
+    (select-window (active-minibuffer-window))
+    (message "Minibuffer is not active")))
 
 (global-set-key (kbd "C-'") #'switch-to-minibuffer-window)
 
