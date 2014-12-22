@@ -25,7 +25,7 @@
      smex
 
      ;; evil based modes
-     evil
+     ;; evil
      evil-args
      evil-easymotion
      evil-exchange
@@ -50,7 +50,7 @@
      haskell-mode
      idris-mode
      jedi
-     js2-mode
+     ;; js2-mode
      js2-refactor
      json-mode
      julia-mode
@@ -66,11 +66,11 @@
 
      ac-ispell
      ac-js2
-     ace-jump-mode
+     ;; ace-jump-mode
      adaptive-wrap
      aggressive-indent
      auto-async-byte-compile
-     auto-complete
+     ;; auto-complete
      auto-indent-mode
      diff-hl
      diminish
@@ -79,7 +79,6 @@
      expand-region
      flx-isearch
      flycheck
-     flyspell
      framemove
      git-gutter+
      gitattributes-mode
@@ -97,10 +96,10 @@
      lacarte
      linum-relative
      load-dir
-     magit
+     ;; magit
      magit-filenotify
      multiple-cursors
-     noflet
+     ;; noflet
      psvn
      rainbow-delimiters
      smartparens
