@@ -501,6 +501,7 @@
       ;; icicle-wide-n
       )))
 
+(global-set-key (kbd "C-S-s") #'icicle-search-generic)
 (global-set-key (kbd "C-:") #'icicle-pp-eval-expression)
 (global-set-key (kbd "<backtab>") #'icicle-complete-keys)
 (define-key evil-normal-state-map (kbd "<backtab>") #'icicle-complete-keys)
