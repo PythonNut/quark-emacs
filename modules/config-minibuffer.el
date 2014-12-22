@@ -18,27 +18,26 @@
 
 (global-set-key (kbd "C-'") #'switch-to-minibuffer-window)
 
-;; don't let the cursor go into minibuffer prompt
-(setq minibuffer-prompt-properties
-  '(read-only t
-     point-entered
-     minibuffer-avoid-prompt
-     face
-     minibuffer-prompt))
-
-;; recursive minibuffers
-(setq
-  enable-recursive-minibuffers t
-  resize-mini-windows t)
-
-(defun turn-on-minibuffer-depth-indicate-mode ()
+(defun minibuffer-onetime-setup ()
   (unless (featurep 'mb-depth)
     (minibuffer-depth-indicate-mode t))
-  (remove-hook 'minibuffer-setup-hook
-    'turn-on-minibuffer-depth-indicate-mode))
 
-(add-hook 'minibuffer-setup-hook
-  'turn-on-minibuffer-depth-indicate-mode)
+  (setq
+    ;; don't let the cursor go into minibuffer prompt
+    minibuffer-prompt-properties
+    '(read-only t
+       point-entered
+       minibuffer-avoid-prompt
+       face
+       minibuffer-prompt)
+
+    ;; recursive minibuffers
+    enable-recursive-minibuffers t
+    resize-mini-windows t)
+
+  (remove-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup))
+
+(add-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup)
 
 (define-key evil-normal-state-map (kbd "SPC SPC") #'smex)
 
