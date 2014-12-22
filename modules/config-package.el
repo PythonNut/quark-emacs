@@ -90,6 +90,7 @@
      hexrgb
      icicles
      idomenu
+     iflipb
      impatient-mode
      idle-require
      key-chord

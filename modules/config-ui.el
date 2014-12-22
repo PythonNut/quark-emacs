@@ -78,29 +78,52 @@
 
 (global-set-key (kbd "C-.") #'er/expand-region)
 
-(defun previous-buffer-smart ()
-  "A `smartrep' enabled previous-buffer"
-  (interactive)
-  (unless (featurep 'smartrep) (require 'smartrep))
-  (previous-buffer)
-  (condition-case e
-    (smartrep-read-event-loop
-      '(("<left>" . #'previous-buffer-smart)
-         ("<right>" . #'next-buffer-smart)))
-    (quit nil)))
+;;; ====================================
+;;; iflib - switch buffers alt-tab style
+;;; ====================================
+(defvar iflipb-running-p nil)
 
-(defun next-buffer-smart ()
+(with-eval-after-load 'iflipb
+  (setq
+    iflipb-ignore-buffers "^ "
+    iflipb-wrap-around 't)
+
+  (defun iflipb-first-iflipb-buffer-switch-command ()
+    "Determines whether this is the first invocation of
+  iflipb-next-buffer or iflipb-previous-buffer this round."
+    (or (not (or (eq last-command 'iflipb-next-buffer)
+               (eq last-command 'iflipb-previous-buffer)))
+      iflipb-running-p)))
+
+(defun iflipb-next-buffer-smart ()
   "A `smartrep' enabled next-buffer"
   (interactive)
   (unless (featurep 'smartrep) (require 'smartrep))
-  (next-buffer)
-  (condition-case e
-    (smartrep-read-event-loop
-      '(("<left>" . #'previous-buffer-smart)
-         ("<right>" . #'next-buffer-smart)))
-    (quit nil)))
+  (call-interactively #'iflipb-next-buffer)
+  (lexical-let ((iflipb-running-p t))
+    (condition-case e
+      (smartrep-read-event-loop
+        '(("C-S-<iso-lefttab>" . #'iflipb-previous-buffer-smart)
+           ("S-<iso-lefttab>"  . #'iflipb-previous-buffer-smart)
+           ("<C-tab>"          . #'iflipb-next-buffer-smart)
+           ("<tab>"            . #'iflipb-next-buffer-smart)))
+      (quit nil))))
 
-(global-set-key (kbd "C-x <left>") #'previous-buffer-smart)
-(global-set-key (kbd "C-x <right>") #'next-buffer-smart)
+(defun iflipb-previous-buffer-smart ()
+  "A `smartrep' enabled previous-buffer"
+  (interactive)
+  (unless (featurep 'smartrep) (require 'smartrep))
+  (call-interactively #'iflipb-previous-buffer)
+  (lexical-let ((iflipb-running-p t))
+    (condition-case e
+      (smartrep-read-event-loop
+        '(("C-S-<iso-lefttab>" . #'iflipb-previous-buffer-smart)
+           ("S-<iso-lefttab>"  . #'iflipb-previous-buffer-smart)
+           ("<C-tab>"          . #'iflipb-next-buffer-smart)
+           ("<tab>"            . #'iflipb-next-buffer-smart)))
+      (quit nil))))
+
+(global-set-key (kbd "<C-tab>") 'iflipb-next-buffer-smart)
+(global-set-key (kbd "C-S-<iso-lefttab>") 'iflipb-previous-buffer-smart)
 
 (provide 'config-ui)
