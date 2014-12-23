@@ -4,9 +4,6 @@
     (require 'auto-complete)
     (require 'auto-complete-config)))
 
-(require 'auto-complete-config)
-(global-auto-complete-mode +1)
-
 (with-eval-after-load 'auto-complete
   (diminish 'auto-complete-mode " α")
   (ac-config-default)
@@ -34,5 +31,21 @@
     ac-dwim-enable t
     ac-use-comphist t
     popup-use-optimized-column-computation nil))
+
+(eval-when-compile (progn (require 'company)))
+
+(setq
+  company-idle-delay 0.1
+  company-echo-delay 0
+  company-auto-complete 'company-explicit-action-p
+  company-minimum-prefix-length 2
+  company-show-numbers nil
+  company-tooltip-align-annotations t)
+
+(define-key company-active-map (kbd "<tab>") #'company-complete)
+(set-face-background 'company-tooltip-common-selection
+  (face-background 'company-tooltip-selection))
+(set-face-background 'company-tooltip-common
+  (face-background 'company-tooltip))
 
 (provide 'config-auto-complete)
