@@ -48,4 +48,6 @@
 (set-face-background 'company-tooltip-common
   (face-background 'company-tooltip))
 
+(global-company-mode +1)
+
 (provide 'config-auto-complete)
