@@ -3,7 +3,8 @@
 (eval-when-compile
   (progn
     (require 'cl)
-    (require 'cl-lib)))
+    (require 'cl-lib)
+    (require 'idle-require)))
 
 ;; Package archives
 (setq
@@ -134,36 +135,44 @@
 
 (add-to-list 'load-path "~/.emacs.d/personal/")
 
-(require 'idle-require)
-(setq idle-require-symbols
-  '(
-     helm-files
-     helm-ring
-     helm-projectile
-     helm-semantic
-     helm-ag
-     icicles
+(with-eval-after-load 'idle-require
+  (add-hook 'idle-require-mode-hook
+    (lambda ()
+      (diminish 'idle-require-mode " ⟳")))
+  (setq idle-require-symbols
+    '(
+       helm-files
+       helm-ring
+       helm-projectile
+       helm-semantic
+       helm-ag
+       icicles
 
-     magit
-     magit-filenotify
-     multiple-cursors
-     windmove
-     framemove
-     easy-kill
-     flx-isearch
-     ace-jump-mode
-     whole-line-or-region
-     smex
-     psvn))
+       magit
+       magit-filenotify
+       multiple-cursors
+       windmove
+       framemove
+       easy-kill
+       flx-isearch
+       ace-jump-mode
+       whole-line-or-region
+       smex
+       psvn)))
 
 (if (daemonp)
   (progn
+    (require 'idle-require)
     (message "loading symbols for server")
-    (mapc 'require idle-require-symbols))
+    (idle-require-mode +1)
+    (dolist (sym idle-require-symbols)
+      (let ((name (symbol-name sym)))
+        (unless (string= name "idle-require")
+          (message (format "Loading %s..." name))
+          (with-demoted-errors (require sym nil t))))))
 
-  (add-hook 'emacs-startup-hook #'idle-require-mode)
-  (add-hook 'idle-require-mode-hook
+  (run-with-idle-timer 5 nil
     (lambda ()
-      (diminish 'idle-require-mode " ⟳"))))
+      (idle-require-mode +1))))
 
 (provide 'config-package)
