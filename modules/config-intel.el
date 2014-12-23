@@ -148,4 +148,19 @@
     (yasnippet-onetime-setup))
   (yas-reload-all))
 
+(setq
+  company-idle-delay 0.1
+  company-echo-delay 0
+  company-auto-complete 'company-explicit-action-p
+  company-minimum-prefix-length 2
+  company-show-numbers nil
+  company-show-location
+  company-tooltip-align-annotations t)
+
+(define-key company-active-map (kbd "<tab>") #'company-complete)
+(set-face-background 'company-tooltip-common-selection
+  (face-background 'company-tooltip-selection))
+(set-face-background 'company-tooltip-common
+  (face-background 'company-tooltip))
+
 (provide 'config-intel)
