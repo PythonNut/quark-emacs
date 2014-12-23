@@ -1,5 +1,9 @@
+(defmacro when* (condition &rest body)
+  (when condition
+    `(progn ,@body)))
+
 ;; polyfill with-eval-after-load
-(when (version< emacs-version "24.4")
+(when* (version< emacs-version "24.4")
   (defmacro with-eval-after-load (thing &rest sexps)
     `(eval-after-load ,thing '(progn ,@sexps))))
 
@@ -9,8 +13,9 @@
   load-prefer-newer t)
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-(add-to-list 'load-path
-  (concat user-emacs-directory "modules/"))
+(eval-and-compile
+  (add-to-list 'load-path
+    (concat user-emacs-directory "modules/")))
 
 (defadvice load (before quiet-loading
                   (FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
@@ -28,38 +33,45 @@
   (ad-enable-advice 'message 'around 'supress-messages)
   (ad-activate 'message))
 
+(defmacro load-module (name &optional method)
+  (if method
+    `(load-library ,name)
+    `(require ',(make-symbol name))))
 
 (load (setq custom-file "~/.emacs.d/custom.el"))
 
 (message-force "[              ]")
-(require 'config-setq)
+(load-module "config-setq" t)
 (message-force "[=             ]")
-(require 'config-package)
+(load-module "config-package" t)
 (message-force "[==            ]")
-(require 'config-modes)
+(load-module "config-modes" t)
 (message-force "[===           ]")
-(require 'config-desktop)
+(load-module "config-desktop" t)
 (message-force "[====          ]")
-(require 'config-safety)
+(load-module "config-safety" t)
 (message-force "[=====         ]")
-(require 'config-evil)
+(load-module "config-evil" t)
 (message-force "[======        ]")
-(require 'config-ui)
+(load-module "config-ui" t)
 (message-force "[=======       ]")
-(require 'config-whitespace)
+(load-module "config-whitespace" t)
 (message-force "[========      ]")
-(require 'config-paste)
+(load-module "config-paste" t)
 (message-force "[=========     ]")
-(require 'config-auto-complete)
+(load-module "config-auto-complete" t)
 (message-force "[==========    ]")
-(require 'config-vcs)
+(load-module "config-vcs" t)
 (message-force "[===========   ]")
-(require 'config-minibuffer)
+(load-module "config-minibuffer" t)
 (message-force "[============  ]")
-(require 'config-intel)
+(load-module "config-intel" t)
 (message-force "[============= ]")
-(require 'config-solarized)
+(load-module "config-solarized" t)
 (message-force "[==============]")
+
+(eval-when-compile
+  (require 'load-dir))
 
 (setq
   load-dir-debug nil
