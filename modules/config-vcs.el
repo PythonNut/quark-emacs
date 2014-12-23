@@ -1,9 +1,15 @@
 (eval-when-compile
   (progn
     (require 'cl)
-    (require 'magit)
+    (require 'cl-lib)
     (require 'diff-hl)
     (require 'git-gutter+)
+    (require 'ispell)
+    (require 'key-chord)
+    (require 'config-modes)
+    (require 'magit)
+    (require 'projectile)
+    (require 'projectile)
     (require 'psvn)))
 
 (add-hook 'find-file-hook
@@ -19,8 +25,113 @@
     git-gutter+-clear-function (lambda (&rest args))
     git-gutter+-window-config-change-function nil))
 
+;; (defun diff-buffer-with-file-unified ()
+;;   "View the differences between BUFFER and its associated file.
+;; This requires the external program `diff' to be in your `exec-path'."
+;;   (interactive)
+;;   (with-current-buffer (get-buffer (current-buffer))
+;;     (diff-no-select buffer-file-name (current-buffer) "-U 0" 'noasync)))
+
+
+(defun diff-hl-make-temp-file-name (file rev &optional manual)
+  "Return a backup file name for REV or the current version of FILE.
+If MANUAL is non-nil it means that a name for backups created by
+the user should be returned."
+  (let* ((diff-hl-temp-location
+           (if (file-directory-p "/dev/shm/")
+             "/dev/shm/" "/tmp/"))
+          (auto-save-file-name-transforms
+            `((".*" ,diff-hl-temp-location t))))
+    (expand-file-name
+      (concat (make-auto-save-file-name)
+        ".~" (subst-char-in-string
+               ?/ ?_ rev)
+        (unless manual ".") "~")
+      diff-hl-temp-location)))
+
+(defun diff-hl-create-revision (file revision)
+  "Read REVISION of FILE into a buffer and return the buffer.
+Use BACKEND as the VC backend if specified."
+  (let ((automatic-backup (diff-hl-make-temp-file-name file revision))
+         (filebuf (get-file-buffer file))
+         (filename (diff-hl-make-temp-file-name file revision 'manual)))
+    (unless (file-exists-p filename)
+      (if (file-exists-p automatic-backup)
+        (rename-file automatic-backup filename nil)
+        (with-current-buffer filebuf
+          (let ((failed t)
+                 (coding-system-for-read 'no-conversion)
+                 (coding-system-for-write 'no-conversion))
+            (unwind-protect
+              (with-temp-file filename
+                (let ((outbuf (current-buffer)))
+                  ;; Change buffer to get local value of
+                  ;; vc-checkout-switches.
+                  (with-current-buffer filebuf
+                    (vc-call find-revision file revision outbuf))))
+              (setq failed nil)
+              (when (and failed (file-exists-p filename))
+                (delete-file filename)))))))
+    filename))
+
+(defun diff-hl-diff-buffer-with-head ()
+  "View the differences between BUFFER and its associated file.
+This requires the external program `diff' to be in your `exec-path'."
+  (interactive)
+  (vc-ensure-vc-buffer)
+  (with-current-buffer (get-buffer (current-buffer))
+    (diff-no-select
+      (diff-hl-create-revision
+        buffer-file-name
+        (vc-working-revision buffer-file-name))
+      (current-buffer)
+      "-U 0" 'noasync
+      (get-buffer-create " *diff-hl-diff*"))))
+
 (with-eval-after-load 'diff-hl
-  (setq diff-hl-draw-borders nil))
+  (setq diff-hl-draw-borders nil)
+  (defun diff-hl-changes ()
+    (let* ((file buffer-file-name)
+            (backend (vc-backend file)))
+      (when backend
+        (let ((state (vc-state file backend)))
+          (cond
+            ((or
+               (buffer-modified-p)
+               (eq state 'edited)
+               (and (eq state 'up-to-date)
+                 ;; VC state is stale in after-revert-hook.
+                 (or revert-buffer-in-progress-p
+                   ;; Diffing against an older revision.
+                   diff-hl-reference-revision)))
+              (let (diff-auto-refine-mode res)
+                (with-current-buffer (diff-hl-diff-buffer-with-head)
+                  (goto-char (point-min))
+                  (unless (eobp)
+                    (ignore-errors
+                      (diff-beginning-of-hunk t))
+                    (while (looking-at diff-hunk-header-re-unified)
+                      (let ((line (string-to-number (match-string 3)))
+                             (len (let ((m (match-string 4)))
+                                    (if m (string-to-number m) 1)))
+                             (beg (point)))
+                        (diff-end-of-hunk)
+                        (let* ((inserts (diff-count-matches "^\\+" beg (point)))
+                                (deletes (diff-count-matches "^-" beg (point)))
+                                (type (cond ((zerop deletes) 'insert)
+                                        ((zerop inserts) 'delete)
+                                        (t 'change))))
+                          (when (eq type 'delete)
+                            (setq len 1)
+                            (cl-incf line))
+                          (push (list line len type) res))))))
+                (nreverse res)))
+            ((eq state 'added)
+              `((1 ,(line-number-at-pos (point-max)) insert)))
+            ((eq state 'removed)
+              `((1 ,(line-number-at-pos (point-max)) delete))))))))
+  ;; (add-hook 'post-command-hook #'diff-hl-update)
+  (run-with-idle-timer 1 t #'diff-hl-update))
 
 (with-eval-after-load 'magit
   (diminish 'magit-auto-revert-mode " ⥀")

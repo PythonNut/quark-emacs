@@ -72,6 +72,8 @@
      auto-async-byte-compile
      ;; auto-complete
      auto-indent-mode
+     company
+     diff-git
      diff-hl
      diminish
      dtrt-indent

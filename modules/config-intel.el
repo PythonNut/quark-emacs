@@ -103,4 +103,20 @@
 (add-hook 'text-mode-hook #'flyspell-mode)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 
+;;; =============================================
+;;; Yasnippet - extensible programmable templates
+;;; =============================================
+
+(with-eval-after-load 'yasnippet
+  (setq-default ac-sources
+    (append '(ac-source-yasnippet) ac-sources))
+  (setq ac-sources
+    (append '(ac-source-yasnippet) ac-sources))
+  ac-source-yasnippet
+  (setq yas-verbosity 0)
+  ;; (setq yas-snippet-dirs (concat user-emacs-directory "/snippets"))
+  )
+
+(yas-global-mode)
+
 (provide 'config-intel)
