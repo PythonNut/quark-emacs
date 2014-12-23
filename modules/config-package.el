@@ -69,6 +69,7 @@
      ;; auto-complete
      auto-indent-mode
      bracketed-paste
+     company
      diff-hl
      diminish
      dtrt-indent
