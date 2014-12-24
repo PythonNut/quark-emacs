@@ -99,6 +99,7 @@
      python-backspace
      python-electric-colon
      python-indent-dedent-line-backspace
+     replace-last-sexp
      smart-newline
      sp--cua-replace-region
      sp--self-insert-command
