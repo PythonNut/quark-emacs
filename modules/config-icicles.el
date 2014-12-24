@@ -33,22 +33,20 @@
 
 (defmacro auto-icicle (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
-     (interactive)
      (if (called-interactively-p 'any)
        (if icicle-mode
          (call-interactively (ad-get-orig-definition ',func) args)
          (unwind-protect
            (progn
-             (call-interactively #'icicle-mode +1)
+             (icicle-mode +1)
              (run-hooks 'icicle-init-hook)
              (call-interactively (ad-get-orig-definition ',func) args))
-           (progn
-             (call-interactively #'icicle-mode -1)
-             (message ""))))
+           (icicle-mode -1)
+           (message "")))
        ad-do-it)))
 
 (defmacro autoload-icicle (func)
-  `(autoload ',func "icicles" "autoloaded icicle function" t))
+  `(autoload ',func "icicles" nil t))
 
 (cl-macrolet
   ((setup-icicles (commands)
