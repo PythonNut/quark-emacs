@@ -3,8 +3,7 @@
 (eval-when-compile
   (progn
     (require 'cl)
-    (require 'cl-lib)
-    (require 'idle-require)))
+    (require 'cl-lib)))
 
 ;; Package archives
 (setq
