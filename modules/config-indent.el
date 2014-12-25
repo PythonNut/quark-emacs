@@ -6,7 +6,16 @@
   (lambda ()
     (diminish 'auto-indent-mode " ⇉")))
 
-(auto-indent-global-mode +1)
+(add-hook 'auto-indent-mode-hook
+  (lambda ()
+    (diminish 'auto-indent-mode " ⇉")))
+
+(defun auto-indent-onetime-setup ()
+  (auto-indent-global-mode +1)
+  (remove-hook 'first-change-hook
+    #'auto-indent-onetime-setup))
+
+(add-hook 'first-change-hook #'auto-indent-onetime-setup)
 (add-hook 'find-file-hook #'dtrt-indent-mode)
 
 (defun smie-auto-guess ()
