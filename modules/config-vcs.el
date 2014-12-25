@@ -8,16 +8,8 @@
 
 (add-hook 'find-file-hook
   (lambda ()
-    (git-gutter+-mode +1)
     (diff-hl-mode +1)
     (diff-hl-update)))
-
-(with-eval-after-load 'git-gutter+
-  ;; leave highlighting to diff-hl
-  (diminish 'git-gutter+-mode)
-  (setq git-gutter+-view-diff-function (lambda (&rest args))
-    git-gutter+-clear-function (lambda (&rest args))
-    git-gutter+-window-config-change-function nil))
 
 (with-eval-after-load 'diff-hl
   (setq diff-hl-draw-borders nil))

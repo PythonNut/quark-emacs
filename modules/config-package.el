@@ -80,7 +80,6 @@
      flx-isearch
      flycheck
      framemove
-     git-gutter+
      gitattributes-mode
      gitconfig-mode
      gitignore-mode
