@@ -15,7 +15,8 @@
   (setq diff-hl-draw-borders nil))
 
 (with-eval-after-load 'magit
-  (diminish 'magit-auto-revert-mode " ⥀")
+  (when (display-graphic-p)
+    (diminish 'magit-auto-revert-mode " ⥀"))
   (setq magit-completing-read-function
     #'magit-ido-completing-read)
   (evil-set-initial-state 'magit-status-mode 'insert)
@@ -57,7 +58,7 @@
 (with-eval-after-load 'projectile
   (require 'magit)
   (setq projectile-mode-line
-    '(:eval (format " ↠"))))
+    '(:eval (format (if (display-graphic-p) " ↠" " pro")))))
 
 (cl-macrolet
   ((define-temp-projectile-binding (key func)

@@ -20,7 +20,7 @@
     (setq
       lisp-indent-offset 2
       lisp-body-indent 2
-      mode-name "λ")
+      mode-name (if (display-graphic-p) "λ" "EL"))
 
     (aggressive-indent-mode +1)
     (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)
@@ -30,4 +30,4 @@
     (evil-define-key 'normal (current-local-map) "gd" #'emacs-lisp-goto-definition)))
 
 (with-eval-after-load 'aggressive-indent
-  (diminish 'aggressive-indent-mode " ⇶"))
+  (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))

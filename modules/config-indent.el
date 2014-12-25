@@ -4,11 +4,11 @@
 
 (add-hook 'auto-indent-global-mode-hook
   (lambda ()
-    (diminish 'auto-indent-mode " ⇉")))
+    (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →"))))
 
 (add-hook 'auto-indent-mode-hook
   (lambda ()
-    (diminish 'auto-indent-mode " ⇉")))
+    (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →"))))
 
 (defun auto-indent-onetime-setup ()
   (auto-indent-global-mode +1)

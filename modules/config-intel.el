@@ -72,7 +72,7 @@
                       ""))
                   (`interrupted "-")
                   (`suspicious "?"))))
-      (concat " ✓" text)))
+      (concat (if (display-graphic-p) " ✓" " Γ") text)))
   ;; (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
   )
 
@@ -93,7 +93,7 @@
     (lambda ()
       (define-key flyspell-mode-map (kbd "C-.") nil)
       (define-key flyspell-mode-map (kbd "C-,") nil)
-      (diminish 'flyspell-mode " ῶ")))
+      (diminish 'flyspell-mode (if (display-graphic-p) " ῶ" " ~"))))
 
   (when (locate-file "hunspell" exec-path)
     (setq ispell-program-name "hunspell")
