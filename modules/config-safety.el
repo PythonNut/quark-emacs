@@ -1,4 +1,7 @@
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (progn
+    (require 'cl)
+    (require 'autorevert)))
 
 (defvar backup-location "~/.emacs.d/data/backups")
 (defvar autosave-location "~/.emacs.d/data/autosave")
@@ -48,5 +51,15 @@
 
 ;; save buffers on blur
 (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+
+(setq
+  auto-revert-use-notify t)
+
+(defun auto-revert-onetime-setup ()
+  (global-auto-revert-mode +1)
+  (remove-hook 'find-file-hook
+    #'auto-revert-onetime-setup))
+
+(add-hook 'find-file-hook #'auto-revert-onetime-setup)
 
 (provide 'config-safety)
