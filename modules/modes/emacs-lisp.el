@@ -10,6 +10,11 @@
     (kill-sexp -1)
     (insert (format "%S" value))))
 
+(defun auto-compile-onetime-setup ()
+  (require 'auto-compile)
+  (auto-compile-on-save-mode +1)
+  (remove-hook 'before-save-hook #'auto-compile-onetime-setup t))
+
 (add-hook 'emacs-lisp-mode-hook
   (lambda ()
     (setq
@@ -18,8 +23,7 @@
       mode-name "λ")
 
     (aggressive-indent-mode +1)
-    (require 'auto-compile)
-    (auto-compile-on-save-mode +1)
+    (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)
     (local-set-key (kbd "C-c e") 'replace-last-sexp)
     (local-set-key (kbd "M-.") #'emacs-lisp-goto-definition)
     (local-set-key (kbd "M-,") #'evil-jump-backward)
