@@ -31,18 +31,21 @@
       icicle-incremental-completion-delay 0.1
       icicle-show-Completions-initially-flag nil)))
 
-(defmacro auto-icicle (func)
+(defun auto-icicle (func)
+  (if icicle-mode
+    (call-interactively (ad-get-orig-definition func) args)
+    (unwind-protect
+      (progn
+        (icicle-mode +1)
+        (run-hooks 'icicle-init-hook)
+        (call-interactively (ad-get-orig-definition func) args))
+      (icicle-mode -1)
+      (message ""))))
+
+(defmacro auto-icicle-macro (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
      (if (called-interactively-p 'any)
-       (if icicle-mode
-         (call-interactively (ad-get-orig-definition ',func) args)
-         (unwind-protect
-           (progn
-             (icicle-mode +1)
-             (run-hooks 'icicle-init-hook)
-             (call-interactively (ad-get-orig-definition ',func) args))
-           (icicle-mode -1)
-           (message "")))
+       (auto-icicle ',func)
        ad-do-it)))
 
 (defmacro autoload-icicle (func)
@@ -54,7 +57,7 @@
         (generate-calls-single autoload-icicle ,commands)
         (with-eval-after-load 'icicles
           (run-hooks 'icicle-init-hook)
-          (generate-calls-single auto-icicle ,commands)))))
+          (generate-calls-single auto-icicle-macro ,commands)))))
 
   (setup-icicles
     (
