@@ -18,8 +18,8 @@
       mode-name "λ")
 
     (aggressive-indent-mode +1)
-    (require 'auto-async-byte-compile)
-    (auto-async-byte-compile-mode +1)
+    (require 'auto-compile)
+    (auto-compile-on-save-mode +1)
     (local-set-key (kbd "C-c e") 'replace-last-sexp)
     (local-set-key (kbd "M-.") #'emacs-lisp-goto-definition)
     (local-set-key (kbd "M-,") #'evil-jump-backward)

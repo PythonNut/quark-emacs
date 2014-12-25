@@ -69,7 +69,7 @@
      ;; ace-jump-mode
      adaptive-wrap
      aggressive-indent
-     auto-async-byte-compile
+     auto-compile
      ;; auto-complete
      auto-indent-mode
      diff-hl
