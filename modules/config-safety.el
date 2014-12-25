@@ -16,20 +16,26 @@
 
 (auto-save-mode +1)
 
+(defun save-buffer-maybe ()
+  (and
+    (buffer-modified-p)
+    buffer-file-name
+    (save-buffer)))
+
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
 (defadvice switch-to-buffer (before save-buffer-now activate)
-  (when buffer-file-name (save-buffer)))
+  (save-buffer-maybe))
 (defadvice other-window (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
+  (save-buffer-maybe))
 (defadvice windmove-up (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
+  (save-buffer-maybe))
 (defadvice windmove-down (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
+  (save-buffer-maybe))
 (defadvice windmove-left (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
+  (save-buffer-maybe))
 (defadvice windmove-right (before other-window-now activate)
-  (when buffer-file-name (save-buffer)))
+  (save-buffer-maybe))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups
