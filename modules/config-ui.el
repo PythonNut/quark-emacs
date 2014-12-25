@@ -72,8 +72,10 @@
   (lambda ()
     (windmove-default-keybindings 'meta)
     (unless (featurep 'framemove)
-      (require 'framemove)
-      (setq framemove-hook-into-windmove t))))
+      (require 'framemove))))
+
+(with-eval-after-load 'framemove
+  (setq framemove-hook-into-windmove t))
 
 (global-set-key (kbd "C-.") #'er/expand-region)
 
