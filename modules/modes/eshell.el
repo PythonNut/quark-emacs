@@ -1,3 +1,9 @@
+(eval-when-compile
+  (progn
+    (require 'hl-line)
+    (require 'em-smart)
+    (require 'em-unix)))
+
 (add-hook 'eshell-mode-hook
   (lambda ()
     (adaptive-wrap-prefix-mode -1)
@@ -15,12 +21,12 @@
       scroll-margin 0
       smooth-scroll-margin 0)))
 
+(defun eshell/clear ()
+  (interactive)
+  (let ((inhibit-read-only t)) (erase-buffer)))
+
 (with-eval-after-load 'eshell
   (require 'em-smart)
-
-  (defun eshell/clear ()
-    (interactive)
-    (let ((inhibit-read-only t)) (erase-buffer)))
 
   (setq
     eshell-where-to-jump 'begin
