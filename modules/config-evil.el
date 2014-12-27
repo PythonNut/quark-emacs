@@ -75,7 +75,7 @@
                                (face-foreground 'mode-line))))
   (add-hook 'post-command-hook
     (lambda ()
-      (let ((color (if (display-graphic-p)
+      (let ((color (if (/= (display-color-cells) 8)
                      (cond ((minibufferp) default-color)
                        ((evil-normal-state-p) '("#586e75" . "#eee8d5"))
                        ((evil-emacs-state-p)  '("#859900" . "#eee8d5"))
