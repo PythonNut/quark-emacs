@@ -31,7 +31,7 @@
       icicle-incremental-completion-delay 0.1
       icicle-show-Completions-initially-flag nil)))
 
-(defun auto-icicle (func)
+(defun auto-icicle (func args)
   (if icicle-mode
     (call-interactively (ad-get-orig-definition func) args)
     (unwind-protect
@@ -44,8 +44,9 @@
 
 (defmacro auto-icicle-macro (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
+     (interactive)
      (if (called-interactively-p 'any)
-       (auto-icicle ',func)
+       (auto-icicle ',func args)
        ad-do-it)))
 
 (defmacro autoload-icicle (func)
