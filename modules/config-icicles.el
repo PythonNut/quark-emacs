@@ -32,15 +32,17 @@
       icicle-show-Completions-initially-flag nil)))
 
 (defun auto-icicle (func args)
+  (unless (featurep 'noflet) (require 'noflet))
   (if icicle-mode
     (call-interactively (ad-get-orig-definition func) args)
     (unwind-protect
       (progn
-        (icicle-mode +1)
-        (run-hooks 'icicle-init-hook)
+        (noflet ((message (&rest args)))
+          (icicle-mode +1)
+          (run-hooks 'icicle-init-hook))
         (call-interactively (ad-get-orig-definition func) args))
-      (icicle-mode -1)
-      (message ""))))
+      (noflet ((message (&rest args)))
+        (icicle-mode -1)))))
 
 (defmacro auto-icicle-macro (func)
   `(defadvice ,func (around icy-mode (&rest args) activate)
