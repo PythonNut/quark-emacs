@@ -106,7 +106,7 @@
      (multiline)
      (mode-line . "C-RET: nl-and-indent, tab: reindent, C-tab:complete, C-p/n: next/prec-line.")
      (filtered-candidate-transformer .
-       (lambda (candidates source)
+       (lambda (candidates _source)
          (list
            (condition-case nil
              (with-helm-current-buffer
@@ -118,12 +118,9 @@
              (error "")))))
      (action . (("Copy result to kill-ring" .
                   (lambda (candidate)
-                    (with-current-buffer helm-buffer
-                      (let ((end (save-excursion
-                                   (goto-char (point-max))
-                                   (search-backward "\n")
-                                   (point))))
-                        (kill-region (point) end)))))
+                    (kill-new
+                      (replace-regexp-in-string
+                        "\n" "" candidate))))
                  ("copy sexp to kill-ring" .
                    (lambda (candidate)
                      (kill-new helm-input)))))))
