@@ -198,7 +198,8 @@
       :fuzzy-match t
       :buffer "*helm-omni*")))
 
-(defadvice evil-paste-pop (around auto-helm-omni activate)
+(defadvice evil-paste-pop
+  (around auto-helm-omni activate preactivate compile)
   (if (memq last-command
         '(evil-paste-after
            evil-paste-before

@@ -63,10 +63,12 @@
 (define-key evil-visual-state-map (kbd "C-M-z") #'evil-insert-state)
 
 ;; indent pasted regions in evil
-(defadvice evil-paste-before (around auto-indent activate)
+(defadvice evil-paste-before
+  (around auto-indent activate preactivate compile)
   (evil-indent (point) (+ (point) (length ad-do-it))))
 
-(defadvice evil-paste-after (around auto-indent activate)
+(defadvice evil-paste-after
+  (around auto-indent activate preactivate compile)
   (evil-indent (point) (+ (point) (length ad-do-it))))
 
 ;;; Change modeline color by Evil state

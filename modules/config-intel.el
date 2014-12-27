@@ -13,7 +13,8 @@
 ;;   (global-semantic-idle-scheduler-mode +1)
 ;;   (global-semantic-idle-summary-mode +1))
 
-(defadvice semantic-idle-summary-idle-function (around show-flycheck-error activate)
+(defadvice semantic-idle-summary-idle-function
+  (around show-flycheck-error activate preactivate compile)
   (if (and
         (featurep 'flycheck)
         flycheck-mode
@@ -81,7 +82,8 @@
 ;;; =======================================
 ;; text mode
 (with-eval-after-load 'flyspell
-  (defadvice ispell-init-process (around hide-startup activate)
+  (defadvice ispell-init-process
+    (around hide-startup activate preactivate compile)
     (require 'noflet)
     (noflet ((message (&rest args)))
       ad-do-it))

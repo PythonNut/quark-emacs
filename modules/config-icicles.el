@@ -45,7 +45,8 @@
         (icicle-mode -1)))))
 
 (defmacro auto-icicle-macro (func)
-  `(defadvice ,func (around icy-mode (&rest args) activate)
+  `(defadvice ,func
+     (around icy-mode (&rest args) activate preactivate compile)
      (interactive)
      (if (called-interactively-p 'any)
        (auto-icicle ',func args)

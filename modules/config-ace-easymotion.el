@@ -51,17 +51,21 @@
           (call-interactively #'next-line)
           (call-interactively #'previous-line)))))
 
-  (defadvice evil-ace-jump-word-mode (after cleanup activate)
+  (defadvice evil-ace-jump-word-mode
+    (after cleanup activate preactivate compile)
     (ignore-errors (call-interactively #'realign-cursor)))
 
-  (defadvice evil-ace-jump-char-mode (after cleanup activate)
+  (defadvice evil-ace-jump-char-mode
+    (after cleanup activate preactivate compile)
     (ignore-errors (call-interactively #'realign-cursor)))
 
-  (defadvice evil-ace-jump-line-mode (after realign activate)
+  (defadvice evil-ace-jump-line-mode
+    (after realign activate preactivate compile)
     (ignore-errors (call-interactively #'realign-cursor)))
 
   ;; jump to approximately the same column
-  (defadvice evil-ace-jump-line-mode (around restore-pos activate)
+  (defadvice evil-ace-jump-line-mode
+    (around restore-pos activate preactivate compile)
     (let ((cursor (first (nth 6 (posn-at-point))))
            (line (- (line-end-position)
                    (line-beginning-position))))

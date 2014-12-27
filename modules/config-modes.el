@@ -31,12 +31,6 @@
   `(progn
      ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
 
-;; disable annoying "blah got redefined" messages
-;; (defadvice ad--defalias-fset (around supress-messages activate)
-;;   (require 'noflet)
-;;   (noflet ((message (&rest args)))
-;;     ad-do-it))
-
 (key-chord-mode +1)
 
 (defun really-kill-emacs ()

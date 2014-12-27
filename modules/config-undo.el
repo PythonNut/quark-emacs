@@ -54,7 +54,8 @@
         ad-do-it)))
 
   ;; Keep region when undoing in region
-  (defadvice undo-tree-undo (around keep-region activate)
+  (defadvice undo-tree-undo
+    (around keep-region activate preactivate compile)
     (if (use-region-p)
       (let ((m (set-marker (make-marker) (mark)))
              (p (set-marker (make-marker) (point))))

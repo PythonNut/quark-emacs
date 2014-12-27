@@ -19,10 +19,10 @@
 
 (defadvice load (before quiet-loading
                   (FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
-                  activate)
+                  activate preactivate compile)
   (setq NOMESSAGE t))
 
-(defadvice message (around supress-messages activate))
+(defadvice message (around supress-messages activate preactivate compile))
 
 ;; force a message through, temporarily disabling
 ;; message advice, let style

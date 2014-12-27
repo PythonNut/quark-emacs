@@ -171,7 +171,8 @@
 
   (run-with-idle-timer 5 nil
     (lambda ()
-      (defadvice idle-require-load-next (after silence-at-end activate)
+      (defadvice idle-require-load-next
+        (after silence-at-end activate)
         (when (null idle-require-symbols)
           (message "")))
 
