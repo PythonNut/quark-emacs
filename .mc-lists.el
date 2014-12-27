@@ -67,6 +67,7 @@
      evil-previous-visual-line
      evil-ret
      evil-ret-and-indent
+     evil-scroll-line-up
      evil-search-forward
      evil-search-next
      evil-visual-char
@@ -124,6 +125,7 @@
      auto-smex
      describe-key
      evil-exit-emacs-state
+     evil-scroll-line-down
      handle-select-window
      handle-switch-frame
      helm-eval-expression
