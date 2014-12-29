@@ -1,12 +1,11 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'cl-lib)
-    (require 'evil)
-    (require 'evil-leader)
-    (require 'evil-indent-textobject)
-    (require 'smartparens)
-    (require 'ace-jump-mode)))
+  (require 'cl)
+  (require 'cl-lib)
+  (require 'evil)
+  (require 'evil-leader)
+  (require 'evil-indent-textobject)
+  (require 'smartparens)
+  (require 'ace-jump-mode))
 
 ;;; === Evil motion section ===
 

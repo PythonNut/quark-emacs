@@ -1,11 +1,10 @@
 (require 'ace-jump-mode)
 
 (eval-when-compile
-  (progn
-    (require 'ace-jump-mode)
-    (require 'noflet)
-    (require 'evil)
-    (require 'key-chord)))
+  (require 'ace-jump-mode)
+  (require 'noflet)
+  (require 'evil)
+  (require 'key-chord))
 
 (with-eval-after-load 'ace-jump-mode
   ;; use letters, numbers and capitals in that order

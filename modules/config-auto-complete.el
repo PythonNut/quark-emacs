@@ -1,7 +1,7 @@
-(eval-when-compile (require 'cl))
-
-(eval-when-compile (require 'auto-complete))
-(eval-when-compile (require 'auto-complete-config))
+(eval-when-compile
+  (require 'cl)
+  (require 'auto-complete)
+  (require 'auto-complete-config))
 
 (add-hook 'first-change-hook
   (lambda () (require 'auto-complete-config)))

@@ -1,15 +1,14 @@
 ;; Automatically save and restore sessions
 
 (eval-when-compile
-  (progn
-    (require 'key-chord)
-    (require 'recentf)
-    (require 'desktop)
-    (require 'saveplace)
-    (require 'savehist)
-    (require 'helm-grep)
-    (require 'evil-ex)
-    (require 'config-modes)))
+  (require 'key-chord)
+  (require 'recentf)
+  (require 'desktop)
+  (require 'saveplace)
+  (require 'savehist)
+  (require 'helm-grep)
+  (require 'evil-ex)
+  (require 'config-modes))
 
 (setq
   desktop-dirname             "~/.emacs.d/desktop/"

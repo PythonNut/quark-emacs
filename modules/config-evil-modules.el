@@ -1,8 +1,7 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'evil)
-    (require 'evil-nerd-commenter)))
+  (require 'cl)
+  (require 'evil)
+  (require 'evil-nerd-commenter))
 
 (evil-set-initial-state #'diff-mode 'motion)
 (evil-set-initial-state #'backups-mode 'insert)

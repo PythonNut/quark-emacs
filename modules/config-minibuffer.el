@@ -1,8 +1,7 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'ido-ubiquitous)
-    (require 'evil-leader)))
+  (require 'cl)
+  (require 'ido-ubiquitous)
+  (require 'evil-leader))
 
 (require 'config-ido)
 (require 'config-helm)

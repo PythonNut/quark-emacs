@@ -1,7 +1,6 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'autorevert)))
+  (require 'cl)
+  (require 'autorevert))
 
 (defvar backup-location "~/.emacs.d/data/backups")
 (defvar autosave-location "~/.emacs.d/data/autosave")

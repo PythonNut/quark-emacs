@@ -1,10 +1,9 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'magit)
-    (require 'diff-hl)
-    (require 'git-gutter+)
-    (require 'psvn)))
+  (require 'cl)
+  (require 'magit)
+  (require 'diff-hl)
+  (require 'git-gutter+)
+  (require 'psvn))
 
 (add-hook 'find-file-hook
   (lambda ()

@@ -1,11 +1,10 @@
 (require 'evil)
 
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'evil)
-    (require 'evil-leader)
-    (require 'evil-surround)))
+  (require 'cl)
+  (require 'evil)
+  (require 'evil-leader)
+  (require 'evil-surround))
 
 (require 'evil-leader)
 

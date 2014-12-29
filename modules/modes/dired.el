@@ -1,6 +1,5 @@
 (eval-when-compile
-  (progn
-    (require 'ls-lisp)))
+  (require 'ls-lisp))
 
 (with-eval-after-load 'dired
   (require 'ls-lisp)

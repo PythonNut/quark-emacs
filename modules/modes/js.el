@@ -1,8 +1,7 @@
 (eval-when-compile
-  (progn
-    (require 'js2-mode)
-    (require 'js2-refactor)
-    (require 'ac-js2)))
+  (require 'js2-mode)
+  (require 'js2-refactor)
+  (require 'ac-js2))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 

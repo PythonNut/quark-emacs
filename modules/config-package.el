@@ -1,9 +1,8 @@
 (require 'package)
 
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'cl-lib)))
+  (require 'cl)
+  (require 'cl-lib))
 
 ;; Package archives
 (setq

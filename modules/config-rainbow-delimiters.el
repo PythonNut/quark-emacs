@@ -1,8 +1,7 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'smartparens)
-    (require 'hexrgb)))
+  (require 'cl)
+  (require 'smartparens)
+  (require 'hexrgb))
 
 (require 'rainbow-delimiters)
 

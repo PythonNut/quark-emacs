@@ -1,7 +1,6 @@
 (eval-when-compile
-  (progn
-    (require 'evil)
-    (require 'undo-tree)))
+  (require 'evil)
+  (require 'undo-tree))
 
 (add-hook 'first-change-hook
   (lambda () (require 'undo-tree)))

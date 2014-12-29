@@ -1,8 +1,9 @@
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl)
+  (require 'whole-line-or-region))
 
 (autoload 'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload 'whole-line-or-region-call-with-prefix "whole-line-or-region")
-(eval-when-compile (require 'whole-line-or-region))
 
 (cua-mode +1)
 

@@ -1,8 +1,7 @@
 (eval-when-compile
-  (progn
-    (require 'hl-line)
-    (require 'em-smart)
-    (require 'em-unix)))
+  (require 'hl-line)
+  (require 'em-smart)
+  (require 'em-unix))
 
 (add-hook 'eshell-mode-hook
   (lambda ()

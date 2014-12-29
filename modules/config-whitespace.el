@@ -1,8 +1,7 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'auto-indent-mode)
-    (require 'diminish)))
+  (require 'cl)
+  (require 'auto-indent-mode)
+  (require 'diminish))
 
 (require 'config-indent)
 

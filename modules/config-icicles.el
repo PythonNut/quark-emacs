@@ -1,10 +1,9 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'cl-lib)
-    (require 'key-chord)
-    (require 'icicles)
-    (require 'config-modes)))
+  (require 'cl)
+  (require 'cl-lib)
+  (require 'key-chord)
+  (require 'icicles)
+  (require 'config-modes))
 
 ;; custom hook run when icicles in initialized
 ;; (defvar icicle-init-hook nil)

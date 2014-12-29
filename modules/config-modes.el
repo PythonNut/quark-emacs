@@ -1,7 +1,6 @@
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'key-chord)))
+  (require 'cl)
+  (require 'key-chord))
 
 (global-hl-line-mode +1)
 
