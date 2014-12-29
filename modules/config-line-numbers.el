@@ -7,7 +7,7 @@
 
 (add-hook 'prog-mode-hook
   (lambda ()
-    (when window-system
+    (when (display-graphic-p)
       (linum-mode +1))))
 
 (defun find-file-check-large-file ()
