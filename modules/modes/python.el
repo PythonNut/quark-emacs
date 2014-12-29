@@ -15,6 +15,9 @@
     jedi:use-shortcuts t
     jedi:complete-on-dot t))
 
+(with-eval-after-load 'jedi
+  (define-key jedi-mode-map (kbd "<C-tab>") nil))
+
 (defun helm-traad-commands ()
   (interactive)
   (minibuffer-with-setup-hook
