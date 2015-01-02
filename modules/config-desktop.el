@@ -31,7 +31,7 @@
   savehist-autosave-interval 60
   history-length 100
   history-delete-duplicates t
-  savehist-save-minibuffer-history 1
+  savehist-save-minibuffer-history t
   savehist-additional-variables
   '(kill-ring
      search-ring
@@ -58,6 +58,7 @@
         evil-ex-history))))
 
 (add-hook 'kill-emacs-hook #'unpropertize-savehist)
+(add-hook 'savehist-save-hook #'unpropertize-savehist)
 
 ;; remember more recent files
 (setq
