@@ -1,6 +1,7 @@
 (setq
   ad-redefinition-action 'accept
   cursor-type 'box
+  debug-on-quit t
   delete-by-moving-to-trash t
   echo-keystrokes 0.4
   focus-follows-mouse 1

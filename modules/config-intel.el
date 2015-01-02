@@ -6,11 +6,11 @@
   (require 'flyspell))
 
 ;; enable semantic code LALR(1) parser
-;; (add-hook 'prog-mode-hook #'semantic-mode)
-;; (with-eval-after-load 'semantic
-;;   (global-semanticdb-minor-mode +1)
-;;   (global-semantic-idle-scheduler-mode +1)
-;;   (global-semantic-idle-summary-mode +1))
+(add-hook 'prog-mode-hook #'semantic-mode)
+(with-eval-after-load 'semantic
+  (global-semanticdb-minor-mode +1)
+  (global-semantic-idle-scheduler-mode +1)
+  (global-semantic-idle-summary-mode +1))
 
 (defadvice semantic-idle-summary-idle-function
   (around show-flycheck-error activate preactivate compile)
