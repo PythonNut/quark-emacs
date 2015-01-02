@@ -62,22 +62,6 @@
     (after realign activate preactivate compile)
     (ignore-errors (call-interactively #'realign-cursor)))
 
-  ;; jump to approximately the same column
-  (defadvice evil-ace-jump-line-mode
-    (around restore-pos activate preactivate compile)
-    (let ((cursor (first (nth 6 (posn-at-point))))
-           (line (- (line-end-position)
-                   (line-beginning-position))))
-      ad-do-it
-      (call-interactively
-        (lambda ()
-          ;; (back-to-indentation)
-          (interactive)
-          (forward-char
-            (round (* (/ cursor (max (float line) 1))
-                     (or (- (line-end-position)
-                           (line-beginning-position)) 1))))))))
-
   (ace-jump-mode-enable-mark-sync)
   (when (and
           (< (display-color-cells) 256)

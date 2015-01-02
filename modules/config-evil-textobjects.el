@@ -168,11 +168,11 @@
   (save-excursion
     (let ((beg (progn
                  (deactivate-mark)
-                 (evil-ace-jump-line-mode)
+                 (evil-ace-jump-line-and-revert)
                  (point)))
            (end (progn
                   (deactivate-mark)
-                  (evil-ace-jump-line-mode)
+                  (evil-ace-jump-line-and-revert)
                   (point))))
       (evil-range
         (progn
