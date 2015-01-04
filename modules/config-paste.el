@@ -1,5 +1,7 @@
 (eval-when-compile
   (require 'cl)
+  (require 'evil)
+  (require 'easy-kill)
   (require 'whole-line-or-region))
 
 (autoload 'whole-line-or-region-call-with-region "whole-line-or-region")
@@ -14,24 +16,24 @@
 (put 'evil-end-of-visual-line       'CUA 'move)
 (put 'evil-beginning-of-visual-line 'CUA 'move)
 
-;; easy-kill the line if no region
-(defun my-wlr-easy-kill (&optional prefix)
-  (interactive "*p")
-  (whole-line-or-region-call-with-region 'easy-kill prefix))
-
 ;; cua-cut the line if no region
-(defun my-wlr-cua-cut-region (&optional prefix)
+(defadvice cua-cut-region
+  (around whole-line-or-region
+    (&optional prefix)
+    activate preactivate compile)
   (interactive "*p")
   (whole-line-or-region-call-with-region
-    (lambda (beg end)
-      (interactive "r")
-      (goto-char beg)
-      (cua-set-mark)
-      (goto-char end)
-      (cua-cut-region current-prefix-arg)) prefix t))
+    (lambda (beg end &optional prefix)
+      (interactive "rP")
+      (call-interactively
+        (ad-get-orig-definition 'cua-cut-region)
+        current-prefix-arg)) prefix t t prefix))
 
 ;; cua-yank a line if cut as a line
-(defun whole-line-or-region-yank-cua (raw-prefix &optional string-in)
+(defadvice cua-paste
+  (around whole-line-or-region
+    (raw-prefix &optional string-in)
+    activate preactivate compile)
   "Yank (paste) previously killed text.
 
 If the text to be yanked was killed with a whole-line-or-region
@@ -62,7 +64,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
           ;; insert "manually"
           (insert string-in)
           ;; just yank as normal
-          (cua-paste raw-prefix))
+          (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))
 
         ;; a whole-line killed from end of file may not have a
         ;; trailing newline -- add one, in these cases
@@ -87,7 +89,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
                        string-to-yank))
               'evil-yank-line-handler)
           (evil-paste-before raw-prefix)
-          (cua-paste raw-prefix))))))
+          (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))))))
 
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
@@ -95,27 +97,45 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
          (beg (line-beginning-position)))
     (save-excursion
       (put-text-property 0 1 'whole-line-or-region t str)
+      ;; (put-text-property 0 1 'yank-handler
+      ;;   '(list evil-yank-line-handler) str)
       (easy-kill-adjust-candidate 'my-line str))))
 
-(setq easy-kill-try-things '(url email my-line))
+(with-eval-after-load 'easy-kill
+  (setq easy-kill-try-things '(url email my-line)))
+
+;; make evil respect whole-line-or-region
+(defadvice evil-paste-after
+  (before whole-line-or-region
+    activate preactivate compile)
+  (when (get-text-property 0 'whole-line-or-region (car kill-ring))
+    (setcar kill-ring
+      (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
+
+(defadvice evil-paste-after
+  (before whole-line-or-region
+    activate preactivate compile)
+  (when (get-text-property 0 'whole-line-or-region (car kill-ring))
+    (setcar kill-ring
+      (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
 (define-key evil-insert-state-map (kbd "C-w") nil)
 
 (define-key evil-insert-state-map
-  (kbd "<remap> <kill-region>") #'my-wlr-cua-cut-region)
+  (kbd "<remap> <kill-region>") #'cua-cut-region)
 (define-key evil-insert-state-map
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-normal-state-map
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
-(define-key evil-insert-state-map
-  (kbd "C-y") #'whole-line-or-region-yank-cua)
+(define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
+(define-key evil-insert-state-map (kbd "<C-return>") #'cua-set-rectangle-mark)
 
 (define-key evil-emacs-state-map
-  (kbd "<remap> <kill-region>") #'my-wlr-cua-cut-region)
+  (kbd "<remap> <kill-region>") #'cua-cut-region)
 (define-key evil-emacs-state-map
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
-(define-key evil-emacs-state-map
-  (kbd "C-y") #'whole-line-or-region-yank-cua)
+(define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
+(define-key evil-emacs-state-map (kbd "<C-return>") #'cua-set-rectangle-mark)
 
 (unless (display-graphic-p)
   (when (locate-file "xclip" exec-path)
