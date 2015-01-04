@@ -97,8 +97,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
          (beg (line-beginning-position)))
     (save-excursion
       (put-text-property 0 1 'whole-line-or-region t str)
-      ;; (put-text-property 0 1 'yank-handler
-      ;;   '(list evil-yank-line-handler) str)
       (easy-kill-adjust-candidate 'my-line str))))
 
 (with-eval-after-load 'easy-kill
@@ -118,6 +116,27 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (when (get-text-property 0 'whole-line-or-region (car kill-ring))
     (setcar kill-ring
       (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
+
+;; unify evil-paste with cua rectangles
+(defadvice evil-paste-after
+  (around cua-rectangles
+    activate preactivate compile)
+  (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
+        'rectangle--insert-for-yank)
+    (evil-with-state
+      (call-interactively #'evil-append)
+      (call-interactively #'cua-paste))
+    ad-do-it))
+
+(defadvice evil-paste-before
+  (around cua-rectangles
+    activate preactivate compile)
+  (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
+        'rectangle--insert-for-yank)
+    (evil-with-state
+      (call-interactively #'evil-insert)
+      (call-interactively #'cua-paste))
+    ad-do-it))
 
 (define-key evil-insert-state-map (kbd "C-w") nil)
 
