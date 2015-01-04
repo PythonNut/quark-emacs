@@ -60,7 +60,9 @@
 
 (cl-macrolet
   ((define-temp-projectile-binding (key func)
-     `(global-set-key ,(kbd (concat "C-c p " key)) ,func)))
+     `(progn
+        (autoload ,func "projectile")
+        (global-set-key ,(kbd (concat "C-c p " key)) ,func))))
 
   (generate-calls define-temp-projectile-binding
     (
