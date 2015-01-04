@@ -12,7 +12,7 @@
   (lambda ()
     (setq
       icicle-highlight-lighter-flag nil
-      icicle-max-candidates 300
+      icicle-max-candidates 200
       icicle-default-cycling-mode 'apropos
       icicle-show-multi-completion-flag t
       icicle-search-highlight-all-current-flag t
