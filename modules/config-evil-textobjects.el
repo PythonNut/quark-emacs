@@ -226,14 +226,15 @@
 (define-key evil-normal-state-map "gc" #'evilnc-comment-operator)
 
 (evil-define-operator evil-macro-on-all-lines (beg end &optional arg)
-  (evil-normal-state)
-  (goto-char end)
-  (evil-visual-state)
-  (goto-char beg)
-  (evil-ex-normal (region-beginning) (region-end)
-    (concat "@"
-      (single-key-description
-        (read-char "What macro?")))))
+  (evil-with-state
+    (evil-normal-state)
+    (goto-char end)
+    (evil-visual-state)
+    (goto-char beg)
+    (evil-ex-normal (region-beginning) (region-end)
+      (concat "@"
+        (single-key-description
+          (read-char "What macro?"))))))
 
 (define-key evil-operator-state-map "g@" #'evil-macro-on-all-lines)
 (define-key evil-normal-state-map "g@" #'evil-macro-on-all-lines)
@@ -268,24 +269,24 @@
 
 (evil-define-operator evil-eval-region (beg end type)
   (save-excursion
-    (evil-normal-state)
-    (goto-char beg)
-    (evil-visual-state)
-    (goto-char end)
-    (eval-region beg end)
-    (evil-normal-state)))
+    (evil-with-state
+      (evil-normal-state)
+      (goto-char beg)
+      (evil-visual-state)
+      (goto-char end)
+      (eval-region beg end))))
 
 (define-key evil-operator-state-map "gV" #'evil-eval-region)
 (define-key evil-normal-state-map "gV" #'evil-eval-region)
 
 (evil-define-operator evil-align-regexp (beg end type)
   (save-excursion
-    (evil-normal-state)
-    (goto-char beg)
-    (evil-visual-state)
-    (goto-char end)
-    (call-interactively #'align-regexp)
-    (evil-normal-state)))
+    (evil-with-state
+      (evil-normal-state)
+      (goto-char beg)
+      (evil-visual-state)
+      (goto-char end)
+      (call-interactively #'align-regexp))))
 
 (define-key evil-operator-state-map "g|" #'evil-align-regexp)
 (define-key evil-normal-state-map "g|" #'evil-align-regexp)
