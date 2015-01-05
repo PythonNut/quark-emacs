@@ -99,4 +99,10 @@
 ;; currently broken
 (evilem-define (kbd "SPC L") 'evil-forward-symbol)
 (evilem-define (kbd "SPC H") 'evil-backward-symbol)
+
+(define-key evil-insert-state-map (kbd "M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
+(define-key evil-insert-state-map (kbd "C-M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
+(define-key evil-emacs-state-map (kbd "M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
+(define-key evil-emacs-state-map (kbd "C-M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
+
 (provide 'config-ace-easymotion)
