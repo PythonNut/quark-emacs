@@ -51,6 +51,15 @@
 (put 'evil-next-sexp          'CUA 'move)
 (put 'evil-previous-sexp      'CUA 'move)
 
+(put 'sp-forward-sexp       'CUA 'move)
+(put 'sp-backward-sexp      'CUA 'move)
+(put 'sp-down-sexp          'CUA 'move)
+(put 'sp-backward-down-sexp 'CUA 'move)
+(put 'sp-up-sexp            'CUA 'move)
+(put 'sp-backward-up-sexp   'CUA 'move)
+(put 'sp-next-sexp          'CUA 'move)
+(put 'sp-previous-sexp      'CUA 'move)
+
 ;; textobject for the sexp immediately after point
 (defun evil-next-thing (count &optional beg end type inclusive)
   (ignore-errors
@@ -115,17 +124,12 @@
 (cl-macrolet
   ((sp-define-bindings (key func)
      `(progn
-        (define-key sp-keymap ,key ,func)
-        (define-key minibuffer-local-map ,key ,func)
-        (define-key minibuffer-local-ns-map ,key ,func)
-        (define-key minibuffer-local-completion-map ,key ,func)
-        (define-key minibuffer-local-must-match-map ,key ,func))))
+        (evil-define-key 'motion sp-keymap ,key ,func))))
 
   (generate-calls sp-define-bindings
     (
       ((kbd "C-M-f") #'evil-forward-sexp)
       ((kbd "C-M-b") #'evil-backward-sexp)
-      ((kbd "C-M-k") #'sp-kill-sexp)
 
       ((kbd "C-M-d") #'evil-down-sexp)
       ((kbd "C-M-S-d") #'evil-backward-down-sexp)
@@ -134,7 +138,48 @@
       ((kbd "C-M-S-u") #'evil-backward-up-sexp)
 
       ((kbd "C-M-n") #'evil-next-sexp)
-      ((kbd "C-M-p") #'evil-previous-sexp)
+      ((kbd "C-M-p") #'evil-previous-sexp))))
+
+(cl-macrolet
+  ((sp-define-bindings (key func)
+     `(progn
+        (evil-define-key 'insert sp-keymap ,key ,func)
+        (evil-define-key 'emacs sp-keymap ,key ,func)
+
+        (define-key minibuffer-local-map ,key ,func)
+        (define-key minibuffer-local-ns-map ,key ,func)
+        (define-key minibuffer-local-completion-map ,key ,func)
+        (define-key minibuffer-local-must-match-map ,key ,func))))
+
+  (generate-calls sp-define-bindings
+    (
+      ((kbd "C-M-f") #'forward-sexp)
+      ((kbd "C-M-b") #'backward-sexp)
+
+      ((kbd "C-M-d") #'sp-down-sexp)
+      ((kbd "C-M-S-d") #'sp-backward-down-sexp)
+
+      ((kbd "C-M-u") #'sp-up-sexp)
+      ((kbd "C-M-S-u") #'sp-backward-up-sexp)
+
+      ((kbd "C-M-n") #'sp-next-sexp)
+      ((kbd "C-M-p") #'sp-previous-sexp))))
+
+(cl-macrolet
+  ((sp-define-bindings (key func)
+     `(progn
+        (evil-define-key 'normal sp-keymap ,key ,func)
+        (evil-define-key 'insert sp-keymap ,key ,func)
+        (evil-define-key 'emacs sp-keymap ,key ,func)
+
+        (define-key minibuffer-local-map ,key ,func)
+        (define-key minibuffer-local-ns-map ,key ,func)
+        (define-key minibuffer-local-completion-map ,key ,func)
+        (define-key minibuffer-local-must-match-map ,key ,func))))
+
+  (generate-calls sp-define-bindings
+    (
+      ((kbd "C-M-k") #'sp-kill-sexp)
 
       ((kbd "C-M-t") #'sp-transpose-sexp)
 

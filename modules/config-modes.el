@@ -2,6 +2,7 @@
   (require 'cl)
   (require 'key-chord))
 
+(delete-selection-mode +1)
 (global-hl-line-mode +1)
 
 (add-hook 'find-file-hook 'auto-compression-mode)
