@@ -3,21 +3,11 @@
 (eval-when-compile
   (require 'key-chord)
   (require 'recentf)
-  (require 'desktop)
   (require 'saveplace)
   (require 'savehist)
   (require 'helm-grep)
   (require 'evil-ex)
   (require 'config-modes))
-
-(setq
-  desktop-dirname "~/.emacs.d/desktop/"
-  desktop-base-file-name "emacs.desktop"
-  desktop-base-lock-name "lock"
-  desktop-path (list desktop-dirname)
-  desktop-save t
-  desktop-files-not-to-save "^$" ;reload tramp paths
-  desktop-load-locked-desktop nil)
 
 (setq save-place-file "~/.emacs.d/.saveplace")
 (setq-default save-place t)
@@ -26,22 +16,24 @@
 
 (setq
   savehist-file "~/.emacs.d/.savehist"
-  savehist-autosave-interval 60
+  savehist-autosave-interval 180
   history-length 100
   history-delete-duplicates t
   savehist-save-minibuffer-history t
   savehist-additional-variables
   '(kill-ring
      search-ring
-     regexp-search-ring))
+     regexp-search-ring)
+  )
 
+(require 'savehist)
 (savehist-mode 1)
 
 ;; text properties severely bloat the history so delete them
 (defun unpropertize-savehist ()
   (cl-macrolet
     ((unpropertize-list (list)
-       `(ignore-errors
+       `(with-demoted-errors
           (setq ,list
             (mapcar #'substring-no-properties ,list)))))
 
