@@ -1,11 +1,23 @@
 (eval-when-compile
   (require 'cl)
   (require 'evil)
+  (require 'cua-base)
   (require 'easy-kill)
   (require 'whole-line-or-region))
 
 (autoload 'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload 'whole-line-or-region-call-with-prefix "whole-line-or-region")
+
+(setq
+  cua-paste-pop-rotate-temporarily t
+  cua-enable-cua-keys nil
+  cua-virtual-rectangle-edges t
+  cua-auto-tabify-rectangles nil)
+
+(when (display-graphic-p)
+  (define-key evil-insert-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
+  (define-key evil-emacs-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
+  (setq cua-rectangle-mark-key (kbd "C-x SPC")))
 
 (cua-mode +1)
 
@@ -147,14 +159,12 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-normal-state-map
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
-(define-key evil-insert-state-map (kbd "<C-return>") #'cua-set-rectangle-mark)
 
 (define-key evil-emacs-state-map
   (kbd "<remap> <kill-region>") #'cua-cut-region)
 (define-key evil-emacs-state-map
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
-(define-key evil-emacs-state-map (kbd "<C-return>") #'cua-set-rectangle-mark)
 
 (unless (display-graphic-p)
   (when (locate-file "xclip" exec-path)
