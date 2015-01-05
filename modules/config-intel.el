@@ -1,6 +1,7 @@
 (eval-when-compile
   (require 's)
   (require 'noflet)
+  (require 'yasnippet)
   (require 'semantic)
   (require 'flycheck)
   (require 'flyspell))
@@ -103,5 +104,30 @@
 
 (add-hook 'text-mode-hook #'flyspell-mode)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
+;;; =============================================
+;;; yasnippet -- extensible programmable snippets
+;;; =============================================
+
+;; technically, *scratch* init triggers first-change-hook
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (add-hook 'first-change-hook 'yas-minor-mode)))
+
+(setq yas-verbosity 0)
+
+(with-eval-after-load 'yasnippet
+  (add-hook 'yas-minor-mode-hook
+    (lambda ()
+      (set-face-background 'yas-field-highlight-face "#586e75")
+      (set-face-foreground 'yas-field-highlight-face
+        (face-foreground 'region))
+      (diminish 'yas-minor-mode " ¥")))
+  (setq
+    yas-snippet-dirs (list
+                       (concat
+                         user-emacs-directory
+                         "data/snippets")))
+  (yas-reload-all))
 
 (provide 'config-intel)

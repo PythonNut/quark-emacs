@@ -140,6 +140,7 @@
     '(
        helm-files
        helm-ring
+       yasnippet
        helm-projectile
        helm-semantic
        helm-ag
