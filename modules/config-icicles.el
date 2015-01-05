@@ -6,29 +6,26 @@
   (require 'config-modes))
 
 ;; custom hook run when icicles in initialized
-;; (defvar icicle-init-hook nil)
-
 (add-hook 'icicle-init-hook
   (lambda ()
     (setq
-      icicle-highlight-lighter-flag nil
-      icicle-max-candidates 200
-      icicle-default-cycling-mode 'apropos
-      icicle-show-multi-completion-flag t
-      icicle-search-highlight-all-current-flag t
-      icicle-command-abbrev-match-all-parts-flag nil
-      icicle-highlight-input-completion-failure-delay 0
-      icicle-Completions-text-scale-decrease 0.2
-      icicle-TAB-completion-methods '(vanilla substring basic)
-      icicle-expand-input-to-common-match 2
-      icicle-apropos-complete-keys (list (kbd "C-i") (kbd "<tab>"))
-      icicle-prefix-complete-keys (list (kbd "<backtab>"))
-      icicle-yank-function #'cua-paste
-      locate-command "locate"
       completions-format 'vertical
+      icicle-Completions-text-scale-decrease 0
+      icicle-TAB-completion-methods '(vanilla substring basic)
+      icicle-default-cycling-mode 'apropos
+      icicle-expand-input-to-common-match 1
+      icicle-highlight-input-completion-failure-delay 0
+      icicle-highlight-lighter-flag nil
       icicle-incremental-completion t
-      icicle-incremental-completion-delay 0.1
-      icicle-show-Completions-initially-flag nil)))
+      icicle-incremental-completion-delay 0.3
+      icicle-max-candidates 200
+      icicle-prefix-complete-keys (list (kbd "<backtab>"))
+      icicle-search-highlight-all-current-flag t
+      icicle-show-Completions-help-flag nil
+      icicle-show-Completions-initially-flag nil
+      icicle-show-multi-completion-flag t
+      icicle-yank-function #'cua-paste
+      locate-command "locate")))
 
 (defun auto-icicle (func args)
   (unless (featurep 'noflet) (require 'noflet))
