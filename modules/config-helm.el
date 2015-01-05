@@ -57,10 +57,6 @@
       (when (locate-file "ack-grep" exec-path)
         (setq helm-ag-base-command "ack-grep --nocolor --nogroup")))))
 
-(global-set-key (kbd "C-x f") #'ido-find-file)
-(global-set-key (kbd "C-S-x C-S-f") #'icicle-find-file)
-(global-set-key (kbd "C-S-X C-S-B") #'icicle-buffer)
-
 (global-set-key (kbd "M-:") #'helm-eval-expression)
 
 (defun my-helm-buffers (&rest arg)
@@ -202,6 +198,8 @@
            evil-visual-paste))
     ad-do-it
     (call-interactively #'my-helm-omni)))
+
+(define-key evil-insert-state-map (kbd "C-p") #'my-helm-omni)
 
 (defun helm-helm-commands ()
   (interactive)

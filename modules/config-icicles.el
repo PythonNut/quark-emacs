@@ -508,6 +508,9 @@
 (define-key evil-normal-state-map (kbd "<backtab>") #'icicle-complete-keys)
 (define-key evil-insert-state-map (kbd "<backtab>") #'icicle-complete-keys)
 
+(global-set-key (kbd "C-S-x C-S-f") #'icicle-find-file)
+(global-set-key (kbd "C-S-X C-S-B") #'icicle-buffer)
+
 (defun helm-icicles-commands ()
   (interactive)
   (minibuffer-with-setup-hook
