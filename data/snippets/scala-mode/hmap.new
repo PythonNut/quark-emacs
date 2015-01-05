@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: new HashMap[K, V]
-# key: hmap
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : new HashMap[K, V]
+# key: hmap.new
 # --
 new HashMap[${1:key}, ${2:value}] $0

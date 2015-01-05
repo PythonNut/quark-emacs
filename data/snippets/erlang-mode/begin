@@ -1,5 +1,4 @@
-# name: begin ... end
-# key: begin
+#name : begin ... end
 # --
 begin
     $0

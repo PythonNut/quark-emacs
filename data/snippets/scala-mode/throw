@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: throw new Exception
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : throw new Exception
 # key: throw
 # --
 throw new ${1:Exception}(${2:msg}) $0

@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: expect(value) { ..}
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : expect(value) { ..}
 # key: expect
 # --
 expect(${1:reply}) {

@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: new HashSet[K]
-# key: hset
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : new HashSet[K]
+# key: hset.new
 # --
 new HashSet[${1:key}] $0

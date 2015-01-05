@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: val l = List(..)
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : val l = List(..)
 # key: ls
 # --
 val ${1:l} = List(${2:args}, ${3:args}) $0

@@ -1,5 +1,4 @@
-# name: after ... ->
-# key: after
+#name : after ... ->
 # --
 after
     $1 -> $0

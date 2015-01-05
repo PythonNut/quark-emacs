@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: for {x <- xs \ y <- ys} { yield }
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : for {x <- xs \ y <- ys} { yield }
 # key: for
 # --
 for {

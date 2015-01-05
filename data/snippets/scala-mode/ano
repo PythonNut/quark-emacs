@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: (args) => ...
-# key: ano
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : (args) => ...
+# key: =>
 # --
 ($1) => ${2:body} $0

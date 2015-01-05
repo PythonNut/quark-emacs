@@ -1,5 +1,4 @@
-# name: Image
-# contributor: Peng Deng <dengpeng@gmail.com>
-# key: img
+#name : Image
+#contributor: Peng Deng <dengpeng@gmail.com>
 # --
 ![${1:Alt Text}](${2:URL} $3) $0

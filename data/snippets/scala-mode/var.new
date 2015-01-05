@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: var name = new ..
-# key: var
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : var name = new ..
+# key: var.new
 # --
 var ${1:name} = new ${2:obj} $0
