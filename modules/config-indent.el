@@ -16,7 +16,10 @@
   (remove-hook 'first-change-hook
     #'auto-indent-onetime-setup))
 
-(add-hook 'first-change-hook #'auto-indent-onetime-setup)
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (add-hook 'first-change-hook #'auto-indent-onetime-setup)))
+
 (add-hook 'find-file-hook #'dtrt-indent-mode)
 
 (defun smie-auto-guess ()

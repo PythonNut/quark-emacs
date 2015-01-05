@@ -3,8 +3,8 @@
   (require 'auto-complete)
   (require 'auto-complete-config))
 
-(add-hook 'first-change-hook
-  (lambda () (require 'auto-complete-config)))
+(require 'auto-complete-config)
+(global-auto-complete-mode +1)
 
 (with-eval-after-load 'auto-complete
   (diminish 'auto-complete-mode " α")
