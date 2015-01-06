@@ -51,13 +51,17 @@
     :background nil
     :inherit '(hl-line default)))
 
+(defun linum-cycle ()
+  (interactive)
+  (if linum-mode
+    (if (eq linum-format 'dynamic)
+      (linum-mode -1)
+      (setq linum-format 'dynamic))
+    (progn
+      (linum-mode +1)
+      (setq linum-format 'linum-relative))))
 
-  (set-face-attribute 'linum-relative-current-face nil :weight 'extra-bold)
-
-  (global-set-key (kbd "C-c L")
-    (lambda ()
-      (interactive)
-      (if linum-mode (linum-relative-toggle)
-        (linum-mode +1)))))
+(global-set-key (kbd "C-c L") #'linum-cycle)
+(global-set-key (kbd "C-c C-l") #'linum-cycle)
 
 (provide 'config-line-numbers)
