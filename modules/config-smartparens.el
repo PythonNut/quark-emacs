@@ -64,7 +64,6 @@
 (defun evil-next-thing (count &optional beg end type inclusive)
   (ignore-errors
     (save-excursion
-      (message (concat "prefix was: " (number-to-string count)))
       (call-interactively 'sp-select-next-thing count)
       (if (> (point) (mark))
         (exchange-point-and-mark))
