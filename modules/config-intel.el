@@ -43,16 +43,20 @@
   (setq flycheck-indication-mode nil)
   (set-face-background 'flycheck-fringe-warning nil)
 
-  (set-face-background 'flycheck-warning nil)
-  (set-face-foreground 'flycheck-warning nil)
-  (set-face-background 'flycheck-error nil)
-  (set-face-background 'flycheck-error nil)
-  (set-face-foreground 'flycheck-info nil)
-  (set-face-foreground 'flycheck-info nil)
+  (set-face-attribute 'flycheck-error nil
+    :foreground nil
+    :background nil
+    :underline "#dc322f")
 
-  (set-face-attribute 'flycheck-error nil :underline "#dc322f")
-  (set-face-attribute 'flycheck-warning nil :underline "#b58900")
-  (set-face-attribute 'flycheck-info nil :underline "#268bd2")
+  (set-face-attribute 'flycheck-warning nil
+    :foreground nil
+    :background nil
+    :underline "#b58900")
+
+  (set-face-attribute 'flycheck-info nil
+    :foreground nil
+    :background nil
+    :underline "#268bd2")
 
   ;; please don't give me emacs-lisp stylistic advice
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
@@ -119,9 +123,10 @@
 (with-eval-after-load 'yasnippet
   (add-hook 'yas-minor-mode-hook
     (lambda ()
-      (set-face-background 'yas-field-highlight-face "#586e75")
-      (set-face-foreground 'yas-field-highlight-face
-        (face-foreground 'region))
+      (set-face-attribute 'yas-field-highlight-face nil
+        :foreground nil
+        :background nil
+        :inherit 'region)
       (diminish 'yas-minor-mode " ¥")))
   (setq
     yas-snippet-dirs (list

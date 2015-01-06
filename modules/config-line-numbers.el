@@ -22,7 +22,6 @@
 
 (with-eval-after-load 'linum
   (set-face-background 'linum nil)
-  (set-face-foreground 'linum "grey51")
   (setq linum-delay t)
 
   (require 'linum-relative)
@@ -46,11 +45,12 @@
   (setq linum-relative-current-symbol "")
   (setq linum-relative-format "%3s ")
 
-  (set-face-background 'linum-relative-current-face "grey15")
-  (set-face-foreground 'linum-relative-current-face "grey70")
+  (set-face-attribute 'linum-relative-current-face nil
+    :weight 'extra-bold
+    :foreground nil
+    :background nil
+    :inherit '(hl-line default)))
 
-  (set-face-background 'linum-relative-current-face "#073642")
-  (set-face-foreground 'linum-relative-current-face "#839496")
 
   (set-face-attribute 'linum-relative-current-face nil :weight 'extra-bold)
 
