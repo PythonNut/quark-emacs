@@ -18,6 +18,27 @@
 (define-key evil-motion-state-map "L" #'evil-forward-symbol)
 (define-key evil-motion-state-map "H" #'evil-backward-symbol)
 
+(evil-define-motion evil-smart-next-visual-line (count)
+  (unless (featurep 'smartrep) (require 'smartrep))
+  (evil-next-visual-line count)
+  (condition-case e
+    (smartrep-read-event-loop
+      '(("j" . #'evil-smart-next-visual-line)
+         ("k" . #'evil-smart-previous-visual-line)))
+    (quit nil)))
+
+(evil-define-motion evil-smart-previous-visual-line (count)
+  (unless (featurep 'smartrep) (require 'smartrep))
+  (evil-previous-visual-line count)
+  (condition-case e
+    (smartrep-read-event-loop
+      '(("j" . #'evil-smart-next-visual-line)
+         ("k" . #'evil-smart-previous-visual-line)))
+    (quit nil)))
+
+(define-key evil-motion-state-map "gj" #'evil-smart-next-visual-line)
+(define-key evil-motion-state-map "gk" #'evil-smart-previous-visual-line)
+
 ;;; === Evil text object section ===
 ;; evil block indentation textobject for Python
 (defun evil-indent--current-indentation ()
