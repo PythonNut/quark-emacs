@@ -5,10 +5,10 @@
   (require 'linum)
   (require 'linum-relative))
 
-(add-hook 'prog-mode-hook
-  (lambda ()
-    (when (display-graphic-p)
-      (linum-mode +1))))
+;; (add-hook 'prog-mode-hook
+;;   (lambda ()
+;;     (when (display-graphic-p)
+;;       (linum-mode +1))))
 
 (defun find-file-check-large-file ()
   "If a file is over a given size, make the buffer read only."
@@ -22,7 +22,6 @@
 
 (with-eval-after-load 'linum
   (set-face-background 'linum nil)
-  (setq linum-delay t)
 
   (require 'linum-relative)
 
@@ -42,8 +41,10 @@
       (propertize (format linum-relative-format current-symbol) 'face face)))
 
 
-  (setq linum-relative-current-symbol "")
-  (setq linum-relative-format "%3s ")
+  (setq
+    linum-relative-current-symbol ""
+    linum-relative-format "%3s "
+    linum-delay t)
 
   (set-face-attribute 'linum-relative-current-face nil
     :weight 'extra-bold
