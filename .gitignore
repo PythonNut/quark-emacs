@@ -76,6 +76,9 @@ ac-comphist.dat
 # EDE projects file
 /ede-projects.el
 
+# Srecode map files
+/srecode-map.el
+
 
 # desktop files
 /desktop
