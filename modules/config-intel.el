@@ -127,7 +127,7 @@
         :foreground nil
         :background nil
         :inherit 'region)
-      (diminish 'yas-minor-mode " ¥")))
+      (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
   (setq
     yas-snippet-dirs (list
                        (concat
