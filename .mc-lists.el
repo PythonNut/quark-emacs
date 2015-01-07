@@ -7,6 +7,7 @@
      ace-jump-mode
      auto-jump-char
      back-to-indentation-or-beginning
+     backward-sexp
      beginning-of-visual-line
      c-electric-semi&comma
      c-indent-line-or-region
@@ -77,6 +78,7 @@
      expand-and-replace
      fastnav-mark-to-char-forward
      fastnav-sprint-forward
+     forward-sexp
      haskell-indentation-delete-backward-char
      icicle-execute-extended-command
      indent-for-tab-command
@@ -105,15 +107,24 @@
      sp--cua-replace-region
      sp--self-insert-command
      sp-absorb-sexp
+     sp-backward-kill-sexp
      sp-backward-sexp
      sp-backward-unwrap-sexp
+     sp-down-sexp
      sp-emit-sexp
      sp-forward-barf-sexp
      sp-forward-sexp
      sp-forward-slurp-sexp
      sp-kill-sexp
+     sp-next-sexp
+     sp-previous-sexp
      sp-remove-active-pair-overlay
+     sp-rewrap-sexp
+     sp-select-next-thing
+     sp-select-previous-thing
+     sp-transpose-sexp
      sp-unwrap-sexp
+     sp-up-sexp
      transpose-sexps
      whole-line-or-region-yank
      yas-expand
