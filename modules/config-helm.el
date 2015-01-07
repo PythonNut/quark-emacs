@@ -22,17 +22,14 @@
        (candidate-number-limit . 999)
        (mode-line . helm-generic-file-mode-line-string)))
 
-  (cl-macrolet
-    ((add-boring (regex)
-       `(add-to-list 'helm-boring-file-regexp-list ,regex)))
-    (generate-calls-single add-boring
-      (
-        "\\.undo.xz$"
-        "\\.elc$"
-        "\\#$"
-        "\\~$"
-        "\\.zwc.old$"
-        "\\.zwc$"))))
+  (setq helm-boring-file-regexp-list
+    (append helm-boring-file-regexp-list
+      '("\\.undo.xz$"
+         "\\.elc$"
+         "\\#$"
+         "\\~$"
+         "\\.zwc.old$"
+         "\\.zwc$"))))
 
 (with-eval-after-load 'helm
   (setq
@@ -47,7 +44,12 @@
 (with-eval-after-load 'helm-buffers
   (unless helm-source-buffers-list
     (setq helm-source-buffers-list
-      (helm-make-source "Buffers" 'helm-source-buffers))))
+      (helm-make-source "Buffers" 'helm-source-buffers)))
+  (setq helm-boring-buffer-regexp-list
+    '("\\ "
+       "\\*helm"
+       "\\*Compile"
+       "\\*Quail")))
 
 ;; adaptively fallback to ack and ack-grep
 (with-eval-after-load 'helm-ag

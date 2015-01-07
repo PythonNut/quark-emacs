@@ -85,7 +85,7 @@
 
 (with-eval-after-load 'iflipb
   (setq
-    iflipb-ignore-buffers "^ "
+    iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
     iflipb-wrap-around 't)
 
   (defun iflipb-first-iflipb-buffer-switch-command ()
