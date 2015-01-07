@@ -1,7 +1,7 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'auto-complete)
-  (require 'auto-complete-config))
+  (with-demoted-errors
+    (require 'auto-complete)
+    (require 'auto-complete-config)))
 
 (require 'auto-complete-config)
 (global-auto-complete-mode +1)

@@ -1,6 +1,6 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'key-chord))
+  (with-demoted-errors
+    (require 'key-chord)))
 
 (delete-selection-mode +1)
 (global-hl-line-mode +1)

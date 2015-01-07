@@ -1,10 +1,11 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'cl-lib)
-  (require 'key-chord)
-  (require 'evil)
-  (require 'helm)
-  (require 'config-modes))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'cl-lib)
+    (require 'key-chord)
+    (require 'evil)
+    (require 'helm)
+    (require 'config-modes)))
 
 (with-eval-after-load 'helm-files
   (setq

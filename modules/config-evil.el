@@ -1,10 +1,11 @@
 (require 'evil)
 
 (eval-when-compile
-  (require 'cl)
-  (require 'evil)
-  (require 'evil-leader)
-  (require 'evil-surround))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'evil)
+    (require 'evil-leader)
+    (require 'evil-surround)))
 
 (require 'evil-leader)
 

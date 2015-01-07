@@ -1,13 +1,13 @@
 (require 'smartparens-config)
 
 (eval-when-compile
-  (require 'cl)
-  (require 'evil)
-  (require 'key-chord)
-  (require 'smartrep)
-  (require 'smartparens)
-  (require 'diminish)
-  (require 'config-modes))
+  (with-demoted-errors
+    (require 'evil)
+    (require 'key-chord)
+    (require 'smartrep)
+    (require 'smartparens)
+    (require 'diminish)
+    (require 'config-modes)))
 
 (setq
   sp-autoinsert-quote-if-followed-by-closing-pair nil

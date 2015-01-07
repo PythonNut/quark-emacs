@@ -1,5 +1,6 @@
 (eval-when-compile
-  (require 'ls-lisp))
+  (with-demoted-errors
+    (require 'ls-lisp)))
 
 (with-eval-after-load 'dired
   (require 'ls-lisp)

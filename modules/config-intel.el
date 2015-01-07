@@ -1,10 +1,11 @@
 (eval-when-compile
-  (require 's)
-  (require 'noflet)
-  (require 'yasnippet)
-  (require 'semantic)
-  (require 'flycheck)
-  (require 'flyspell))
+  (with-demoted-errors
+    (require 's)
+    (require 'noflet)
+    (require 'yasnippet)
+    (require 'semantic)
+    (require 'flycheck)
+    (require 'flyspell)))
 
 ;; enable semantic code LALR(1) parser
 (add-hook 'prog-mode-hook #'semantic-mode)

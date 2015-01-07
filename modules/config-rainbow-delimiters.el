@@ -1,7 +1,8 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'smartparens)
-  (require 'hexrgb))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'smartparens)
+    (require 'hexrgb)))
 
 (require 'rainbow-delimiters)
 

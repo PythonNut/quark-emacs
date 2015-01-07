@@ -1,7 +1,7 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'evil)
-  (require 'evil-nerd-commenter))
+  (with-demoted-errors
+    (require 'evil)
+    (require 'evil-nerd-commenter)))
 
 (evil-set-initial-state #'diff-mode 'motion)
 (evil-set-initial-state #'backups-mode 'insert)

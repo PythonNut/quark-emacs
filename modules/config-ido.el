@@ -1,10 +1,11 @@
 (eval-when-compile
-  (require 'ido)
-  (require 'idomenu)
-  (require 'ido-vertical-mode)
-  (require 'flx-isearch)
-  (require 'ido-ubiquitous)
-  (require 'smex))
+  (with-demoted-errors
+    (require 'ido)
+    (require 'idomenu)
+    (require 'ido-vertical-mode)
+    (require 'flx-isearch)
+    (require 'ido-ubiquitous)
+    (require 'smex)))
 
 (ido-mode +1)
 (ido-ubiquitous-mode +1)

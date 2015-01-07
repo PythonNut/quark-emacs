@@ -1,9 +1,10 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'evil)
-  (require 'cua-base)
-  (require 'easy-kill)
-  (require 'whole-line-or-region))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'evil)
+    (require 'cua-base)
+    (require 'easy-kill)
+    (require 'whole-line-or-region)))
 
 (autoload 'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload 'whole-line-or-region-call-with-prefix "whole-line-or-region")

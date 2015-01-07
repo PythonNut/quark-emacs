@@ -1,9 +1,8 @@
 (require 'linum)
 
 (eval-when-compile
-  (require 'cl)
-  (require 'linum)
-  (require 'linum-relative))
+  (with-demoted-errors
+    (require 'linum-relative)))
 
 ;; (add-hook 'prog-mode-hook
 ;;   (lambda ()

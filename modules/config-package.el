@@ -1,8 +1,9 @@
 (require 'package)
 
 (eval-when-compile
-  (require 'cl)
-  (require 'cl-lib))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'cl-lib)))
 
 ;; Package archives
 (setq

@@ -1,10 +1,11 @@
 (eval-when-compile
-  (require 'cl-lib)
-  (require 'key-chord)
-  (require 'evil)
-  (require 'diminish)
-  (require 'evil-easymotion)
-  (require 'config-modes))
+  (with-demoted-errors
+    (require 'cl-lib)
+    (require 'key-chord)
+    (require 'evil)
+    (require 'diminish)
+    (require 'evil-easymotion)
+    (require 'config-modes)))
 
 (require 'config-scroll)
 (require 'config-line-numbers)

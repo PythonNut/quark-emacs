@@ -1,9 +1,10 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'cl-lib)
-  (require 'key-chord)
-  (require 'icicles)
-  (require 'config-modes))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'cl-lib)
+    (require 'key-chord)
+    (require 'icicles)
+    (require 'config-modes)))
 
 ;; custom hook run when icicles in initialized
 (add-hook 'icicle-init-hook

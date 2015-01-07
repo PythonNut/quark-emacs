@@ -1,7 +1,8 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'auto-indent-mode)
-  (require 'smie))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'auto-indent-mode)
+    (require 'smie)))
 
 (add-hook 'auto-indent-global-mode-hook
   (lambda ()

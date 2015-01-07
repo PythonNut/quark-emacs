@@ -1,8 +1,9 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'magit)
-  (require 'diff-hl)
-  (require 'psvn))
+  (with-demoted-errors
+    (require 'cl)
+    (require 'magit)
+    (require 'diff-hl)
+    (require 'psvn)))
 
 (add-hook 'find-file-hook
   (lambda ()

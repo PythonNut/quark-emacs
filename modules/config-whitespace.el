@@ -1,7 +1,7 @@
 (eval-when-compile
-  (require 'cl)
-  (require 'auto-indent-mode)
-  (require 'diminish))
+  (with-demoted-errors
+    (require 'auto-indent-mode)
+    (require 'diminish)))
 
 (require 'config-indent)
 

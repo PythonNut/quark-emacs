@@ -1,4 +1,6 @@
-(eval-when-compile (require 'tramp))
+(eval-when-compile
+  (with-demoted-errors
+    (require 'tramp)))
 
 (with-eval-after-load 'tramp
   ;; cache passwords for the duration of the session

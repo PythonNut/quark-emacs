@@ -1,7 +1,8 @@
 (eval-when-compile
-  (require 'hl-line)
-  (require 'em-smart)
-  (require 'em-unix))
+  (with-demoted-errors
+    (require 'hl-line)
+    (require 'em-smart)
+    (require 'em-unix)))
 
 (add-hook 'eshell-mode-hook
   (lambda ()

@@ -1,13 +1,14 @@
 ;; Automatically save and restore sessions
 
 (eval-when-compile
-  (require 'key-chord)
-  (require 'recentf)
-  (require 'saveplace)
-  (require 'savehist)
-  (require 'helm-grep)
-  (require 'evil-ex)
-  (require 'config-modes))
+  (with-demoted-errors
+    (require 'key-chord)
+    (require 'recentf)
+    (require 'saveplace)
+    (require 'savehist)
+    (require 'helm-grep)
+    (require 'evil-ex)
+    (require 'config-modes)))
 
 (setq save-place-file "~/.emacs.d/.saveplace")
 (setq-default save-place t)

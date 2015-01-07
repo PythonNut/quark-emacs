@@ -1,4 +1,6 @@
-(eval-when-compile (require 'evil))
+(eval-when-compile
+  (with-demoted-errors
+    (require 'evil)))
 
 (defun emacs-lisp-goto-definition ()
   (interactive)

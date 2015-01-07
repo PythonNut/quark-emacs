@@ -1,6 +1,7 @@
 (eval-when-compile
-  (require 'evil)
-  (require 'jedi))
+  (with-demoted-errors
+    (require 'evil)
+    (require 'jedi)))
 
 (add-hook 'python-mode-hook
   (lambda ()

@@ -1,6 +1,7 @@
 (eval-when-compile
-  (require 'evil)
-  (require 'undo-tree))
+  (with-demoted-errors
+    (require 'evil)
+    (require 'undo-tree)))
 
 (defun undo-tree-onetime-setup ()
   (require 'undo-tree)
