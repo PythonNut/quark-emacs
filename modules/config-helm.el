@@ -34,6 +34,7 @@
 
 (with-eval-after-load 'helm
   (setq
+    helm-case-fold-search 'smart
     helm-M-x-fuzzy-match t
     helm-locate-command "locate %s -r %s -be -l 500"
     helm-ff-transformer-show-only-basename nil
