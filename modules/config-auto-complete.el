@@ -1,37 +1,3 @@
-(eval-when-compile
-  (with-demoted-errors
-    (require 'diminish)
-    (require 'auto-complete)
-    (require 'auto-complete-config)))
-
-(with-eval-after-load 'auto-complete
-  (diminish 'auto-complete-mode " α")
-  (ac-config-default)
-  (ac-flyspell-workaround)
-  (ac-linum-workaround)
-  (ac-set-trigger-key "C-c <C-tab>")
-
-  (setq-default ac-sources
-    (append
-      '(
-         ac-source-semantic
-         ac-source-filename
-         ac-source-yasnippet
-         )
-      ac-sources))
-
-  (setq ac-auto-start t
-    ac-auto-show-menu 0.5
-    ac-show-menu-immediately-on-auto-complete t
-    ac-ignore-case 'smart
-    ac-delay 0
-    ac-dwim t
-    ac-use-fuzzy t
-    ac-fuzzy-enable t
-    ac-dwim-enable t
-    ac-use-comphist t
-    popup-use-optimized-column-computation nil))
-
 (eval-when-compile (progn (require 'company)))
 
 (setq
@@ -42,12 +8,30 @@
   company-show-numbers nil
   company-tooltip-align-annotations t)
 
+(global-company-mode +1)
+
 (define-key company-active-map (kbd "<tab>") #'company-complete)
 (set-face-background 'company-tooltip-common-selection
   (face-background 'company-tooltip-selection))
 (set-face-background 'company-tooltip-common
   (face-background 'company-tooltip))
 
-(global-company-mode +1)
+(with-eval-after-load 'company
+  (diminish 'company-mode (if (display-graphic-p) " γ" " Co")))
+
+(defun company-complete-common-or-complete-full ()
+  (interactive)
+  (when (company-manual-begin)
+    (if (eq last-command #'company-complete-common-or-cycle)
+        (let ((company-selection-wrap-around t))
+          (call-interactively #'company-complete-selection))
+      (let ((buffer-mod-tick (buffer-chars-modified-tick)))
+        (call-interactively #'company-complete-common)
+        (when (= buffer-mod-tick (buffer-chars-modified-tick))
+          (call-interactively #'company-complete-selection)
+          (call-interactively #'company-complete))))))
+
+(define-key company-active-map [tab] #'company-complete-common-or-complete-full)
+(define-key company-active-map (kbd "TAB") #'company-complete-common-or-complete-full)
 
 (provide 'config-auto-complete)
