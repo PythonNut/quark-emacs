@@ -94,16 +94,17 @@
   (setq
     flyspell-issue-message-flag nil
     flyspell-issue-welcome-flag nil)
+
   (add-hook 'flyspell-mode-hook
     (lambda ()
       (define-key flyspell-mode-map (kbd "C-.") nil)
       (define-key flyspell-mode-map (kbd "C-,") nil)
       (diminish 'flyspell-mode (if (display-graphic-p) " ῶ" " ~"))))
 
-  (when (locate-file "hunspell" exec-path)
+  (if (locate-file "hunspell" exec-path)
     (setq ispell-program-name "hunspell")
-    (add-to-list 'ispell-extra-args "--sug-mode=ultra"))
-  (set 'flyspell-issue-message-flag nil))
+    (when (locate-file "aspell" exec-path)
+      (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
 
 (add-hook 'text-mode-hook #'flyspell-mode)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
