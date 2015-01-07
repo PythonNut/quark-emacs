@@ -73,13 +73,17 @@
        helm-source-files-in-all-dired
        helm-source-buffer-not-found)
     :fuzzy-match t
+    :prompt "> "
     :buffer "*helm-find-buffers"))
 
 (global-set-key (kbd "C-x C-b") #'my-helm-buffers)
 (global-set-key (kbd "C-x b") #'ido-switch-buffer)
 
-(defun my-helm-find-files (&rest arg)
+(defun* my-helm-find-files (&rest arg)
   (interactive)
+  (message "Use C-p")
+  (sleep-for 5)
+  (return-from 0)
   (unless (featurep 'helm-buffers) (require 'helm-buffers))
   (unless (featurep 'helm-files) (require 'helm-files))
   (helm
@@ -93,6 +97,7 @@
        ;; helm-source-tracker-search
        )
     :fuzzy-match t
+    :prompt "> "
     :buffer "*helm-find-files"))
 
 (global-set-key (kbd "C-x C-f") 'my-helm-find-files)
@@ -190,6 +195,7 @@
            ;; helm-source-buffer-not-found
            ))
       :fuzzy-match t
+      :prompt "> "
       :buffer "*helm-omni*")))
 
 (defadvice evil-paste-pop
