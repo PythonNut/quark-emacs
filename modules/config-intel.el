@@ -1,6 +1,7 @@
 (eval-when-compile
   (with-demoted-errors
     (require 's)
+    (require 'cl-lib)
     (require 'yasnippet)
     (require 'semantic)
     (require 'flycheck)
