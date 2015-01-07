@@ -29,12 +29,11 @@
       locate-command "locate")))
 
 (defun auto-icicle (func args)
-  (unless (featurep 'noflet) (require 'noflet))
   (if icicle-mode
     (call-interactively (ad-get-orig-definition func) args)
     (unwind-protect
       (progn
-        (noflet ((message (&rest args)))
+        (cl-letf (((symbol-function 'message) #'format))
           (icicle-mode +1)
           (run-hooks 'icicle-init-hook))
         (call-interactively (ad-get-orig-definition func) args))

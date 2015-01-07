@@ -1,7 +1,6 @@
 (eval-when-compile
   (with-demoted-errors
     (require 's)
-    (require 'noflet)
     (require 'yasnippet)
     (require 'semantic)
     (require 'flycheck)
@@ -89,8 +88,7 @@
 (with-eval-after-load 'flyspell
   (defadvice ispell-init-process
     (around hide-startup activate preactivate compile)
-    (require 'noflet)
-    (noflet ((message (&rest args)))
+    (cl-letf (((symbol-function 'message) #'format))
       ad-do-it))
 
   (setq
