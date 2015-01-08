@@ -173,6 +173,10 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
           (executable-find "pbcopy"))
     (xclip-mode +1))
   (xterm-mouse-mode +1)
+  (when (getenv "TMUX")
+    (add-hook 'emacs-startup-hook
+      (lambda ()
+        (run-hooks 'terminal-init-xterm-hook))))
   (add-hook 'kill-emacs-hook
     (lambda ()
       (xterm-mouse-mode -1))))
