@@ -17,6 +17,10 @@
 
 (show-paren-mode +1)
 
+(with-eval-after-load 'multiple-cursors
+  (define-key mc/keymap (kbd "<return>") nil)
+  (define-key mc/keymap (kbd "C-c <return>") 'multiple-cursors-mode))
+
 (cl-macrolet
   ((autoload-multiple-cursors (func)
      `(autoload ,func "multiple-cursors")))
