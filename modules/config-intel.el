@@ -102,9 +102,9 @@
       (define-key flyspell-mode-map (kbd "C-,") nil)
       (diminish 'flyspell-mode (if (display-graphic-p) " ῶ" " ~"))))
 
-  (if (locate-file "hunspell" exec-path)
+  (if (executable-find "hunspell")
     (setq ispell-program-name "hunspell")
-    (when (locate-file "aspell" exec-path)
+    (when (executable-find "aspell")
       (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
 
 (add-hook 'text-mode-hook #'flyspell-mode)

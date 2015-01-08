@@ -51,7 +51,7 @@
     (kbd "<down>") #'undo-tree-visualize-redo)
 
   ;; compress undo with xz
-  (when (locate-file "xz" exec-path)
+  (when (executable-find "xz")
     (defadvice undo-tree-make-history-save-file-name
       (after undo-tree activate)
       (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz")))

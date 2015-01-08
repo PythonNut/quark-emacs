@@ -4,7 +4,11 @@
     (require 'cl-lib)
     (require 'key-chord)
     (require 'evil)
+    (require 'projectile)
     (require 'helm)
+    (require 'helm-files)
+    (require 'helm-config)
+    (require 'helm-ag)
     (require 'config-modes)))
 
 (with-eval-after-load 'helm-files
@@ -55,10 +59,10 @@
 
 ;; adaptively fallback to ack and ack-grep
 (with-eval-after-load 'helm-ag
-  (unless (locate-file "ag" exec-path)
-    (if (locate-file "ack" exec-path)
+  (unless (executable-find "ag")
+    (if (executable-find "ack")
       (setq helm-ag-base-command "ack --nocolor --nogroup")
-      (when (locate-file "ack-grep" exec-path)
+      (when (executable-find "ack-grep")
         (setq helm-ag-base-command "ack-grep --nocolor --nogroup")))))
 
 (global-set-key (kbd "M-:") #'helm-eval-expression)
@@ -137,9 +141,9 @@
   (unless (featurep 'helm-misc) (require 'helm-misc))
   (unless (featurep 'helm-semantic) (require 'helm-semantic))
   (when (or
-          (locate-file "ag" exec-path)
-          (locate-file "ack" exec-path)
-          (locate-file "ack-grep" exec-path))
+          (executable-find "ag")
+          (executable-find "ack")
+          (executable-find "ack-grep"))
     (unless (featurep 'helm-ag)
       (require 'helm-ag)))
   (unless (featurep 'helm-projectile)
@@ -174,9 +178,9 @@
 
         ;; code search
         (when (or
-                (locate-file "ag" exec-path)
-                (locate-file "ack" exec-path)
-                (locate-file "ack-grep" exec-path))
+                (executable-find "ag")
+                (executable-find "ack")
+                (executable-find "ack-grep"))
           '(helm-source-do-ag))
 
         '(
