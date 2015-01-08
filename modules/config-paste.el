@@ -168,7 +168,9 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
 
 (unless (display-graphic-p)
-  (when (locate-file "xclip" exec-path)
+  (when (or
+          (executable-find "xclip")
+          (executable-find "pbcopy"))
     (xclip-mode +1))
   (xterm-mouse-mode +1)
   (add-hook 'kill-emacs-hook
