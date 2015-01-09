@@ -26,23 +26,17 @@
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
 (defadvice switch-to-buffer
-  (before save-buffer-now activate preactivate compile)
-  (save-buffer-maybe))
+  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
 (defadvice other-window
-  (before other-window-now activate preactivate compile)
-  (save-buffer-maybe))
+  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
 (defadvice windmove-up
-  (before other-window-now activate preactivate compile)
-  (save-buffer-maybe))
+  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
 (defadvice windmove-down
-  (before other-window-now activate preactivate compile)
-  (save-buffer-maybe))
+  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
 (defadvice windmove-left
-  (before other-window-now activate preactivate compile)
-  (save-buffer-maybe))
+  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
 (defadvice windmove-right
-  (before other-window-now activate preactivate compile)
-  (save-buffer-maybe))
+  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups
@@ -68,10 +62,9 @@
     (cl-letf (((symbol-function 'message) #'format))
       (save-some-buffers t))))
 
-(setq
-  auto-revert-use-notify t)
-
 (defun auto-revert-onetime-setup ()
+  (setq
+    auto-revert-use-notify t)
   (global-auto-revert-mode +1)
   (remove-hook 'find-file-hook
     #'auto-revert-onetime-setup))
