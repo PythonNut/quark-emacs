@@ -49,7 +49,9 @@
     (make-variable-buffer-local 'global-hl-line-mode)
     (make-variable-buffer-local 'scroll-margin)
     (make-variable-buffer-local 'smooth-scroll-margin)
+    (yas-minor-mode -1)
     (setq
+      yas-dont-activate t
       global-hl-line-mode nil
       scroll-margin 0
       smooth-scroll-margin 0)))
