@@ -36,7 +36,7 @@
           (icicle-mode +1)
           (run-hooks 'icicle-init-hook))
         (call-interactively (ad-get-orig-definition func) args))
-      (noflet ((message (&rest args)))
+      (cl-letf (((symbol-function 'message) #'format))
         (icicle-mode -1)))))
 
 (defmacro auto-icicle-macro (func)
