@@ -102,37 +102,15 @@
 
   (defun rainbow-delimiters-focus-on-maybe ()
     "Display the show pair overlays."
-    (let* ((pair-list (sp--get-allowed-pair-list))
-            (opening (sp--get-opening-regexp pair-list))
-            (closing (sp--get-closing-regexp pair-list))
-            (allowed (and sp-show-pair-from-inside (sp--get-allowed-regexp))))
-      (when (or
-              (or (sp--looking-at (if sp-show-pair-from-inside allowed opening))
-                (and (memq major-mode sp-navigate-consider-stringlike-sexp)
-                  (looking-at (sp--get-stringlike-regexp))))
-
-              (or (sp--looking-back (if sp-show-pair-from-inside allowed closing))
-                (and (memq major-mode sp-navigate-consider-stringlike-sexp)
-                  (sp--looking-back (sp--get-stringlike-regexp)))))
-        (rainbow-delimiters-on-maybe))))
+    (when (or (looking-at "[][(){}]") (looking-back "[][(){}]"))
+      (rainbow-delimiters-on-maybe)))
 
   (run-with-idle-timer 0.6 t 'rainbow-delimiters-focus-on-maybe)
 
   (defun rainbow-delimiters-focus-off-maybe ()
     "Display the show pair overlays."
-    (let* ((pair-list (sp--get-allowed-pair-list))
-            (opening (sp--get-opening-regexp pair-list))
-            (closing (sp--get-closing-regexp pair-list))
-            (allowed (and sp-show-pair-from-inside (sp--get-allowed-regexp))))
-      (unless (or
-                (or (sp--looking-at (if sp-show-pair-from-inside allowed opening))
-                  (and (memq major-mode sp-navigate-consider-stringlike-sexp)
-                    (looking-at (sp--get-stringlike-regexp))))
-
-                (or (sp--looking-back (if sp-show-pair-from-inside allowed closing))
-                  (and (memq major-mode sp-navigate-consider-stringlike-sexp)
-                    (sp--looking-back (sp--get-stringlike-regexp)))))
-        (rainbow-delimiters-off-maybe))))
+    (unless (or (looking-at "[][(){}]") (looking-back "[][(){}]"))
+      (rainbow-delimiters-off-maybe)))
 
   (run-with-idle-timer 0.1 t 'rainbow-delimiters-focus-off-maybe))
 
