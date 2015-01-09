@@ -63,7 +63,10 @@
 (add-hook 'before-save-hook #'force-backup-of-buffer)
 
 ;; save buffers on blur
-(add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
+(add-hook 'focus-out-hook
+  (lambda ()
+    (cl-letf (((symbol-function 'message) #'format))
+      (save-some-buffers t))))
 
 (setq
   auto-revert-use-notify t)
