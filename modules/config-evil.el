@@ -65,11 +65,11 @@
 ;; indent pasted regions in evil
 (defadvice evil-paste-before
   (around auto-indent activate preactivate compile)
-  (evil-indent (point) (+ (point) (length ad-do-it))))
+  (indent-region (point) (+ (point) (length ad-do-it))))
 
 (defadvice evil-paste-after
   (around auto-indent activate preactivate compile)
-  (evil-indent (point) (+ (point) (length ad-do-it))))
+  (indent-region (point) (+ (point) (length ad-do-it))))
 
 ;;; Change modeline color by Evil state
 (lexical-let ((default-color (cons (face-background 'mode-line)
