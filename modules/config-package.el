@@ -133,11 +133,19 @@
 
 (add-to-list 'load-path "~/.emacs.d/personal/")
 
+(eval-when-compile
+  (require 'idle-require)
+  (require 'diminish))
+
 (with-eval-after-load 'idle-require
   (add-hook 'idle-require-mode-hook
     (lambda ()
       (diminish 'idle-require-mode (if (display-graphic-p) " ⦿" " IR"))))
-  (setq idle-require-symbols
+
+  (setq
+    idle-require-idle-delay 1
+    idle-require-load-break 0
+    idle-require-symbols
     '(
        helm-files
        helm-ring
@@ -145,7 +153,7 @@
        helm-projectile
        helm-semantic
        helm-ag
-       icicles
+       ;; icicles
 
        magit
        magit-filenotify
@@ -170,13 +178,21 @@
           (message (format "Loading %s..." name))
           (with-demoted-errors (require sym nil t))))))
 
-  (run-with-idle-timer 5 nil
+  (add-hook 'emacs-startup-hook
     (lambda ()
-      (defadvice idle-require-load-next
-        (after silence-at-end activate)
-        (when (null idle-require-symbols)
-          (message "")))
+      (run-with-idle-timer 0.5 nil
+        (lambda ()
+          (defadvice idle-require-load-next
+            (around quiet activate preactivate compile)
+            (ad-enable-advice 'load 'before 'quiet-loading)
+            (ad-activate 'load)
+            (cl-letf (((symbol-function 'message) #'format))
+              ad-do-it)
+            (ad-disable-advice 'load 'before 'quiet-loading)
+            (ad-activate 'load)
+            (when (null idle-require-symbols)
+              (message "")))
 
-      (idle-require-mode +1))))
+          (idle-require-mode +1))))))
 
 (provide 'config-package)
