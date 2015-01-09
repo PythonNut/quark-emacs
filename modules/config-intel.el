@@ -114,26 +114,38 @@
 ;;; yasnippet -- extensible programmable snippets
 ;;; =============================================
 
-;; technically, *scratch* init triggers first-change-hook
+(defun yasnippet-onetime-setup ()
+  (yas-global-mode +1)
+  (remove-hook 'prog-mode-hook
+    #'yasnippet-onetime-setup-proxy)
+  (remove-hook 'text-mode-hook
+    #'yasnippet-onetime-setup-proxy))
+
+(defun yasnippet-onetime-setup-proxy ()
+  (add-hook 'first-change-hook #'yasnippet-onetime-setup nil t))
+
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (add-hook 'first-change-hook 'yas-minor-mode)))
+    (add-hook 'prog-mode-hook #'yasnippet-onetime-setup-proxy)
+    (add-hook 'text-mode-hook #'yasnippet-onetime-setup-proxy)))
 
 (setq yas-verbosity 0)
 
 (with-eval-after-load 'yasnippet
-  (add-hook 'yas-minor-mode-hook
+  (set-face-attribute 'yas-field-highlight-face nil
+    :foreground nil
+    :background nil
+    :inherit 'region)
+  (add-hook 'yas-global-mode-hook
     (lambda ()
-      (set-face-attribute 'yas-field-highlight-face nil
-        :foreground nil
-        :background nil
-        :inherit 'region)
       (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
   (setq
     yas-snippet-dirs (list
                        (concat
                          user-emacs-directory
                          "data/snippets")))
+  (unless yas-global-mode
+    (yasnippet-onetime-setup))
   (yas-reload-all))
 
 (provide 'config-intel)

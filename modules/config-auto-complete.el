@@ -18,6 +18,7 @@
       '(
          ac-source-semantic
          ac-source-filename
+         ac-source-yasnippet
          )
       ac-sources))
 
