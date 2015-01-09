@@ -1,31 +1,21 @@
 (eval-when-compile
   (with-demoted-errors
-    (require 'cl)
     (require 'cl-lib)
-    (require 'key-chord)
     (require 'evil)
-    (require 'projectile)
     (require 'helm)
-    (require 'helm-files)
-    (require 'helm-config)
     (require 'helm-ag)
+    (require 'helm-config)
+    (require 'helm-files)
+    (require 'helm-grep)
+    (require 'key-chord)
+    (require 'projectile)
+    (require 'semantic)
     (require 'config-modes)))
 
 (with-eval-after-load 'helm-files
   (setq
     helm-recentf-fuzzy-match t
-    helm-locate-fuzzy-match t
-    helm-locate
-    `((name . "Locate")
-       (init . helm-locate-set-command)
-       (candidates-process . helm-locate-init)
-       (type . file)
-       (requires-pattern . 3)
-       (history . ,'helm-file-name-history)
-       (keymap . ,helm-generic-files-map)
-       (help-message . helm-generic-file-help-message)
-       (candidate-number-limit . 999)
-       (mode-line . helm-generic-file-mode-line-string)))
+    helm-locate-fuzzy-match t)
 
   (setq helm-boring-file-regexp-list
     (append helm-boring-file-regexp-list
@@ -39,7 +29,6 @@
 (with-eval-after-load 'helm
   (setq
     helm-case-fold-search 'smart
-    helm-M-x-fuzzy-match t
     helm-locate-command "locate %s -r %s -be -l 500"
     helm-ff-transformer-show-only-basename nil
     helm-buffers-fuzzy-matching t
@@ -83,13 +72,9 @@
     :buffer "*helm-find-buffers"))
 
 (global-set-key (kbd "C-x C-b") #'my-helm-buffers)
-(global-set-key (kbd "C-x b") #'ido-switch-buffer)
 
-(defun* my-helm-find-files (&rest arg)
+(defun my-helm-find-files (&rest arg)
   (interactive)
-  (message "Use C-p")
-  (sleep-for 5)
-  (return-from 0)
   (unless (featurep 'helm-buffers) (require 'helm-buffers))
   (unless (featurep 'helm-files) (require 'helm-files))
   (helm
@@ -99,40 +84,12 @@
        helm-source-files-in-current-dir
        helm-source-find-files
        helm-source-findutils
-       helm-source-locate
-       ;; helm-source-tracker-search
-       )
+       helm-source-locate)
     :fuzzy-match t
     :prompt "> "
     :buffer "*helm-find-files"))
 
 (global-set-key (kbd "C-x C-f") 'my-helm-find-files)
-
-(defvar my-helm-source-evaluation-result
-  '((name . "Evaluation Result")
-     (init . (lambda () (require 'edebug)))
-     (dummy)
-     (multiline)
-     (mode-line . "C-RET: nl-and-indent, tab: reindent, C-tab:complete, C-p/n: next/prec-line.")
-     (filtered-candidate-transformer .
-       (lambda (candidates _source)
-         (list
-           (condition-case nil
-             (with-helm-current-buffer
-               (pp-to-string
-                 (if edebug-active
-                   (edebug-eval-expression
-                     (read helm-pattern))
-                   (eval (read helm-pattern)))))
-             (error "")))))
-     (action . (("Copy result to kill-ring" .
-                  (lambda (candidate)
-                    (kill-new
-                      (replace-regexp-in-string
-                        "\n" "" candidate))))
-                 ("copy sexp to kill-ring" .
-                   (lambda (candidate)
-                     (kill-new helm-input)))))))
 
 (defun my-helm-omni (&rest arg)
   (interactive)
@@ -140,11 +97,11 @@
   (unless (featurep 'helm-ring) (require 'helm-ring))
   (unless (featurep 'helm-misc) (require 'helm-misc))
   (unless (featurep 'helm-semantic) (require 'helm-semantic))
-  (when (or
-          (executable-find "ag")
-          (executable-find "ack")
-          (executable-find "ack-grep"))
-    (unless (featurep 'helm-ag)
+  (unless (featurep 'helm-ag)
+    (when (or
+            (executable-find "ag")
+            (executable-find "ack")
+            (executable-find "ack-grep"))
       (require 'helm-ag)))
   (unless (featurep 'helm-projectile)
     (require 'helm-projectile)
@@ -162,44 +119,42 @@
         collect (buffer-chars-modified-tick (get-buffer b))))
     (helm
       :sources
-      (append '(helm-source-buffers-list)
-
+      (append
         ;; projectile explodes when not in project
-        (when projectile-root
-          '(helm-source-projectile-recentf-list
-             helm-source-projectile-files-list
-             helm-source-projectile-buffers-list))
+        (if projectile-root
+          '(helm-source-projectile-buffers-list)
+          '(helm-source-buffers-list))
 
-        '( ;; files
-           helm-source-file-cache
-           helm-source-recentf
+        (if (semantic-active-p)
+          '(helm-source-semantic)
+          '(helm-source-imenu))
+
+        (if projectile-root
+          '(helm-source-projectile-recentf-list
+             helm-source-recentf
+             helm-source-projectile-files-list)
+          '(helm-source-recentf))
+
+        '(;; files
            helm-source-files-in-current-dir
-           helm-source-bookmarks)
+           helm-source-find-files
+           helm-source-occur
+
+           ;; internal sources
+           helm-source-kill-ring
+           helm-source-mark-ring
+           helm-source-global-mark-ring)
 
         ;; code search
-        (when (or
-                (executable-find "ag")
-                (executable-find "ack")
-                (executable-find "ack-grep"))
+        (when (featurep 'helm-ag)
           '(helm-source-do-ag))
-
-        '(
-           helm-source-semantic
-           helm-source-imenu
-           helm-source-occur
-           ;; internal
-           helm-source-kill-ring           ;; helm-source-lacarte
-           my-helm-source-evaluation-result)
 
         ;; file location, of which projectile can be a superset
         (unless projectile-root
           '(helm-source-findutils))
 
-        '(helm-source-locate
-           ;; helm-source-tracker-search
-           ;; fallback
-           ;; helm-source-buffer-not-found
-           ))
+        '(helm-source-locate))
+
       :fuzzy-match t
       :prompt "> "
       :buffer "*helm-omni*")))

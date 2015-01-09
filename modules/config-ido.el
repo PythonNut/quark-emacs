@@ -16,6 +16,7 @@
     ido-save-directory-list-file "~/.emacs.d/ido.last"
     ido-use-faces nil))
 
+(global-set-key (kbd "C-x b") #'ido-switch-buffer)
 (global-set-key (kbd "C-x f") #'ido-find-file)
 
 (defun ido-onetime-setup ()
