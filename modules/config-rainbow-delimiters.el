@@ -102,14 +102,20 @@
 
   (defun rainbow-delimiters-focus-on-maybe ()
     "Display the show pair overlays."
-    (when (or (looking-at "[][(){}]") (looking-back "[][(){}]"))
+    (when (or (looking-at "[][(){}]")
+            (and
+              (evil-insert-state-p)
+              (looking-back "[][(){}]")))
       (rainbow-delimiters-on-maybe)))
 
   (run-with-idle-timer 0.6 t 'rainbow-delimiters-focus-on-maybe)
 
   (defun rainbow-delimiters-focus-off-maybe ()
     "Display the show pair overlays."
-    (unless (or (looking-at "[][(){}]") (looking-back "[][(){}]"))
+    (unless (or (looking-at "[][(){}]")
+              (and
+                (evil-insert-state-p)
+                (looking-back "[][(){}]")))
       (rainbow-delimiters-off-maybe)))
 
   (run-with-idle-timer 0.1 t 'rainbow-delimiters-focus-off-maybe))
