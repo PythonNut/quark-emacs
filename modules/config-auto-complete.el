@@ -1,5 +1,6 @@
 (eval-when-compile
   (with-demoted-errors
+    (require 'diminish)
     (require 'auto-complete)
     (require 'auto-complete-config)))
 
@@ -32,8 +33,6 @@
     ac-fuzzy-enable t
     ac-dwim-enable t
     ac-use-comphist t
-    popup-use-optimized-column-computation nil)
-
-  (add-to-list 'ac-trigger-commands #'backwards-kill-char))
+    popup-use-optimized-column-computation nil))
 
 (provide 'config-auto-complete)
