@@ -2,6 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors
+    (require 'cl-lib)
     (require 'key-chord)
     (require 'recentf)
     (require 'saveplace)
@@ -57,5 +58,8 @@
   recentf-max-saved-items 200
   recentf-max-menu-items 30)
 
+(defadvice recentf-cleanup (around quiet activate preactivate compile)
+  (cl-letf (((symbol-function 'message) #'format))
+    ad-do-it))
 
 (provide 'config-desktop)
