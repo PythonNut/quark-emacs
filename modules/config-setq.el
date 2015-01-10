@@ -16,6 +16,7 @@
   left-margin-width 0
   max-lisp-eval-depth 5000
   max-specpdl-size 10000
+  mode-line-end-spaces nil
   mouse-autoselect-window 0.3
   mouse-drag-copy-region nil
   right-margin-width 0
