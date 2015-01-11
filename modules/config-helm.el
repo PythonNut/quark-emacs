@@ -7,6 +7,9 @@
     (require 'helm-config)
     (require 'helm-files)
     (require 'helm-grep)
+    (require 'helm-command)
+    (require 'helm-imenu)
+    (require 'helm-semantic)
     (require 'key-chord)
     (require 'projectile)
     (require 'semantic)
@@ -14,10 +17,7 @@
 
 (with-eval-after-load 'helm-files
   (setq
-    helm-recentf-fuzzy-match t
-    helm-locate-fuzzy-match t)
-
-  (setq helm-boring-file-regexp-list
+    helm-boring-file-regexp-list
     (append helm-boring-file-regexp-list
       '("\\.undo.xz$"
          "\\.elc$"
@@ -27,11 +27,45 @@
          "\\.zwc$"))))
 
 (with-eval-after-load 'helm
+  (require 'flx)
+  (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-str))
+  (defun helm-score-candidate-for-pattern (candidate pattern)
+    (car (flx-score candidate pattern helm-flx-cache)))
+
+  (defun helm-fuzzy-default-highlight-match (candidate)
+    "The default function to highlight matches in fuzzy matching.
+  It is meant to use with `filter-one-by-one' slot."
+    (let* ((pair (and (consp candidate) candidate))
+            (display (if pair (car pair) candidate))
+            (real (cdr pair)))
+      (with-temp-buffer
+        (insert display)
+        (goto-char (point-min))
+        (if (string-match-p " " helm-pattern)
+          (cl-loop with pattern = (split-string helm-pattern)
+            for p in pattern
+            do (when (search-forward p nil t)
+                 (add-text-properties
+                   (match-beginning 0) (match-end 0) '(face helm-match))))
+          (cl-loop with pattern = (cdr (flx-score display
+                                         helm-pattern helm-flx-cache))
+            for index in pattern
+            do (add-text-properties
+                 (1+ index) (+ 2 index) '(face helm-match))))
+        (setq display (buffer-string)))
+      (if real (cons display real) display)))
+
   (setq
+    helm-buffers-fuzzy-matching t
+    helm-imenu-fuzzy-match t
+    helm-recentf-fuzzy-match t
+    helm-locate-fuzzy-match t
+    helm-M-x-fuzzy-match t
+    helm-semantic-fuzzy-match t
+
     helm-case-fold-search 'smart
     helm-locate-command "locate %s -r %s -be -l 500"
     helm-ff-transformer-show-only-basename nil
-    helm-buffers-fuzzy-matching t
     helm-ff-newfile-prompt-p nil)
 
   (set-face-attribute 'helm-selection nil :underline nil))
@@ -176,7 +210,6 @@
     (lambda ()
       (insert "helm-"))
     (call-interactively #'helm-M-x)))
-
 
 (evil-leader/set-key
   "h" #'helm-helm-commands)
