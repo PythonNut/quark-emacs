@@ -6,7 +6,14 @@
 
 (set-face-background 'mode-line-inactive "#073642")
 
-(set-face-foreground 'vertical-border
-  (face-background 'hl-line))
+(unless (display-graphic-p)
+  (set-face-attribute 'vertical-border nil
+    :foreground nil
+    :background nil
+    :inherit 'default)
+
+  (let ((display-table (or standard-display-table (make-display-table))))
+    (set-display-table-slot display-table 'vertical-border (make-glyph-code ?│))
+    (setq standard-display-table display-table)))
 
 (provide 'config-solarized)
