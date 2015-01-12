@@ -1,11 +1,22 @@
-(require 'ace-jump-mode)
-
 (eval-when-compile
   (with-demoted-errors
     (require 'ace-jump-mode)
     (require 'noflet)
     (require 'evil)
-    (require 'key-chord)))
+    (require 'key-chord)
+    (require 'evil-easymotion)))
+
+(defun realign-cursor ()
+  (interactive)
+  (save-excursion
+    (if (> (rest (nth 6 (posn-at-point)))
+          (/ (window-body-height) 2))
+      (progn
+        (call-interactively #'previous-line)
+        (call-interactively #'next-line))
+      (progn
+        (call-interactively #'next-line)
+        (call-interactively #'previous-line)))))
 
 (with-eval-after-load 'ace-jump-mode
   ;; use letters, numbers and capitals in that order
@@ -14,79 +25,39 @@
       (loop for i from ?a to ?z collect i)
       (loop for i from ?0 to ?9 collect i)
       (loop for i from ?A to ?Z collect i))
-    ace-jump-mode-case-fold nil)
+    ace-jump-mode-case-fold nil
+    ace-jump-mode-scope 'visible)
 
-  ;; enable and use the more powerful ACE jump back feature
-  ;; see github.com/winterTTr/ace-jump-mode/wiki/AceJump-FAQ
-  (setq ace-jump-mode-scope 'global)
-
-  (defun ace-jump-char-N-lines (&optional n)
-    (interactive "p")
-    (let* ((N (or n (window-body-height)))
-            (query-char (read-char "Query Char:"))
-            (start (save-excursion
-                     (forward-line (- N))
-                     (point)))
-            (stop (save-excursion
-                    (forward-line (1+ N))
-                    (point))))
-      (unwind-protect
-        (condition-case err
-          (progn
-            (narrow-to-region start stop)
-            (evil-ace-jump-char-mode query-char))
-          (error
-            (message (error-message-string err))))
-        (widen))))
-
-  (defun realign-cursor ()
-    (interactive)
-    (save-excursion
-      (if (> (rest (nth 6 (posn-at-point)))
-            (/ (window-body-height) 2))
-        (progn
-          (call-interactively #'previous-line)
-          (call-interactively #'next-line))
-        (progn
-          (call-interactively #'next-line)
-          (call-interactively #'previous-line)))))
+  (ace-jump-mode-enable-mark-sync)
 
   (defadvice evil-ace-jump-word-mode
-    (after cleanup activate preactivate compile)
-    (ignore-errors (call-interactively #'realign-cursor)))
+    (after realign activate preactivate compile)
+    (ignore-errors (realign-cursor)))
 
   (defadvice evil-ace-jump-char-mode
-    (after cleanup activate preactivate compile)
-    (ignore-errors (call-interactively #'realign-cursor)))
+    (after realign activate preactivate compile)
+    (ignore-errors (realign-cursor)))
 
   (defadvice evil-ace-jump-line-mode
     (after realign activate preactivate compile)
-    (ignore-errors (call-interactively #'realign-cursor)))
+    (ignore-errors (realign-cursor)))
 
-  (ace-jump-mode-enable-mark-sync)
-  (when (and
-          (< (display-color-cells) 256)
-          (not (display-graphic-p)))
-    (set-face-foreground 'ace-jump-face-background "white")
-    (set-face-background 'ace-jump-face-background "black")
-    (set-face-foreground 'ace-jump-face-foreground "black")
-    (set-face-background 'ace-jump-face-foreground "white"))
+  (add-hook 'before-make-frame-hook
+    (lambda ()
+      (when (< (display-color-cells) 256)
+        (set-face-foreground 'ace-jump-face-background "white")
+        (set-face-background 'ace-jump-face-background "black")
+        (set-face-foreground 'ace-jump-face-foreground "black")
+        (set-face-background 'ace-jump-face-foreground "white")))))
 
-  (key-chord-define evil-insert-state-map "jl" #'evil-ace-jump-line-mode)
-  (key-chord-define evil-insert-state-map "jk" #'evil-ace-jump-word-mode)
-  (key-chord-define evil-emacs-state-map "jk" #'ace-jump-word-mode)
-  (key-chord-define evil-emacs-state-map "jc" #'ace-jump-char-N-lines)
-  (key-chord-define evil-emacs-state-map "jl" #'ace-jump-line-mode)
+(key-chord-define evil-insert-state-map "jk" #'evil-ace-jump-word-mode)
+(key-chord-define evil-insert-state-map "jc" #'evil-ace-jump-char-mode)
+(key-chord-define evil-insert-state-map "jl" #'evil-ace-jump-line-mode)
 
-  (key-chord-define evil-normal-state-map " l" #'evil-ace-jump-line-mode)
-  (key-chord-define evil-normal-state-map " n" #'ace-jump-char-N-lines)
-  (key-chord-define evil-normal-state-map " c" #'evil-ace-jump-char-mode)
-  (key-chord-define evil-normal-state-map " t" #'evil-ace-jump-char-to-mode)
+(key-chord-define evil-emacs-state-map "jk" #'ace-jump-word-mode)
+(key-chord-define evil-emacs-state-map "jc" #'ace-jump-char-mode)
+(key-chord-define evil-emacs-state-map "jl" #'ace-jump-line-mode)
 
-  (key-chord-define evil-insert-state-map "jc" #'ace-jump-char-N-lines))
-
-(require 'evil-easymotion)
-(eval-when-compile (require 'evil-easymotion))
 (evilem-default-keybindings "SPC")
 (evilem-define (kbd "SPC s f") 'evil-forward-sexp)
 (evilem-define (kbd "SPC s b") 'evil-backward-sexp)
@@ -97,7 +68,6 @@
 (evilem-define (kbd "SPC s n") 'evil-next-sexp)
 (evilem-define (kbd "SPC s p") 'evil-previous-sexp)
 
-;; currently broken
 (evilem-define (kbd "SPC L") 'evil-forward-symbol)
 (evilem-define (kbd "SPC H") 'evil-backward-symbol)
 
