@@ -1,10 +1,5 @@
 (require 'package)
 
-(eval-when-compile
-  (with-demoted-errors
-    (require 'cl)
-    (require 'cl-lib)))
-
 ;; Package archives
 (setq
   package-enable-at-startup nil
