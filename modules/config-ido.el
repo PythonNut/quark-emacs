@@ -20,9 +20,13 @@
 (global-set-key (kbd "C-x f") #'ido-find-file)
 
 (defun ido-onetime-setup ()
-  (unless (featurep 'flx-ido)
+  (unless (and
+            (featurep 'flx-ido)
+            flx-ido-mode)
     (flx-ido-mode +1))
-  (unless (featurep 'ido-vertical-mode)
+  (unless (and
+            (featurep 'ido-vertical-mode)
+            ido-vertical-mode)
     (ido-vertical-mode +1))
 
   (remove-hook 'ido-minibuffer-setup-hook 'ido-onetime-setup))
@@ -33,7 +37,8 @@
   (setq smex-save-file
     (concat
       user-emacs-directory
-      "smex-items")))
+      "smex-items")
+    smex-auto-update nil))
 
 (global-set-key (kbd "M-x") #'smex)
 
