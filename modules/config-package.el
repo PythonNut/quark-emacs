@@ -153,7 +153,7 @@
        helm-projectile
        helm-semantic
        helm-ag
-       ;; icicles
+       icicles
 
        magit
        magit-filenotify
