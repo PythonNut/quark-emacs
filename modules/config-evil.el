@@ -26,6 +26,8 @@
 (evil-mode +1)
 (global-evil-leader-mode +1)
 
+(define-key evil-visual-state-map "v" #'er/expand-region)
+
 (define-key evil-normal-state-map (kbd "<down>") #'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") #'evil-previous-visual-line)
 (define-key evil-motion-state-map (kbd "<down>") #'evil-next-visual-line)
