@@ -21,10 +21,7 @@
 (with-eval-after-load 'ace-jump-mode
   ;; use letters, numbers and capitals in that order
   (setq ace-jump-mode-move-keys
-    (nconc
-      (loop for i from ?a to ?z collect i)
-      (loop for i from ?0 to ?9 collect i)
-      (loop for i from ?A to ?Z collect i))
+    (string-to-list "zxbqpwomceirukdlsvnahgyt5647382910fj")
     ace-jump-mode-case-fold nil
     ace-jump-mode-scope 'visible)
 
