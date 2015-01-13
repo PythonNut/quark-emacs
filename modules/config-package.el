@@ -1,5 +1,7 @@
 (require 'package)
 
+(eval-when-compile (require 'cl-lib))
+
 ;; Package archives
 (setq
   package-enable-at-startup nil
@@ -107,7 +109,7 @@
   "List of packages needs to be installed at launch")
 
 (defun has-package-not-installed ()
-  (loop for p in packages-list
+  (cl-loop for p in packages-list
     when (not (package-installed-p p)) do (return t)
     finally (return nil)))
 
