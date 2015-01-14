@@ -9,6 +9,7 @@
     (require 'helm-grep)
     (require 'helm-command)
     (require 'helm-imenu)
+    (require 'helm-locate)
     (require 'helm-semantic)
     (require 'key-chord)
     (require 'projectile)
@@ -64,7 +65,6 @@
     helm-semantic-fuzzy-match t
 
     helm-case-fold-search 'smart
-    helm-locate-command "locate %s -r %s -be -l 500"
     helm-ff-transformer-show-only-basename nil
     helm-ff-newfile-prompt-p nil)
 
@@ -79,6 +79,13 @@
        "\\*helm"
        "\\*Compile"
        "\\*Quail")))
+
+(with-eval-after-load 'helm-locate
+  (setq helm-source-locate
+    (helm-make-source "Locate" 'helm-locate-source
+      :pattern-transformer 'helm-locate-pattern-transformer
+      :candidate-number-limit 100)
+    helm-locate-command "locate %s -r %s -be -l 100"))
 
 ;; adaptively fallback to ack and ack-grep
 (with-eval-after-load 'helm-ag
