@@ -190,7 +190,9 @@
         '(helm-source-locate))
 
       :fuzzy-match t
-      :prompt "> "
+      :prompt (if projectile-root
+                (format "[%s] > " (projectile-project-name))
+                "> ")
       :buffer "*helm-omni*")))
 
 (defadvice evil-paste-pop
