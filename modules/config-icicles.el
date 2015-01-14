@@ -9,23 +9,20 @@
 (add-hook 'icicle-init-hook
   (lambda ()
     (setq
-      completions-format 'vertical
+      icicle-sort-comparer #'icicle-file-type-less-p
       icicle-Completions-text-scale-decrease 0
-      icicle-TAB-completion-methods '(vanilla substring basic)
+      icicle-TAB-completion-methods '(vanilla substring)
       icicle-default-cycling-mode 'apropos
       icicle-expand-input-to-common-match 1
-      icicle-highlight-input-completion-failure-delay 0
       icicle-highlight-lighter-flag nil
-      icicle-incremental-completion t
-      icicle-incremental-completion-delay 0.3
-      icicle-max-candidates 200
+      icicle-incremental-completion nil
+      icicle-apropos-complete-keys (list (kbd "<tab>"))
       icicle-prefix-complete-keys (list (kbd "<backtab>"))
       icicle-search-highlight-all-current-flag t
       icicle-show-Completions-help-flag nil
       icicle-show-Completions-initially-flag nil
       icicle-show-multi-completion-flag t
-      icicle-yank-function #'cua-paste
-      locate-command "locate")))
+      icicle-yank-function #'cua-paste)))
 
 (defun auto-icicle (func args)
   (if icicle-mode
