@@ -128,7 +128,7 @@
 
 (install-all-packages)
 
-(add-to-list 'load-path "~/.emacs.d/personal/")
+(add-to-list 'load-path (concat user-emacs-directory "personal/"))
 
 (eval-when-compile
   (require 'idle-require)

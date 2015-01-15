@@ -11,13 +11,13 @@
     (require 'evil-ex)
     (require 'config-modes)))
 
-(setq save-place-file "~/.emacs.d/.saveplace")
+(setq save-place-file (concat user-emacs-directory ".saveplace"))
 (setq-default save-place t)
 
 (require 'saveplace)
 
 (setq
-  savehist-file "~/.emacs.d/.savehist"
+  savehist-file (concat user-emacs-directory ".savehist")
   savehist-autosave-interval 180
   history-length 100
   history-delete-duplicates t

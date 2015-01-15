@@ -13,7 +13,7 @@
 (with-eval-after-load 'ido
   (setq
     ido-enable-flex-matching t
-    ido-save-directory-list-file "~/.emacs.d/ido.last"
+    ido-save-directory-list-file (concat user-emacs-directory "ido.last")
     ido-use-faces nil))
 
 (global-set-key (kbd "C-x b") #'ido-switch-buffer)

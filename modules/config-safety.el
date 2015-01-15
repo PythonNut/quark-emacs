@@ -4,10 +4,9 @@
     (require 'auto-save)
     (require 'autorevert)))
 
-(defvar backup-location "~/.emacs.d/data/backups")
-(defvar autosave-location "~/.emacs.d/data/autosave")
-(defvar backup-directory "~/.emacs.d/data/backups")
-(defvar tramp-backup-directory "~/.emacs.d/data/tramp-backups")
+(defvar backup-location (concat user-emacs-directory "data/backups"))
+(defvar autosave-location (concat user-emacs-directory "data/autosave"))
+(defvar tramp-backup-directory (concat user-emacs-directory "data/tramp-backups"))
 
 (setq backup-directory-alist
   `((".*" . ,backup-location)))
@@ -18,10 +17,7 @@
 (auto-save-mode +1)
 
 (defun save-buffer-maybe ()
-  (and
-    (buffer-modified-p)
-    buffer-file-name
-    (save-buffer)))
+  (and (buffer-modified-p) buffer-file-name (save-buffer)))
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
@@ -63,8 +59,6 @@
       (save-some-buffers t))))
 
 (defun auto-revert-onetime-setup ()
-  (setq
-    auto-revert-use-notify t)
   (global-auto-revert-mode +1)
   (remove-hook 'find-file-hook
     #'auto-revert-onetime-setup))
