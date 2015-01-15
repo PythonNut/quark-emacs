@@ -63,6 +63,11 @@ ac-comphist.dat
 # UCS cache
 /var
 
+
+# Yasnippet extras
+.yas-compiled-snippets*
+
+
 # personal files
 /data/backups/*
 /data/autosave/*
