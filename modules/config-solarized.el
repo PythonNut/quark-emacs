@@ -6,11 +6,10 @@
 
 (set-face-background 'mode-line-inactive "#073642")
 
-(unless (display-graphic-p)
+(if (display-graphic-p)
   (set-face-attribute 'vertical-border nil
     :foreground nil
-    :background nil
-    :inherit 'default)
+    :inherit 'region)
 
   (let ((display-table (or standard-display-table (make-display-table))))
     (set-display-table-slot display-table 'vertical-border (make-glyph-code ?│))
