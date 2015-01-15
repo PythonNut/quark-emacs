@@ -29,7 +29,7 @@
 
 (with-eval-after-load 'helm
   (require 'flx)
-  (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-str))
+  (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file))
   (defun helm-score-candidate-for-pattern (candidate pattern)
     (car (flx-score candidate pattern helm-flx-cache)))
 
