@@ -4,6 +4,7 @@
 (icomplete-mode +1)
 (show-paren-mode +1)
 (xterm-mouse-mode +1)
+(visual-line-mode +1)
 
 (set-face-attribute 'show-paren-match nil
   :background nil
