@@ -25,14 +25,16 @@
   (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
 (defadvice other-window
   (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-(defadvice windmove-up
-  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-(defadvice windmove-down
-  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-(defadvice windmove-left
-  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-(defadvice windmove-right
-  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
+
+(with-eval-after-load 'windmove
+  (defadvice windmove-up
+    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
+  (defadvice windmove-down
+    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
+  (defadvice windmove-left
+    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
+  (defadvice windmove-right
+    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe)))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups
