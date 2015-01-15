@@ -13,8 +13,7 @@
     (require 'helm-semantic)
     (require 'key-chord)
     (require 'projectile)
-    (require 'semantic)
-    (require 'config-modes)))
+    (require 'semantic)))
 
 (with-eval-after-load 'helm-files
   (setq
