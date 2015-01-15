@@ -81,6 +81,7 @@
      gitconfig-mode
      gitignore-mode
      helm-ag
+     helm-git-grep
      helm-projectile
      hexrgb
      icicles
@@ -96,6 +97,7 @@
      magit-filenotify
      multiple-cursors
      ;; noflet
+     popwin
      psvn
      rainbow-delimiters
      smartparens
@@ -131,8 +133,9 @@
 (add-to-list 'load-path (concat user-emacs-directory "personal/"))
 
 (eval-when-compile
-  (require 'idle-require)
-  (require 'diminish))
+  (with-demoted-errors
+    (require 'idle-require)
+    (require 'diminish)))
 
 (with-eval-after-load 'idle-require
   (add-hook 'idle-require-mode-hook
