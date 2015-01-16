@@ -73,7 +73,22 @@
   auto-save-default t   
   auto-save-timeout 10  
   auto-save-interval 200
-  vc-make-backup-files t)
+  vc-make-backup-files t
+
+  ;; hippie expand settings
+  hippie-expand-try-functions-list
+  '(try-expand-dabbrev
+     try-expand-dabbrev-from-kill
+     try-expand-dabbrev-all-buffers
+     try-complete-file-name-partially
+     try-complete-file-name
+     try-expand-all-abbrevs
+     try-expand-list
+     try-expand-line
+     try-complete-lisp-symbol-partially
+     try-complete-lisp-symbol))
+
+(global-set-key (kbd "M-/") 'hippie-expand)
 
 (setq-default
   buffer-file-coding-system 'utf-8
@@ -86,4 +101,3 @@
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
 (load-theme 'tango-dark)
-
