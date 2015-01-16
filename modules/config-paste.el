@@ -83,18 +83,17 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
         ;; trailing newline -- add one, in these cases
         (when (not (string-match "\n$" string-to-yank))
           (insert "\n")
-          (previous-line 1))
+          (forward-line -1))
 
         ;; restore state of being....
         (move-to-column saved-column)
-        (remove-text-properties beg (+ beg 1) '(whole-line-or-region nil)))
+        (remove-text-properties beg (1+ beg) '(whole-line-or-region nil)))
 
       ;; no whole-line-or-region mark
       (if string-in
         ;; insert "manually"
         (progn
-          (when (and delete-selection-mode
-                  mark-active)
+          (when (and delete-selection-mode mark-active)
             (delete-active-region))
           (insert string-in))
         ;; just yank as normal
@@ -120,14 +119,14 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (before whole-line-or-region
     activate preactivate compile)
   (when (get-text-property 0 'whole-line-or-region (car kill-ring))
-    (setcar kill-ring
+    (setf (car kill-ring)
       (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
 (defadvice evil-paste-after
   (before whole-line-or-region
     activate preactivate compile)
   (when (get-text-property 0 'whole-line-or-region (car kill-ring))
-    (setcar kill-ring
+    (setf (car kill-ring)
       (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
 ;; unify evil-paste with cua rectangles
