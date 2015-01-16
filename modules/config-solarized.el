@@ -1,4 +1,6 @@
-(load-theme 'solarized-dark)
+(if (<= (display-color-cells) 256)
+  (load-theme 'tango-dark)
+  (load-theme 'solarized-dark))
 
 (set-face-background 'fringe "#022F3A")
 (set-face-attribute 'mode-line nil :underline nil)
