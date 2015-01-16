@@ -133,4 +133,12 @@
 
 (defalias 'yes-or-no-p #'y-or-n-p)
 
+;; make vertical window borders prettier
+(let ((display-table (or standard-display-table (make-display-table))))
+  (set-display-table-slot display-table 'vertical-border (make-glyph-code ?│))
+  (setq standard-display-table display-table))
+
+(set-face-attribute 'vertical-border nil
+  :inherit 'default)
+
 (load-theme 'tango-dark)
