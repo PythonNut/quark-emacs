@@ -35,7 +35,6 @@
   
   ;; supress useless stuff
   inhibit-default-init 1
-  inhibit-startup-echo-area-message t
   inhibit-startup-screen t
 
   ;; syntax highlighting settings
@@ -84,6 +83,7 @@
 
 (add-hook 'find-file-hook (lambda () (prefer-coding-system 'utf-8)))
 (add-hook 'before-save-hook (lambda () (setq buffer-backed-up nil)))
+(add-hook 'emacs-startup-hook (lambda () (message "")))
 
 (load-theme 'tango-dark)
 
