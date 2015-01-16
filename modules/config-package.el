@@ -112,8 +112,8 @@
 
 (defun has-package-not-installed ()
   (cl-loop for p in packages-list
-    when (not (package-installed-p p)) do (return t)
-    finally (return nil)))
+    when (not (package-installed-p p)) do (cl-return t)
+    finally (cl-return nil)))
 
 (defun install-all-packages ()
   (interactive)
