@@ -6,17 +6,17 @@
 
 ;; then additive
 (column-number-mode +1)
-(delete-selection-mode +1)
-(icomplete-mode +1)
 (show-paren-mode +1)
 (xterm-mouse-mode +1)
 (visual-line-mode +1)
-(auto-save-mode +1)
-(global-auto-revert-mode +1)
+(icomplete-mode +1)
 
-(set-face-attribute 'show-paren-match nil
-  :background nil
-  :weight 'extra-bold)
+(add-hook 'find-file-hook #'auto-save-mode)
+(add-hook 'find-file-hook #'global-auto-revert-mode)
+(add-hook 'activate-mark-hook #'delete-selection-mode)
+(add-hook 'find-file-hook (lambda () (prefer-coding-system 'utf-8)))
+(add-hook 'before-save-hook (lambda () (setq buffer-backed-up nil)))
+(add-hook 'emacs-startup-hook (lambda () (message "")))
 
 (global-hl-line-mode +1)
 (set-face-background 'hl-line "grey20") 
@@ -99,9 +99,5 @@
   indent-tabs-mode nil)
 
 (defalias 'yes-or-no-p #'y-or-n-p)
-
-(add-hook 'find-file-hook (lambda () (prefer-coding-system 'utf-8)))
-(add-hook 'before-save-hook (lambda () (setq buffer-backed-up nil)))
-(add-hook 'emacs-startup-hook (lambda () (message "")))
 
 (load-theme 'tango-dark)
