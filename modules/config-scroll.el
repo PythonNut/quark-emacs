@@ -14,12 +14,6 @@
   (lambda ()
     (setq scroll-margin 5)))
 
-(add-hook 'window-size-change-functions
-  (lambda (frame)
-    (if (< (window-body-height) 10)
-      (setq scroll-margin (max 0 (1-  (/ (window-body-height) 2))))
-      (setq scroll-margin 5))))
-
 (global-set-key (kbd "<left-margin> <mouse-5>")
   (kbd "<mouse-5> <mouse-5> <mouse-5>"))
 (global-set-key (kbd "<left-margin> <mouse-4>")
