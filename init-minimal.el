@@ -33,7 +33,19 @@
 (global-hl-line-mode +1)
 (set-face-background 'hl-line "grey20") 
 (set-face-foreground 'highlight nil)
-  
+
+;; interpreted as C-<Arrow> in a terminal
+(global-set-key (kbd "M-[ d") #'windmove-left)
+(global-set-key (kbd "M-[ c") #'windmove-right)
+(global-set-key (kbd "M-[ a") #'windmove-up)
+(global-set-key (kbd "M-[ b") #'windmove-down)
+
+;; and parsed normally in GUI
+(global-set-key (kbd "C-<left>") #'windmove-left)
+(global-set-key (kbd "C-<right>") #'windmove-right)
+(global-set-key (kbd "C-<up>") #'windmove-up)
+(global-set-key (kbd "C-<down>") #'windmove-down)
+
 (setf
   delete-by-moving-to-trash t
   echo-keystrokes 0.4
