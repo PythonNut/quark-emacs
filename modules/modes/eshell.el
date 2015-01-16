@@ -4,22 +4,26 @@
     (require 'em-smart)
     (require 'em-unix)))
 
+(defun generic-term-init ()
+  ;; this disables key-chord-mode
+  (set (make-local-variable 'input-method-function) nil)
+  (adaptive-wrap-prefix-mode -1)
+  (visual-line-mode -1)
+  (yas-minor-mode -1)
+  (make-variable-buffer-local 'global-hl-line-mode)
+  (make-variable-buffer-local 'scroll-margin)
+  (make-variable-buffer-local 'smooth-scroll-margin)
+  (setq
+    yas-dont-activate t
+    global-hl-line-mode nil
+    scroll-margin 0
+    smooth-scroll-margin 0))
+
 (add-hook 'eshell-mode-hook
   (lambda ()
-    (adaptive-wrap-prefix-mode -1)
-    (visual-line-mode -1)
-    (make-variable-buffer-local 'global-hl-line-mode)
-    (make-variable-buffer-local 'scroll-margin)
-    (make-variable-buffer-local 'smooth-scroll-margin)
+    (generic-term-init)
     (eshell-smart-initialize)
-    (make-local-variable 'scroll-margin)
-    (make-local-variable 'smooth-scroll-margin)
-    (set-input-method "TeX")
-    (local-set-key (kbd "C-l") #'eshell/clear)
-    (setq
-      global-hl-line-mode nil
-      scroll-margin 0
-      smooth-scroll-margin 0)))
+    (local-set-key (kbd "C-l") #'eshell/clear)))
 
 (defun eshell/clear ()
   (interactive)
@@ -41,17 +45,5 @@
     eshell-rm-interactive-query t
     eshell-mv-overwrite-files nil))
 
-(add-hook 'term-mode-hook
-  (lambda ()
-    (adaptive-wrap-prefix-mode -1)
-    (visual-line-mode -1)
-    (set-input-method "TeX")
-    (make-variable-buffer-local 'global-hl-line-mode)
-    (make-variable-buffer-local 'scroll-margin)
-    (make-variable-buffer-local 'smooth-scroll-margin)
-    (yas-minor-mode -1)
-    (setq
-      yas-dont-activate t
-      global-hl-line-mode nil
-      scroll-margin 0
-      smooth-scroll-margin 0)))
+(add-hook 'term-mode-hook #'generic-term-init)
+(add-hook 'shell-mode-hook #'generic-term-init)
