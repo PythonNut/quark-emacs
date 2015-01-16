@@ -29,6 +29,15 @@
   ;; switch windows without clicking
   focus-follows-mouse 1
   mouse-autoselect-window 0.3
+
+  ;; make scrolling sane
+  scroll-margin 5
+  scroll-conservatively 1000
+  scroll-step 1
+  redisplay-dont-pause t
+  mouse-wheel-progressive-speed nil
+  mouse-wheel-follow-mouse t
+  mouse-wheel-scroll-amount '(3 ((shift) . 1))
   
   ;; indentation settings
   indent-tabs-mode nil
