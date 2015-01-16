@@ -18,6 +18,10 @@
   :background nil
   :weight 'extra-bold)
 
+(global-hl-line-mode +1)
+(set-face-background 'hl-line "grey20") 
+(set-face-foreground 'highlight nil)
+  
 (setf
   delete-by-moving-to-trash t
   echo-keystrokes 0.4
