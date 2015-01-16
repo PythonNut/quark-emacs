@@ -133,4 +133,23 @@
 (global-set-key (kbd "<C-tab>") 'iflipb-next-buffer-smart)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'iflipb-previous-buffer-smart)
 
+;; ===================================
+;; popwin - split commands in "popups"
+;; ===================================
+
+(defun popwin-onetime-setup ()
+  (require 'popwin)
+  (popwin-mode +1)
+  (add-to-list 'popwin:special-display-config
+    '("^\*helm.+\*$" :regexp t ;; :height 12
+       :position bottom))
+  (remove-hook 'window-configuration-change-hook
+    #'popwin-onetime-setup))
+
+(add-hook 'window-configuration-change-hook #'popwin-onetime-setup)
+
+;; also allow undo/redo on window configs
+(add-hook 'window-configuration-change-hook #'winner-mode)
+
+
 (provide 'config-ui)
