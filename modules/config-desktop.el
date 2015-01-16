@@ -33,21 +33,19 @@
 
 ;; text properties severely bloat the history so delete them
 (defun unpropertize-savehist ()
-  (cl-macrolet
-    ((unpropertize-list (list)
-       `(with-demoted-errors
-          (setq ,list
-            (mapcar #'substring-no-properties ,list)))))
+  (mapc (lambda (list)
+          (with-demoted-errors
+            (set list (mapcar #'substring-no-properties (eval list)))))
+    '(
+       kill-ring
+       minibuffer-history
+       helm-grep-history
+       file-name-history
+       read-expression-history
+       extended-command-history
+       evil-ex-history)))
 
-    (generate-calls-single unpropertize-list
-      (
-        kill-ring
-        minibuffer-history
-        helm-grep-history
-        file-name-history
-        read-expression-history
-        extended-command-history
-        evil-ex-history))))
+
 
 (add-hook 'kill-emacs-hook #'unpropertize-savehist)
 (add-hook 'savehist-save-hook #'unpropertize-savehist)
