@@ -31,8 +31,6 @@
 (add-hook 'eshell-mode-hook #'generic-term-init)
 
 (global-hl-line-mode +1)
-(set-face-background 'hl-line "grey20") 
-(set-face-foreground 'highlight nil)
 
 ;; interpreted as C-<Arrow> in a terminal
 (global-set-key (kbd "M-[ d") #'windmove-left)
@@ -142,3 +140,14 @@
   :inherit 'default)
 
 (load-theme 'tango-dark)
+
+(set-face-background 'highlight "grey20")
+(set-face-attribute 'hl-line nil
+  :foreground nil
+  :background nil
+  :inherit 'fringe)
+
+(set-face-attribute 'mode-line nil :box nil)
+(set-face-attribute 'mode-line-inactive nil :box nil)
+
+(set-face-foreground 'highlight nil)
