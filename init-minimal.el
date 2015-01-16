@@ -8,8 +8,8 @@
 (column-number-mode +1)
 (show-paren-mode +1)
 (xterm-mouse-mode +1)
-(visual-line-mode +1)
 (icomplete-mode +1)
+(global-visual-line-mode +1)
 
 (add-hook 'find-file-hook #'auto-save-mode)
 (add-hook 'find-file-hook #'global-auto-revert-mode)
