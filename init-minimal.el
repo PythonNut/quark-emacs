@@ -18,6 +18,18 @@
 (add-hook 'before-save-hook (lambda () (setq buffer-backed-up nil)))
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
+(defun generic-term-init ()
+  (visual-line-mode -1)
+  (make-variable-buffer-local 'global-hl-line-mode)
+  (make-variable-buffer-local 'scroll-margin)
+  (setq
+    global-hl-line-mode nil
+    scroll-margin 0))
+
+(add-hook 'term-mode-hook #'generic-term-init)
+(add-hook 'shell-mode-hook #'generic-term-init)
+(add-hook 'eshell-mode-hook #'generic-term-init)
+
 (global-hl-line-mode +1)
 (set-face-background 'hl-line "grey20") 
 (set-face-foreground 'highlight nil)
