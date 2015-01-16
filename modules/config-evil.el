@@ -28,6 +28,12 @@
 
 (define-key evil-visual-state-map "v" #'er/expand-region)
 
+;; define C-<arrow> for terminals
+(global-set-key (kbd "M-[ d") #'left-word)
+(global-set-key (kbd "M-[ c") #'right-word)
+(global-set-key (kbd "M-[ a") #'backward-paragraph)
+(global-set-key (kbd "M-[ b") #'forward-paragraph)
+
 (define-key evil-normal-state-map (kbd "<down>") #'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") #'evil-previous-visual-line)
 (define-key evil-motion-state-map (kbd "<down>") #'evil-next-visual-line)
