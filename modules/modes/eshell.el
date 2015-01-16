@@ -19,11 +19,11 @@
     scroll-margin 0
     smooth-scroll-margin 0))
 
-(add-hook 'eshell-mode-hook
-  (lambda ()
-    (generic-term-init)
-    (eshell-smart-initialize)
-    (local-set-key (kbd "C-l") #'eshell/clear)))
+(add-hook 'term-mode-hook #'generic-term-init)
+(add-hook 'shell-mode-hook #'generic-term-init)
+(add-hook 'eshell-mode-hook #'generic-term-init)
+
+(add-hook 'eshell-mode-hook #'eshell-smart-initialize)
 
 (defun eshell/clear ()
   (interactive)
@@ -45,5 +45,3 @@
     eshell-rm-interactive-query t
     eshell-mv-overwrite-files nil))
 
-(add-hook 'term-mode-hook #'generic-term-init)
-(add-hook 'shell-mode-hook #'generic-term-init)
