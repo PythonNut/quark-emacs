@@ -186,8 +186,13 @@
            helm-source-global-mark-ring)
 
         ;; code search
-        (when (featurep 'helm-ag)
-          '(helm-source-do-ag))
+        (if (and projectile-root
+              (featurep 'vc)
+              (eq (vc-responsible-backend projectile-root) 'Git)
+              (require 'helm-git-grep nil t))
+          '(helm-source-git-grep)
+          (when (featurep 'helm-ag)
+            '(helm-source-do-ag)))
 
         ;; file location, of which projectile can be a superset
         (unless projectile-root
