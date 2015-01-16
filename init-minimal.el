@@ -19,9 +19,11 @@
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
 (defun generic-term-init ()
+  (face-remap-add-relative 'default :background "#111")
   (visual-line-mode -1)
   (make-variable-buffer-local 'global-hl-line-mode)
   (make-variable-buffer-local 'scroll-margin)
+  (make-local-variable 'global-hl-line-mode)
   (setq
     global-hl-line-mode nil
     scroll-margin 0))
@@ -47,6 +49,7 @@
 (setf
   delete-by-moving-to-trash t
   echo-keystrokes 0.4
+  term-default-bg-color "#111"
   
   ;; switch windows without clicking
   focus-follows-mouse 1
