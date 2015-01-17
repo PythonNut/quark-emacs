@@ -52,52 +52,43 @@
   "Return the point at the begin and end of the text block "
   ;; there are faster ways to mark the entire file
   ;; so assume the user wants a block and skip to there
-  (loop while (and (/= (point) (point-max))
-                (= 0
-                  (length (evil-indent--current-indentation))))
-    do (progn
-         (forward-line 1)))
-
-  (cl-flet ((before-end () (/= (point) (point-max)))
-             (empty-line-p ()
+  (while (and (string-empty-p
+                (evil-indent--current-indentation))
+           (not (eobp)))
+    (forward-line))
+  (cl-flet* ((empty-line-p ()
                (string-match "^[[:space:]]*$"
                  (buffer-substring-no-properties
                    (line-beginning-position)
-                   (line-end-position)))))
-    (let ((indent (evil-indent--current-indentation)))
-      (cl-flet ((line-indent-ok ()
-                  (or (>=
-                        (length (evil-indent--current-indentation))
-                        (length indent))
-                    (empty-line-p))))
-        ;; now skip ahead to the Nth block with this indentation
-        (let ((index (or last-prefix-arg 0)))
-          (while (> index 1)
-            (while (and (before-end) (line-indent-ok))
-              (forward-line 1))
-            (while (and (before-end) (not (line-indent-ok)))
-              (forward-line 1))
-            (setq index (1- index))))
-        (save-excursion
-          (when point (goto-char point))
-          (let ((start (point)) begin end)
-            (while (and (/= (point) (point-min)) (line-indent-ok))
-              (setq begin (point))
-              (forward-line -1))
-            (goto-char start)
-            (while (and (before-end) (line-indent-ok))
-              (setq end (point))
-              (forward-line 1))
-            (goto-char end)
-            (while (empty-line-p)
-              (forward-line -1)
-              (setq end (point)))
-            (list begin end)))))))
+                   (line-end-position))))
+              (line-indent-ok (indent)
+                (or (<= (length indent)
+                      (length (evil-indent--current-indentation)))
+                  (empty-line-p))))
+    (let ((indent (evil-indent--current-indentation)) start begin end)
+      ;; now skip ahead to the Nth block with this indentation
+      (dotimes (index (or last-prefix-arg 0))
+        (while (and (line-indent-ok) (not (eobp))) (forward-line))
+        (while (or (line-indent-ok indent) (eobp)) (forward-line)))
+      (save-excursion
+        (setq start (goto-char (or point (point))))
+        (while (and (line-indent-ok indent) (not (bobp)))
+          (setq begin (point))
+          (forward-line -1))
+        (goto-char start)
+        (while (and (line-indent-ok indent) (not (eobp)))
+          (setq end (point))
+          (forward-line))
+        (goto-char end)
+        (while (empty-line-p)
+          (forward-line -1)
+          (setq end (point)))
+        (list begin end)))))
 
-(evil-define-text-object evil-indent-i-block (&optional count beg end type)
-  "Text object describing the block with the same indentation as the current line."
-  (let ((range (evil-indent--block-range)))
-    (evil-range (first range) (second range) 'line)))
+  (evil-define-text-object evil-indent-i-block (&optional count beg end type)
+    "Text object describing the block with the same indentation as the current line."
+    (let ((range (evil-indent--block-range)))
+      (evil-range (first range) (second range) 'line)))
 
 (evil-define-text-object evil-indent-a-block (&optional count beg end type)
   "Text object describing the block with the same indentation as the current line and the line above."
