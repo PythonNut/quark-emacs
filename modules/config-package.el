@@ -39,7 +39,6 @@
      bbcode-mode
      coffee-mode
      crontab-mode
-     csharp-mode
      csv-mode
      cython-mode
      dart-mode
