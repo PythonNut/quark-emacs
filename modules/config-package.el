@@ -68,6 +68,7 @@
      auto-compile
      ;; auto-complete
      auto-indent-mode
+     bracketed-paste
      diff-hl
      diminish
      dtrt-indent
