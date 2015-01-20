@@ -37,7 +37,7 @@
       `(cl-letf (((symbol-function 'message) #'format))
          (require ',(make-symbol name)))))
 
-  (load (setq custom-file (concat user-emacs-directory "custom.el")))
+  (load (setq custom-file (concat user-emacs-directory "custom")))
 
   (message "[              ]")
   (load-module "config-setq" t)
