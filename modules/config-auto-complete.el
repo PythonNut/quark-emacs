@@ -1,4 +1,6 @@
-(eval-when-compile (require 'company))
+(eval-when-compile
+  (with-demoted-errors
+    (require 'company)))
 
 (global-company-mode +1)
 
