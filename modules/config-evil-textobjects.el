@@ -85,10 +85,10 @@
           (setq end (point)))
         (list begin end)))))
 
-  (evil-define-text-object evil-indent-i-block (&optional count beg end type)
-    "Text object describing the block with the same indentation as the current line."
-    (let ((range (evil-indent--block-range)))
-      (evil-range (first range) (second range) 'line)))
+(evil-define-text-object evil-indent-i-block (&optional count beg end type)
+  "Text object describing the block with the same indentation as the current line."
+  (let ((range (evil-indent--block-range)))
+    (evil-range (first range) (second range) 'line)))
 
 (evil-define-text-object evil-indent-a-block (&optional count beg end type)
   "Text object describing the block with the same indentation as the current line and the line above."
@@ -100,7 +100,7 @@
                   (point-at-bol))
       (second range) 'line)))
 
-(evil-define-text-object evil-indent-a-block-end (&optional count beg end type)
+(evil-define-text-object evil-indent-a-block-end (count &optional beg end type)
   "Text object describing the block with the same indentation as the current line and the lines above and below."
   :type line
   (let ((range (evil-indent--block-range)))
@@ -117,33 +117,33 @@
 (define-key evil-outer-text-objects-map "c" #'evil-indent-a-block)
 (define-key evil-outer-text-objects-map "C" #'evil-indent-a-block-end)
 
-(defun evil-make-arbitrary-char-range ()
+(defun evil-make-char-range ()
   (save-excursion
     (sort (list
             (progn
               (deactivate-mark)
-              (call-interactively #'evil-ace-jump-char-mode)
+              (evil-ace-jump-char-mode)
               (point))
             (progn
               (deactivate-mark)
-              (call-interactively #'evil-ace-jump-char-mode)
+              (evil-ace-jump-char-mode)
               (point)))
       '<)))
 
-(evil-define-text-object evil-i-arbitrary-char-range (&optional _c _b _e _t)
+(evil-define-text-object evil-i-char-range (count &optional beg end type)
   "Text object describing the range between two arbitrary points"
   :type inclusive
-  (let ((range (evil-make-arbitrary-char-range)))
+  (let ((range (evil-make-char-range)))
     (evil-range (first range) (second range) 'inclusive)))
 
-(evil-define-text-object evil-a-arbitrary-char-range (&optional _c _b _e _t)
+(evil-define-text-object evil-a-char-range (count &optional beg end type)
   "Text object describing the range between two arbitrary points"
   :type exclusive
-  (let ((range (evil-make-arbitrary-char-range)))
+  (let ((range (evil-make-char-range)))
     (evil-range (1- (first range)) (1+ (second range)) 'inclusive)))
 
-(define-key evil-inner-text-objects-map "R" #'evil-i-arbitrary-char-range)
-(define-key evil-outer-text-objects-map "R" #'evil-a-arbitrary-char-range)
+(define-key evil-inner-text-objects-map "R" #'evil-i-char-range)
+(define-key evil-outer-text-objects-map "R" #'evil-a-char-range)
 
 (defun evil-ace-jump-line-and-revert ()
   (interactive)
@@ -159,13 +159,7 @@
                                (evil-window-top)
                                (line-number-at-pos)))))))
 
-(defun evil-make-arbitrary-line-range (&rest _ignored)
-  (save-excursion
-    (let ((beg (evil-ace-jump-line-and-revert))
-           (end (evil-ace-jump-line-and-revert)))
-      (evil-range (min beg end) (max beg end)))))
-
-(evil-define-text-object evil-i-arbitrary-line-range (&optional _c _b _e _t)
+(evil-define-text-object evil-i-line-range (count &optional beg end type)
   "Text object describing the block with the same indentation as the current line."
   :type line
   (save-excursion
@@ -175,48 +169,12 @@
         (evil-range beg end #'line)
         (evil-range end beg #'line)))))
 
-(evil-define-text-object evil-a-arbitrary-line-range (&optional _c _b _e _t)
-  :type line
-  "Text object describing the block with the same indentation as the current line."
-  (save-excursion
-    (let ((beg (progn
-                 (deactivate-mark)
-                 (evil-ace-jump-line-and-revert)
-                 (point)))
-           (end (progn
-                  (deactivate-mark)
-                  (evil-ace-jump-line-and-revert)
-                  (point))))
-      (evil-range
-        (progn
-          (goto-char (min beg end))
-          (loop do (forward-line -1) while
-            (string-match "^[[:space:]]*$"
-              (buffer-substring-no-properties
-                (line-beginning-position)
-                (line-end-position))))
-          (forward-line 1)
-          (point))
-        (progn
-          (goto-char (max beg end))
-          (loop do (forward-line 1) while
-            (string-match "^[[:space:]]*$"
-              (buffer-substring-no-properties
-                (line-beginning-position)
-                (line-end-position))))
-          (forward-line -1)
-          (point)) 'line))))
-
-(define-key evil-inner-text-objects-map "r" #'evil-i-arbitrary-line-range)
-(define-key evil-outer-text-objects-map "r" #'evil-a-arbitrary-line-range)
-
-(define-key evil-inner-text-objects-map "s" #'evil-inner-symbol)
-(define-key evil-outer-text-objects-map "s" #'evil-a-symbol)
+(define-key evil-inner-text-objects-map "r" #'evil-i-line-range)
 
 (define-key evil-inner-text-objects-map "." #'evil-inner-sentence)
 (define-key evil-outer-text-objects-map "." #'evil-a-sentence)
 
-(evil-define-text-object evil-i-entire-buffer (&optional _c _b _e _t)
+(evil-define-text-object evil-i-entire-buffer (count &optional ben end type)
   "Text object describing the entire buffer excluding empty lines at the end"
   :type line
   (evil-range (point-min) (save-excursion
@@ -224,7 +182,7 @@
                             (skip-chars-backward " \n\t")
                             (point)) 'line))
 
-(evil-define-text-object evil-an-entire-buffer (&optional _c _b _e _t)
+(evil-define-text-object evil-an-entire-buffer (count &optional beg end type)
   "Text object describing the entire buffer"
   :type line
   (evil-range (point-min) (point-max) 'line))
