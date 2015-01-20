@@ -29,7 +29,6 @@
   (define-key company-active-map [tab] #'company-complete-common-or-complete-full)
   (define-key company-active-map (kbd "TAB") #'company-complete-common-or-complete-full)
 
-  (define-key company-active-map (kbd "<tab>") #'company-complete)
   (set-face-background 'company-tooltip-common-selection
     (face-background 'company-tooltip-selection))
   (set-face-background 'company-tooltip-common
