@@ -1,6 +1,7 @@
 (eval-when-compile
   (with-demoted-errors
-    (require 'company)))
+    (require 'company)
+    (require 'company-dabbrev-code)))
 
 (global-company-mode +1)
 
@@ -12,8 +13,11 @@
     company-auto-complete 'company-explicit-action-p
     company-minimum-prefix-length 2
     company-show-numbers nil
+    company-tooltip-flip-when-above t
     company-tooltip-align-annotations t)
 
+  (add-to-list 'company-backends 'company-yasnippet t)
+  
   (defun company-complete-common-or-complete-full ()
     (interactive)
     (when (company-manual-begin)
@@ -33,5 +37,8 @@
     (face-background 'company-tooltip-selection))
   (set-face-background 'company-tooltip-common
     (face-background 'company-tooltip)))
+
+(with-eval-after-load 'company-dabbrev-code
+  (setq company-dabbrev-code-everywhere t))
 
 (provide 'config-auto-complete)
