@@ -190,6 +190,12 @@
 (define-key evil-inner-text-objects-map "e" #'evil-i-entire-buffer)
 (define-key evil-outer-text-objects-map "e" #'evil-an-entire-buffer)
 
+(evil-define-text-object evil-inner-last-paste (count &optional beg end type)
+  :type char
+  (evil-range (evil-get-marker ?\[) (evil-get-marker ?\]) 'char))
+
+(define-key evil-inner-text-objects-map "P" #'evil-inner-last-paste)
+
 ;;; === evil operators ===
 (autoload 'evilnc-comment-operator "evil-nerd-commenter")
 (autoload 'evilnc-hotkey-comment-operator "evil-nerd-commenter")
