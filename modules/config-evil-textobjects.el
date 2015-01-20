@@ -1,6 +1,5 @@
 (eval-when-compile
   (with-demoted-errors
-    (require 'cl)
     (require 'cl-lib)
     (require 'evil)
     (require 'evil-leader)

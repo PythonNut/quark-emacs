@@ -1,7 +1,5 @@
 (eval-when-compile
   (with-demoted-errors
-    (require 'cl)
-    (require 'auto-save)
     (require 'autorevert)))
 
 (defvar backup-location (concat user-emacs-directory "data/backups"))

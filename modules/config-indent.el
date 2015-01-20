@@ -1,6 +1,5 @@
 (eval-when-compile
   (with-demoted-errors
-    (require 'cl)
     (require 'auto-indent-mode)
     (require 'smie)))
 
