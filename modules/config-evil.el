@@ -16,6 +16,7 @@
   evil-want-fine-undo t
   evil-search-module 'evil-search
   evil-magic 'very-magic
+  evil-shift-width 2
 
   evil-leader/leader ","
   evil-leader/in-all-states t)
