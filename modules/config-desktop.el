@@ -25,8 +25,7 @@
   savehist-additional-variables
   '(kill-ring
      search-ring
-     regexp-search-ring)
-  )
+     regexp-search-ring))
 
 (require 'savehist)
 (savehist-mode 1)
@@ -35,7 +34,8 @@
 (defun unpropertize-savehist ()
   (mapc (lambda (list)
           (with-demoted-errors
-            (set list (mapcar #'substring-no-properties (eval list)))))
+            (when (boundp list)
+              (set list (mapcar #'substring-no-properties (eval list))))))
     '(
        kill-ring
        minibuffer-history
