@@ -4,7 +4,20 @@
     (require 'company-dabbrev-code)
     (require 'config-modes)))
 
-(global-company-mode +1)
+(defun company-onetime-setup ()
+  (global-company-mode +1)
+  (run-hooks 'load-theme-hook)
+  (remove-hook 'prog-mode-hook #'company-onetime-setup-proxy)
+  (remove-hook 'text-mode-hook #'company-onetime-setup-proxy))
+
+(defun company-onetime-setup-proxy ()
+  (add-hook 'first-change-hook #'company-onetime-setup nil t))
+
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (add-hook 'first-change-hook #'company-onetime-setup nil t)
+    (add-hook 'prog-mode-hook #'company-onetime-setup-proxy)
+    (add-hook 'text-mode-hook #'company-onetime-setup-proxy)))
 
 (with-eval-after-load 'company
   (diminish 'company-mode (if (display-graphic-p) " γ" " Co"))
@@ -88,14 +101,17 @@
         :background nil
         :inherit 'company-tooltip)
 
-      (set-face-attribute 'company-template-field nil
-        :foreground nil
-        :background nil
-        :inherit 'region)
-
       (set-face-attribute 'company-tooltip nil
         :foreground nil
         :inherit 'default))))
+
+(with-eval-after-load 'company-template
+  (add-hook 'load-theme-hook
+    (lambda ()
+      (set-face-attribute 'company-template-field nil
+        :foreground nil
+        :background nil
+        :inherit 'region))))
 
 (with-eval-after-load 'company-dabbrev-code
   (setq company-dabbrev-code-everywhere t))
