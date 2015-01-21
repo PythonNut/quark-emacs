@@ -71,6 +71,9 @@
      bracketed-paste
      company
      diff-hl
+     dired-avfs
+     dired-filter
+     dired-subtree
      diminish
      dtrt-indent
      easy-kill
