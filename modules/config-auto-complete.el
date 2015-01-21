@@ -59,8 +59,10 @@
             (call-interactively #'company-complete-selection)
             (call-interactively #'company-complete))))))
 
-  (define-key company-active-map [tab] #'company-complete-common-or-complete-full)
-  (define-key company-active-map (kbd "TAB") #'company-complete-common-or-complete-full)
+  (define-key company-active-map (kbd "<tab>")
+    #'company-complete-common-or-complete-full)
+  (define-key company-active-map (kbd "TAB")
+    #'company-complete-common-or-complete-full)
 
   (add-hook 'load-theme-hook
     (lambda ()
