@@ -14,6 +14,7 @@
 (add-hook 'find-file-hook #'auto-save-mode)
 (add-hook 'find-file-hook #'global-auto-revert-mode)
 (add-hook 'activate-mark-hook #'delete-selection-mode)
+(add-hook 'find-file-hook 'flymake-find-file-hook)
 (add-hook 'find-file-hook (lambda () (prefer-coding-system 'utf-8)))
 (add-hook 'before-save-hook (lambda () (setq buffer-backed-up nil)))
 (add-hook 'emacs-startup-hook (lambda () (message "")))
@@ -152,5 +153,4 @@
 
 (set-face-attribute 'mode-line nil :box nil)
 (set-face-attribute 'mode-line-inactive nil :box nil)
-
 (set-face-foreground 'highlight nil)
