@@ -1,7 +1,8 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'company)
-    (require 'company-dabbrev-code)))
+    (require 'company-dabbrev-code)
+    (require 'config-modes)))
 
 (global-company-mode +1)
 
@@ -14,10 +15,38 @@
     company-minimum-prefix-length 2
     company-show-numbers nil
     company-tooltip-flip-when-above t
-    company-tooltip-align-annotations t)
+    company-tooltip-align-annotations t
 
-  (add-to-list 'company-backends 'company-yasnippet t)
-  
+    company-backends
+    '((company-capf
+        company-yasnippet
+        company-dabbrev-code
+        company-files
+        company-keywords)
+
+       company-dabbrev))
+
+  (with-no-warnings
+    (cl-macrolet
+      ((company-define-specific-modes (mode backend)
+         `(add-hook ,mode
+            (lambda ()
+              (let ((old-backends company-backends))
+                (set (make-local-variable 'company-backends)
+                  (cons (cons
+                          ,backend
+                          (cdar old-backends))
+                    (cdr old-backends))))))))
+
+      (generate-calls company-define-specific-modes
+        (
+          ('c++-mode-hook  'company-clang)
+          ('objc-mode-hook 'company-clang)
+          ('c-mode-hook    'company-clang)
+          ('css-mode-hook  'company-css)
+          ('java-mode-hook 'company-eclim)
+          ('nxml-mode-hook 'company-nxml)))))
+
   (defun company-complete-common-or-complete-full ()
     (interactive)
     (when (company-manual-begin)
@@ -56,6 +85,11 @@
         :foreground nil
         :background nil
         :inherit 'company-tooltip)
+
+      (set-face-attribute 'company-template-field nil
+        :foreground nil
+        :background nil
+        :inherit 'region)
 
       (set-face-attribute 'company-tooltip nil
         :foreground nil
