@@ -7,10 +7,24 @@
     (load (concat user-emacs-directory "init-minimal")))
 
   (eval-when-compile (require 'cl-lib))
+
+
+  (eval-and-compile
+    (add-to-list 'load-path
+		 (concat user-emacs-directory "modules/"))
+    
   (defmacro when* (condition &rest body)
     (when condition
       `(progn ,@body)))
 
+  (defmacro load-module (name &optional method)
+    (if method
+      `(cl-letf (((symbol-function 'message) #'format))
+         (load-library ,name))
+      `(cl-letf (((symbol-function 'message) #'format))
+         (require ',(make-symbol name))))))
+
+  
   ;; polyfill with-eval-after-load
   (when* (version< emacs-version "24.4")
     (defmacro with-eval-after-load (thing &rest sexps)
@@ -21,21 +35,10 @@
     inhibit-startup-echo-area-message "pythonnut")
   (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-  (eval-and-compile
-    (add-to-list 'load-path
-      (concat user-emacs-directory "modules/")))
-
   (defadvice load (before quiet-loading
                     (FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
                     activate preactivate compile)
     (setq NOMESSAGE t))
-
-  (defmacro load-module (name &optional method)
-    (if method
-      `(cl-letf (((symbol-function 'message) #'format))
-         (load-library ,name))
-      `(cl-letf (((symbol-function 'message) #'format))
-         (require ',(make-symbol name)))))
 
   (load (setq custom-file (concat user-emacs-directory "custom.el")))
 
