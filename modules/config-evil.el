@@ -10,6 +10,7 @@
 (require 'evil-leader)
 
 (setq
+  evil-toggle-key "C-M-z"
   evil-want-C-w-delete nil
   evil-want-C-w-in-emacs-state nil
   evil-ex-complete-emacs-commands t
@@ -70,6 +71,7 @@
 (define-key evil-normal-state-map (kbd "C-M-z") #'evil-emacs-state)
 (define-key evil-motion-state-map (kbd "C-M-z") #'evil-emacs-state)
 (define-key evil-visual-state-map (kbd "C-M-z") #'evil-emacs-state)
+(define-key evil-motion-state-map (kbd "C-z") nil)
 
 ;; indent pasted regions in evil
 (defadvice evil-paste-before
