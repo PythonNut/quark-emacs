@@ -3,16 +3,6 @@
     (require 'evil)
     (require 'undo-tree)))
 
-(defun undo-tree-onetime-setup ()
-  (require 'undo-tree)
-  (remove-hook 'first-change-hook
-    #'undo-tree-onetime-setup))
-
-(add-hook 'emacs-startup-hook
-  (lambda ()
-    (add-hook 'first-change-hook
-      #'undo-tree-onetime-setup)))
-
 (with-eval-after-load 'evil
   (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
     #'undo-tree-visualizer-toggle-timestamps)
