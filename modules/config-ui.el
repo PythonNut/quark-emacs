@@ -67,16 +67,22 @@
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this)
 
 ;; directional window movement
-(add-hook 'window-configuration-change-hook
-  (lambda ()
-    (windmove-default-keybindings 'meta)))
+(global-set-key (kbd "<M-left>")  'windmove-left)
+(global-set-key (kbd "<M-right>") 'windmove-right)
+(global-set-key (kbd "<M-up>")    'windmove-up)
+(global-set-key (kbd "<M-down>")  'windmove-down)
+
+(defun framemove-onetime-setup ()
+  (windmove-default-keybindings 'meta)
+  (require 'framemove)
+  (remove-hook 'before-make-frame-hook
+    #'framemove-onetime-setup))
 
 ;; directional frame movement too
-(add-hook 'before-make-frame-hook
+(add-hook 'emacs-startup-hook
   (lambda ()
-    (windmove-default-keybindings 'meta)
-    (unless (featurep 'framemove)
-      (require 'framemove))))
+    (add-hook 'before-make-frame-hook
+      #'framemove-onetime-setup)))
 
 (with-eval-after-load 'framemove
   (setq framemove-hook-into-windmove t))
