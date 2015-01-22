@@ -19,11 +19,11 @@
         (set-display-table-slot display-table 'vertical-border (make-glyph-code ?│))
         (setq standard-display-table display-table)))))
 
-(set-face-background 'fringe "#022F3A")
-(set-face-background 'mode-line-inactive "#073642")
 
 (if (<= (display-color-cells) 256)
   (load-theme 'tango-dark)
-  (load-theme 'solarized-dark))
+  (load-theme 'solarized-dark)
+  (set-face-background 'fringe "#022F3A")
+  (set-face-background 'mode-line-inactive "#073642"))
 
 (provide 'config-solarized)
