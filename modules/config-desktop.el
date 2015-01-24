@@ -40,6 +40,7 @@
        kill-ring
        minibuffer-history
        helm-grep-history
+       helm-ff-history
        file-name-history
        read-expression-history
        extended-command-history
