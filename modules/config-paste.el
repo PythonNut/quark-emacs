@@ -3,6 +3,7 @@
     (require 'evil)
     (require 'cua-base)
     (require 'easy-kill)
+    (require 'iso-transl)
     (require 'whole-line-or-region)))
 
 (autoload 'whole-line-or-region-call-with-region "whole-line-or-region")
@@ -189,5 +190,20 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (add-hook 'bracketed-paste--pasting-mode-hook
     (lambda ()
       (smartparens-mode -1))))
+
+(with-eval-after-load 'iso-transl
+  (define-prefix-command 'arrow-thin-map)
+  (define-key iso-transl-ctl-x-8-map "-" 'arrow-thin-map)
+  (define-key iso-transl-ctl-x-8-map "->" "→")
+  (define-key iso-transl-ctl-x-8-map "-->" "→")
+  (define-key iso-transl-ctl-x-8-map "-<" "←")
+  (define-key iso-transl-ctl-x-8-map "--<" "←")
+
+  (define-prefix-command 'arrow-thick-map)
+  (define-key iso-transl-ctl-x-8-map "=" 'arrow-thick-map)
+  (define-key iso-transl-ctl-x-8-map "=>" "⇒")
+  (define-key iso-transl-ctl-x-8-map "==>" "⇒")
+  (define-key iso-transl-ctl-x-8-map "=<" "⇐")
+  (define-key iso-transl-ctl-x-8-map "==<" "⇐"))
 
 (provide 'config-paste)
