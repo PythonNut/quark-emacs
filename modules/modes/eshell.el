@@ -23,7 +23,10 @@
 (add-hook 'shell-mode-hook #'generic-term-init)
 (add-hook 'eshell-mode-hook #'generic-term-init)
 
-(add-hook 'eshell-mode-hook #'eshell-smart-initialize)
+(add-hook 'eshell-mode-hook
+  (lambda ()
+    (company-mode -1)
+    (eshell-smart-initialize)))
 
 (defun eshell/clear ()
   (interactive)
