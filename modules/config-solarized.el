@@ -21,7 +21,13 @@
 
 
 (if (<= (display-color-cells) 256)
-  (load-theme 'tango-dark)
+  (progn
+    (load-theme 'tango-dark)
+    (set-face-attribute 'hl-line nil
+      :foreground nil
+      :background "grey20"
+      :inherit nil))
+  (package-activate 'solarized-theme)
   (load-theme 'solarized-dark)
   (set-face-background 'fringe "#022F3A")
   (set-face-background 'mode-line-inactive "#073642"))
