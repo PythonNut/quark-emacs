@@ -112,24 +112,7 @@
     :buffer "*helm-find-buffers"))
 
 (global-set-key (kbd "C-x C-b") #'my-helm-buffers)
-
-(defun my-helm-find-files (&rest arg)
-  (interactive)
-  (unless (featurep 'helm-buffers) (require 'helm-buffers))
-  (unless (featurep 'helm-files) (require 'helm-files))
-  (helm
-    :sources
-    '(helm-source-recentf
-       helm-source-buffers-list
-       helm-source-files-in-current-dir
-       helm-source-find-files
-       helm-source-findutils
-       helm-source-locate)
-    :fuzzy-match t
-    :prompt "> "
-    :buffer "*helm-find-files"))
-
-(global-set-key (kbd "C-x C-f") 'my-helm-find-files)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 (defun my-helm-omni (&rest arg)
   (interactive)
