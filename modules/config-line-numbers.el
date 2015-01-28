@@ -1,5 +1,3 @@
-(require 'linum)
-
 (eval-when-compile
   (with-demoted-errors
     (require 'linum-relative)))
