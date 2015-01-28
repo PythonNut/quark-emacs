@@ -36,17 +36,7 @@
 (evil-leader/set-key
   "m" #'magit-key-mode-popup-dispatch)
 
-(with-eval-after-load 'git-commit-mode
-  (add-hook 'git-commit-mode-hook 'ac-ispell-ac-setup))
-
-(with-eval-after-load 'ac-ispell
-  (ac-ispell-setup)
-  (set-face-foreground 'ac-ispell-fuzzy-candidate-face
-    (face-foreground 'default))
-  (setq ispell-alternate-dictionary "/usr/share/dict/words"))
-
 ;; and psvn for svn not-so-awesomeness
-
 (with-eval-after-load 'psvn
   (evil-set-initial-state 'svn-status-mode 'insert)
   (setq svn-status-verbose nil))
