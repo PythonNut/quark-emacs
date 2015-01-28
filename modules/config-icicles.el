@@ -50,7 +50,7 @@
 
 (cl-macrolet
   ((setup-icicles (commands)
-     `(progn
+     `(with-no-warnings
         (generate-calls-single autoload-icicle ,commands)
         (with-eval-after-load 'icicles
           (run-hooks 'icicle-init-hook)

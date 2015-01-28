@@ -125,19 +125,20 @@
      `(progn
         (evil-define-key 'motion sp-keymap ,key ,func))))
 
-  (generate-calls sp-define-bindings
-    (
-      ((kbd "C-M-f") #'evil-forward-sexp)
-      ((kbd "C-M-b") #'evil-backward-sexp)
+  (with-no-warnings
+    (generate-calls sp-define-bindings
+      (
+        ((kbd "C-M-f") #'evil-forward-sexp)
+        ((kbd "C-M-b") #'evil-backward-sexp)
 
-      ((kbd "C-M-d") #'evil-down-sexp)
-      ((kbd "C-M-S-d") #'evil-backward-down-sexp)
+        ((kbd "C-M-d") #'evil-down-sexp)
+        ((kbd "C-M-S-d") #'evil-backward-down-sexp)
 
-      ((kbd "C-M-u") #'evil-up-sexp)
-      ((kbd "C-M-S-u") #'evil-backward-up-sexp)
+        ((kbd "C-M-u") #'evil-up-sexp)
+        ((kbd "C-M-S-u") #'evil-backward-up-sexp)
 
-      ((kbd "C-M-n") #'evil-next-sexp)
-      ((kbd "C-M-p") #'evil-previous-sexp))))
+        ((kbd "C-M-n") #'evil-next-sexp)
+        ((kbd "C-M-p") #'evil-previous-sexp)))))
 
 (cl-macrolet
   ((sp-define-bindings (key func)
@@ -150,19 +151,20 @@
         (define-key minibuffer-local-completion-map ,key ,func)
         (define-key minibuffer-local-must-match-map ,key ,func))))
 
-  (generate-calls sp-define-bindings
-    (
-      ((kbd "C-M-f") #'forward-sexp)
-      ((kbd "C-M-b") #'backward-sexp)
+  (with-no-warnings
+    (generate-calls sp-define-bindings
+      (
+        ((kbd "C-M-f") #'forward-sexp)
+        ((kbd "C-M-b") #'backward-sexp)
 
-      ((kbd "C-M-d") #'sp-down-sexp)
-      ((kbd "C-M-S-d") #'sp-backward-down-sexp)
+        ((kbd "C-M-d") #'sp-down-sexp)
+        ((kbd "C-M-S-d") #'sp-backward-down-sexp)
 
-      ((kbd "C-M-u") #'sp-up-sexp)
-      ((kbd "C-M-S-u") #'sp-backward-up-sexp)
+        ((kbd "C-M-u") #'sp-up-sexp)
+        ((kbd "C-M-S-u") #'sp-backward-up-sexp)
 
-      ((kbd "C-M-n") #'sp-next-sexp)
-      ((kbd "C-M-p") #'sp-previous-sexp))))
+        ((kbd "C-M-n") #'sp-next-sexp)
+        ((kbd "C-M-p") #'sp-previous-sexp)))))
 
 (cl-macrolet
   ((sp-define-bindings (key func)
@@ -176,28 +178,29 @@
         (define-key minibuffer-local-completion-map ,key ,func)
         (define-key minibuffer-local-must-match-map ,key ,func))))
 
-  (generate-calls sp-define-bindings
-    (
-      ((kbd "C-M-k") #'sp-kill-sexp)
+  (with-no-warnings
+    (generate-calls sp-define-bindings
+      (
+        ((kbd "C-M-k") #'sp-kill-sexp)
 
-      ((kbd "C-M-t") #'sp-transpose-sexp)
+        ((kbd "C-M-t") #'sp-transpose-sexp)
 
-      ((kbd "M-(") #'sp-select-previous-thing)
-      ((kbd "M-)") #'sp-select-next-thing)
+        ((kbd "M-(") #'sp-select-previous-thing)
+        ((kbd "M-)") #'sp-select-next-thing)
 
-      ((kbd "C-+") #'sp-rewrap-sexp)
-      ((kbd "M-<delete>") #'sp-kill-sexp)
-      ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
-      ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
+        ((kbd "C-+") #'sp-rewrap-sexp)
+        ((kbd "M-<delete>") #'sp-kill-sexp)
+        ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
+        ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
 
-      ((kbd "C-M-a") #'sp-absorb-sexp)
-      ((kbd "C-M-e") #'sp-emit-sexp)
+        ((kbd "C-M-a") #'sp-absorb-sexp)
+        ((kbd "C-M-e") #'sp-emit-sexp)
 
-      ((kbd "C-M-,") #'sp-forward-slurp-sexp)
-      ((kbd "C-M-.") #'sp-forward-barf-sexp)
+        ((kbd "C-M-,") #'sp-forward-slurp-sexp)
+        ((kbd "C-M-.") #'sp-forward-barf-sexp)
 
-      ((kbd "M-<") #'sp-backward-slurp-sexp)
-      ((kbd "M->") #'sp-backward-barf-sexp))))
+        ((kbd "M-<") #'sp-backward-slurp-sexp)
+        ((kbd "M->") #'sp-backward-barf-sexp)))))
 
 ;; allow quick repetition since normal state key chains are awkward
 (defun evil-smart-smartparens-move ()

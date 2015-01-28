@@ -39,18 +39,18 @@
 
        company-dabbrev))
 
-  (with-no-warnings
-    (cl-macrolet
-      ((company-define-specific-modes (mode backend)
-         `(add-hook ,mode
-            (lambda ()
-              (let ((old-backends company-backends))
-                (set (make-local-variable 'company-backends)
-                  (cons (cons
-                          ,backend
-                          (cdar old-backends))
-                    (cdr old-backends))))))))
+  (cl-macrolet
+    ((company-define-specific-modes (mode backend)
+       `(add-hook ,mode
+          (lambda ()
+            (let ((old-backends company-backends))
+              (set (make-local-variable 'company-backends)
+                (cons (cons
+                        ,backend
+                        (cdar old-backends))
+                  (cdr old-backends))))))))
 
+    (with-no-warnings
       (generate-calls company-define-specific-modes
         (
           ('c++-mode-hook  'company-clang)
