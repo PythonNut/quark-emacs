@@ -8,23 +8,21 @@
 
   (eval-when-compile (require 'cl-lib))
 
-
   (eval-and-compile
     (add-to-list 'load-path
-		 (concat user-emacs-directory "modules/"))
+      (concat user-emacs-directory "modules/"))
     
-  (defmacro when* (condition &rest body)
-    (when condition
-      `(progn ,@body)))
+    (defmacro when* (condition &rest body)
+      (when condition
+        `(progn ,@body)))
 
-  (defmacro load-module (name &optional method)
-    (if method
-      `(cl-letf (((symbol-function 'message) #'format))
-         (load-library ,name))
-      `(cl-letf (((symbol-function 'message) #'format))
-         (require ',(make-symbol name))))))
+    (defmacro load-module (name &optional method)
+      (if method
+        `(cl-letf (((symbol-function 'message) #'format))
+           (load-library ,name))
+        `(cl-letf (((symbol-function 'message) #'format))
+           (require ',(make-symbol name))))))
 
-  
   ;; polyfill with-eval-after-load
   (when* (version< emacs-version "24.4")
     (defmacro with-eval-after-load (thing &rest sexps)
