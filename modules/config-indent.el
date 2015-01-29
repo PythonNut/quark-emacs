@@ -1,7 +1,9 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'auto-indent-mode)
-    (require 'smie)))
+    (require 'smie)
+    (require 'evil)
+    (require 'multiple-cursors)))
 
 (add-hook 'auto-indent-global-mode-hook
   (lambda ()
@@ -28,5 +30,25 @@
       (smie-config-guess))))
 
 (add-hook 'after-change-major-mode-hook #'smie-auto-guess)
+
+(defun back-to-indentation-or-beginning ()
+  (interactive)
+  (if (= (point)
+        (save-excursion (back-to-indentation) (point)))
+    (beginning-of-line)
+    (unless (and (bolp)
+              (featurep 'multiple-cursors)
+              multiple-cursors-mode)
+      (back-to-indentation))))
+
+(define-key evil-insert-state-map (kbd "C-a")
+  #'back-to-indentation-or-beginning)
+(define-key evil-motion-state-map (kbd "C-a")
+  #'back-to-indentation-or-beginning)
+
+(define-key evil-insert-state-map (kbd "<home>")
+  #'back-to-indentation-or-beginning)
+(define-key evil-motion-state-map (kbd "<home>")
+  #'back-to-indentation-or-beginning)
 
 (provide 'config-indent)
