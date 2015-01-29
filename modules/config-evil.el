@@ -67,7 +67,7 @@
 
 ;; define a key to switch to emacs state
 (define-key evil-insert-state-map (kbd "C-M-z") #'evil-emacs-state)
-(define-key evil-emacs-state-map (kbd "C-M-z") #'evil-emacs-state)
+(define-key evil-emacs-state-map (kbd "C-M-z") #'evil-normal-state)
 (define-key evil-normal-state-map (kbd "C-M-z") #'evil-emacs-state)
 (define-key evil-motion-state-map (kbd "C-M-z") #'evil-emacs-state)
 (define-key evil-visual-state-map (kbd "C-M-z") #'evil-emacs-state)
