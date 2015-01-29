@@ -270,4 +270,37 @@
 (require 'config-evil-modules)
 (require 'config-evil-textobjects)
 
+
+;; cross lines on (list f F t T ; ,)
+;; consider setting evil-cross-lines to t for laughs
+(defadvice evil-repeat-find-char
+  (around cross-lines activate preactivate compile)
+  (let ((evil-cross-lines t))
+    ad-do-it))
+
+(defadvice evil-repeat-find-char-reverse
+  (around cross-lines activate preactivate compile)
+  (let ((evil-cross-lines t))
+    ad-do-it))
+
+(defadvice evil-find-char
+  (around cross-lines activate preactivate compile)
+  (let ((evil-cross-lines t))
+    ad-do-it))
+
+(defadvice evil-find-char-to
+  (around cross-lines activate preactivate compile)
+  (let ((evil-cross-lines t))
+    ad-do-it))
+
+(defadvice evil-find-char-backward
+  (around cross-lines activate preactivate compile)
+  (let ((evil-cross-lines t))
+    ad-do-it))
+
+(defadvice evil-find-char-to-backward
+  (around cross-lines activate preactivate compile)
+  (let ((evil-cross-lines t))
+    ad-do-it))
+
 (provide 'config-evil)
