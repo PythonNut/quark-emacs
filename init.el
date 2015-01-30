@@ -59,7 +59,7 @@
   (message "[========      ]")
   (load-module "config-paste" t)
   (message "[=========     ]")
-  (load-module "config-auto-complete" t)
+  (load-module "config-company" t)
   (message "[==========    ]")
   (load-module "config-vcs" t)
   (message "[===========   ]")
