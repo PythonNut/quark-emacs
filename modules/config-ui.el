@@ -17,6 +17,18 @@
 
 (show-paren-mode +1)
 
+(defadvice show-paren-function
+  (after show-matching-paren-offscreen activate preactivate compile)
+  "If the matching paren is offscreen, show the matching line in the
+        echo area. Has no effect if the character before point is not of
+        the syntax class ')'."
+  (interactive)
+  (let* ((cb (char-before (point)))
+          (matching-text (and cb
+                           (char-equal (char-syntax cb) ?\) )
+                           (blink-matching-open))))
+    (when matching-text (message matching-text))))
+
 (with-eval-after-load 'multiple-cursors
   (define-key mc/keymap (kbd "<return>") nil)
   (define-key mc/keymap (kbd "C-c <return>") 'multiple-cursors-mode))
