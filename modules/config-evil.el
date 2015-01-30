@@ -56,6 +56,7 @@
 
 ;; Esc quits from everything
 (define-key evil-normal-state-map [escape] #'keyboard-quit)
+(define-key evil-emacs-state-map [escape] #'evil-normal-state)
 (define-key evil-visual-state-map [escape] #'keyboard-quit)
 (define-key evil-motion-state-map [escape] #'evil-normal-state)
 (define-key evil-operator-state-map [escape] #'evil-normal-state)
