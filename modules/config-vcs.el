@@ -33,9 +33,6 @@
         (diminish 'magit-filenotify-mode)
         (magit-filenotify-mode +1)))))
 
-(evil-leader/set-key
-  "m" #'magit-key-mode-popup-dispatch)
-
 ;; and psvn for svn not-so-awesomeness
 (with-eval-after-load 'psvn
   (evil-set-initial-state 'svn-status-mode 'insert)

@@ -1,7 +1,6 @@
 (eval-when-compile
   (with-demoted-errors
-    (require 'ido-ubiquitous)
-    (require 'evil-leader)))
+    (require 'ido-ubiquitous)))
 
 (require 'config-ido)
 (require 'config-helm)

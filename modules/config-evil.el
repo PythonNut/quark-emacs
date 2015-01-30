@@ -4,10 +4,7 @@
   (with-demoted-errors
     (require 'cl)
     (require 'evil)
-    (require 'evil-leader)
     (require 'evil-surround)))
-
-(require 'evil-leader)
 
 (setq
   evil-toggle-key "C-M-z"
@@ -17,16 +14,12 @@
   evil-want-fine-undo t
   evil-search-module 'evil-search
   evil-magic 'very-magic
-  evil-shift-width 2
-
-  evil-leader/leader ","
-  evil-leader/in-all-states t)
+  evil-shift-width 2)
 
 (setq-default
   evil-symbol-word-search t)
 
 (evil-mode +1)
-(global-evil-leader-mode +1)
 
 (define-key evil-visual-state-map "v" #'er/expand-region)
 

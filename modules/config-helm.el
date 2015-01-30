@@ -200,16 +200,6 @@
 
 (define-key evil-insert-state-map (kbd "C-p") #'my-helm-omni)
 
-(defun helm-helm-commands ()
-  (interactive)
-  (minibuffer-with-setup-hook
-    (lambda ()
-      (insert "helm-"))
-    (call-interactively #'helm-M-x)))
-
-(evil-leader/set-key
-  "h" #'helm-helm-commands)
-
 (global-set-key (kbd "C-c C-o") #'my-helm-omni)
 (define-key evil-normal-state-map (kbd "C-c C-o") #'my-helm-omni)
 (define-key evil-insert-state-map (kbd "C-c C-o") #'my-helm-omni)

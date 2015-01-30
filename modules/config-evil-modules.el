@@ -30,10 +30,6 @@
 ;; evil NERD commenter, commenting awesomeness!
 (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines)
 
-(evil-leader/set-key
-  "cl" #'evilnc-comment-or-uncomment-to-the-line
-  "cc" #'evilnc-copy-and-comment-lines)
-
 ;; evil matchit, jump between matching tags and keywords
 (define-key evil-normal-state-map "%" #'evilmi-jump-items)
 (define-key evil-inner-text-objects-map "%" #'evilmi-text-object)

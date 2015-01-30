@@ -508,14 +508,4 @@
 (global-set-key (kbd "C-S-x C-S-f") #'icicle-find-file)
 (global-set-key (kbd "C-S-X C-S-B") #'icicle-buffer)
 
-(defun helm-icicles-commands ()
-  (interactive)
-  (minibuffer-with-setup-hook
-    (lambda ()
-      (insert "icicle-"))
-    (call-interactively #'helm-M-x)))
-
-(evil-leader/set-key
-  "i" #'helm-icicles-commands)
-
 (provide 'config-icicles)

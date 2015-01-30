@@ -21,13 +21,3 @@
 
 (with-eval-after-load 'jedi
   (define-key jedi-mode-map (kbd "<C-tab>") nil))
-
-(defun helm-traad-commands ()
-  (interactive)
-  (minibuffer-with-setup-hook
-    (lambda ()
-      (insert "traad-"))
-    (call-interactively #'helm-M-x)))
-
-(evil-leader/set-key
-  "t" #'helm-traad-commands)

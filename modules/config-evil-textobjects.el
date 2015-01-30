@@ -2,7 +2,6 @@
   (with-demoted-errors
     (require 'cl-lib)
     (require 'evil)
-    (require 'evil-leader)
     (require 'evil-indent-textobject)
     (require 'smartparens)
     (require 'ace-jump-mode)))
