@@ -96,3 +96,4 @@ ac-comphist.dat
 /.elisp-cache-stamp
 /kkrc
 /.python-environments
+/company-statistics-cache.el
