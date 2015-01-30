@@ -7,6 +7,7 @@
 (defun company-onetime-setup ()
   (global-company-mode +1)
   (run-hooks 'load-theme-hook)
+  (company-statistics-mode +1)
   (remove-hook 'prog-mode-hook #'company-onetime-setup-proxy)
   (remove-hook 'text-mode-hook #'company-onetime-setup-proxy))
 
