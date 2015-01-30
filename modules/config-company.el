@@ -122,4 +122,8 @@
 (with-eval-after-load 'company-dabbrev-code
   (setq company-dabbrev-code-everywhere t))
 
+(with-eval-after-load 'company-statistics
+  (defun company-statistics--load ()
+    (load company-statistics-file 'noerror 'nomessage 'nosuffix)))
+
 (provide 'config-auto-complete)
