@@ -1,6 +1,7 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'company)
+    (require 'company-statistics)
     (require 'company-dabbrev-code)
     (require 'config-modes)))
 
