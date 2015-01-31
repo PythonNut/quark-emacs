@@ -126,6 +126,7 @@
 
 (add-hook 'emacs-startup-hook
   (lambda ()
+    (add-hook 'first-change-hook #'yasnippet-onetime-setup nil t)
     (add-hook 'prog-mode-hook #'yasnippet-onetime-setup-proxy)
     (add-hook 'text-mode-hook #'yasnippet-onetime-setup-proxy)))
 
