@@ -9,6 +9,8 @@
   inhibit-default-init 1
   inhibit-startup-echo-area-message t
   inhibit-startup-screen t
+  interprogram-cut-function #'x-select-text
+  interprogram-paste-function #'x-selection-value
   jit-lock-defer-time 0.04
   jit-lock-stealth-nice 0.1
   jit-lock-stealth-time 0.2
@@ -30,10 +32,6 @@
   x-select-enable-primary t
   x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
   x-stretch-cursor t)
-
-(setf
-  interprogram-cut-function #'x-select-text
-  interprogram-paste-function #'x-selection-value)
 
 (setq-default
   buffer-file-coding-system 'utf-8
