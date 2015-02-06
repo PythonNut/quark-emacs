@@ -42,6 +42,9 @@
      cython-mode
      dart-mode
      fasm-mode
+     gitattributes-mode
+     gitconfig-mode
+     gitignore-mode
      haskell-mode
      idris-mode
      jedi
@@ -81,9 +84,6 @@
      flx-isearch
      flycheck
      framemove
-     gitattributes-mode
-     gitconfig-mode
-     gitignore-mode
      helm-ag
      helm-git-grep
      helm-projectile
