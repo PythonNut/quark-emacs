@@ -1,14 +1,12 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'company)
-    (require 'company-statistics)
     (require 'company-dabbrev-code)
     (require 'config-modes)))
 
 (defun company-onetime-setup ()
   (global-company-mode +1)
   (run-hooks 'load-theme-hook)
-  (company-statistics-mode +1)
   (remove-hook 'prog-mode-hook #'company-onetime-setup-proxy)
   (remove-hook 'text-mode-hook #'company-onetime-setup-proxy))
 
@@ -122,9 +120,5 @@
 
 (with-eval-after-load 'company-dabbrev-code
   (setq company-dabbrev-code-everywhere t))
-
-(with-eval-after-load 'company-statistics
-  (defun company-statistics--load ()
-    (load company-statistics-file 'noerror 'nomessage 'nosuffix)))
 
 (provide 'config-auto-complete)

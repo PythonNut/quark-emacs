@@ -72,7 +72,6 @@
      auto-indent-mode
      bracketed-paste
      company
-     company-statistics
      diff-hl
      dired-avfs
      dired-filter
