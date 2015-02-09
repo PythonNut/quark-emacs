@@ -37,8 +37,7 @@
   (setq smex-save-file
     (concat
       user-emacs-directory
-      "smex-items")
-    smex-auto-update nil))
+      "smex-items")))
 
 (global-set-key (kbd "M-x") #'smex)
 
