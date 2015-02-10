@@ -24,6 +24,7 @@
       lisp-body-indent 2
       mode-name (if (display-graphic-p) "λ" "EL"))
 
+    (auto-indent-mode -1)
     (aggressive-indent-mode +1)
     (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)
     (local-set-key (kbd "C-c e") 'replace-last-sexp)
