@@ -17,9 +17,13 @@
 
 (with-eval-after-load 'helm-files
   (setq
+    helm-ff-skip-boring-files t
     helm-boring-file-regexp-list
     (append helm-boring-file-regexp-list
-      '("\\.undo.xz$"
+      '(
+         "\\."
+         "\\.\\."
+         "\\.undo.xz$"
          "\\.elc$"
          "\\#$"
          "\\~$"
