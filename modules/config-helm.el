@@ -21,8 +21,8 @@
     helm-boring-file-regexp-list
     (append helm-boring-file-regexp-list
       '(
-         "^\\.$"
-         "^\\.\\.$"
+         "/\\.$"
+         "/\\.\\.$"
          "\\.undo\\.xz$"
          "\\.elc$"
          "\\#$"
