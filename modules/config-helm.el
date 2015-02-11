@@ -21,13 +21,13 @@
     helm-boring-file-regexp-list
     (append helm-boring-file-regexp-list
       '(
-         "\\."
-         "\\.\\."
-         "\\.undo.xz$"
+         "^\\.$"
+         "^\\.\\.$"
+         "\\.undo\\.xz$"
          "\\.elc$"
          "\\#$"
          "\\~$"
-         "\\.zwc.old$"
+         "\\.zwc\\.old$"
          "\\.zwc$"))))
 
 (with-eval-after-load 'helm
