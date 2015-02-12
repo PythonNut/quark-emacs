@@ -13,7 +13,11 @@
   `((".*" ,autosave-location t)))
 
 (defun save-buffer-maybe ()
-  (and (buffer-modified-p) buffer-file-name (save-buffer)))
+  (and
+    (buffer-modified-p)
+    buffer-file-name
+    (file-writable-p buffer-file-name)
+    (save-buffer)))
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
