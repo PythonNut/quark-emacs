@@ -35,18 +35,12 @@
      evil-visualstar
 
      ;; major modes
-     bbcode-mode
      coffee-mode
-     crontab-mode
-     csv-mode
      cython-mode
-     dart-mode
-     fasm-mode
      gitattributes-mode
      gitconfig-mode
      gitignore-mode
      haskell-mode
-     idris-mode
      jedi
      ;; js2-mode
      js2-refactor
@@ -62,8 +56,6 @@
      scss-mode
      web-mode
 
-     ac-ispell
-     ac-js2
      ;; ace-jump-mode
      adaptive-wrap
      aggressive-indent
