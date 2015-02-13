@@ -161,8 +161,6 @@
        magit
        magit-filenotify
        multiple-cursors
-       windmove
-       framemove
        easy-kill
        flx-isearch
        ace-jump-mode
