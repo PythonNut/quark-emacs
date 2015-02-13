@@ -1,5 +1,6 @@
 (eval-when-compile
   (with-demoted-errors
+    (require 'evil)
     (require 'dired)
     (require 'dired-x)
     (require 'ls-lisp)))
