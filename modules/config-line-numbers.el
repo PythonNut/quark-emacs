@@ -2,11 +2,6 @@
   (with-demoted-errors
     (require 'linum-relative)))
 
-;; (add-hook 'prog-mode-hook
-;;   (lambda ()
-;;     (when (display-graphic-p)
-;;       (linum-mode +1))))
-
 (with-eval-after-load 'linum
   (set-face-background 'linum nil)
 
@@ -52,7 +47,7 @@
 
 (defun linum-cycle ()
   (interactive)
-  (if linum-mode
+  (if (and (featurep 'linum) linum-mode)
     (if (eq linum-format 'dynamic)
       (linum-mode -1)
       (setq linum-format 'dynamic))
