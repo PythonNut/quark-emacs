@@ -91,6 +91,8 @@ ac-comphist.dat
 # misc
 *.undo.xz
 *#
+.#*
+flycheck_*
 *.swp
 *.elc
 /.elisp-cache-stamp
