@@ -63,7 +63,7 @@
     helm-buffers-fuzzy-matching t
     helm-imenu-fuzzy-match t
     helm-recentf-fuzzy-match t
-    helm-locate-fuzzy-match t
+    helm-locate-fuzzy-match nil
     helm-M-x-fuzzy-match t
     helm-semantic-fuzzy-match t
 
