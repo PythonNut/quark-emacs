@@ -196,65 +196,40 @@
 
 (define-key evil-normal-state-map "U" #'undo-tree-visualize)
 
+(defun evil-window-hydra-wrapper ()
+  (unless (fboundp 'evil-window-hydra/body)
+    (require 'hydra)
+    (defhydra evil-window-hydra ()
+      "switch window"
+      ("h" evil-window-left-smart "left")
+      ("j" evil-window-down-smart "down")
+      ("k" evil-window-up-smart "up")
+      ("l" evil-window-right-smart "right")
+      ("RET" nil "quit")))
+  (evil-window-hydra/body))
+
 (evil-define-command evil-window-left-smart ()
-  "A `smartrep' enabled `evil-window-left'"
+  "A `hydra' enabled `evil-window-left'"
   (interactive)
-  (unless (featurep 'smartrep) (require 'smartrep))
   (with-demoted-errors (call-interactively #'evil-window-left))
-  (lexical-let ((iflipb-running-p t))
-    (condition-case e
-      (smartrep-read-event-loop
-        '(("h"  . #'evil-window-left-smart)
-           ("j" . #'evil-window-down-smart)
-           ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)
-           ("<return>" . #'keyboard-quit)))
-      (quit nil))))
+  (evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-down-smart ()
-  "A `smartrep' enabled `evil-window-left'"
   (interactive)
-  (unless (featurep 'smartrep) (require 'smartrep))
   (with-demoted-errors (call-interactively #'evil-window-down))
-  (lexical-let ((iflipb-running-p t))
-    (condition-case e
-      (smartrep-read-event-loop
-        '(("h"  . #'evil-window-left-smart)
-           ("j" . #'evil-window-down-smart)
-           ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)
-           ("<return>" . #'keyboard-quit)))
-      (quit nil))))
+  (evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-up-smart ()
-  "A `smartrep' enabled `evil-window-left'"
+  "A `hydra' enabled `evil-window-left'"
   (interactive)
-  (unless (featurep 'smartrep) (require 'smartrep))
   (with-demoted-errors (call-interactively #'evil-window-up))
-  (lexical-let ((iflipb-running-p t))
-    (condition-case e
-      (smartrep-read-event-loop
-        '(("h"  . #'evil-window-left-smart)
-           ("j" . #'evil-window-down-smart)
-           ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)
-           ("<return>" . #'keyboard-quit)))
-      (quit nil))))
+  (evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-right-smart ()
-  "A `smartrep' enabled `evil-window-left'"
+  "A `hydra' enabled `evil-window-left'"
   (interactive)
-  (unless (featurep 'smartrep) (require 'smartrep))
   (with-demoted-errors (call-interactively #'evil-window-right))
-  (lexical-let ((iflipb-running-p t))
-    (condition-case e
-      (smartrep-read-event-loop
-        '(("h"  . #'evil-window-left-smart)
-           ("j" . #'evil-window-down-smart)
-           ("k" . #'evil-window-up-smart)
-           ("l" . #'evil-window-right-smart)
-           ("<return>" . #'keyboard-quit)))
-      (quit nil))))
+  (evil-window-hydra-wrapper))
 
 (define-key evil-normal-state-map (kbd "C-w h") 'evil-window-left-smart)
 (define-key evil-normal-state-map (kbd "C-w j") 'evil-window-down-smart)
