@@ -262,19 +262,19 @@
   (evil-sp-move))
 
 
-(evil-define-command sp-smart-forward-slurp-sexp ()
+(evil-define-command evil-sp-forward-slurp-sexp ()
   (call-interactively #'sp-forward-slurp-sexp)
   (evil-sp-barfslurp))
 
-(evil-define-command sp-smart-forward-barf-sexp ()
+(evil-define-command evil-sp-forward-barf-sexp ()
   (call-interactively #'sp-forward-barf-sexp)
   (evil-sp-barfslurp))
 
-(evil-define-command sp-smart-backward-slurp-sexp ()
+(evil-define-command evil-sp-backward-slurp-sexp ()
   (call-interactively #'sp-backward-slurp-sexp)
   (evil-sp-barfslurp))
 
-(evil-define-command sp-smart-backward-barf-sexp ()
+(evil-define-command evil-sp-backward-barf-sexp ()
   (call-interactively #'sp-backward-barf-sexp)
   (evil-sp-barfslurp))
 
@@ -303,10 +303,10 @@
       ("gsj" #'sp-join-sexp)
       ("gsa" #'sp-absorb-sexp)
       ("gse" #'sp-emit-sexp)
-      ("gs," #'sp-smart-forward-slurp-sexp)
-      ("gs." #'sp-smart-forward-barf-sexp)
-      ("gs<" #'sp-smart-backward-barf-sexp)
-      ("gs>" #'sp-smart-backward-slurp-sexp))))
+      ("gs," #'evil-sp-forward-slurp-sexp)
+      ("gs." #'evil-sp-forward-barf-sexp)
+      ("gs<" #'evil-sp-backward-barf-sexp)
+      ("gs>" #'evil-sp-backward-slurp-sexp))))
 
 (defun my-sp-pair-function (id action context)
   (if (eq action 'insert)
