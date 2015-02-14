@@ -98,6 +98,9 @@
       (when (executable-find "ack-grep")
         (setq helm-ag-base-command "ack-grep --nocolor --nogroup")))))
 
+(with-eval-after-load 'helm-projectile
+  (setq helm-projectile-fuzzy-match t))
+
 (global-set-key (kbd "M-:") #'helm-eval-expression)
 
 (defun my-helm-buffers (&rest arg)
