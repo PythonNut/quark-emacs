@@ -79,6 +79,7 @@
      helm-git-grep
      helm-projectile
      hexrgb
+     hydra
      icicles
      idomenu
      iflipb
