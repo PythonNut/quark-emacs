@@ -108,8 +108,8 @@
 
 (defun my-helm-buffers (&rest arg)
   (interactive)
-  (unless (featurep 'helm-buffers) (require 'helm-buffers))
-  (unless (featurep 'helm-files) (require 'helm-files))
+  (require 'helm-buffers)
+  (require 'helm-files)
   (helm
     :sources
     '(helm-source-buffers-list
@@ -126,16 +126,18 @@
 
 (defun my-helm-omni (&rest arg)
   (interactive)
-  (unless (featurep 'helm-files) (require 'helm-files))
-  (unless (featurep 'helm-ring) (require 'helm-ring))
-  (unless (featurep 'helm-misc) (require 'helm-misc))
-  (unless (featurep 'helm-semantic) (require 'helm-semantic))
+  (require 'helm-files)
+  (require 'helm-ring)
+  (require 'helm-misc)
+  (require 'helm-semantic)
+
   (unless (featurep 'helm-ag)
     (when (or
             (executable-find "ag")
             (executable-find "ack")
             (executable-find "ack-grep"))
       (require 'helm-ag)))
+
   (unless (featurep 'helm-projectile)
     (require 'helm-projectile)
     (unless projectile-global-mode-buffers
