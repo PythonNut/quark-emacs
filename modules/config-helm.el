@@ -101,6 +101,9 @@
 (with-eval-after-load 'helm-projectile
   (setq helm-projectile-fuzzy-match t))
 
+(with-eval-after-load 'helm-regexp
+  (helm-occur-init-source))
+
 (global-set-key (kbd "M-:") #'helm-eval-expression)
 
 (defun my-helm-buffers (&rest arg)
@@ -138,7 +141,6 @@
     (unless projectile-global-mode-buffers
       (projectile-global-mode +1)))
 
-  (helm-occur-init-source)
   (let ((bufs (list (buffer-name (current-buffer))))
          (projectile-root (ignore-errors (projectile-project-p))))
 
