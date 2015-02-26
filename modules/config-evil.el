@@ -157,43 +157,6 @@
 (define-key evil-normal-state-map (kbd "[ <SPC>") #'evil-open-above-normal)
 (define-key evil-normal-state-map (kbd "] <SPC>") #'evil-open-below-normal)
 
-;; let oo open a new paragraph
-(defun evil-open-paragraph-full (arg)
-  (interactive "p")
-  (evil-open-above-normal arg)
-  (evil-open-below arg)
-  (keyboard-quit))
-
-(defun evil-open-paragraph-empty (arg)
-  (interactive "p")
-  (evil-open-below arg)
-  (evil-previous-line arg)
-  (indent-according-to-mode)
-  (keyboard-quit))
-
-(defun evil-open-paragraph (arg)
-  (interactive "p")
-  (unless (featurep 'smartrep)
-    (require 'smartrep))
-  (run-at-time 0.3 nil #'keyboard-quit)
-  (let ((blank-line (string-match "^[[:space:]]*$"
-                      (buffer-substring-no-properties
-                        (line-beginning-position)
-                        (line-end-position)))))
-    (evil-open-below arg)
-    (run-hooks 'post-command-hook)
-    (if blank-line
-      (condition-case e
-        (smartrep-read-event-loop
-          '(("o" . evil-open-paragraph-empty)))
-        (quit nil))
-      (condition-case e
-        (smartrep-read-event-loop
-          '(("o" . evil-open-paragraph-full)))
-        (quit nil)))))
-
-(define-key evil-normal-state-map "o" #'evil-open-paragraph)
-
 (define-key evil-normal-state-map "U" #'undo-tree-visualize)
 
 (defun evil-window-hydra-wrapper ()
