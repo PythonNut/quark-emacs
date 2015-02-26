@@ -97,8 +97,6 @@
   x-select-enable-clipboard t
   x-select-enable-primary t
   x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
-  interprogram-cut-function #'x-select-text
-  interprogram-paste-function #'x-selection-value
   
   ;; backup locations
   backup-directory-alist
