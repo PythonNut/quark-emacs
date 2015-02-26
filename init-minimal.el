@@ -15,6 +15,13 @@
 (icomplete-mode +1)
 (global-visual-line-mode +1)
 
+;; enable semantic code LALR(1) parser
+(add-hook 'prog-mode-hook #'semantic-mode)
+(with-eval-after-load 'semantic
+  (global-semanticdb-minor-mode +1)
+  (global-semantic-idle-scheduler-mode +1)
+  (global-semantic-idle-summary-mode +1))
+
 (add-hook 'find-file-hook #'auto-save-mode)
 (add-hook 'find-file-hook #'global-auto-revert-mode)
 (add-hook 'activate-mark-hook #'delete-selection-mode)
