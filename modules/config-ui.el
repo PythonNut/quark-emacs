@@ -116,39 +116,33 @@
   (defun iflipb-first-iflipb-buffer-switch-command ()
     "Determines whether this is the first invocation of
   iflipb-next-buffer or iflipb-previous-buffer this round."
-    (or (not (or (eq last-command 'iflipb-next-buffer)
-               (eq last-command 'iflipb-previous-buffer)))
-      iflipb-running-p)))
+    iflipb-running-p))
+
+(defun iflipb-smart-buffer ()
+  (unless (fboundp 'iflipb-hydra/body)
+    (require 'hydra)
+    (defhydra iflipb-hydra
+      (:pre (setq hydra-is-helpful nil)
+        :post (setq hydra-is-helpful t))
+      ("<C-tab>"
+        (call-interactively #'iflipb-next-buffer) nil)
+      ("<C-S-iso-lefttab>"
+        (call-interactively #'iflipb-previous-buffer) nil)))
+  (iflipb-hydra/body))
 
 (defun iflipb-next-buffer-smart ()
-  "A `smartrep' enabled next-buffer"
+  "A `hydra' enabled next-buffer"
   (interactive)
-  (unless (featurep 'smartrep) (require 'smartrep))
-  (call-interactively #'iflipb-next-buffer)
-  (lexical-let ((iflipb-running-p t))
-    (condition-case e
-      (smartrep-read-event-loop
-        '(("C-S-<iso-lefttab>" . #'iflipb-previous-buffer-smart)
-           ("S-<iso-lefttab>"  . #'iflipb-previous-buffer-smart)
-           ("<C-tab>"          . #'iflipb-next-buffer-smart)
-           ("<tab>"            . #'iflipb-next-buffer-smart)
-           ("<return>"         . #'keyboard-quit)))
-      (quit nil))))
+  (let ((iflipb-running-p t))
+    (call-interactively #'iflipb-next-buffer))
+  (iflipb-smart-buffer))
 
 (defun iflipb-previous-buffer-smart ()
-  "A `smartrep' enabled previous-buffer"
+  "A `hydra' enabled previous-buffer"
   (interactive)
-  (unless (featurep 'smartrep) (require 'smartrep))
-  (call-interactively #'iflipb-previous-buffer)
-  (lexical-let ((iflipb-running-p t))
-    (condition-case e
-      (smartrep-read-event-loop
-        '(("C-S-<iso-lefttab>" . #'iflipb-previous-buffer-smart)
-           ("S-<iso-lefttab>"  . #'iflipb-previous-buffer-smart)
-           ("<C-tab>"          . #'iflipb-next-buffer-smart)
-           ("<tab>"            . #'iflipb-next-buffer-smart)
-           ("<return>"         . #'keyboard-quit)))
-      (quit nil))))
+  (let ((iflipb-running-p t))
+    (call-interactively #'iflipb-previous-buffer))
+  (iflipb-smart-buffer))
 
 (global-set-key (kbd "<C-tab>") 'iflipb-next-buffer-smart)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'iflipb-previous-buffer-smart)
