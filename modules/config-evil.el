@@ -100,26 +100,6 @@
         (set-face-foreground 'mode-line (rest color))
         (set-face-foreground 'mode-line-buffer-id (rest color))))))
 
-;; exit isearch with jj and kk 
-(defun isearch-exit-chord-worker (&optional arg)
-  (interactive "p")
-  (execute-kbd-macro (kbd "<backspace> <return>")))
-
-(defun isearch-exit-chord (arg)
-  (interactive "p")
-  (isearch-printing-char)
-  (unless (featurep 'smartrep)
-    (require 'smartrep))
-  (run-at-time 0.3 nil #'keyboard-quit)
-  (condition-case e
-    (smartrep-read-event-loop
-      '(("j" . isearch-exit-chord-worker)
-         ("k" . isearch-exit-chord-worker)))
-    (quit nil)))
-
-(define-key isearch-mode-map "j" #'isearch-exit-chord)
-(define-key isearch-mode-map "k" #'isearch-exit-chord)
-
 ;; switch to insert state if I set an emacs-style mark
 (define-key evil-normal-state-map (kbd "C-SPC")
   (lambda () (interactive)
