@@ -97,7 +97,6 @@
      psvn
      rainbow-delimiters
      smartparens
-     smartrep
      smooth-scrolling
      solarized-theme
      traad
