@@ -162,14 +162,16 @@
 (defun evil-window-hydra-wrapper ()
   (unless (fboundp 'evil-window-hydra/body)
     (require 'hydra)
-    (defhydra evil-window-hydra ()
-      "switch window"
-      ("h" evil-window-left-smart "left")
-      ("j" evil-window-down-smart "down")
-      ("k" evil-window-up-smart "up")
-      ("l" evil-window-right-smart "right")
-      ("RET" nil "quit")))
-  (evil-window-hydra/body))
+    (with-no-warnings
+      (defhydra evil-window-hydra ()
+        "switch window"
+        ("h" evil-window-left-smart "left")
+        ("j" evil-window-down-smart "down")
+        ("k" evil-window-up-smart "up")
+        ("l" evil-window-right-smart "right")
+        ("RET" nil "quit"))))
+  (with-no-warnings
+    (evil-window-hydra/body)))
 
 (evil-define-command evil-window-left-smart ()
   "A `hydra' enabled `evil-window-left'"
