@@ -13,6 +13,7 @@
      c-indent-line-or-region
      cua-cancel
      cua-copy-region
+     cua-cut-region
      cua-delete-region
      cua-exchange-point-and-mark
      cua-paste
