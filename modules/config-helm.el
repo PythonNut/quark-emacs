@@ -48,7 +48,7 @@
         (if (string-match-p " " helm-pattern)
           (cl-loop with pattern = (split-string helm-pattern)
             for p in pattern
-            do (when (search-forward p nil t)
+            do (when (search-forward (substring-no-properties p) nil t)
                  (add-text-properties
                    (match-beginning 0) (match-end 0) '(face helm-match))))
           (cl-loop with pattern = (cdr (flx-score display
