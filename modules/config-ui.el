@@ -166,4 +166,23 @@
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
 
+;; =================================
+;; automatically request root access
+;; =================================
+
+(defun my-edit-file-as-root ()
+  "Find file as root"
+  (interactive)
+  (if (/= (call-process "sudo" nil nil "-v") 0)
+    (find-alternate-file (concat "/su:root@localhost:" buffer-file-name))
+    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
+(defun my-edit-file-as-root-maybe ()
+  "Find file as root if necessary."
+  (unless (and buffer-file-name (file-writable-p buffer-file-name))
+    (when (y-or-n-p "File is not writable. Open with root? ")
+      (my-edit-file-as-root))))
+
+(add-hook 'find-file-hook #'my-edit-file-as-root-maybe)
+
 (provide 'config-ui)
