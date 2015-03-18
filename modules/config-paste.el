@@ -177,6 +177,12 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
     (require 'bracketed-paste)
     (bracketed-paste-enable)
     (bracketed-paste-setup)
+
+    ;; fix display corruption in certain terminals when using isearch
+    (defadvice isearch-printing-char
+      (after redisplay activate preactivate compile)
+      (redraw-display))
+
     (when (getenv "TMUX")
       (run-hooks 'terminal-init-xterm-hook))
     (add-hook 'kill-emacs-hook
