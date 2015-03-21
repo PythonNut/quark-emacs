@@ -61,11 +61,7 @@
             do (add-text-properties
                  (1+ index) (+ 2 index) '(face helm-match))))
         (setq display (buffer-string)))
-      (if real (cons display real) display)))
-
-  (defadvice helm-get-selection
-    (around sanitize-properties activate preactivate compile)
-    (substring-no-properties ad-do-it))
+      (if real (cons display (substring-no-properties real)) display)))
 
   (setq
     helm-buffers-fuzzy-matching t
