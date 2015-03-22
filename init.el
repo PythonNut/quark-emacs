@@ -71,7 +71,8 @@
   (message "[==============]")
 
   (eval-when-compile
-    (require 'load-dir))
+    (ignore-errors
+      (require 'load-dir)))
 
   (setq
     load-dir-debug nil
