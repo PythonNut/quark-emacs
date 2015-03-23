@@ -56,12 +56,12 @@
                    (match-beginning 0) (match-end 0) '(face helm-match))))
           (cl-loop with pattern = (cdr (flx-score
                                          (substring-no-properties display)
-                                         (substring-no-properties helm-pattern) helm-flx-cache))
+                                         helm-pattern helm-flx-cache))
             for index in pattern
             do (add-text-properties
                  (1+ index) (+ 2 index) '(face helm-match))))
         (setq display (buffer-string)))
-      (if real (cons display (substring-no-properties real)) display)))
+      (if real (cons display real) display)))
 
   (setq
     helm-buffers-fuzzy-matching t
