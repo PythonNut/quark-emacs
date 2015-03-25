@@ -33,35 +33,39 @@
 (with-eval-after-load 'helm
   (require 'flx)
   (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file))
-  (defun helm-score-candidate-for-pattern (candidate pattern)
-    (car (flx-score
-           (substring-no-properties candidate)
-           (substring-no-properties pattern)
-           helm-flx-cache)))
+  (defadvice helm-score-candidate-for-pattern
+    (around flx-score (candidate pattern) activate preactivate compile)
+    (setq ad-return-value
+      (car (flx-score
+             (substring-no-properties candidate)
+             (substring-no-properties pattern)
+             helm-flx-cache))))
 
-  (defun helm-fuzzy-default-highlight-match (candidate)
+  (defadvice helm-fuzzy-default-highlight-match
+    (around flx-highlight (candidate) activate preactivate compile)
     "The default function to highlight matches in fuzzy matching.
   It is meant to use with `filter-one-by-one' slot."
-    (let* ((pair (and (consp candidate) candidate))
-            (display (if pair (car pair) candidate))
-            (real (cdr pair)))
-      (with-temp-buffer
-        (insert display)
-        (goto-char (point-min))
-        (if (string-match-p " " helm-pattern)
-          (cl-loop with pattern = (split-string helm-pattern)
-            for p in pattern
-            do (when (search-forward (substring-no-properties p) nil t)
-                 (add-text-properties
-                   (match-beginning 0) (match-end 0) '(face helm-match))))
-          (cl-loop with pattern = (cdr (flx-score
-                                         (substring-no-properties display)
-                                         helm-pattern helm-flx-cache))
-            for index in pattern
-            do (add-text-properties
-                 (1+ index) (+ 2 index) '(face helm-match))))
-        (setq display (buffer-string)))
-      (if real (cons display real) display)))
+    (setq ad-return-value
+      (let* ((pair (and (consp candidate) candidate))
+              (display (if pair (car pair) candidate))
+              (real (cdr pair)))
+        (with-temp-buffer
+          (insert display)
+          (goto-char (point-min))
+          (if (string-match-p " " helm-pattern)
+            (cl-loop with pattern = (split-string helm-pattern)
+              for p in pattern
+              do (when (search-forward (substring-no-properties p) nil t)
+                   (add-text-properties
+                     (match-beginning 0) (match-end 0) '(face helm-match))))
+            (cl-loop with pattern = (cdr (flx-score
+                                           (substring-no-properties display)
+                                           helm-pattern helm-flx-cache))
+              for index in pattern
+              do (add-text-properties
+                   (1+ index) (+ 2 index) '(face helm-match))))
+          (setq display (buffer-string)))
+        (if real (cons display real) display))))
 
   (setq
     helm-buffers-fuzzy-matching t
