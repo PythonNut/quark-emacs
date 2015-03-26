@@ -8,6 +8,8 @@
   (lambda ()
     (anaconda-mode +1)
     (eldoc-mode +1)
+    (global-semantic-idle-summary-mode -1)
+
     (run-at-time 1 nil #'python-indent-guess-indent-offset)
     (local-set-key (kbd "M-.") #'anaconda-mode-goto)
     (evil-define-key 'normal (current-local-map) "gd" #'anaconda-mode-goto)))
