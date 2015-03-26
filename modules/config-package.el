@@ -41,7 +41,6 @@
      gitconfig-mode
      gitignore-mode
      haskell-mode
-     jedi
      ;; js2-mode
      js2-refactor
      json-mode

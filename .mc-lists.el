@@ -85,7 +85,6 @@
      indent-for-tab-command
      indent-new-comment-line
      iy-go-to-char--command
-     jedi:dot-complete
      jump-char-process-char
      keyboard-quit
      kill-ring-search
