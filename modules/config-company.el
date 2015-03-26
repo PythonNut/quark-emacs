@@ -53,12 +53,13 @@
     (with-no-warnings
       (generate-calls company-define-specific-modes
         (
-          ('c++-mode-hook  'company-clang)
-          ('objc-mode-hook 'company-clang)
-          ('c-mode-hook    'company-clang)
-          ('css-mode-hook  'company-css)
-          ('java-mode-hook 'company-eclim)
-          ('nxml-mode-hook 'company-nxml)))))
+          ('c++-mode-hook    'company-clang)
+          ('objc-mode-hook   'company-clang)
+          ('c-mode-hook      'company-clang)
+          ('css-mode-hook    'company-css)
+          ('java-mode-hook   'company-eclim)
+          ('nxml-mode-hook   'company-nxml)
+          ('python-mode-hook 'company-anaconda)))))
 
   (defun company-complete-common-or-complete-full ()
     (interactive)

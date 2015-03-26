@@ -58,11 +58,13 @@
      ;; ace-jump-mode
      adaptive-wrap
      aggressive-indent
+     anaconda-mode
      auto-compile
      ;; auto-complete
      auto-indent-mode
      bracketed-paste
      company
+     company-anaconda
      diff-hl
      dired-avfs
      dired-filter
