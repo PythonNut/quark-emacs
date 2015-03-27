@@ -100,7 +100,7 @@
     (lambda ()
       (define-key flyspell-mode-map (kbd "C-.") nil)
       (define-key flyspell-mode-map (kbd "C-,") nil)
-      (diminish 'flyspell-mode (if (display-graphic-p) " ῶ" " ~"))))
+      (diminish 'flyspell-mode (if (display-graphic-p) " f̲" " ~"))))
 
   (if (executable-find "hunspell")
     (setq ispell-program-name "hunspell")
