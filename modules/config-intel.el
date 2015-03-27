@@ -78,9 +78,7 @@
                       ""))
                   (`interrupted "-")
                   (`suspicious "?"))))
-      (concat (if (display-graphic-p) " ✓" " Γ") text)))
-  ;; (add-hook 'flycheck-mode-hook #'flycheck-haskell-setup)
-  )
+      (concat (if (display-graphic-p) " ✓" " Γ") text))))
 
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
