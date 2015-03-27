@@ -26,11 +26,15 @@
 
     (auto-indent-mode -1)
     (aggressive-indent-mode +1)
-    (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)
-    (local-set-key (kbd "C-c e") 'replace-last-sexp)
-    (local-set-key (kbd "M-.") #'emacs-lisp-goto-definition)
-    (local-set-key (kbd "M-,") #'evil-jump-backward)
-    (evil-define-key 'normal (current-local-map) "gd" #'emacs-lisp-goto-definition)))
+    (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)))
 
 (with-eval-after-load 'aggressive-indent
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
+
+(with-eval-after-load 'elisp-mode
+  (define-key emacs-lisp-mode-map (kbd "C-c e") #'replace-last-sexp)
+  (define-key emacs-lisp-mode-map (kbd "M-.") #'emacs-lisp-goto-definition)
+  (define-key emacs-lisp-mode-map (kbd "M-,") #'evil-jump-backward)
+
+  (evil-define-key 'normal emacs-lisp-mode-map "gd"
+    #'emacs-lisp-goto-definition))
