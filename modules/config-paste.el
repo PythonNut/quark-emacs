@@ -40,7 +40,8 @@
       (interactive "rP")
       (call-interactively
         (ad-get-orig-definition 'cua-cut-region)
-        current-prefix-arg)) prefix t t prefix))
+        current-prefix-arg))
+    prefix t t prefix))
 
 ;; cua-yank a line if cut as a line
 (defadvice cua-paste
