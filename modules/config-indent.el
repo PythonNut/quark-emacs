@@ -51,4 +51,7 @@
 (define-key evil-motion-state-map (kbd "<home>")
   #'back-to-indentation-or-beginning)
 
+(define-key evil-insert-state-map (kbd "C-e") #'end-of-visual-line)
+(define-key evil-insert-state-map (kbd "<end>") #'end-of-visual-line)
+
 (provide 'config-indent)

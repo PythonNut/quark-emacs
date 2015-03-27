@@ -118,7 +118,6 @@
     (evil-normal-state)
     (call-interactively 'evil-search-forward)))
 
-(define-key evil-insert-state-map (kbd "C-e") #'evil-end-of-visual-line)
 (setq evil-replace-state-cursor '("#884444" box))
 
 ;; open line and stay in normal mode
