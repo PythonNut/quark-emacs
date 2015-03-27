@@ -136,7 +136,7 @@
 (with-eval-after-load 'idle-require
   (add-hook 'idle-require-mode-hook
     (lambda ()
-      (diminish 'idle-require-mode (if (display-graphic-p) " ⨀" " IR"))))
+      (diminish 'idle-require-mode (if (display-graphic-p) " ⋯" " IR"))))
 
   (setq
     idle-require-idle-delay 1
