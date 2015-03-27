@@ -23,13 +23,10 @@
   mouse-drag-copy-region nil
   right-margin-width 0
   ring-bell-function 'ignore
-  select-active-regions t
   split-height-threshold 0
   split-width-threshold 0
   tab-width 4
   use-dialog-box nil
-  x-select-enable-clipboard t
-  x-select-enable-primary t
   x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
   x-stretch-cursor t)
 
