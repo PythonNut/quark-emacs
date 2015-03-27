@@ -17,3 +17,6 @@
   (setq python-indent-guess-indent-offset t)
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
   (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto))
+
+(with-eval-after-load 'anaconda-mode
+  (diminish 'anaconda-mode " ✶"))
