@@ -33,9 +33,9 @@
 
 (with-eval-after-load 'flycheck
   (defun my-display-error-messages-condensed (errors)
-    (unless (featurep 's) (require 's))
     (-when-let (messages (-keep #'flycheck-error-message errors))
       (when (flycheck-may-use-echo-area-p)
+        (require 's)
         (display-message-or-buffer (s-join "\n" messages)
           flycheck-error-message-buffer))))
 
@@ -83,13 +83,13 @@
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
 ;;; =======================================
-;; text mode
-(with-eval-after-load 'flyspell
+(with-eval-after-load 'ispell
   (defadvice ispell-init-process
     (around hide-startup activate preactivate compile)
     (cl-letf (((symbol-function 'message) #'format))
-      ad-do-it))
+      ad-do-it)))
 
+(with-eval-after-load 'flyspell
   (setq
     flyspell-issue-message-flag nil
     flyspell-issue-welcome-flag nil)
@@ -98,7 +98,7 @@
     (lambda ()
       (define-key flyspell-mode-map (kbd "C-.") nil)
       (define-key flyspell-mode-map (kbd "C-,") nil)
-      (diminish 'flyspell-mode (if (display-graphic-p) " f̲" " ~"))))
+      (diminish 'flyspell-mode (if (display-graphic-p) " f̲" " f"))))
 
   (if (executable-find "hunspell")
     (setq ispell-program-name "hunspell")
