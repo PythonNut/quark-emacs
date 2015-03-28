@@ -145,11 +145,11 @@
     '(
        helm-files
        helm-ring
-       yasnippet
        helm-projectile
        helm-semantic
        helm-ag
-       icicles
+       yasnippet
+       company
 
        magit
        magit-filenotify
@@ -159,7 +159,9 @@
        ace-jump-mode
        whole-line-or-region
        smex
-       psvn)))
+       psvn
+
+       icicles)))
 
 (if (daemonp)
   (progn
