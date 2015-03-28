@@ -5,7 +5,7 @@
     (require 'config-modes)))
 
 (defun company-onetime-setup ()
-  (global-company-mode +1)
+  (require 'company)
   (run-hooks 'load-theme-hook)
   (remove-hook 'prog-mode-hook #'company-onetime-setup-proxy)
   (remove-hook 'text-mode-hook #'company-onetime-setup-proxy))
@@ -20,6 +20,7 @@
     (add-hook 'text-mode-hook #'company-onetime-setup-proxy)))
 
 (with-eval-after-load 'company
+  (global-company-mode +1)
   (diminish 'company-mode (if (display-graphic-p) " ❃" " Co"))
   (setq
     company-idle-delay 0.1
