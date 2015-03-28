@@ -20,7 +20,7 @@
     (add-hook 'text-mode-hook #'company-onetime-setup-proxy)))
 
 (with-eval-after-load 'company
-  (diminish 'company-mode (if (display-graphic-p) " γ" " Co"))
+  (diminish 'company-mode (if (display-graphic-p) " ❃" " Co"))
   (setq
     company-idle-delay 0.1
     company-echo-delay 0
