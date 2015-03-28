@@ -113,7 +113,7 @@
 ;;; =============================================
 
 (defun yasnippet-onetime-setup ()
-  (yas-global-mode +1)
+  (require 'yasnippet)
   (remove-hook 'prog-mode-hook
     #'yasnippet-onetime-setup-proxy)
   (remove-hook 'text-mode-hook
@@ -143,8 +143,7 @@
                        (concat
                          user-emacs-directory
                          "data/snippets")))
-  (unless yas-global-mode
-    (yasnippet-onetime-setup))
+  (yas-global-mode +1)
   (yas-reload-all))
 
 (provide 'config-intel)
