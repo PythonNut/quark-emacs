@@ -9,7 +9,6 @@
 
 (require 'config-scroll)
 (require 'config-line-numbers)
-(require 'config-parens)
 (require 'config-ace-easymotion)
 (require 'config-undo)
 
