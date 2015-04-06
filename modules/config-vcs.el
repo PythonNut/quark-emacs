@@ -80,6 +80,12 @@ This requires the external program `diff' to be in your `exec-path'."
       "-U 0" 'noasync
       (get-buffer-create " *diff-hl-diff*"))))
 
+(with-eval-after-load 'vc-git
+  (defadvice vc-git-working-revision
+    (around use-hashes-only (file) activate preactivate compile)
+    "Git-specific version of `vc-working-revision'."
+    (setq ad-return-value (vc-git--rev-parse ad-do-it))))
+
 (with-eval-after-load 'diff-hl
   (setq diff-hl-draw-borders nil)
   (defun diff-hl-changes ()
