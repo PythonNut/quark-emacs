@@ -56,16 +56,15 @@ This requires the external program `diff' to be in your `exec-path'."
   (interactive)
   (vc-ensure-vc-buffer)
   (with-current-buffer (get-buffer (current-buffer))
-    (diff-no-select
-      (diff-hl-create-revision
-        buffer-file-name
-        (vc-working-revision buffer-file-name
-          (vc-responsible-backend buffer-file-name)
-          t))
-      (current-buffer)
-      "-U 0" 'noasync
-      (get-buffer-create " *diff-hl-diff*"))))
-
+    (let ((rev (diff-hl-create-revision
+                 buffer-file-name
+                 (vc-working-revision buffer-file-name
+                   (vc-responsible-backend buffer-file-name)
+                   t))))
+      (if (called-interactively-p 'any)
+        (diff rev (current-buffer) "-U 0" 'noasync)
+        (diff-no-select rev (current-buffer) "-U 0" 'noasync
+          (get-buffer-create " *diff-hl-diff*"))))))
 
 (with-eval-after-load 'vc
   (defadvice vc-working-revision
