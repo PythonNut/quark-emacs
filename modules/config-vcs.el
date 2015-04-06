@@ -25,14 +25,6 @@
     git-gutter+-clear-function (lambda (&rest args))
     git-gutter+-window-config-change-function nil))
 
-;; (defun diff-buffer-with-file-unified ()
-;;   "View the differences between BUFFER and its associated file.
-;; This requires the external program `diff' to be in your `exec-path'."
-;;   (interactive)
-;;   (with-current-buffer (get-buffer (current-buffer))
-;;     (diff-no-select buffer-file-name (current-buffer) "-U 0" 'noasync)))
-
-
 (defun diff-hl-make-temp-file-name (file rev &optional manual)
   "Return a backup file name for REV or the current version of FILE.
 If MANUAL is non-nil it means that a name for backups created by
