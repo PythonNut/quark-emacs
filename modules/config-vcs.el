@@ -9,13 +9,6 @@
     (diff-hl-mode +1)
     (diff-hl-update)))
 
-(with-eval-after-load 'git-gutter+
-  ;; leave highlighting to diff-hl
-  (diminish 'git-gutter+-mode)
-  (setq git-gutter+-view-diff-function (lambda (&rest args))
-    git-gutter+-clear-function (lambda (&rest args))
-    git-gutter+-window-config-change-function nil))
-
 (defun diff-hl-make-temp-file-name (file rev &optional manual)
   "Return a backup file name for REV or the current version of FILE.
 If MANUAL is non-nil it means that a name for backups created by
