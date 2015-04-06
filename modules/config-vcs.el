@@ -15,7 +15,8 @@ If MANUAL is non-nil it means that a name for backups created by
 the user should be returned."
   (let* ((diff-hl-temp-location
            (if (file-directory-p "/dev/shm/")
-             "/dev/shm/" "/tmp/"))
+             "/dev/shm/"
+             temporary-file-directory))
           (auto-save-file-name-transforms
             `((".*" ,diff-hl-temp-location t))))
     (expand-file-name
@@ -60,7 +61,11 @@ This requires the external program `diff' to be in your `exec-path'."
                  buffer-file-name
                  (vc-working-revision buffer-file-name
                    (vc-responsible-backend buffer-file-name)
-                   t))))
+                   t)))
+           (temporary-file-directory
+             (if (file-directory-p "/dev/shm/")
+               "/dev/shm/"
+               temporary-file-directory)))
       (if (called-interactively-p 'any)
         (diff rev (current-buffer) "-U 0" 'noasync)
         (diff-no-select rev (current-buffer) "-U 0" 'noasync
