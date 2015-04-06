@@ -88,7 +88,7 @@ This requires the external program `diff' to be in your `exec-path'."
     (around concrete-revision (file &optional backend concrete) activate preactivate compile)
     (setq ad-return-value
       (if concrete
-        (vc-call-backend backend 'working-revision file)
+        (vc-call-backend backend 'working-revision file t)
         (or (vc-file-getprop file 'vc-working-revision)
           (progn
             (setq backend (or backend (vc-responsible-backend file)))
@@ -98,9 +98,11 @@ This requires the external program `diff' to be in your `exec-path'."
 
 (with-eval-after-load 'vc-git
   (defadvice vc-git-working-revision
-    (around use-hashes-only (file) activate preactivate compile)
+    (around use-hashes-only (file &optional concrete) activate preactivate compile)
     "Git-specific version of `vc-working-revision'."
-    (setq ad-return-value (vc-git--rev-parse ad-do-it))))
+    (if concrete
+      (setq ad-return-value (vc-git--rev-parse ad-do-it))
+      ad-do-it)))
 
 (with-eval-after-load 'diff-hl
   (setq diff-hl-draw-borders nil)
