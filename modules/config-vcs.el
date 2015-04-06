@@ -94,46 +94,48 @@ This requires the external program `diff' to be in your `exec-path'."
 
 (with-eval-after-load 'diff-hl
   (setq diff-hl-draw-borders nil)
-  (defun diff-hl-changes ()
-    (let* ((file buffer-file-name)
-            (backend (vc-backend file)))
-      (when backend
-        (let ((state (vc-state file backend)))
-          (cond
-            ((or
-               (buffer-modified-p)
-               (eq state 'edited)
-               (and (eq state 'up-to-date)
-                 ;; VC state is stale in after-revert-hook.
-                 (or revert-buffer-in-progress-p
-                   ;; Diffing against an older revision.
-                   diff-hl-reference-revision)))
-              (let (diff-auto-refine-mode res)
-                (with-current-buffer (diff-hl-diff-buffer-with-head)
-                  (goto-char (point-min))
-                  (unless (eobp)
-                    (ignore-errors
-                      (diff-beginning-of-hunk t))
-                    (while (looking-at diff-hunk-header-re-unified)
-                      (let ((line (string-to-number (match-string 3)))
-                             (len (let ((m (match-string 4)))
-                                    (if m (string-to-number m) 1)))
-                             (beg (point)))
-                        (diff-end-of-hunk)
-                        (let* ((inserts (diff-count-matches "^\\+" beg (point)))
-                                (deletes (diff-count-matches "^-" beg (point)))
-                                (type (cond ((zerop deletes) 'insert)
-                                        ((zerop inserts) 'delete)
-                                        (t 'change))))
-                          (when (eq type 'delete)
-                            (setq len 1)
-                            (cl-incf line))
-                          (push (list line len type) res))))))
-                (nreverse res)))
-            ((eq state 'added)
-              `((1 ,(line-number-at-pos (point-max)) insert)))
-            ((eq state 'removed)
-              `((1 ,(line-number-at-pos (point-max)) delete))))))))
+  (defadvice diff-hl-changes
+    (around flydiff activate preactivate compile)
+    (setq ad-return-value
+      (let* ((file buffer-file-name)
+              (backend (vc-backend file)))
+        (when backend
+          (let ((state (vc-state file backend)))
+            (cond
+              ((or
+                 (buffer-modified-p)
+                 (eq state 'edited)
+                 (and (eq state 'up-to-date)
+                   ;; VC state is stale in after-revert-hook.
+                   (or revert-buffer-in-progress-p
+                     ;; Diffing against an older revision.
+                     diff-hl-reference-revision)))
+                (let (diff-auto-refine-mode res)
+                  (with-current-buffer (diff-hl-diff-buffer-with-head)
+                    (goto-char (point-min))
+                    (unless (eobp)
+                      (ignore-errors
+                        (diff-beginning-of-hunk t))
+                      (while (looking-at diff-hunk-header-re-unified)
+                        (let ((line (string-to-number (match-string 3)))
+                               (len (let ((m (match-string 4)))
+                                      (if m (string-to-number m) 1)))
+                               (beg (point)))
+                          (diff-end-of-hunk)
+                          (let* ((inserts (diff-count-matches "^\\+" beg (point)))
+                                  (deletes (diff-count-matches "^-" beg (point)))
+                                  (type (cond ((zerop deletes) 'insert)
+                                          ((zerop inserts) 'delete)
+                                          (t 'change))))
+                            (when (eq type 'delete)
+                              (setq len 1)
+                              (cl-incf line))
+                            (push (list line len type) res))))))
+                  (nreverse res)))
+              ((eq state 'added)
+                `((1 ,(line-number-at-pos (point-max)) insert)))
+              ((eq state 'removed)
+                `((1 ,(line-number-at-pos (point-max)) delete)))))))))
   ;; (add-hook 'post-command-hook #'diff-hl-update)
   (run-with-idle-timer 1 t #'diff-hl-update))
 
