@@ -75,7 +75,9 @@ This requires the external program `diff' to be in your `exec-path'."
     (diff-no-select
       (diff-hl-create-revision
         buffer-file-name
-        (vc-working-revision buffer-file-name))
+        (vc-working-revision buffer-file-name
+          (vc-responsible-backend buffer-file-name)
+          t))
       (current-buffer)
       "-U 0" 'noasync
       (get-buffer-create " *diff-hl-diff*"))))
