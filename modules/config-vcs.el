@@ -138,8 +138,7 @@ This requires the external program `diff' to be in your `exec-path'."
   (run-with-idle-timer 1 t #'diff-hl-update))
 
 (with-eval-after-load 'magit
-  (when (display-graphic-p)
-    (diminish 'magit-auto-revert-mode))
+  (diminish 'magit-auto-revert-mode)
   (setq magit-completing-read-function
     #'magit-ido-completing-read)
   (evil-set-initial-state 'magit-status-mode 'insert)
