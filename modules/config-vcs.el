@@ -80,6 +80,20 @@ This requires the external program `diff' to be in your `exec-path'."
       "-U 0" 'noasync
       (get-buffer-create " *diff-hl-diff*"))))
 
+
+(with-eval-after-load 'vc
+  (defadvice vc-working-revision
+    (around concrete-revision (file &optional backend concrete) activate preactivate compile)
+    (setq ad-return-value
+      (if concrete
+        (vc-call-backend backend 'working-revision file)
+        (or (vc-file-getprop file 'vc-working-revision)
+          (progn
+            (setq backend (or backend (vc-responsible-backend file)))
+            (when backend
+              (vc-file-setprop file 'vc-working-revision
+                (vc-call-backend backend 'working-revision file)))))))))
+
 (with-eval-after-load 'vc-git
   (defadvice vc-git-working-revision
     (around use-hashes-only (file) activate preactivate compile)
