@@ -27,8 +27,7 @@ the user should be returned."
       diff-hl-temp-location)))
 
 (defun diff-hl-create-revision (file revision)
-  "Read REVISION of FILE into a buffer and return the buffer.
-Use BACKEND as the VC backend if specified."
+  "Read REVISION of FILE into a buffer and return the buffer."
   (let ((automatic-backup (diff-hl-make-temp-file-name file revision))
          (filebuf (get-file-buffer file))
          (filename (diff-hl-make-temp-file-name file revision 'manual)))
@@ -136,7 +135,6 @@ This requires the external program `diff' to be in your `exec-path'."
                 `((1 ,(line-number-at-pos (point-max)) insert)))
               ((eq state 'removed)
                 `((1 ,(line-number-at-pos (point-max)) delete)))))))))
-  ;; (add-hook 'post-command-hook #'diff-hl-update)
   (run-with-idle-timer 1 t #'diff-hl-update))
 
 (with-eval-after-load 'magit
