@@ -31,7 +31,6 @@
      evil-nerd-commenter
      evil-org
      evil-surround
-     evil-terminal-cursor-changer
      evil-visualstar
 
      ;; major modes

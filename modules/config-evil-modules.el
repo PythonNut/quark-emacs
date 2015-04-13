@@ -23,10 +23,6 @@
 ;; Evil surround, easily change surrounding chars
 (global-evil-surround-mode +1)
 
-;; Also change cursor colors in a terminal
-(unless (display-graphic-p)
-  (require 'evil-terminal-cursor-changer))
-
 ;; evil NERD commenter, commenting awesomeness!
 (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines)
 
