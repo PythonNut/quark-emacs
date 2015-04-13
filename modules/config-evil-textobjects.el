@@ -195,8 +195,8 @@
 (define-key evil-inner-text-objects-map "P" #'evil-inner-last-paste)
 
 ;;; === evil operators ===
-(autoload 'evilnc-comment-operator "evil-nerd-commenter")
-(autoload 'evilnc-hotkey-comment-operator "evil-nerd-commenter")
+(autoload #'evilnc-comment-operator "evil-nerd-commenter")
+(autoload #'evilnc-hotkey-comment-operator "evil-nerd-commenter")
 (define-key evil-operator-state-map "gc" #'evilnc-comment-operator)
 (define-key evil-normal-state-map "gc" #'evilnc-comment-operator)
 

@@ -6,8 +6,8 @@
     (require 'iso-transl)
     (require 'whole-line-or-region)))
 
-(autoload 'whole-line-or-region-call-with-region "whole-line-or-region")
-(autoload 'whole-line-or-region-call-with-prefix "whole-line-or-region")
+(autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
+(autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
 
 (setq
   cua-paste-pop-rotate-temporarily t
