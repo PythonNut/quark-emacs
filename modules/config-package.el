@@ -30,6 +30,7 @@
      evil-matchit
      evil-nerd-commenter
      evil-org
+     evil-snipe
      evil-surround
      evil-visualstar
 

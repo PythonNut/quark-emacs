@@ -34,14 +34,48 @@
 (with-eval-after-load 'evil-matchit
   (evilmi-init-plugins))
 
-(autoload 'evil-inner-arg "evil-args")
-(autoload 'evil-outer-arg "evil-args")
-(autoload 'evil-forward-arg "evil-args")
-(autoload 'evil-backward-arg "evil-args")
+(autoload #'evil-inner-arg "evil-args")
+(autoload #'evil-outer-arg "evil-args")
+(autoload #'evil-forward-arg "evil-args")
+(autoload #'evil-backward-arg "evil-args")
 
 (define-key evil-inner-text-objects-map "a" #'evil-inner-arg)
 (define-key evil-outer-text-objects-map "a" #'evil-outer-arg)
 
 (define-key evil-normal-state-map "K" #'evil-jump-out-args)
+
+(with-eval-after-load 'evil-snipe
+  (diminish 'evil-snipe-mode)
+
+  (setq
+    evil-snipe-scope 'visible
+    evil-snipe-repeat-scope 'visible
+    evil-snipe-override-evil t
+    evil-snipe-smart-case t)
+
+  (global-evil-snipe-mode +1))
+
+(autoload #'evil-snipe-f "evil-snipe")
+(autoload #'evil-snipe-F "evil-snipe")
+(autoload #'evil-snipe-t "evil-snipe")
+(autoload #'evil-snipe-T "evil-snipe")
+(autoload #'evil-snipe-s "evil-snipe")
+(autoload #'evil-snipe-S "evil-snipe")
+(autoload #'evil-snipe-x "evil-snipe")
+(autoload #'evil-snipe-X "evil-snipe")
+(autoload #'evil-snipe-s "evil-snipe")
+(autoload #'evil-snipe-S "evil-snipe")
+
+(define-key evil-motion-state-map "f" #'evil-snipe-f)
+(define-key evil-motion-state-map "F" #'evil-snipe-F)
+(define-key evil-motion-state-map "t" #'evil-snipe-t)
+(define-key evil-motion-state-map "T" #'evil-snipe-T)
+(define-key evil-motion-state-map "s" #'evil-snipe-s)
+(define-key evil-motion-state-map "S" #'evil-snipe-S)
+
+(define-key evil-operator-state-map "x" #'evil-snipe-x)
+(define-key evil-operator-state-map "X" #'evil-snipe-X)
+(define-key evil-operator-state-map "s" #'evil-snipe-s)
+(define-key evil-operator-state-map "S" #'evil-snipe-S)
 
 (provide 'config-evil-modules)
