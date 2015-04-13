@@ -137,9 +137,8 @@ This requires the external program `diff' to be in your `exec-path'."
                 `((1 ,(line-number-at-pos (point-max)) delete)))))))))
   (run-with-idle-timer 1 t #'diff-hl-update))
 
+(setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
-  (setq magit-last-seen-setup-instructions "1.4.0")
-
   (diminish 'magit-auto-revert-mode)
   (setq magit-completing-read-function
     #'magit-ido-completing-read)
