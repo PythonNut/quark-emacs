@@ -132,9 +132,9 @@
       (:pre (setq hydra-is-helpful nil)
         :post (setq hydra-is-helpful t))
       ("<C-tab>"
-        (call-interactively #'iflipb-next-buffer) nil)
+        (call-interactively #'iflipb-next-buffer))
       ("<C-S-iso-lefttab>"
-        (call-interactively #'iflipb-previous-buffer) nil)))
+        (call-interactively #'iflipb-previous-buffer))))
   (iflipb-hydra/body))
 
 (defun iflipb-next-buffer-smart ()
