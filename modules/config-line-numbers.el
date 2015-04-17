@@ -5,7 +5,6 @@
 (with-eval-after-load 'linum
   (set-face-background 'linum nil)
 
-  (package-activate 'linum-relative)
   (require 'linum-relative)
 
   ;; truncate current line to four digits
