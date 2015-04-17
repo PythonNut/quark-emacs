@@ -204,9 +204,9 @@
 
 ;; allow quick repetition since normal state key chains are awkward
 (defun evil-sp-move ()
-  (unless (fboundp 'evil-sp-hydra/body)
+  (unless (fboundp 'evil-sp-move-hydra/body)
     (require 'hydra)
-    (defhydra evil-sp-hydra ()
+    (defhydra evil-sp-move-hydra ()
       "sexp"
       ("f" evil-forward-sexp "→")
       ("b" evil-backward-sexp "←")
@@ -216,18 +216,18 @@
       ("U" evil-backward-up-sexp "↖")
       ("n" evil-next-sexp "⇒")
       ("p" evil-previous-sexp "⇐")))
-  (evil-sp-hydra/body))
+  (evil-sp-move-hydra/body))
 
 (defun evil-sp-barfslurp ()
-  (unless (fboundp 'evil-sp-hydra/body)
+  (unless (fboundp 'evil-sp-barfslurp-hydra/body)
     (require 'hydra)
-    (defhydra evil-sp-hydra ()
+    (defhydra evil-sp-barfslurp-hydra ()
       "sexp"
       ("," sp-forward-slurp-sexp "← slurp")
       ("." sp-forward-barf-sexp "→ barf")
       ("<" sp-backward-slurp-sexp "→ slurp")
       (">" sp-backward-barf-sexp "← barf")))
-  (evil-sp-hydra/body))
+  (evil-sp-barfslurp-hydra/body))
 
 (evil-define-command evil-sp-forward-sexp (&rest args)
   (call-interactively #'evil-forward-sexp args)
