@@ -142,7 +142,10 @@ This requires the external program `diff' to be in your `exec-path'."
   (diminish 'magit-auto-revert-mode)
   (setq magit-completing-read-function
     #'magit-ido-completing-read)
+
   (evil-set-initial-state 'magit-status-mode 'insert)
+  (evil-set-initial-state 'magit-log-mode 'insert)
+
   (define-key magit-log-mode-map (kbd "k") #'previous-line)
   (define-key magit-log-mode-map (kbd "j") #'next-line)
   (define-key magit-status-mode-map (kbd "k") #'previous-line)
