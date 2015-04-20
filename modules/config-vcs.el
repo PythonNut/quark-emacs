@@ -152,14 +152,17 @@ This requires the external program `diff' to be in your `exec-path'."
   (define-key magit-status-mode-map (kbd "K") #'magit-discard-item)
   (define-key magit-status-mode-map (kbd "j") #'next-line)
 
+  (unless (version< emacs-version "24.4")
+    (require 'magit-filenotify)
+    (diminish 'magit-filenotify-mode)
+    (magit-filenotify-mode +1))
+
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
-    (lambda ()
-      (set-input-method "TeX")
-      (unless (version< emacs-version "24.4")
-        (require 'magit-filenotify)
-        (diminish 'magit-filenotify-mode)
-        (magit-filenotify-mode +1)))))
+    (lambda () (set-input-method "TeX")))
+
+  (add-hook 'magit-log-mode-hook
+    (lambda () (set-input-method "TeX"))))
 
 ;; and psvn for svn not-so-awesomeness
 (with-eval-after-load 'psvn
