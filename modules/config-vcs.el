@@ -135,7 +135,7 @@ This requires the external program `diff' to be in your `exec-path'."
                 `((1 ,(line-number-at-pos (point-max)) insert)))
               ((eq state 'removed)
                 `((1 ,(line-number-at-pos (point-max)) delete)))))))))
-  (run-with-idle-timer 1 t #'diff-hl-update))
+  (run-with-idle-timer 0.3 t #'diff-hl-update))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
