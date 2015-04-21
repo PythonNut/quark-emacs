@@ -154,12 +154,13 @@ This requires the external program `diff' to be in your `exec-path'."
 
   (unless (version< emacs-version "24.4")
     (require 'magit-filenotify)
-    (diminish 'magit-filenotify-mode)
-    (magit-filenotify-mode +1))
+    (diminish 'magit-filenotify-mode))
 
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
-    (lambda () (set-input-method "TeX")))
+    (lambda ()
+      (magit-filenotify-mode +1)
+      (set-input-method "TeX")))
 
   (add-hook 'magit-log-mode-hook
     (lambda () (set-input-method "TeX"))))
