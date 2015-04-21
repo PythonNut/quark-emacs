@@ -31,6 +31,11 @@
          "\\.zwc$"))))
 
 (with-eval-after-load 'helm
+  ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-z")  'helm-select-action)
+
   (require 'flx)
   (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file))
   (defadvice helm-score-candidate-for-pattern
