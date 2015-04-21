@@ -135,6 +135,14 @@ This requires the external program `diff' to be in your `exec-path'."
                 `((1 ,(line-number-at-pos (point-max)) insert)))
               ((eq state 'removed)
                 `((1 ,(line-number-at-pos (point-max)) delete)))))))))
+
+  (defadvice diff-hl-overlay-modified
+    (around preserve-overlays activate preactivate compile))
+
+  (add-hook 'diff-hl-mode-hook
+    (lambda ()
+      (remove-hook 'after-change-functions #'diff-hl-edit t)))
+
   (run-with-idle-timer 0.3 t #'diff-hl-update))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
