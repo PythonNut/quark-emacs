@@ -73,6 +73,13 @@
 (define-key evil-motion-state-map "s" #'evil-snipe-s)
 (define-key evil-motion-state-map "S" #'evil-snipe-S)
 
+(define-key evil-normal-state-map "f" #'evil-snipe-f)
+(define-key evil-normal-state-map "F" #'evil-snipe-F)
+(define-key evil-normal-state-map "t" #'evil-snipe-t)
+(define-key evil-normal-state-map "T" #'evil-snipe-T)
+(define-key evil-normal-state-map "s" #'evil-snipe-s)
+(define-key evil-normal-state-map "S" #'evil-snipe-S)
+
 (define-key evil-operator-state-map "x" #'evil-snipe-x)
 (define-key evil-operator-state-map "X" #'evil-snipe-X)
 (define-key evil-operator-state-map "s" #'evil-snipe-s)
