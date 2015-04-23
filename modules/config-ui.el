@@ -133,7 +133,11 @@
         :post (setq hydra-is-helpful t))
       ("<C-tab>"
         (call-interactively #'iflipb-next-buffer))
+      ("TAB"
+        (call-interactively #'iflipb-next-buffer))
       ("<C-S-iso-lefttab>"
+        (call-interactively #'iflipb-previous-buffer))
+      ("<backtab>"
         (call-interactively #'iflipb-previous-buffer))))
   (iflipb-hydra/body))
 
@@ -153,6 +157,9 @@
 
 (global-set-key (kbd "<C-tab>") 'iflipb-next-buffer-smart)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'iflipb-previous-buffer-smart)
+
+(global-set-key (kbd "C-c TAB") 'iflipb-next-buffer-smart)
+(global-set-key (kbd "C-c <backtab>") 'iflipb-previous-buffer-smart)
 
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
