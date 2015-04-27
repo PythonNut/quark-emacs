@@ -1,6 +1,7 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'evil)
+    (require 'evil-snipe)
     (require 'evil-nerd-commenter)))
 
 (evil-set-initial-state #'diff-mode 'motion)
