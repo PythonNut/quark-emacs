@@ -54,6 +54,7 @@
      sass-mode
      scss-mode
      web-mode
+     yaml-mode
 
      ;; ace-jump-mode
      adaptive-wrap
