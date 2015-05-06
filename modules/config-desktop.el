@@ -11,6 +11,8 @@
     (require 'evil-ex)
     (require 'config-modes)))
 
+(defvar file-name-mode-alist '())
+
 (setq save-place-file (concat user-emacs-directory ".saveplace"))
 (setq-default save-place t)
 
@@ -24,6 +26,7 @@
   savehist-save-minibuffer-history t
   savehist-additional-variables
   '(kill-ring
+     file-name-mode-alist
      search-ring
      regexp-search-ring))
 
@@ -46,8 +49,6 @@
        extended-command-history
        evil-ex-history)))
 
-
-
 (add-hook 'kill-emacs-hook #'unpropertize-savehist)
 (add-hook 'savehist-save-hook #'unpropertize-savehist)
 
@@ -60,5 +61,22 @@
 (defadvice recentf-cleanup (around quiet activate preactivate compile)
   (cl-letf (((symbol-function 'message) #'format))
     ad-do-it))
+
+(setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
+
+(add-hook 'after-change-major-mode-hook
+  (lambda ()
+    (when (and
+            buffer-file-name
+            (not
+              (file-name-extension
+                buffer-file-name)))
+      (setq file-name-mode-alist
+        (cons
+          (cons buffer-file-name major-mode)
+          file-name-mode-alist))
+      (setq auto-mode-alist
+        (append auto-mode-alist
+          (list (cons buffer-file-name major-mode)))))))
 
 (provide 'config-desktop)
