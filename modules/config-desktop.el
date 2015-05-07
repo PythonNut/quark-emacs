@@ -64,6 +64,22 @@
 
 (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 
+(defun my-compress-alist (alist)
+  "Remove shadowed keys from alist"
+  (let ((result))
+    (mapc (lambda (elem)
+            (unless (assoc (car elem) result)
+              (setq result (cons elem result))))
+      alist)
+    (nreverse result)))
+
+(add-hook 'savehist-save-hook
+  (lambda ()
+    (require 'dash)
+    (setq file-name-mode-alist
+      (-take history-length
+        (my-compress-alist file-name-mode-alist)))))
+
 (add-hook 'after-change-major-mode-hook
   (lambda ()
     (when (and
