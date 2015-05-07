@@ -177,8 +177,14 @@
 
 (defun my-edit-file-as-root-maybe ()
   "Find file as root if necessary."
-  (unless (and buffer-file-name (file-writable-p buffer-file-name))
-    (when (y-or-n-p "File is not writable. Open with root? ")
+  (unless
+    (and
+      buffer-file-name
+      (file-writable-p buffer-file-name))
+    (when
+      (and (not (string= user-login-name
+                  (nth 3 (file-attributes buffer-file-name 'string))))
+        (y-or-n-p "File is not writable. Open with root? "))
       (my-edit-file-as-root))))
 
 (add-hook 'find-file-hook #'my-edit-file-as-root-maybe)
