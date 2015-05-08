@@ -55,6 +55,11 @@
 (key-chord-define evil-emacs-state-map "jc" #'ace-jump-char-mode)
 (key-chord-define evil-emacs-state-map "jl" #'ace-jump-line-mode)
 
+(define-key evil-normal-state-map (kbd "SPC l") #'evil-ace-jump-line-mode)
+(define-key evil-motion-state-map (kbd "SPC l") #'evil-ace-jump-line-mode)
+(define-key evil-normal-state-map (kbd "SPC c") #'evil-ace-jump-char-mode)
+(define-key evil-motion-state-map (kbd "SPC c") #'evil-ace-jump-char-mode)
+
 (evilem-default-keybindings "SPC")
 (evilem-define (kbd "SPC s f") 'evil-forward-sexp)
 (evilem-define (kbd "SPC s b") 'evil-backward-sexp)
