@@ -175,21 +175,20 @@
     ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
       (file-name
         (if (tramp-tramp-file-p buffer-file-name)
-          (substring
-            (with-parsed-tramp-file-name buffer-file-name parsed
-              (tramp-make-tramp-file-name
-                (if sudo "sudo" "su")
-                "root"
-                parsed-host
-                parsed-localname
-                (let ((tramp-postfix-host-format "|"))
-                  (tramp-make-tramp-file-name
-                    parsed-method
-                    parsed-user
-                    parsed-host
-                    ""
-                    parsed-hop))))
-            1)
+          (with-parsed-tramp-file-name buffer-file-name parsed
+            (tramp-make-tramp-file-name
+              (if sudo "sudo" "su")
+              "root"
+              parsed-host
+              parsed-localname
+              (let ((tramp-postfix-host-format "|")
+                     (tramp-prefix-format))
+                (tramp-make-tramp-file-name
+                  parsed-method
+                  parsed-user
+                  parsed-host
+                  ""
+                  parsed-hop))))
           (concat (if sudo
                     "/sudo::"
                     "/su::")
