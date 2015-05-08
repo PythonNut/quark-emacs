@@ -171,9 +171,30 @@
 (defun my-edit-file-as-root ()
   "Find file as root"
   (interactive)
-  (if (/= (call-process "sudo" nil nil "-v") 0)
-    (find-alternate-file (concat "/su:root@localhost:" buffer-file-name))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+  (let*
+    ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
+      (file-name
+        (if (tramp-tramp-file-p buffer-file-name)
+          (substring
+            (with-parsed-tramp-file-name buffer-file-name parsed
+              (tramp-make-tramp-file-name
+                (if sudo "sudo" "su")
+                "root"
+                parsed-host
+                parsed-localname
+                (let ((tramp-postfix-host-format "|"))
+                  (tramp-make-tramp-file-name
+                    parsed-method
+                    parsed-user
+                    parsed-host
+                    ""
+                    parsed-hop))))
+            1)
+          (concat (if sudo
+                    "/sudo::"
+                    "/su::")
+            buffer-file-name))))
+    (find-alternate-file file-name)))
 
 (defun my-edit-file-as-root-maybe ()
   "Find file as root if necessary."
