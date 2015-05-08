@@ -172,7 +172,7 @@
   "Find file as root"
   (interactive)
   (let*
-    ((sudo (/= (call-process "sudo" nil nil "-n true") 0))
+    ((sudo (= (process-file "sudo" nil nil "-n" "true") 0))
       (file-name
         (if (tramp-tramp-file-p buffer-file-name)
           (with-parsed-tramp-file-name buffer-file-name parsed
