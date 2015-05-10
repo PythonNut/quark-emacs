@@ -171,6 +171,7 @@
 (defun my-edit-file-as-root ()
   "Find file as root"
   (interactive)
+  (require 'tramp)
   (let*
     ((sudo (= (process-file "sudo" nil nil "-n" "true") 0))
       (file-name
