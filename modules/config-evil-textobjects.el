@@ -100,7 +100,8 @@
       (save-excursion
         (goto-char (second range))
         (forward-line 1)
-        (point-at-eol)) 'line)))
+        (point-at-eol))
+      'line)))
 
 (define-key evil-inner-text-objects-map "c" #'evil-indent-i-block)
 (define-key evil-outer-text-objects-map "c" #'evil-indent-a-block)
