@@ -8,15 +8,6 @@
 
 ;;; === Evil motion section ===
 
-(evil-define-motion evil-forward-symbol (count)
-  (sp-forward-symbol count))
-
-(evil-define-motion evil-backward-symbol (count)
-  (sp-backward-symbol count))
-
-(define-key evil-motion-state-map "L" #'evil-forward-symbol)
-(define-key evil-motion-state-map "H" #'evil-backward-symbol)
-
 (defun evil-smart-visual-line ()
   (unless (fboundp #'evil-visual-line-hydra/body)
     (require 'hydra)
