@@ -88,14 +88,12 @@
      impatient-mode
      idle-require
      key-chord
-     lacarte
      linum-relative
      load-dir
      ;; magit
      magit-filenotify
      multiple-cursors
      ;; noflet
-     popwin
      psvn
      rainbow-delimiters
      smartparens
