@@ -107,34 +107,6 @@
 (define-key evil-outer-text-objects-map "c" #'evil-indent-a-block)
 (define-key evil-outer-text-objects-map "C" #'evil-indent-a-block-end)
 
-(defun evil-make-char-range ()
-  (save-excursion
-    (sort (list
-            (progn
-              (deactivate-mark)
-              (evil-ace-jump-char-mode)
-              (point))
-            (progn
-              (deactivate-mark)
-              (evil-ace-jump-char-mode)
-              (point)))
-      '<)))
-
-(evil-define-text-object evil-i-char-range (count &optional beg end type)
-  "Text object describing the range between two arbitrary points"
-  :type inclusive
-  (let ((range (evil-make-char-range)))
-    (evil-range (first range) (second range) 'inclusive)))
-
-(evil-define-text-object evil-a-char-range (count &optional beg end type)
-  "Text object describing the range between two arbitrary points"
-  :type exclusive
-  (let ((range (evil-make-char-range)))
-    (evil-range (1- (first range)) (1+ (second range)) 'inclusive)))
-
-(define-key evil-inner-text-objects-map "R" #'evil-i-char-range)
-(define-key evil-outer-text-objects-map "R" #'evil-a-char-range)
-
 (defun evil-ace-jump-line-and-revert ()
   (interactive)
   (let ((top (save-excursion
