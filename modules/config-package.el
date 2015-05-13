@@ -61,7 +61,6 @@
      aggressive-indent
      anaconda-mode
      auto-compile
-     ;; auto-complete
      auto-indent-mode
      bracketed-paste
      company
