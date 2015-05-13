@@ -45,7 +45,6 @@
      js2-refactor
      json-mode
      julia-mode
-     livescript-mode
      markdown-mode
      matlab-mode
      php-mode
