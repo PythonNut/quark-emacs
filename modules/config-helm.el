@@ -41,10 +41,12 @@
   (defadvice helm-score-candidate-for-pattern
     (around flx-score (candidate pattern) activate preactivate compile)
     (setq ad-return-value
-      (car (flx-score
-             (substring-no-properties candidate)
-             (substring-no-properties pattern)
-             helm-flx-cache))))
+      (or
+        (car (flx-score
+               (substring-no-properties candidate)
+               (substring-no-properties pattern)
+               helm-flx-cache))
+        0)))
 
   (defadvice helm-fuzzy-default-highlight-match
     (around flx-highlight (candidate) activate preactivate compile)
