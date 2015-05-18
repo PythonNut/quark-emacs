@@ -97,6 +97,7 @@ flycheck_*
 *.elc
 /.elisp-cache-stamp
 /kkrc
+/kkcrc
 /.python-environments
 /company-statistics-cache.el
 /dunnet
