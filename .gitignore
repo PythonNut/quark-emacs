@@ -98,6 +98,10 @@ flycheck_*
 /.elisp-cache-stamp
 /kkrc
 /kkcrc
+
+# savehist history file
+/history
+
 /.python-environments
 /company-statistics-cache.el
 /dunnet
