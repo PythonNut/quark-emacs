@@ -12,45 +12,74 @@
 ;; =================================
 ;; automatically request root access
 ;; =================================
+(defun my-root-file-name-p (file-name)
+  (and
+    (tramp-tramp-file-p file-name)
+    (with-parsed-tramp-file-name file-name parsed
+      (string= "root"
+        (substring-no-properties parsed-user)))))
 
-(defun my-edit-file-as-root ()
+(defun my-make-root-file-name (file-name)
+  (require 'tramp)
+  (let ((sudo (let ((default-directory
+                      (file-name-directory file-name)))
+                (= (process-file "sudo" nil nil "-n" "true") 0))))
+    (if (tramp-tramp-file-p file-name)
+      (with-parsed-tramp-file-name file-name parsed
+        (tramp-make-tramp-file-name
+          (if sudo "sudo" "su")
+          "root"
+          parsed-host
+          parsed-localname
+          (let ((tramp-postfix-host-format "|")
+                 (tramp-prefix-format))
+            (tramp-make-tramp-file-name
+              (if (string= "scp" parsed-method)
+                "ssh"
+                parsed-method)
+              parsed-user
+              parsed-host
+              ""
+              parsed-hop))))
+      (concat (if sudo "/sudo::" "/su::")
+        file-name))))
+
+(defun edit-file-as-root ()
   "Find file as root"
   (interactive)
-  (require 'tramp)
-  (let*
-    ((sudo (= (process-file "sudo" nil nil "-n" "true") 0))
-      (file-name
-        (if (tramp-tramp-file-p buffer-file-name)
-          (with-parsed-tramp-file-name buffer-file-name parsed
-            (tramp-make-tramp-file-name
-              (if sudo "sudo" "su")
-              "root"
-              parsed-host
-              parsed-localname
-              (let ((tramp-postfix-host-format "|")
-                     (tramp-prefix-format))
-                (tramp-make-tramp-file-name
-                  parsed-method
-                  parsed-user
-                  parsed-host
-                  ""
-                  parsed-hop))))
-          (concat (if sudo
-                    "/sudo::"
-                    "/su::")
-            buffer-file-name))))
-    (find-alternate-file file-name)))
+  (find-alternate-file
+    (my-make-root-file-name buffer-file-name)))
 
 (defun my-edit-file-as-root-maybe ()
   "Find file as root if necessary."
-  (unless
-    (and
-      buffer-file-name
-      (file-writable-p buffer-file-name))
-    (when
-      (and (not (string= user-login-name
-                  (nth 3 (file-attributes buffer-file-name 'string))))
-        (y-or-n-p "File is not writable. Open with root? "))
-      (my-edit-file-as-root))))
+  (when (and
+          buffer-file-name
+          (not (file-writable-p buffer-file-name))
+          (not (string= user-login-name
+                 (nth 3 (file-attributes buffer-file-name 'string))))
+          (not (my-root-file-name-p buffer-file-name))
+          (y-or-n-p "File is not writable. Open with root? "))
+    (edit-file-as-root)))
 
 (add-hook 'find-file-hook #'my-edit-file-as-root-maybe)
+
+;; also fallback to root if file cannot be read
+(defadvice find-file-noselect-1
+  (around edit-with-root (buf filename nowarn rawfile truename number)
+    activate preactivate compile)
+  (condition-case nil
+    ad-do-it
+    (file-error
+      (if (and
+            (not (my-root-file-name-p filename))
+            (y-or-n-p "File is not readable. Open with root? "))
+        (setq ad-return-value
+          (let ((filename (my-make-root-file-name (file-truename filename))))
+            (find-file-noselect-1
+              (or
+                (get-file-buffer filename)
+                (create-file-buffer filename))
+              filename
+              nowarn rawfile truename number)))
+        (signal 'file-error (list "File is not readable"
+                              filename))))))
