@@ -13,10 +13,11 @@
   `((".*" ,autosave-location t)))
 
 (defun save-buffer-maybe ()
-  (and
-    (buffer-modified-p)
-    buffer-file-name
-    (file-writable-p buffer-file-name)
+  (when (and
+          buffer-file-name
+          (buffer-modified-p)
+          (file-writable-p buffer-file-name)
+          (not (file-remote-p buffer-file-name)))
     (save-buffer)))
 
 ;; automatically save buffers associated with files on buffer switch
@@ -59,7 +60,8 @@
 (add-hook 'focus-out-hook
   (lambda ()
     (cl-letf (((symbol-function 'message) #'format))
-      (save-some-buffers t))))
+      (unless (file-remote-p buffer-file-name)
+        (save-some-buffers t)))))
 
 (defun auto-revert-onetime-setup ()
   (global-auto-revert-mode +1)
