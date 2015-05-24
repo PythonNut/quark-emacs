@@ -60,7 +60,9 @@
 (add-hook 'focus-out-hook
   (lambda ()
     (cl-letf (((symbol-function 'message) #'format))
-      (unless (file-remote-p buffer-file-name)
+      (when (and
+              buffer-file-name
+              (file-remote-p buffer-file-name))
         (save-some-buffers t)))))
 
 (defun auto-revert-onetime-setup ()
