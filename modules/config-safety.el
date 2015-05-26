@@ -62,7 +62,7 @@
     (cl-letf (((symbol-function 'message) #'format))
       (when (and
               buffer-file-name
-              (file-remote-p buffer-file-name))
+              (not (file-remote-p buffer-file-name)))
         (save-some-buffers t)))))
 
 (defun auto-revert-onetime-setup ()
