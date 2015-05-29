@@ -17,5 +17,16 @@
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
   (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto))
 
-  (with-eval-after-load 'anaconda-mode
-    (diminish 'anaconda-mode " ✶"))
+(with-eval-after-load 'anaconda-mode
+  (diminish 'anaconda-mode " ✶"))
+
+(autoload #'cython-mode "cython-mode")
+(add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
+(add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
+(add-to-list 'auto-mode-alist '("\\.pxi\\'" . python-mode))
+
+(with-eval-after-load 'sage-mode
+  (require 'sage))
+
+(autoload #'sage-mode "sage-mode")
+(add-to-list 'auto-mode-alist '("\\.sage\\'" . sage-mode))
