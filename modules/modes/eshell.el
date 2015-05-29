@@ -25,21 +25,14 @@
 
 (add-hook 'eshell-mode-hook
   (lambda ()
-    (company-mode -1)
-    (eshell-smart-initialize)))
+    (company-mode -1)))
 
 (defun eshell/clear ()
   (interactive)
   (let ((inhibit-read-only t)) (erase-buffer)))
 
 (with-eval-after-load 'eshell
-  (require 'em-smart)
-
   (setq
-    eshell-where-to-jump 'begin
-    eshell-review-quick-commands nil
-    eshell-smart-space-goes-to-end t
-
     eshell-scroll-to-bottom-on-input t
     eshell-scroll-show-maximum-output nil
     eshell-cp-interactive-query t
