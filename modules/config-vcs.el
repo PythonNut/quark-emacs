@@ -100,9 +100,8 @@ This requires the external program `diff' to be in your `exec-path'."
   (defadvice diff-hl-update
     (around flydiff activate preactivate compile)
     (unless (or
-              (not buffer-file-name)
               (= diff-hl-modified-tick (buffer-modified-tick))
-              (file-remote-p buffer-file-name)
+              (file-remote-p default-directory)
               (not (buffer-modified-p)))
       ad-do-it))
 
