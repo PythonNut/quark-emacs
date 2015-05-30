@@ -3,8 +3,6 @@
 
 (setq mc/cmds-to-run-for-all
   '(
-     ace-jump-done
-     ace-jump-mode
      auto-jump-char
      back-to-indentation-or-beginning
      backward-sexp
@@ -155,4 +153,5 @@
      suspend-frame
      toggle-input-method
      undo-tree-visualize
+     yaml-electric-backspace
      ))
