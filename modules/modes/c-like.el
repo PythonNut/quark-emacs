@@ -1,3 +1,5 @@
+(setq c-default-style "k&r")
+
 ;; prefer C++1y
 (add-hook 'c++-mode-hook
   (lambda ()
