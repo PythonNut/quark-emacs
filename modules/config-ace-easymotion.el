@@ -1,66 +1,37 @@
 (eval-when-compile
   (with-demoted-errors
-    (require 'ace-jump-mode)
+    (require 'avy)
     (require 'noflet)
     (require 'evil)
     (require 'key-chord)
     (require 'evil-easymotion)))
 
-(defun realign-cursor ()
-  (interactive)
-  (save-excursion
-    (if (> (rest (nth 6 (posn-at-point)))
-          (/ (window-body-height) 2))
-      (progn
-        (call-interactively #'previous-line)
-        (call-interactively #'next-line))
-      (progn
-        (call-interactively #'next-line)
-        (call-interactively #'previous-line)))))
+(key-chord-define evil-insert-state-map "jk" #'avy-goto-word-1)
+(key-chord-define evil-insert-state-map "jc" #'avy-goto-char)
+(key-chord-define evil-insert-state-map "jl" #'avy-goto-line)
 
-(with-eval-after-load 'ace-jump-mode
-  ;; use letters, numbers and capitals in that order
-  (setq ace-jump-mode-move-keys
-    (string-to-list "zxbqpwomceirukdlsvnahgyt5647382910fj")
-    ace-jump-mode-case-fold nil
-    ace-jump-mode-scope 'visible)
+(key-chord-define evil-emacs-state-map "jk" #'avy-goto-word-1)
+(key-chord-define evil-emacs-state-map "jc" #'avy-goto-char)
+(key-chord-define evil-emacs-state-map "jl" #'avy-goto-line)
 
-  (ace-jump-mode-enable-mark-sync)
-
-  (defadvice evil-ace-jump-word-mode
-    (after realign activate preactivate compile)
-    (ignore-errors (realign-cursor)))
-
-  (defadvice evil-ace-jump-char-mode
-    (after realign activate preactivate compile)
-    (ignore-errors (realign-cursor)))
-
-  (defadvice evil-ace-jump-line-mode
-    (after realign activate preactivate compile)
-    (ignore-errors (realign-cursor)))
-
-  (add-hook 'before-make-frame-hook
-    (lambda ()
-      (when (< (display-color-cells) 256)
-        (set-face-foreground 'ace-jump-face-background "white")
-        (set-face-background 'ace-jump-face-background "black")
-        (set-face-foreground 'ace-jump-face-foreground "black")
-        (set-face-background 'ace-jump-face-foreground "white")))))
-
-(key-chord-define evil-insert-state-map "jk" #'evil-ace-jump-word-mode)
-(key-chord-define evil-insert-state-map "jc" #'evil-ace-jump-char-mode)
-(key-chord-define evil-insert-state-map "jl" #'evil-ace-jump-line-mode)
-
-(key-chord-define evil-emacs-state-map "jk" #'ace-jump-word-mode)
-(key-chord-define evil-emacs-state-map "jc" #'ace-jump-char-mode)
-(key-chord-define evil-emacs-state-map "jl" #'ace-jump-line-mode)
+(with-eval-after-load 'avy
+  (setq
+    avy-background t
+    avy-style 'de-bruijn
+    avy-keys (string-to-list "jfkdls;aurieowncpqmxzb75849392016"))
+  (set-face-background 'avy-lead-face-0 nil)
+  (set-face-background 'avy-lead-face nil)
+  (set-face-foreground 'avy-lead-face-0 "#dc322f")
+  (set-face-foreground 'avy-lead-face "#b58900")
+  (set-face-attribute 'avy-lead-face nil :weight 'normal)
+  (set-face-attribute 'avy-lead-face-0 nil :weight 'extra-bold))
 
 (evilem-default-keybindings "SPC")
 
-(define-key evil-normal-state-map (kbd "SPC l") #'evil-ace-jump-line-mode)
-(define-key evil-motion-state-map (kbd "SPC l") #'evil-ace-jump-line-mode)
-(define-key evil-normal-state-map (kbd "SPC c") #'evil-ace-jump-char-mode)
-(define-key evil-motion-state-map (kbd "SPC c") #'evil-ace-jump-char-mode)
+(define-key evil-normal-state-map (kbd "SPC l") #'avy-goto-line)
+(define-key evil-motion-state-map (kbd "SPC l") #'avy-goto-line)
+(define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char)
+(define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char)
 
 (evilem-define (kbd "SPC s f") 'evil-forward-sexp)
 (evilem-define (kbd "SPC s b") 'evil-backward-sexp)

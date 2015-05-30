@@ -54,12 +54,12 @@
      web-mode
      yaml-mode
 
-     ;; ace-jump-mode
      adaptive-wrap
      aggressive-indent
      anaconda-mode
      auto-compile
      auto-indent-mode
+     avy
      bracketed-paste
      company
      company-anaconda

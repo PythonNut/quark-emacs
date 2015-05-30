@@ -4,7 +4,7 @@
     (require 'evil)
     (require 'evil-indent-textobject)
     (require 'smartparens)
-    (require 'ace-jump-mode)))
+    (require 'avy)))
 
 ;;; === Evil motion section ===
 
@@ -107,7 +107,7 @@
 (define-key evil-outer-text-objects-map "c" #'evil-indent-a-block)
 (define-key evil-outer-text-objects-map "C" #'evil-indent-a-block-end)
 
-(defun evil-ace-jump-line-and-revert ()
+(defun evil-avy-jump-line-and-revert ()
   (interactive)
   (let ((top (save-excursion
                (evil-window-top)
@@ -115,7 +115,7 @@
     (prog1
       (progn
         (deactivate-mark)
-        (evil-ace-jump-line-mode)
+        (avy-goto-line)
         (point))
       (scroll-up-line (- top (save-excursion
                                (evil-window-top)
@@ -125,8 +125,8 @@
   "Text object describing the block with the same indentation as the current line."
   :type line
   (save-excursion
-    (let ((beg (evil-ace-jump-line-and-revert))
-           (end (evil-ace-jump-line-and-revert)))
+    (let ((beg (evil-avy-jump-line-and-revert))
+           (end (evil-avy-jump-line-and-revert)))
       (if (> beg end)
         (evil-range beg end #'line)
         (evil-range end beg #'line)))))
