@@ -92,7 +92,16 @@ This requires the external program `diff' to be in your `exec-path'."
       ad-do-it)))
 
 (with-eval-after-load 'diff-hl
+  (defvar diff-hl-modified-tick 0)
+  (make-variable-buffer-local 'diff-hl-modified-tick)
+
   (setq diff-hl-draw-borders nil)
+
+  (defadvice diff-hl-update
+    (around flydiff activate preactivate compile)
+    (unless (= diff-hl-modified-tick (buffer-modified-tick))
+      ad-do-it))
+
   (defadvice diff-hl-changes
     (around flydiff activate preactivate compile)
     (setq ad-return-value
@@ -130,6 +139,7 @@ This requires the external program `diff' to be in your `exec-path'."
                               (setq len 1)
                               (cl-incf line))
                             (push (list line len type) res))))))
+                  (setq diff-hl-modified-tick (buffer-modified-tick))
                   (nreverse res)))
               ((eq state 'added)
                 `((1 ,(line-number-at-pos (point-max)) insert)))
