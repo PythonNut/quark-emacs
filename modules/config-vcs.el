@@ -102,7 +102,8 @@ This requires the external program `diff' to be in your `exec-path'."
     (unless (or
               (not buffer-file-name)
               (= diff-hl-modified-tick (buffer-modified-tick))
-              (file-remote-p buffer-file-name))
+              (file-remote-p buffer-file-name)
+              (not (buffer-modified-p)))
       ad-do-it))
 
   (defadvice diff-hl-changes
