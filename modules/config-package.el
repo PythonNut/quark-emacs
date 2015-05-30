@@ -114,11 +114,7 @@
 (defun install-all-packages ()
   (interactive)
   (when (has-package-not-installed)
-    ;; Check for new packages (package versions)
-    (message "%s" "Get latest versions of all packages...")
     (package-refresh-contents)
-    (message "%s" " done.")
-    ;; Install the missing packages
     (dolist (p packages-list)
       (when (not (package-installed-p p))
 	(package-install p)))
