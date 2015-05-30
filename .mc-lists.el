@@ -3,7 +3,6 @@
 
 (setq mc/cmds-to-run-for-all
   '(
-     auto-jump-char
      back-to-indentation-or-beginning
      backward-sexp
      beginning-of-visual-line
@@ -75,22 +74,14 @@
      evil-yank
      evilnc-comment-or-uncomment-lines
      expand-and-replace
-     fastnav-mark-to-char-forward
-     fastnav-sprint-forward
      forward-sexp
      haskell-indentation-delete-backward-char
      icicle-execute-extended-command
      indent-for-tab-command
      indent-new-comment-line
-     iy-go-to-char--command
-     jump-char-process-char
      keyboard-quit
      kill-ring-search
      kill-sexp
-     kring-down
-     kring-left
-     kring-right
-     kring-up
      mouse-set-region
      my-evil-smart-undo
      my-helm-omni
@@ -101,7 +92,6 @@
      python-electric-colon
      python-indent-dedent-line-backspace
      replace-last-sexp
-     smart-newline
      sp--cua-replace-region
      sp--self-insert-command
      sp-absorb-sexp
