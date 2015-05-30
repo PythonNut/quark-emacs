@@ -1,6 +1,10 @@
 (require 'package)
 
-(eval-when-compile (require 'cl-lib))
+(eval-when-compile
+  (with-demoted-errors
+    (require 'cl-lib)
+    (require 'idle-require)
+    (require 'diminish)))
 
 ;; Package archives
 (setq
@@ -123,11 +127,6 @@
 (install-all-packages)
 
 (add-to-list 'load-path (concat user-emacs-directory "personal/"))
-
-(eval-when-compile
-  (with-demoted-errors
-    (require 'idle-require)
-    (require 'diminish)))
 
 (with-eval-after-load 'idle-require
   (add-hook 'idle-require-mode-hook
