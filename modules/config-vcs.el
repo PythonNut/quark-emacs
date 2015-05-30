@@ -98,11 +98,12 @@ This requires the external program `diff' to be in your `exec-path'."
   (setq diff-hl-draw-borders nil)
 
   (defadvice diff-hl-update
-    (around flydiff activate preactivate compile)
-    (unless (or
-              (= diff-hl-modified-tick (buffer-modified-tick))
-              (file-remote-p default-directory)
-              (not (buffer-modified-p)))
+    (around flydiff (&optional auto) activate preactivate compile)
+    (unless (and auto
+              (or
+                (= diff-hl-modified-tick (buffer-modified-tick))
+                (file-remote-p default-directory)
+                (not (buffer-modified-p))))
       ad-do-it))
 
   (defadvice diff-hl-changes
@@ -156,7 +157,7 @@ This requires the external program `diff' to be in your `exec-path'."
     (lambda ()
       (remove-hook 'after-change-functions #'diff-hl-edit t)))
 
-  (run-with-idle-timer 0.3 t #'diff-hl-update))
+  (run-with-idle-timer 0.3 t #'diff-hl-update t))
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
