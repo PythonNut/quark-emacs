@@ -159,7 +159,9 @@
       (projectile-global-mode +1)))
 
   (let ((bufs (list (buffer-name (current-buffer))))
-         (projectile-root (ignore-errors (projectile-project-p))))
+         (projectile-root (ignore-errors (projectile-project-p)))
+         (file-remote (and buffer-file-name
+                        (file-remote-p default-directory))))
 
     (helm-attrset 'moccur-buffers bufs helm-source-occur)
     (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
@@ -179,9 +181,11 @@
           '(helm-source-imenu))
 
         (if projectile-root
-          '(helm-source-projectile-recentf-list
-             helm-source-recentf
-             helm-source-projectile-files-list)
+          (append
+            '(helm-source-projectile-recentf-list
+               helm-source-recentf)
+            (unless file-remote
+              '(helm-source-projectile-files-list)))
           '(helm-source-recentf))
 
         '(;; files
@@ -194,20 +198,23 @@
            helm-source-mark-ring
            helm-source-global-mark-ring)
 
-        ;; code search
-        (if (and projectile-root
-              (featurep 'vc)
-              (eq (vc-responsible-backend projectile-root) 'Git)
-              (require 'helm-git-grep nil t))
-          '(helm-source-git-grep)
-          (when (featurep 'helm-ag)
-            '(helm-source-do-ag)))
+        ;; disable expensve helm sources when using TRAMP
+        (unless file-remote
+          (append
+            ;; code search
+            (if (and projectile-root
+                  (featurep 'vc)
+                  (eq (vc-responsible-backend projectile-root) 'Git)
+                  (require 'helm-git-grep nil t))
+              '(helm-source-git-grep)
+              (when (featurep 'helm-ag)
+                '(helm-source-do-ag)))
 
-        ;; file location, of which projectile can be a superset
-        (unless projectile-root
-          '(helm-source-findutils))
+            ;; file location, of which projectile can be a superset
+            (unless projectile-root
+              '(helm-source-findutils))
 
-        '(helm-source-locate))
+            '(helm-source-locate))))
 
       :fuzzy-match t
       :prompt (if projectile-root
