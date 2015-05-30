@@ -154,17 +154,7 @@
 
        icicles)))
 
-(if (daemonp)
-  (progn
-    (require 'idle-require)
-    (message "loading symbols for server")
-    (idle-require-mode +1)
-    (dolist (sym idle-require-symbols)
-      (let ((name (symbol-name sym)))
-        (unless (string= name "idle-require")
-          (message (format "Loading %s..." name))
-          (with-demoted-errors (require sym nil t))))))
-
+(if (not (daemonp))
   (add-hook 'emacs-startup-hook
     (lambda ()
       (run-with-idle-timer 0.5 nil
@@ -180,6 +170,15 @@
             (when (null idle-require-symbols)
               (message "")))
 
-          (idle-require-mode +1))))))
+          (idle-require-mode +1)))))
+
+  (require 'idle-require)
+  (message "loading symbols for server")
+  (idle-require-mode +1)
+  (dolist (sym idle-require-symbols)
+    (let ((name (symbol-name sym)))
+      (unless (string= name "idle-require")
+        (message (format "Loading %s..." name))
+        (with-demoted-errors (require sym nil t))))))
 
 (provide 'config-package)
