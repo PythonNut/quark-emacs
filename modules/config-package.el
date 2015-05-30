@@ -150,12 +150,7 @@
        magit
        magit-filenotify
        multiple-cursors
-       easy-kill
-       flx-isearch
-       ace-jump-mode
-       whole-line-or-region
        smex
-       psvn
 
        icicles)))
 
