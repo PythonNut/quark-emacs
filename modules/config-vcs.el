@@ -99,7 +99,10 @@ This requires the external program `diff' to be in your `exec-path'."
 
   (defadvice diff-hl-update
     (around flydiff activate preactivate compile)
-    (unless (= diff-hl-modified-tick (buffer-modified-tick))
+    (unless (or
+              (not buffer-file-name)
+              (= diff-hl-modified-tick (buffer-modified-tick))
+              (file-remote-p buffer-file-name))
       ad-do-it))
 
   (defadvice diff-hl-changes
