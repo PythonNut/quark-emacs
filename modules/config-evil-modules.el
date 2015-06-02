@@ -55,7 +55,8 @@
     evil-snipe-override-evil t
     evil-snipe-smart-case t)
 
-  (global-evil-snipe-mode +1))
+  (evil-snipe-mode +1)
+  (evil-snipe-override-mode +1))
 
 (autoload #'evil-snipe-f "evil-snipe")
 (autoload #'evil-snipe-F "evil-snipe")
