@@ -181,7 +181,8 @@ This requires the external program `diff' to be in your `exec-path'."
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
     (lambda ()
-      (magit-filenotify-mode +1)
+      (unless (file-remote-p default-directory)
+        (magit-filenotify-mode +1))
       (set-input-method "TeX")))
 
   (add-hook 'magit-log-mode-hook
