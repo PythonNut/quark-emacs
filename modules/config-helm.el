@@ -204,7 +204,9 @@
             ;; code search
             (if (and projectile-root
                   (featurep 'vc)
-                  (eq (vc-responsible-backend projectile-root) 'Git)
+                  (eq (with-demoted-errors
+                        (vc-responsible-backend projectile-root))
+                    'Git)
                   (require 'helm-git-grep nil t))
               '(helm-source-git-grep)
               (when (featurep 'helm-ag)
