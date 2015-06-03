@@ -26,6 +26,10 @@
   (set-face-attribute 'avy-lead-face nil :weight 'normal)
   (set-face-attribute 'avy-lead-face-0 nil :weight 'extra-bold))
 
+(with-eval-after-load 'evil-easymotion
+  (setq
+    evilem-style 'de-bruijn))
+
 (evilem-default-keybindings "SPC")
 
 (define-key evil-normal-state-map (kbd "SPC l") #'avy-goto-line)
