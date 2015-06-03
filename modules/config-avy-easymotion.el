@@ -54,4 +54,4 @@
 (define-key evil-emacs-state-map (kbd "M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
 (define-key evil-emacs-state-map (kbd "C-M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
 
-(provide 'config-ace-easymotion)
+(provide 'config-avy-easymotion)

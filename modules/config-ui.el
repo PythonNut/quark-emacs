@@ -9,7 +9,7 @@
 
 (require 'config-scroll)
 (require 'config-line-numbers)
-(require 'config-ace-easymotion)
+(require 'config-avy-easymotion)
 (require 'config-undo)
 
 (require 'config-smartparens)
