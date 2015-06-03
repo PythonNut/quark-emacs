@@ -18,7 +18,7 @@
   (setq
     avy-background t
     avy-style 'de-bruijn
-    avy-keys (string-to-list "jfkdls;aurieowncpqmxzb75849392016"))
+    avy-keys (string-to-list "jfkdls;aurieowncpqmxzb"))
   (set-face-background 'avy-lead-face-0 nil)
   (set-face-background 'avy-lead-face nil)
   (set-face-foreground 'avy-lead-face-0 "#dc322f")
