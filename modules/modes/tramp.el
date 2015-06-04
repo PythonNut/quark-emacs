@@ -23,7 +23,7 @@
   (require 'tramp)
   (let ((sudo (let ((default-directory
                       (file-name-directory file-name)))
-                (= (process-file "sudo" nil nil "-n" "true") 0))))
+                (= (process-file "sudo" nil nil nil "-n" "true") 0))))
     (if (tramp-tramp-file-p file-name)
       (with-parsed-tramp-file-name file-name parsed
         (tramp-make-tramp-file-name
