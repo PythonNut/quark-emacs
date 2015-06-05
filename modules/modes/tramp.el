@@ -14,6 +14,7 @@
 ;; =================================
 (defun my-root-file-name-p (file-name)
   (and
+    (featurep 'tramp)
     (tramp-tramp-file-p file-name)
     (with-parsed-tramp-file-name file-name parsed
       (string= "root"
