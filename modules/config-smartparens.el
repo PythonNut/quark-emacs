@@ -51,15 +51,6 @@
 (put 'evil-next-sexp          'CUA 'move)
 (put 'evil-previous-sexp      'CUA 'move)
 
-(put 'sp-forward-sexp       'CUA 'move)
-(put 'sp-backward-sexp      'CUA 'move)
-(put 'sp-down-sexp          'CUA 'move)
-(put 'sp-backward-down-sexp 'CUA 'move)
-(put 'sp-up-sexp            'CUA 'move)
-(put 'sp-backward-up-sexp   'CUA 'move)
-(put 'sp-next-sexp          'CUA 'move)
-(put 'sp-previous-sexp      'CUA 'move)
-
 ;; textobject for the sexp immediately after point
 (defun evil-next-thing (count &optional beg end type inclusive)
   (ignore-errors
