@@ -123,4 +123,4 @@
 (with-eval-after-load 'company-dabbrev-code
   (setq company-dabbrev-code-everywhere t))
 
-(provide 'config-auto-complete)
+(provide 'config-company)
