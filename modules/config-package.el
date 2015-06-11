@@ -95,7 +95,6 @@
      magit-filenotify
      multiple-cursors
      ;; noflet
-     psvn
      rainbow-delimiters
      smartparens
      smooth-scrolling

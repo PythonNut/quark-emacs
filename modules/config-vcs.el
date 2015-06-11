@@ -1,8 +1,7 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'magit)
-    (require 'diff-hl)
-    (require 'psvn)))
+    (require 'diff-hl)))
 
 (add-hook 'find-file-hook
   (lambda ()
@@ -187,11 +186,6 @@ This requires the external program `diff' to be in your `exec-path'."
 
   (add-hook 'magit-log-mode-hook
     (lambda () (set-input-method "TeX"))))
-
-;; and psvn for svn not-so-awesomeness
-(with-eval-after-load 'psvn
-  (evil-set-initial-state 'svn-status-mode 'insert)
-  (setq svn-status-verbose nil))
 
 (global-set-key (kbd "C-c C-c s") #'svn-status)
 
