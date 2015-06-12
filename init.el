@@ -27,8 +27,6 @@
       `(eval-after-load ,thing '(progn ,@sexps))))
 
   ;; suppress the GNU spam
-  (setq
-    inhibit-startup-echo-area-message "pythonnut")
   (add-hook 'emacs-startup-hook (lambda () (message "")))
 
   (defadvice load (before quiet-loading
