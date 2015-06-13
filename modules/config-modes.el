@@ -12,6 +12,14 @@
 (epa-file-name-regexp-update)
 (setenv "GPG_AGENT_INFO" nil)
 
+(setq-default major-mode
+  (lambda ()
+    nil
+    (if buffer-file-name
+      (fundamental-mode)
+      (let ((buffer-file-name (buffer-name)))
+        (set-auto-mode)))))
+
 (defun raise-minor-mode-map-alist (mode-symbol)
   "Raise `minor-mode-map-alist' priority of MODE-SYMBOL."
   (let ((x (assq mode-symbol minor-mode-map-alist)))
