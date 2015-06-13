@@ -140,12 +140,6 @@
        helm-ag
        yasnippet
        company
-
-       magit
-       magit-filenotify
-       multiple-cursors
-       smex
-
        icicles)))
 
 (if (not (daemonp))
