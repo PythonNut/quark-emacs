@@ -173,7 +173,7 @@
     (add-hook 'first-change-hook #'vhl-onetime-setup)))
 
 (with-eval-after-load 'volatile-highlights
-  ;; (diminish #'volatile-highlights-mode)
+  (diminish #'volatile-highlights-mode)
 
   (vhl/define-extension 'my-evil-highlights
     'evil-yank
