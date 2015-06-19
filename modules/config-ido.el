@@ -8,6 +8,7 @@
     (require 'smex)))
 
 (ido-mode +1)
+(defvar ido-context-switch-command nil)
 (ido-ubiquitous-mode +1)
 
 (with-eval-after-load 'ido
