@@ -139,8 +139,7 @@
        helm-semantic
        helm-ag
        yasnippet
-       company
-       icicles)))
+       company)))
 
 (if (not (daemonp))
   (add-hook 'emacs-startup-hook
