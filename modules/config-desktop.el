@@ -14,9 +14,7 @@
 (defvar file-name-mode-alist '())
 
 (setq save-place-file (concat user-emacs-directory ".saveplace"))
-(setq-default save-place t)
-
-(require 'saveplace)
+(save-place-mode +1)
 
 (setq
   savehist-file (concat user-emacs-directory ".savehist")
