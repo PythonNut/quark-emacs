@@ -1,37 +1,80 @@
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-  '(custom-safe-themes
-     (quote
-       ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default))))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-  )
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;;(package-initialize)
 
-(add-to-list 'load-path
-  (concat user-emacs-directory "modules/"))
+(setq load-prefer-newer t)
 
-(load-library "config-setq")
-(load-library "config-package")
-(load-library "config-modes")
-(load-library "config-desktop")
-(load-library "config-pre-bindings")
-(load-library "config-safety")
-(load-library "config-evil")
-(load-library "config-ui")
-(load-library "config-whitespace")
-(load-library "config-paste")
-(load-library "config-auto-complete")
-(load-library "config-projects")
-(load-library "config-minibuffer")
-(load-library "config-intel")
-(load-library "config-solarized")
+(if (member "-F" command-line-args)
+  (progn
+    ;; skip and load minimal init instead
+    (delete "-F" command-line-args)
+    (load (concat user-emacs-directory "init-minimal")))
 
-(setq load-dirs (concat
-                  user-emacs-directory
-                  "modules/modes/"))
+  (eval-when-compile (require 'cl-lib))
+
+  (eval-and-compile
+    (add-to-list 'load-path
+      (concat user-emacs-directory "modules/"))
+    
+    (defmacro when* (condition &rest body)
+      (when condition
+        `(progn ,@body))))
+
+  ;; polyfill with-eval-after-load
+  (when* (version< emacs-version "24.4")
+    (defmacro with-eval-after-load (thing &rest sexps)
+      `(eval-after-load ,thing '(progn ,@sexps))))
+
+  ;; suppress the GNU spam
+  (add-hook 'emacs-startup-hook (lambda () (message "")))
+
+  (defadvice load (before quiet-loading
+                    (FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
+                    activate preactivate compile)
+    (setq NOMESSAGE t))
+
+  (load (setq custom-file (concat user-emacs-directory "custom.el")))
+
+  (message "[              ]")
+  (require 'config-setq)
+  (message "[=             ]")
+  (require 'config-package)
+  (message "[==            ]")
+  (require 'config-modes)
+  (message "[===           ]")
+  (require 'config-desktop)
+  (message "[====          ]")
+  (require 'config-safety)
+  (message "[=====         ]")
+  (require 'config-evil)
+  (message "[======        ]")
+  (require 'config-ui)
+  (message "[=======       ]")
+  (require 'config-whitespace)
+  (message "[========      ]")
+  (require 'config-paste)
+  (message "[=========     ]")
+  (require 'config-company)
+  (message "[==========    ]")
+  (require 'config-vcs)
+  (message "[===========   ]")
+  (require 'config-minibuffer)
+  (message "[============  ]")
+  (require 'config-intel)
+  (message "[============= ]")
+  (require 'config-solarized)
+  (message "[==============]")
+
+  (eval-when-compile
+    (ignore-errors
+      (require 'load-dir)))
+
+  (setq
+    load-dir-debug nil
+    load-dirs (concat
+                user-emacs-directory
+                "modules/modes/"))
+
+  (ad-disable-advice 'load 'before 'quiet-loading)
+  (ad-activate 'load))

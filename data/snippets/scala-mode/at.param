@@ -1,5 +1,6 @@
-# Author: Anders Bach Nielsen <andersbach.nielsen@epfl.ch>
-# name: @param name description
+# -*- mode: snippet -*-
+#Author : Anders Bach Nielsen <andersbach.nielsen@epfl.ch>
+#name : @param name description
 # key: at
 # --
 @param ${1:name} ${2:description} $0

@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: element1 :: Nil
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : element1 :: Nil
 # key: cons
 # --
 ${1:element1} :: Nil $0

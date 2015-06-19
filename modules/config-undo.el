@@ -1,66 +1,66 @@
-(eval-when-compile (require 'evil))
-(add-hook 'first-change-hook
-  (lambda () (require 'undo-tree)))
-
-;; supress XZ messages
-(add-hook 'emacs-startup-hook
-  (lambda ()
-    (run-at-time 1 nil (lambda () (message "")))))
-
-(add-hook 'find-file-hook
-  (lambda ()
-    (run-at-time 1 nil (lambda () (message "")))))
+(eval-when-compile
+  (with-demoted-errors
+    (require 'evil)
+    (require 'undo-tree)))
 
 (with-eval-after-load 'evil
-  (progn
-    (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
-      'undo-tree-visualizer-toggle-timestamps)
-    (evil-define-key 'motion  undo-tree-visualizer-mode-map (kbd "d")
-      'undo-tree-visualizer-toggle-diff)))
+  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
+    #'undo-tree-visualizer-toggle-timestamps)
+  (evil-define-key 'motion  undo-tree-visualizer-mode-map (kbd "d")
+    #'undo-tree-visualizer-toggle-diff))
 
 (with-eval-after-load 'undo-tree
-  (progn
-    (diminish 'undo-tree-mode " μ")
-    (defalias 'redo 'undo-tree-redo)
-    (defalias 'undo 'undo-tree-undo)
+  (diminish 'undo-tree-mode " μ")
+  (defalias 'redo #'undo-tree-redo)
+  (defalias 'undo #'undo-tree-undo)
 
-    (key-chord-define evil-emacs-state-map "uu" 'undo-tree-visualize)
-    (key-chord-define evil-insert-state-map "uu" 'undo-tree-visualize)
+  (key-chord-define evil-emacs-state-map "uu" #'undo-tree-visualize)
+  (key-chord-define evil-insert-state-map "uu" #'undo-tree-visualize)
 
-    (global-set-key (kbd "M-_") 'undo-tree-redo)
-    (setq undo-tree-auto-save-history t)
+  (define-key evil-visual-state-map "u" #'undo-tree-undo)
 
-    (define-key undo-tree-visualizer-mode-map "C-g" 'undo-tree-visualizer-quit)
-    (define-key undo-tree-visualizer-mode-map (kbd "<escape>") 'undo-tree-visualizer-quit)
-    (define-key undo-tree-visualizer-mode-map (kbd "<return>") 'undo-tree-visualizer-quit)
-    (define-key undo-tree-visualizer-mode-map (kbd "<up>") 'undo-tree-visualize-undo)
-    (define-key undo-tree-visualizer-mode-map (kbd "<down>") 'undo-tree-visualize-redo)
+  (global-set-key (kbd "M-_") #'undo-tree-redo)
+  (setq undo-tree-auto-save-history t)
 
-    ;; compress undo with xz
-    (key-chord-define evil-emacs-state-map "uu" 'undo-tree-visualize)
+  (add-to-list 'evil-overriding-maps 'undo-tree-visualizer-mode-map)
 
-    (global-set-key (kbd "M-_") 'undo-tree-redo)
-    (setq undo-tree-auto-save-history t)
+  ;; visual line wrapping breaks the 
+  (add-hook 'undo-tree-visualizer-mode-hook
+    (lambda ()
+      (visual-line-mode -1)))
 
-    (define-key undo-tree-visualizer-mode-map "C-g" 'undo-tree-visualizer-quit)
-    (define-key undo-tree-visualizer-mode-map (kbd "<escape>") 'undo-tree-visualizer-quit)
-    (define-key undo-tree-visualizer-mode-map (kbd "<return>") 'undo-tree-visualizer-quit)
-    (define-key undo-tree-visualizer-mode-map (kbd "<up>") 'undo-tree-visualize-undo)
-    (define-key undo-tree-visualizer-mode-map (kbd "<down>") 'undo-tree-visualize-redo)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    "C-g" #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<escape>") #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<return>") #'undo-tree-visualizer-quit)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<up>") #'undo-tree-visualize-undo)
+  (evil-define-key 'motion undo-tree-visualizer-mode-map
+    (kbd "<down>") #'undo-tree-visualize-redo)
 
-    (when (locate-file "xz" exec-path)
-      (defadvice undo-tree-make-history-save-file-name
-	(after undo-tree activate)
-	(setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz"))))
+  ;; compress undo with xz
+  (when (executable-find "xz")
+    (defadvice undo-tree-make-history-save-file-name
+      (after undo-tree activate)
+      (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz")))
 
-    ;; Keep region when undoing in region
-    (defadvice undo-tree-undo (around keep-region activate)
-      (if (use-region-p)
-	(let ((m (set-marker (make-marker) (mark)))
-	       (p (set-marker (make-marker) (point))))
-	  ad-do-it
-	  (goto-char p)
-	  (set-mark m)
-	  (set-marker p nil)
-	  (set-marker m nil))
-	ad-do-it))))
+    (defadvice undo-tree-load-history (around quiet-compress activate)
+      (let ((jka-compr-verbose nil))
+        ad-do-it)))
+
+  ;; Keep region when undoing in region
+  (defadvice undo-tree-undo
+    (around keep-region activate preactivate compile)
+    (if (use-region-p)
+      (let ((m (set-marker (make-marker) (mark)))
+             (p (set-marker (make-marker) (point))))
+        ad-do-it
+        (goto-char p)
+        (set-mark m)
+        (set-marker p nil)
+        (set-marker m nil))
+      ad-do-it)))
+
+(provide 'config-undo)

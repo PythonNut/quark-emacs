@@ -20,12 +20,14 @@
 
 
 # save last place in files
+/saveplace
 /.saveplace
 
 # recentf file
 /.recentf
 
 # ring save file
+/savehist
 /.savehist
 
 # persistent registers
@@ -61,6 +63,11 @@ ac-comphist.dat
 # UCS cache
 /var
 
+
+# Yasnippet extras
+.yas-compiled-snippets*
+
+
 # personal files
 /data/backups/*
 /data/autosave/*
@@ -74,6 +81,9 @@ ac-comphist.dat
 # EDE projects file
 /ede-projects.el
 
+# Srecode map files
+/srecode-map.el
+
 
 # desktop files
 /desktop
@@ -81,8 +91,17 @@ ac-comphist.dat
 # misc
 *.undo.xz
 *#
+.#*
+flycheck_*
 *.swp
 *.elc
 /.elisp-cache-stamp
 /kkrc
+/kkcrc
+
+# savehist history file
+/history
+
 /.python-environments
+/company-statistics-cache.el
+/dunnet

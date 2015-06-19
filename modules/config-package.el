@@ -1,9 +1,10 @@
 (require 'package)
 
 (eval-when-compile
-  (progn
-    (require 'cl)
-    (require 'cl-lib)))
+  (with-demoted-errors
+    (require 'cl-lib)
+    (require 'idle-require)
+    (require 'diminish)))
 
 ;; Package archives
 (setq
@@ -17,94 +18,103 @@
 
 ;; Guarantee all packages are installed on start
 (defvar packages-list
-  '(icicles
-     solarized-theme
-
+  '(
      ;; ido based packages
-     smex
      flx-ido
-     ido-vertical-mode
      ido-ubiquitous
+     ido-vertical-mode
+     smex
 
      ;; evil based modes
-     evil
-     evil-leader
-     evil-nerd-commenter
-     evil-indent-textobject
-     evil-surround
-     evil-org
+     ;; evil
+     evil-args
+     evil-easymotion
      evil-exchange
-     evil-terminal-cursor-changer
+     evil-indent-textobject
+     evil-matchit
+     evil-nerd-commenter
+     evil-org
+     evil-snipe
+     evil-surround
      evil-visualstar
 
      ;; major modes
-     idris-mode
-     haskell-mode
-     livescript-mode
-     scss-mode
-     sass-mode
-     less-css-mode
-     markdown-mode
-     js2-mode
-     cython-mode
      coffee-mode
-     dart-mode
-     julia-mode
-     matlab-mode
-     web-mode
-
-     helm-ag
-     diminish
-     smooth-scrolling
-     framemove
-     aggressive-indent
-     auto-async-byte-compile
+     cython-mode
      gitattributes-mode
      gitconfig-mode
      gitignore-mode
-     idle-require
-     multiple-cursors
-     ace-jump-mode
-     noflet
+     haskell-mode
+     ;; js2-mode
+     js2-refactor
+     json-mode
+     julia-mode
+     markdown-mode
+     matlab-mode
+     php-mode
+     pkgbuild-mode
+     sass-mode
+     scss-mode
+     web-mode
+     yaml-mode
+
+     adaptive-wrap
+     aggressive-indent
+     anaconda-mode
+     auto-compile
+     auto-indent-mode
+     avy
+     bracketed-paste
+     company
+     company-anaconda
+     diff-hl
+     dired-avfs
+     dired-filter
+     dired-subtree
+     diminish
+     dtrt-indent
+     easy-kill
+     expand-region
+     flx-isearch
+     flycheck
+     framemove
+     helm-ag
+     helm-git-grep
+     helm-projectile
      hexrgb
+     hydra
+     icicles
+     idomenu
+     iflipb
+     impatient-mode
+     idle-require
+     key-chord
+     linum-relative
+     load-dir
+     ;; magit
+     magit-filenotify
+     multiple-cursors
+     ;; noflet
      rainbow-delimiters
      smartparens
-     magit
-     magit-filenotify
-     psvn
-     linum-relative
-     ws-butler
-     dtrt-indent
-     adaptive-wrap
-     xclip
-     easy-kill
-     load-dir
-     auto-indent-mode
-     lacarte
-     smartrep
+     smooth-scrolling
+     solarized-theme
+     traad
+     volatile-highlights
      whole-line-or-region
-     wide-n
-     key-chord
-     auto-complete
-     flycheck
-     flyspell
-     helm-projectile
-     iflipb)
+     ws-butler
+     xclip)
   "List of packages needs to be installed at launch")
 
 (defun has-package-not-installed ()
-  (loop for p in packages-list
-    when (not (package-installed-p p)) do (return t)
-    finally (return nil)))
+  (cl-loop for p in packages-list
+    when (not (package-installed-p p)) do (cl-return t)
+    finally (cl-return nil)))
 
 (defun install-all-packages ()
   (interactive)
   (when (has-package-not-installed)
-    ;; Check for new packages (package versions)
-    (message "%s" "Get latest versions of all packages...")
     (package-refresh-contents)
-    (message "%s" " done.")
-    ;; Install the missing packages
     (dolist (p packages-list)
       (when (not (package-installed-p p))
 	(package-install p)))
@@ -112,23 +122,51 @@
 
 (install-all-packages)
 
-(add-to-list 'load-path "~/.emacs.d/personal/")
+(add-to-list 'load-path (concat user-emacs-directory "personal/"))
 
-(require 'idle-require)
-(setq idle-require-symbols
-  '(
-     whole-line-or-region
-     smex
-     icicles
-     helm
-     helm-ring
-     helm-projectile
-     helm-semantic
-     helm-ag
-     magit
-     ))
+(with-eval-after-load 'idle-require
+  (add-hook 'idle-require-mode-hook
+    (lambda ()
+      (diminish 'idle-require-mode (if (display-graphic-p) " ⋯" " IR"))))
 
-(add-hook 'emacs-startup-hook 'idle-require-mode)
-(add-hook 'idle-require-mode-hook
-  (lambda ()
-    (diminish 'idle-require-mode " ⟳")))
+  (setq
+    idle-require-idle-delay 1
+    idle-require-load-break 0
+    idle-require-symbols
+    '(
+       helm-files
+       helm-ring
+       helm-projectile
+       helm-semantic
+       helm-ag
+       yasnippet
+       company)))
+
+(if (not (daemonp))
+  (add-hook 'emacs-startup-hook
+    (lambda ()
+      (run-with-idle-timer 0.5 nil
+        (lambda ()
+          (defadvice idle-require-load-next
+            (around quiet activate preactivate compile)
+            (ad-enable-advice 'load 'before 'quiet-loading)
+            (ad-activate 'load)
+            (cl-letf (((symbol-function 'message) #'format))
+              ad-do-it)
+            (ad-disable-advice 'load 'before 'quiet-loading)
+            (ad-activate 'load)
+            (when (null idle-require-symbols)
+              (message "")))
+
+          (idle-require-mode +1)))))
+
+  (require 'idle-require)
+  (message "loading symbols for server")
+  (idle-require-mode +1)
+  (dolist (sym idle-require-symbols)
+    (let ((name (symbol-name sym)))
+      (unless (string= name "idle-require")
+        (message (format "Loading %s..." name))
+        (with-demoted-errors (require sym nil t))))))
+
+(provide 'config-package)

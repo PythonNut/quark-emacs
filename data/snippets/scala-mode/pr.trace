@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: println("obj: " + obj)
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : println("obj: " + obj)
 # key: pr
 # --
 println("${1:obj}: " + ${1:obj}) $0

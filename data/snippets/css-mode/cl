@@ -1,5 +1,4 @@
-# contributor: rejeep <johan.rejeep@gmail.com>
-# name: clear: ...
-# key: cl
+#contributor : rejeep <johan.rejeep@gmail.com>
+#name : clear: ...
 # --
 clear: $1;

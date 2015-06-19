@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: cblock
+# key: cblock
+# --
+;; ${1:$(make-string (string-width yas-text) ?\=)}
+;; ${1:Comment}
+;; ${1:$(make-string (string-width yas-text) ?\=)}

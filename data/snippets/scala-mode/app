@@ -1,7 +1,8 @@
-# Author: Anders Bach Nielsen <andersbach.nielsen@epfl.ch>
-# name: object name extends Application
+# -*- mode: snippet -*-
+#Author : Anders Bach Nielsen <andersbach.nielsen@epfl.ch>
+#name : object name extends App
 # key: app
 # --
-object ${1:name} extends Application {
+object ${1:name} extends App {
   $0
 }

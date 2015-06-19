@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: var name: T = ..
-# key: var
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : var name: T = ..
+# key: var.ret
 # --
 var ${1:name}: ${2:T} = ${3:obj} $0

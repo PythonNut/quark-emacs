@@ -1,5 +1,4 @@
-# name: if ... -> ... ; true -> ... end
-# key: if
+#name : if ... -> ... ; true -> ... end
 # --
 if
     $1 -> $2;

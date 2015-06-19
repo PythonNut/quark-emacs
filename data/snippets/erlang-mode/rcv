@@ -1,5 +1,4 @@
-# name: receive ... -> ... end
-# key: rcv
+#name : receive ... -> ... end
 # --
 receive
     $1 -> $0

@@ -1,5 +1,4 @@
-# contributor: Li Zhu <http://www.zhuli.name>
-# name: automatic
-# key: au
+#contributor: Li Zhu <http://www.zhuli.name>
+#name : automatic
 # --
-automatic $0
+automatic $0 

@@ -1,33 +1,49 @@
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (with-demoted-errors
+    (require 'ido-ubiquitous)))
 
-(load-library "config-ido")
-(load-library "config-helm")
-(load-library "config-icicles")
-
-(global-set-key (kbd "C-S-s") 'icicle-search-generic)
+(require 'config-ido)
+(require 'config-helm)
+(require 'config-icicles)
 
 ;; bind command to switch to minibuffer
 (defun switch-to-minibuffer-window ()
   "switch to minibuffer window (if active)"
   (interactive)
-  (when (active-minibuffer-window)
-    (select-window (active-minibuffer-window))))
+  (if (active-minibuffer-window)
+    (select-window (active-minibuffer-window))
+    (message "Minibuffer is not active")))
 
-(global-set-key (kbd "C-'") 'switch-to-minibuffer-window)
+(global-set-key (kbd "C-'") #'switch-to-minibuffer-window)
 
-;; don't let the cursor go into minibuffer prompt
-(setq minibuffer-prompt-properties
-  '(read-only t
-     point-entered
-     minibuffer-avoid-prompt
-     face
-     minibuffer-prompt))
+(defun minibuffer-onetime-setup ()
+  (unless (featurep 'mb-depth)
+    (minibuffer-depth-indicate-mode t))
 
-;; recursive minibuffers
-(setq
-  enable-recursive-minibuffers t
-  resize-mini-windows t)
+  (setq
+    ;; don't let the cursor go into minibuffer prompt
+    minibuffer-prompt-properties
+    '(read-only t
+       point-entered
+       minibuffer-avoid-prompt
+       face
+       minibuffer-prompt)
 
-(minibuffer-depth-indicate-mode t)
+    ;; recursive minibuffers
+    enable-recursive-minibuffers t
+    resize-mini-windows t)
 
-(define-key evil-normal-state-map (kbd "SPC SPC") 'smex)
+  (remove-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup))
+
+(add-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup)
+
+(define-key evil-normal-state-map (kbd "SPC SPC") #'smex)
+
+;; hl-line-mode breaks minibuffer in TTY
+(add-hook 'minibuffer-setup-hook
+  (lambda ()
+    (make-variable-buffer-local 'global-hl-line-mode)
+    (setq global-hl-line-mode nil)))
+
+
+(provide 'config-minibuffer)

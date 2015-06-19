@@ -1,5 +1,6 @@
-# Author: Jonas Bonèr <jonas@jonasboner.com>
-# name: x <- xs
-# key: for
+# -*- mode: snippet -*-
+#Author : Jonas Bonèr <jonas@jonasboner.com>
+#name : x <- xs
+# key: for.extract
 # --
 ${1:x} <- ${2:xs}

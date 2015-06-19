@@ -1,5 +1,4 @@
-# contributor: rejeep <johan.rejeep@gmail.com>
-# name: display: block
-# key: disp
+#contributor : rejeep <johan.rejeep@gmail.com>
+#name : display: block
 # --
 display: block;
