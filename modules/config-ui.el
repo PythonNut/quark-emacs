@@ -164,4 +164,32 @@
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
 
+(defun vhl-onetime-setup ()
+  (require 'volatile-highlights)
+  (remove-hook 'first-change-hook #'vhl-onetime-setup))
+
+(add-hook 'emacs-startup-hook
+  (lambda ()
+    (add-hook 'first-change-hook #'vhl-onetime-setup)))
+
+(with-eval-after-load 'volatile-highlights
+  ;; (diminish #'volatile-highlights-mode)
+
+  (vhl/define-extension 'my-evil-highlights
+    'evil-yank
+    'evil-paste-pop-proxy
+    'evil-paste-pop-next
+    'evil-paste-after
+    'evil-paste-before)
+
+  (vhl/install-extension 'my-evil-highlights)
+
+  (vhl/define-extension 'my-undo-tree-highlights
+    'undo-tree-undo
+    'undo-tree-redo)
+
+  (vhl/install-extension 'my-undo-tree-highlights)
+
+  (volatile-highlights-mode +1))
+
 (provide 'config-ui)

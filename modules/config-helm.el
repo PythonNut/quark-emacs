@@ -224,13 +224,16 @@
                 "> ")
       :buffer "*helm-omni*")))
 
+(defun evil-paste-pop-proxy (&rest args)
+  (apply (ad-get-orig-definition #'evil-paste-pop) args))
+
 (defadvice evil-paste-pop
-  (around auto-helm-omni activate preactivate compile)
+  (around auto-helm-omni (&rest args) activate preactivate compile)
   (if (memq last-command
         '(evil-paste-after
            evil-paste-before
            evil-visual-paste))
-    ad-do-it
+    (apply #'evil-paste-pop-proxy args)
     (call-interactively #'my-helm-omni)))
 
 (define-key evil-insert-state-map (kbd "C-p") #'my-helm-omni)

@@ -100,6 +100,7 @@
      smooth-scrolling
      solarized-theme
      traad
+     volatile-highlights
      whole-line-or-region
      ws-butler
      xclip)
