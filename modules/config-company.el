@@ -7,17 +7,11 @@
 (defun company-onetime-setup ()
   (require 'company)
   (run-hooks 'load-theme-hook)
-  (remove-hook 'prog-mode-hook #'company-onetime-setup-proxy)
-  (remove-hook 'text-mode-hook #'company-onetime-setup-proxy))
-
-(defun company-onetime-setup-proxy ()
-  (add-hook 'first-change-hook #'company-onetime-setup nil t))
+  (remove-hook 'first-change-hook #'company-onetime-setup))
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (add-hook 'first-change-hook #'company-onetime-setup nil t)
-    (add-hook 'prog-mode-hook #'company-onetime-setup-proxy)
-    (add-hook 'text-mode-hook #'company-onetime-setup-proxy)))
+    (add-hook 'first-change-hook #'company-onetime-setup)))
 
 (with-eval-after-load 'company
   (global-company-mode +1)

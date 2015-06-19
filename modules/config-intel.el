@@ -114,19 +114,11 @@
 
 (defun yasnippet-onetime-setup ()
   (require 'yasnippet)
-  (remove-hook 'prog-mode-hook
-    #'yasnippet-onetime-setup-proxy)
-  (remove-hook 'text-mode-hook
-    #'yasnippet-onetime-setup-proxy))
-
-(defun yasnippet-onetime-setup-proxy ()
-  (add-hook 'first-change-hook #'yasnippet-onetime-setup nil t))
+  (remove-hook 'first-change-hook #'yasnippet-onetime-setup))
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (add-hook 'first-change-hook #'yasnippet-onetime-setup nil t)
-    (add-hook 'prog-mode-hook #'yasnippet-onetime-setup-proxy)
-    (add-hook 'text-mode-hook #'yasnippet-onetime-setup-proxy)))
+    (add-hook 'first-change-hook #'yasnippet-onetime-setup)))
 
 (setq yas-verbosity 0)
 
