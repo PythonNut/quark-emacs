@@ -11,7 +11,7 @@
     (require 'evil-ex)
     (require 'config-modes)))
 
-(defvar file-name-mode-alist)
+(defvar file-name-mode-alist (list))
 
 (setq
   save-place-file (concat user-emacs-directory ".saveplace")
