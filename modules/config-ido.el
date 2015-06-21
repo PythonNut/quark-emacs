@@ -7,15 +7,22 @@
     (require 'ido-ubiquitous)
     (require 'smex)))
 
-(ido-mode +1)
-(defvar ido-context-switch-command nil)
-(ido-ubiquitous-mode +1)
+(setq
+  ido-enable-flex-matching t
+  ido-save-directory-list-file (concat user-emacs-directory "ido.last")
+  ido-use-faces nil)
 
-(with-eval-after-load 'ido
-  (setq
-    ido-enable-flex-matching t
-    ido-save-directory-list-file (concat user-emacs-directory "ido.last")
-    ido-use-faces nil))
+(ido-mode +1)
+
+(defvar ido-context-switch-command nil)
+(with-eval-after-load 'ido-ubiquitous
+  (ido-ubiquitous-mode +1))
+
+(defadvice completing-read
+  (before autoload-ido-ubiquitous activate preactivate compile)
+  (require 'ido-ubiquitous)
+  (ad-disable-advice #'completing-read 'before 'autoload-ido-ubiquitous)
+  (ad-activate #'completing-read))
 
 (global-set-key (kbd "C-x b") #'ido-switch-buffer)
 (global-set-key (kbd "C-x f") #'ido-find-file)
