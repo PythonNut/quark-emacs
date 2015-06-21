@@ -11,12 +11,10 @@
     (require 'evil-ex)
     (require 'config-modes)))
 
-(defvar file-name-mode-alist '())
-
-(setq save-place-file (concat user-emacs-directory ".saveplace"))
-(save-place-mode +1)
+(defvar file-name-mode-alist)
 
 (setq
+  save-place-file (concat user-emacs-directory ".saveplace")
   savehist-file (concat user-emacs-directory ".savehist")
   savehist-autosave-interval 180
   history-length 100
@@ -27,6 +25,10 @@
      file-name-mode-alist
      search-ring
      regexp-search-ring))
+
+(if (fboundp #'save-place-mode)
+  (save-place-mode +1)
+  (setq-default save-place t))
 
 (require 'savehist)
 (savehist-mode 1)
