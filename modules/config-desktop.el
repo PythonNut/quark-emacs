@@ -14,17 +14,25 @@
 (defvar file-name-mode-alist (list))
 
 (setq
-  save-place-file (concat user-emacs-directory ".saveplace")
-  savehist-file (concat user-emacs-directory ".savehist")
-  savehist-autosave-interval 180
   history-length 100
   history-delete-duplicates t
+
+  save-place-file (concat user-emacs-directory ".saveplace")
+
+  savehist-file (concat user-emacs-directory ".savehist")
+  savehist-autosave-interval 180
   savehist-save-minibuffer-history t
   savehist-additional-variables
   '(kill-ring
      file-name-mode-alist
      search-ring
-     regexp-search-ring))
+
+     regexp-search-ring)
+
+  ;; remember more recent files
+  recentf-save-file (concat user-emacs-directory ".recentf")
+  recentf-max-saved-items 200
+  recentf-max-menu-items 30)
 
 (if (fboundp #'save-place-mode)
   (save-place-mode +1)
@@ -51,12 +59,6 @@
 
 (add-hook 'kill-emacs-hook #'unpropertize-savehist)
 (add-hook 'savehist-save-hook #'unpropertize-savehist)
-
-;; remember more recent files
-(setq
-  recentf-save-file (concat user-emacs-directory ".recentf")
-  recentf-max-saved-items 200
-  recentf-max-menu-items 30)
 
 (defadvice recentf-cleanup (around quiet activate preactivate compile)
   (cl-letf (((symbol-function 'message) #'format))
