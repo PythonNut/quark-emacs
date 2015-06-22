@@ -11,6 +11,11 @@
   (set-face-attribute 'js2-external-variable nil :weight 'extra-bold)
   (set-face-attribute 'js2-external-variable nil :underline t)
   (js2r-add-keybindings-with-prefix "C-c C-r")
+
+  (sp-local-pair 'js2-mode "{" nil :post-handlers
+    '(:add
+       ("||\n[i]" "RET")
+       ("| " "SPC")))
+
   (setq
-    js2-basic-offset 2
-    js2-bounce-indent-p t))
+    js2-basic-offset 2))

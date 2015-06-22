@@ -28,6 +28,9 @@
     (aggressive-indent-mode +1)
     (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)))
 
+(sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
+(sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p))
+
 (with-eval-after-load 'aggressive-indent
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
 
