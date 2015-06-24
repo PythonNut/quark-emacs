@@ -144,19 +144,7 @@
   (require 'helm-files)
   (require 'helm-ring)
   (require 'helm-misc)
-  (require 'helm-semantic)
-
-  (unless (featurep 'helm-ag)
-    (when (or
-            (executable-find "ag")
-            (executable-find "ack")
-            (executable-find "ack-grep"))
-      (require 'helm-ag)))
-
-  (unless (featurep 'helm-projectile)
-    (require 'helm-projectile)
-    (unless projectile-global-mode-buffers
-      (projectile-global-mode +1)))
+  (require 'projectile)
 
   (let ((helm-sources-using-default-as-input)
          (bufs (list (buffer-name (current-buffer))))
@@ -174,11 +162,16 @@
       (append
         ;; projectile explodes when not in project
         (if projectile-root
-          '(helm-source-projectile-buffers-list)
+          (progn
+            (require 'helm-projectile)
+            '(helm-source-projectile-buffers-list))
           '(helm-source-buffers-list))
 
         (if (semantic-active-p)
-          '(helm-source-semantic)
+          (progn
+            (require 'helm-semantic)
+            '(helm-source-semantic))
+          (require 'helm-imenu)
           '(helm-source-imenu))
 
         (if projectile-root
@@ -210,6 +203,12 @@
                     'Git)
                   (require 'helm-git-grep nil t))
               '(helm-source-git-grep)
+              (unless (featurep 'helm-ag)
+                (when (or
+                        (executable-find "ag")
+                        (executable-find "ack")
+                        (executable-find "ack-grep"))
+                  (require 'helm-ag)))
               (when (featurep 'helm-ag)
                 '(helm-source-do-ag)))
 

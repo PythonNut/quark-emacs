@@ -190,6 +190,7 @@ This requires the external program `diff' to be in your `exec-path'."
 (global-set-key (kbd "C-c C-c s") #'svn-status)
 
 (with-eval-after-load 'projectile
+  (projectile-global-mode +1)
   (require 'magit)
   (setq projectile-mode-line
     '(:eval (format (if (display-graphic-p) " ↠" " pro")))))
