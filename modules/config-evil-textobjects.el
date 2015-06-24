@@ -3,7 +3,6 @@
     (require 'cl-lib)
     (require 'evil)
     (require 'evil-indent-textobject)
-    (require 'smartparens)
     (require 'avy)))
 
 ;;; === Evil motion section ===
