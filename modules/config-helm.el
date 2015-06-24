@@ -158,7 +158,8 @@
     (unless projectile-global-mode-buffers
       (projectile-global-mode +1)))
 
-  (let ((bufs (list (buffer-name (current-buffer))))
+  (let ((helm-sources-using-default-as-input)
+         (bufs (list (buffer-name (current-buffer))))
          (projectile-root (ignore-errors (projectile-project-p)))
          (file-remote (and buffer-file-name
                         (file-remote-p default-directory))))
