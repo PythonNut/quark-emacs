@@ -22,16 +22,30 @@
 (define-key evil-normal-state-map "gX" #'evil-exchange-cancel)
 (define-key evil-visual-state-map "gX" #'evil-exchange-cancel)
 
+(autoload #'evil-surround-edit "evil-surround")
+(autoload #'evil-Surround-edit "evil-surround")
+(autoload #'evil-surround-region "evil-surround")
+(autoload #'evil-Surround-region "evil-surround")
+
 ;; Evil surround, easily change surrounding chars
-(global-evil-surround-mode +1)
+(define-key evil-operator-state-map "s" 'evil-surround-edit)
+(define-key evil-operator-state-map "S" 'evil-Surround-edit)
+
+(define-key evil-visual-state-map (kbd "C-s") 'evil-surround-region)
+(define-key evil-visual-state-map (kbd "C-S-s") 'evil-Surround-region)
 
 ;; evil NERD commenter, commenting awesomeness!
 (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines)
 
+(autoload #'evilmi-inner-text-object "evil-matchit")
+(autoload #'evilmi-outer-text-object "evil-matchit")
+
 ;; evil matchit, jump between matching tags and keywords
 (define-key evil-normal-state-map "%" #'evilmi-jump-items)
-(define-key evil-inner-text-objects-map "%" #'evilmi-text-object)
-(define-key evil-outer-text-objects-map "%" #'evilmi-text-object)
+(define-key evil-visual-state-map "%" #'evilmi-jump-items)
+
+(define-key evil-inner-text-objects-map "%" #'evilmi-inner-text-object)
+(define-key evil-outer-text-objects-map "%" #'evilmi-outer-text-object)
 
 (with-eval-after-load 'evil-matchit
   (evilmi-init-plugins))
@@ -83,9 +97,11 @@
 (define-key evil-normal-state-map "s" #'evil-snipe-s)
 (define-key evil-normal-state-map "S" #'evil-snipe-S)
 
-(define-key evil-operator-state-map "x" #'evil-snipe-x)
-(define-key evil-operator-state-map "X" #'evil-snipe-X)
-(define-key evil-operator-state-map "s" #'evil-snipe-s)
-(define-key evil-operator-state-map "S" #'evil-snipe-S)
+(define-key evil-visual-state-map "f" #'evil-snipe-f)
+(define-key evil-visual-state-map "F" #'evil-snipe-F)
+(define-key evil-visual-state-map "t" #'evil-snipe-t)
+(define-key evil-visual-state-map "T" #'evil-snipe-T)
+(define-key evil-visual-state-map "s" #'evil-snipe-s)
+(define-key evil-visual-state-map "S" #'evil-snipe-S)
 
 (provide 'config-evil-modules)
