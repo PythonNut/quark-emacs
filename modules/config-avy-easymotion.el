@@ -2,7 +2,7 @@
   (with-demoted-errors
     (require 'avy)
     (require 'noflet)
-    (require 'evil)
+    (require 'evil-states)
     (require 'key-chord)
     (require 'evil-easymotion)))
 
@@ -40,17 +40,30 @@
 (define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char)
 (define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char)
 
-(evilem-define (kbd "SPC s f") 'evil-forward-sexp)
-(evilem-define (kbd "SPC s b") 'evil-backward-sexp)
-(evilem-define (kbd "SPC s d") 'evil-down-sexp)
-(evilem-define (kbd "SPC s D") 'evil-backward-down-sexp)
-(evilem-define (kbd "SPC s e") 'evil-up-sexp)
-(evilem-define (kbd "SPC s U") 'evil-backward-up-sexp)
-(evilem-define (kbd "SPC s n") 'evil-next-sexp)
-(evilem-define (kbd "SPC s p") 'evil-previous-sexp)
+(evilem-define (kbd "SPC g s f") 'evil-forward-sexp)
+(evilem-define (kbd "SPC g s b") 'evil-backward-sexp)
+(evilem-define (kbd "SPC g s d") 'evil-down-sexp)
+(evilem-define (kbd "SPC g s D") 'evil-backward-down-sexp)
+(evilem-define (kbd "SPC g s e") 'evil-up-sexp)
+(evilem-define (kbd "SPC g s U") 'evil-backward-up-sexp)
+(evilem-define (kbd "SPC g s n") 'evil-next-sexp)
+(evilem-define (kbd "SPC g s p") 'evil-previous-sexp)
 
-(evilem-define (kbd "SPC L") 'evil-forward-symbol)
-(evilem-define (kbd "SPC H") 'evil-backward-symbol)
+(evilem-define (kbd "SPC s") 'evil-snipe-repeat
+  (lambda ()
+    (ignore-errors
+      (call-interactively #'evil-snipe-s)))
+  nil
+  ((evil-snipe-enable-highlight)
+    (evil-snipe-enable-incremental-highlight)))
+
+(evilem-define (kbd "SPC S") 'evil-snipe-repeat-reverse
+  (lambda ()
+    (ignore-errors
+      (call-interactively #'evil-snipe-S)))
+  nil
+  ((evil-snipe-enable-highlight)
+    (evil-snipe-enable-incremental-highlight)))
 
 (define-key evil-insert-state-map (kbd "M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
 (define-key evil-insert-state-map (kbd "C-M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
