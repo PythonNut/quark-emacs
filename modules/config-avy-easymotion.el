@@ -1,7 +1,6 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'avy)
-    (require 'noflet)
     (require 'evil-states)
     (require 'key-chord)
     (require 'evil-easymotion)))
