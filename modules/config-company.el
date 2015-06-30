@@ -76,7 +76,7 @@
 
 (with-eval-after-load 'company
   (global-company-mode +1)
-  (diminish 'company-mode (if (display-graphic-p) " ❃" " Co"))
+  (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
   (require 'flx)
 
   (setq
