@@ -103,9 +103,10 @@
         (if (<  (length cands) 2000)
           (cl-sort cands #'>
             :key (lambda (cand)
-                   (car (flx-score cand
-                          company-prefix
-                          company-flx-cache))))
+                   (or (car (flx-score cand
+                              company-prefix
+                              company-flx-cache))
+                     0)))
           cands))))
 
   (cl-macrolet
