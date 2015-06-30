@@ -1,8 +1,11 @@
 (eval-when-compile
   (with-demoted-errors
+    (require 'cl-lib)
     (require 'company)
     (require 'company-dabbrev-code)
     (require 'config-modes)))
+
+(defvar company-flx-cache)
 
 (defun company-onetime-setup ()
   (require 'company)
@@ -13,9 +16,69 @@
   (lambda ()
     (add-hook 'first-change-hook #'company-onetime-setup)))
 
+(defun completion-fuzzy-completion (string table predicate point
+                                     &optional all-p)
+  (let* ((beforepoint (substring string 0 point))
+          (afterpoint (substring string point))
+          (boundaries (completion-boundaries beforepoint table predicate afterpoint))
+          (prefix (substring beforepoint 0 (car boundaries)))
+          (infix (concat
+                   (substring beforepoint (car boundaries))
+                   (substring afterpoint 0 (cdr boundaries))))
+          (suffix (substring afterpoint (cdr boundaries)))
+          ;; |-              string                  -|
+          ;;              point^
+          ;;            |-  boundaries -|
+          ;; |- prefix -|-    infix    -|-  suffix   -|
+          ;;
+          ;; Infix is the part supposed to be completed by table, AFAIKT.
+          (regexp (concat "\\`.*?" (mapconcat 'string infix ".*?") ".*\\'"))
+          (candidates (cl-remove-if-not
+                        (apply-partially 'string-match-p regexp)
+                        (all-completions prefix table predicate))))
+    (if all-p
+      ;; Implement completion-all-completions interface
+      (when candidates
+        ;; Not doing this may result in an error.
+        (setcdr (last candidates) (length prefix))
+        candidates)
+      ;; Implement completion-try-completions interface
+      (cond
+        ((and (= (length candidates) 1)
+           (equal infix (car candidates)))
+          t)
+        ((= (length candidates) 1)
+          ;; Avoid quirk of double / for filename completion. I don't
+          ;; know how this is *supposed* to be handled.
+          (when (and (> (length (car candidates)) 0)
+                  (> (length suffix) 0)
+                  (char-equal (aref (car candidates)
+                                (1- (length (car candidates))))
+                    (aref suffix 0)))
+            (setq suffix (substring suffix 1)))
+          (cons (concat prefix (car candidates) suffix)
+            (length (concat prefix (car candidates)))))
+        ;; Do nothing, i.e leave string as it is.
+        (t (cons string point))))))
+
+(defun completion-fuzzy-try-completion (string table predicate point)
+  (completion-fuzzy-completion string table predicate point))
+(defun completion-fuzzy-all-completions (string table predicate point)
+  (completion-fuzzy-completion string table predicate point 'all))
+
+(add-to-list 'completion-styles-alist
+  '(fuzzy
+     completion-fuzzy-try-completion
+     completion-fuzzy-all-completions
+     "Simple fuzzy completion, which never alters the string to complete, unless a unique match exists."))
+
+(setq completion-styles (list 'fuzzy))
+
 (with-eval-after-load 'company
   (global-company-mode +1)
   (diminish 'company-mode (if (display-graphic-p) " ❃" " Co"))
+  (require 'flx)
+
   (setq
     company-idle-delay 0.1
     company-echo-delay 0
@@ -25,14 +88,25 @@
     company-tooltip-flip-when-above t
     company-tooltip-align-annotations t
 
-    company-backends
-    '((company-capf
-        company-yasnippet
-        company-dabbrev-code
-        company-files
-        company-keywords)
+    company-backends '((company-capf
+                         company-yasnippet
+                         company-dabbrev-code
+                         company-files
+                         company-keywords)
 
-       company-dabbrev))
+                        company-dabbrev)
+
+    company-flx-cache (flx-make-string-cache 'flx-get-heatmap-str)
+    company-transformers
+    (list
+      (lambda (cands)
+        (if (<  (length cands) 2000)
+          (cl-sort cands #'>
+            :key (lambda (cand)
+                   (car (flx-score cand
+                          company-prefix
+                          company-flx-cache))))
+          cands))))
 
   (cl-macrolet
     ((company-define-specific-modes (mode backend)
