@@ -32,7 +32,13 @@
           ;; |- prefix -|-    infix    -|-  suffix   -|
           ;;
           ;; Infix is the part supposed to be completed by table, AFAIKT.
-          (regexp (concat "\\`.*?" (mapconcat 'string infix ".*?") ".*\\'"))
+          (regexp (concat "\\`"
+                    (mapconcat
+                      (lambda (x)
+                        (concat "[^" (string x) "]*?" (string x)))
+                      infix
+                      "")
+                    ".*\\'"))
           (candidates (cl-remove-if-not
                         (apply-partially 'string-match-p regexp)
                         (all-completions prefix table predicate))))
