@@ -7,7 +7,11 @@ My personal emacs config (to be put in `~/.emacs.d`)
  * Features `vim` emulation including extensive custom textobjects and motions
  * Extensive versioned backup system including file positions, registers, undo history etc.
  * Does everything you'd expect an emacs to do: email, web browsing, multimedia, file managing etc.
- * Everything that can be made fuzzy (sublime style) has been made fuzzy
+ * Everything that can be made fuzzy (sublime style) has been made fuzzy, including
+   * Minibuffer completion
+   * Helm
+   * Autocompletion
+   * Isearch
  * Several powerful completion systems, including `ido`, `smex`, and
    * [Icicles](http://www.emacswiki.org/emacs/Icicles)
    * [Helm](https://github.com/emacs-helm/helm)
