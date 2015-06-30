@@ -17,7 +17,21 @@
 (package-initialize)
 
 ;; Guarantee all packages are installed on start
-(defvar packages-list
+(defun has-package-not-installed (package-list)
+  (cl-loop for p in package-list
+    when (not (package-installed-p p)) do (cl-return t)
+    finally (cl-return nil)))
+
+(defun ensure-packages-are-installed (package-list)
+  (interactive)
+  (when (has-package-not-installed package-list)
+    (package-refresh-contents)
+    (dolist (p package-list)
+      (when (not (package-installed-p p))
+	(package-install p)))
+    (package-initialize)))
+
+(ensure-packages-are-installed
   '(
      ;; ido based packages
      flx-ido
@@ -102,24 +116,7 @@
      volatile-highlights
      whole-line-or-region
      ws-butler
-     xclip)
-  "List of packages needs to be installed at launch")
-
-(defun has-package-not-installed ()
-  (cl-loop for p in packages-list
-    when (not (package-installed-p p)) do (cl-return t)
-    finally (cl-return nil)))
-
-(defun install-all-packages ()
-  (interactive)
-  (when (has-package-not-installed)
-    (package-refresh-contents)
-    (dolist (p packages-list)
-      (when (not (package-installed-p p))
-	(package-install p)))
-    (package-initialize)))
-
-(install-all-packages)
+     xclip))
 
 (add-to-list 'load-path (concat user-emacs-directory "personal/"))
 
