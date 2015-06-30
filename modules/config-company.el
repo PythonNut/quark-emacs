@@ -1,6 +1,7 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'cl-lib)
+    (require 'flx)
     (require 'company)
     (require 'company-dabbrev-code)
     (require 'config-modes)))
