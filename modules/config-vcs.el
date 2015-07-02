@@ -172,29 +172,30 @@ This requires the external program `diff' to be in your `exec-path'."
   (define-key magit-status-mode-map (kbd "j") #'next-line)
 
   (cl-macrolet
-    ((magit-setup-section-k (mode)
+    ((magit-setup-section-k (mode &optional command)
        `(with-demoted-errors
           (define-key ,mode (kbd "k") #'previous-line)
-          (define-key ,mode (kbd "K") #'magit-discard-item))))
+          ,(when command
+             `(define-key ,mode (kbd "K") ,command)))))
 
     (with-no-warnings
       (generate-calls magit-setup-section-k
         (
-          (magit-branch-section-map)
+          (magit-branch-section-map #'magit-branch-delete)
           (magit-commit-section-map)
-          (magit-file-section-map)
-          (magit-hunk-section-map)
+          (magit-file-section-map #'magit-discard)
+          (magit-hunk-section-map #'magit-discard)
           (magit-module-commit-section-map)
           (magit-remote-section-map)
-          (magit-staged-section-map)
-          (magit-stash-section-map)
+          (magit-staged-section-map #'magit-discard)
+          (magit-stash-section-map #'magit-stash-drop)
           (magit-stashes-section-map)
           (magit-status-mode-map)
-          (magit-tag-section-map)
+          (magit-tag-section-map #'magit-tag-delete)
           (magit-unpulled-section-map)
           (magit-unpushed-section-map)
-          (magit-unstaged-section-map)
-          (magit-untracked-section-map)))))
+          (magit-unstaged-section-map #'magit-discard)
+          (magit-untracked-section-map #'magit-discard)))))
 
   (unless (version< emacs-version "24.4")
     (require 'magit-filenotify)
