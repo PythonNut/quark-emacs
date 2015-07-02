@@ -131,6 +131,7 @@
      icicle-goto-marker-or-set-mark-command
      ido-write-file
      iflipb-next-buffer
+     iflipb-next-buffer-smart
      mark-whole-buffer
      my-helm-buffers
      my-helm-find-files
