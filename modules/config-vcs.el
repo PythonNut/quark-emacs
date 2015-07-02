@@ -160,18 +160,41 @@ This requires the external program `diff' to be in your `exec-path'."
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
-  (diminish 'magit-auto-revert-mode)
   (setq magit-completing-read-function
     #'magit-ido-completing-read)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
+  (evil-set-initial-state 'magit-popup-mode 'insert)
 
   (define-key magit-log-mode-map (kbd "k") #'previous-line)
   (define-key magit-log-mode-map (kbd "j") #'next-line)
-  (define-key magit-status-mode-map (kbd "k") #'previous-line)
-  (define-key magit-status-mode-map (kbd "K") #'magit-discard-item)
   (define-key magit-status-mode-map (kbd "j") #'next-line)
+
+  (cl-macrolet
+    ((magit-setup-section-k (mode)
+       `(with-demoted-errors
+          (define-key ,mode (kbd "k") #'previous-line)
+          (define-key ,mode (kbd "K") #'magit-discard-item))))
+
+    (with-no-warnings
+      (generate-calls magit-setup-section-k
+        (
+          (magit-branch-section-map)
+          (magit-commit-section-map)
+          (magit-file-section-map)
+          (magit-hunk-section-map)
+          (magit-module-commit-section-map)
+          (magit-remote-section-map)
+          (magit-staged-section-map)
+          (magit-stash-section-map)
+          (magit-stashes-section-map)
+          (magit-status-mode-map)
+          (magit-tag-section-map)
+          (magit-unpulled-section-map)
+          (magit-unpushed-section-map)
+          (magit-unstaged-section-map)
+          (magit-untracked-section-map)))))
 
   (unless (version< emacs-version "24.4")
     (require 'magit-filenotify)
