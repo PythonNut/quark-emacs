@@ -167,7 +167,6 @@ This requires the external program `diff' to be in your `exec-path'."
   (evil-set-initial-state 'magit-log-mode 'insert)
   (evil-set-initial-state 'magit-popup-mode 'insert)
 
-  (define-key magit-log-mode-map (kbd "k") #'previous-line)
   (define-key magit-log-mode-map (kbd "j") #'next-line)
   (define-key magit-status-mode-map (kbd "j") #'next-line)
 
@@ -185,6 +184,7 @@ This requires the external program `diff' to be in your `exec-path'."
           (magit-commit-section-map)
           (magit-file-section-map #'magit-discard)
           (magit-hunk-section-map #'magit-discard)
+          (magit-log-mode-map)
           (magit-module-commit-section-map)
           (magit-remote-section-map)
           (magit-staged-section-map #'magit-discard)
