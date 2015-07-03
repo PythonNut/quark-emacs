@@ -38,8 +38,7 @@
                       (lambda (x)
                         (concat "[^" (string x) "]*?" (string x)))
                       infix
-                      "")
-                    ".*\\'"))
+                      "")))
           (candidates (cl-remove-if-not
                         (apply-partially 'string-match-p regexp)
                         (all-completions prefix table predicate))))
