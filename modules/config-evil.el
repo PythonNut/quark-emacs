@@ -76,29 +76,36 @@
   (around auto-indent activate preactivate compile)
   (indent-region (point) (+ (point) (length ad-do-it))))
 
-;;; Change modeline color by Evil state
-(lexical-let ((default-color (cons (face-background 'mode-line)
-                               (face-foreground 'mode-line))))
-  (add-hook 'post-command-hook
-    (lambda ()
-      (let ((color (if (/= (display-color-cells) 8)
-                     (cond ((minibufferp) default-color)
-                       ((evil-normal-state-p) '("#586e75" . "#eee8d5"))
-                       ((evil-emacs-state-p)  '("#859900" . "#eee8d5"))
-                       ((evil-insert-state-p)  '("#93a1a1" . "#073642"))
-                       ((evil-visual-state-p) '("#268bd2" . "#eee8d5"))
-                       ((evil-replace-state-p) '("#dc322f" . "#eee8d5"))
-                       (t '("grey70" . "black")))
-                     (cond ((minibufferp) default-color)
-                       ((evil-normal-state-p) '("white" . "blue"))
-                       ((evil-emacs-state-p)  '("white" . "green"))
-                       ((evil-insert-state-p)  '("black" . "grey"))
-                       ((evil-visual-state-p) '("white" . "cyan"))
-                       ((evil-replace-state-p) '("white" . "red"))
-                       (t '("grey" . "black"))))))
-        (set-face-background 'mode-line (first color))
-        (set-face-foreground 'mode-line (rest color))
-        (set-face-foreground 'mode-line-buffer-id (rest color))))))
+(lexical-let ((evil-mode-line-face-cookies nil))
+  (defun evil-set-mode-line-face ()
+    (let ((color
+            (if (> (display-color-cells) 8)
+              (pcase evil-state
+                (`normal  '("#586e75" . "#eee8d5"))
+                (`emacs   '("#859900" . "#eee8d5"))
+                (`insert  '("#93a1a1" . "#073642"))
+                (`visual  '("#268bd2" . "#eee8d5"))
+                (`replace '("#dc322f" . "#eee8d5"))
+                (other    '("grey70" . "black")))
+              (pcase evil-state
+                (`normal  '("white" . "blue"))
+                (`emacs   '("white" . "green"))
+                (`insert  '("black" . "grey"))
+                (`visual  '("white" . "cyan"))
+                (`replace '("white" . "red"))
+                (other    '("grey" . "black"))))))
+
+      (mapc #'face-remap-remove-relative evil-mode-line-face-cookies)
+      (setq evil-mode-line-face-cookies
+        (list
+          (face-remap-add-relative 'mode-line
+            `((:foreground ,(cdr color) :background ,(car color)) mode-line))
+
+          (face-remap-add-relative 'mode-line-buffer-id
+            `((:foreground ,(cdr color)) mode-line-buffer-id)))))))
+
+;; Change modeline color by Evil state
+(add-hook 'post-command-hook #'evil-set-mode-line-face)
 
 ;; switch to insert state if I set an emacs-style mark
 (define-key evil-normal-state-map (kbd "C-SPC")

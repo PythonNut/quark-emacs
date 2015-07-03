@@ -3,7 +3,12 @@
     (require 'smartparens)
     (require 'hexrgb)))
 
-(defvar rainbow-delimiters-switch nil)
+(defmacro rainbow-delimiters-saturate (face &optional degree)
+  "Adjust the saturation of the given face by the given degree"
+  `(face-remap-add-relative ,face
+     (list (list ':foreground (hexrgb-increment-saturation
+                                (face-attribute ,face :foreground) 0.5))
+       ,face)))
 
 ;; the equivalent of a global mode, but does not
 ;; turn on for odd non-programming modes
@@ -31,52 +36,48 @@
     (set-face-foreground 'rainbow-delimiters-depth-8-face "#7b88a5")
     (set-face-foreground 'rainbow-delimiters-depth-9-face "#659896"))
 
-  ;; currently solarized colors
-  (add-hook 'after-change-major-mode-hook #'rainbow-define-faces)
+  (rainbow-define-faces)
 
-  ;; punch the color
-  (defun rainbow-delimiters-saturate (face &optional degree)
-    (unless (featurep 'hexrgb) (require 'hexrgb))
-    "Adjust the saturation of the given face by the given degree"
-    (set-face-foreground face
-      (hexrgb-increment-saturation
-        (face-attribute face :foreground) 0.5)))
+  (lexical-let ((rainbow-delimiters-switch nil)
+                 (rainbow-delimiters-face-cookies nil))
+    (defun rainbow-delimiters-focus-on ()
+      (unless (featurep 'hexrgb) (require 'hexrgb))
+      (setq rainbow-delimiters-face-cookies
+        (list
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-1-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-2-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-3-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-4-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-5-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-6-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-7-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-8-face)
+          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-9-face))
+        rainbow-delimiters-switch t))
 
-  ;; punch the parens
-  (defvar rainbow-delimiters-face-delta 0.1)
-  (defun rainbow-delimiters-focus (arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-1-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-2-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-3-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-4-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-5-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-6-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-7-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-8-face arg)
-    (rainbow-delimiters-saturate 'rainbow-delimiters-depth-9-face arg))
+    (defun rainbow-delimiters-focus-off ()
+      (mapc #'face-remap-remove-relative rainbow-delimiters-face-cookies)
+      (setq rainbow-delimiters-switch nil))
 
-  (defun rainbow-delimiters-focus-on-maybe ()
-    "Display the show pair overlays."
-    (when (or (looking-at "[][(){}]")
-            (and
-              (evil-insert-state-p)
-              (looking-back "[][(){}]")))
-      (unless (or rainbow-delimiters-switch (minibufferp))
-        (rainbow-delimiters-focus rainbow-delimiters-face-delta)
-        (setq rainbow-delimiters-switch t))))
-
-  (run-with-idle-timer 0.6 t 'rainbow-delimiters-focus-on-maybe)
-
-  (defun rainbow-delimiters-focus-off-maybe ()
-    "Display the show pair overlays."
-    (unless (or (looking-at "[][(){}]")
+    (defun rainbow-delimiters-focus-on-maybe ()
+      "Display the show pair overlays."
+      (when (or (looking-at "[][(){}]")
               (and
                 (evil-insert-state-p)
                 (looking-back "[][(){}]")))
-      (when rainbow-delimiters-switch
-        (rainbow-delimiters-focus (- rainbow-delimiters-face-delta))
-        (setq rainbow-delimiters-switch nil))))
+        (unless (or rainbow-delimiters-switch (minibufferp))
+          (rainbow-delimiters-focus-on))))
 
+    (defun rainbow-delimiters-focus-off-maybe ()
+      "Display the show pair overlays."
+      (unless (or (looking-at "[][(){}]")
+                (and
+                  (evil-insert-state-p)
+                  (looking-back "[][(){}]")))
+        (when rainbow-delimiters-switch
+          (rainbow-delimiters-focus-off)))))
+
+  (run-with-idle-timer 0.6 t 'rainbow-delimiters-focus-on-maybe)
   (run-with-idle-timer 0.1 t 'rainbow-delimiters-focus-off-maybe))
 
 (provide 'config-rainbow-delimiters)
