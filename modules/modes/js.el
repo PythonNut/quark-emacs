@@ -12,10 +12,11 @@
   (set-face-attribute 'js2-external-variable nil :underline t)
   (js2r-add-keybindings-with-prefix "C-c C-r")
 
-  (sp-local-pair 'js2-mode "{" nil :post-handlers
-    '(:add
-       ("||\n[i]" "RET")
-       ("| " "SPC")))
+  (with-eval-after-load 'smartparens
+    (sp-local-pair 'js2-mode "{" nil :post-handlers
+      '(:add
+         ("||\n[i]" "RET")
+         ("| " "SPC"))))
 
   (setq
     js2-basic-offset 2))

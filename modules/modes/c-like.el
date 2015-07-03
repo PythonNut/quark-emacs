@@ -15,16 +15,17 @@
   (lambda ()
     (setq flycheck-clang-language-standard "c11")))
 
-(with-eval-after-load 'cc-mode
-  (setq c-default-style "k&r")
-  (let ((my-c-modes
-          '('c++-mode
-             'java-mode
-             'c-mode)))
+(with-eval-after-load 'smartparens
+  (with-eval-after-load 'cc-mode
+    (setq c-default-style "k&r")
+    (let ((my-c-modes
+            '('c++-mode
+               'java-mode
+               'c-mode)))
 
-    (while my-c-modes
-      (sp-local-pair (car my-c-modes) "{" nil :post-handlers
-        '(:add
-           ("||\n[i]" "RET")
-           ("| " "SPC")))
-      (setq my-c-modes (cdr my-c-modes)))))
+      (while my-c-modes
+        (sp-local-pair (car my-c-modes) "{" nil :post-handlers
+          '(:add
+             ("||\n[i]" "RET")
+             ("| " "SPC")))
+        (setq my-c-modes (cdr my-c-modes))))))
