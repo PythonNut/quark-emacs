@@ -3,7 +3,7 @@
     (require 'smartparens)
     (require 'hexrgb)))
 
-(require 'rainbow-delimiters)
+(defvar rainbow-delimiters-switch nil)
 
 ;; the equivalent of a global mode, but does not
 ;; turn on for odd non-programming modes
@@ -18,50 +18,18 @@
       (rainbow-delimiters-mode +1))))
 
 (with-eval-after-load 'rainbow-delimiters
-  (defun rainbow-wash-out-color (color &optional amount)
-    "Return a color string specifying a washed-out version of COLOR."
-    (let ((basec (color-values
-                   (face-attribute 'default :foreground)))
-           (col (color-values color))
-           (list nil))
-      (while col
-        (push (/ (/ (+ (or (pop col) 128)
-                      (* amount (or (pop basec) 128)))
-                   (1+ amount))
-                256)
-          list))
-      (apply 'format "#%02x%02x%02x" (nreverse list))))
-
-  (defun rainbow-wash-out-face (face &optional amount)
-    "Make the foreground color of FACE appear a bit more pale."
-    (let ((color (face-attribute face :foreground)))
-      (unless (eq color 'unspecified)
-        (set-face-attribute face nil
-          :foreground (rainbow-wash-out-color color amount)))))
-
-  (defun rainbow-delimiters-wash (arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-1-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-2-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-3-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-4-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-5-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-6-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-7-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-8-face arg)
-    (rainbow-wash-out-face 'rainbow-delimiters-depth-9-face arg))
-
   (defun rainbow-define-faces ()
     (interactive)
-    (set-face-foreground 'rainbow-delimiters-depth-1-face "#93a1a1")
-    (set-face-foreground 'rainbow-delimiters-depth-2-face "#cb4b16")
-    (set-face-foreground 'rainbow-delimiters-depth-3-face "#6c71c4")
-    (set-face-foreground 'rainbow-delimiters-depth-4-face "#93a1a1")
-    (set-face-foreground 'rainbow-delimiters-depth-5-face "#859900")
-    (set-face-foreground 'rainbow-delimiters-depth-6-face "#258bd2")
-    (set-face-foreground 'rainbow-delimiters-depth-7-face "#d33682")
-    (set-face-foreground 'rainbow-delimiters-depth-8-face "#6c71c4")
-    (set-face-foreground 'rainbow-delimiters-depth-9-face "#2aa198")
-    (rainbow-delimiters-wash 2))
+    (setq rainbow-delimiters-switch nil)
+    (set-face-foreground 'rainbow-delimiters-depth-1-face "#889899")
+    (set-face-foreground 'rainbow-delimiters-depth-2-face "#9b7b6b")
+    (set-face-foreground 'rainbow-delimiters-depth-3-face "#7b88a5")
+    (set-face-foreground 'rainbow-delimiters-depth-4-face "#889899")
+    (set-face-foreground 'rainbow-delimiters-depth-5-face "#839564")
+    (set-face-foreground 'rainbow-delimiters-depth-6-face "#6391aa")
+    (set-face-foreground 'rainbow-delimiters-depth-7-face "#9d748f")
+    (set-face-foreground 'rainbow-delimiters-depth-8-face "#7b88a5")
+    (set-face-foreground 'rainbow-delimiters-depth-9-face "#659896"))
 
   ;; currently solarized colors
   (add-hook 'after-change-major-mode-hook #'rainbow-define-faces)
@@ -87,25 +55,15 @@
     (rainbow-delimiters-saturate 'rainbow-delimiters-depth-8-face arg)
     (rainbow-delimiters-saturate 'rainbow-delimiters-depth-9-face arg))
 
-  (defvar rainbow-delimiters-switch nil)
-
-  (defun rainbow-delimiters-on-maybe ()
-    (unless (or rainbow-delimiters-switch (minibufferp))
-      (rainbow-delimiters-focus rainbow-delimiters-face-delta)
-      (setq rainbow-delimiters-switch t)))
-
-  (defun rainbow-delimiters-off-maybe ()
-    (when rainbow-delimiters-switch
-      (rainbow-delimiters-focus (- rainbow-delimiters-face-delta))
-      (setq rainbow-delimiters-switch nil)))
-
   (defun rainbow-delimiters-focus-on-maybe ()
     "Display the show pair overlays."
     (when (or (looking-at "[][(){}]")
             (and
               (evil-insert-state-p)
               (looking-back "[][(){}]")))
-      (rainbow-delimiters-on-maybe)))
+      (unless (or rainbow-delimiters-switch (minibufferp))
+        (rainbow-delimiters-focus rainbow-delimiters-face-delta)
+        (setq rainbow-delimiters-switch t))))
 
   (run-with-idle-timer 0.6 t 'rainbow-delimiters-focus-on-maybe)
 
@@ -115,7 +73,9 @@
               (and
                 (evil-insert-state-p)
                 (looking-back "[][(){}]")))
-      (rainbow-delimiters-off-maybe)))
+      (when rainbow-delimiters-switch
+        (rainbow-delimiters-focus (- rainbow-delimiters-face-delta))
+        (setq rainbow-delimiters-switch nil))))
 
   (run-with-idle-timer 0.1 t 'rainbow-delimiters-focus-off-maybe))
 
