@@ -147,8 +147,9 @@
             (around quiet activate preactivate compile)
             (ad-enable-advice 'load 'before 'quiet-loading)
             (ad-activate 'load)
-            (cl-letf (((symbol-function 'message) #'format))
-              ad-do-it)
+            (with-demoted-errors
+              (cl-letf (((symbol-function 'message) #'format))
+                ad-do-it))
             (ad-disable-advice 'load 'before 'quiet-loading)
             (ad-activate 'load)
             (when (null idle-require-symbols)
@@ -156,7 +157,6 @@
 
           (idle-require-mode +1)))))
 
-  (require 'idle-require)
   (message "loading symbols for server")
   (idle-require-mode +1)
   (dolist (sym idle-require-symbols)
