@@ -107,18 +107,23 @@
     company-transformers
     (list
       (lambda (cands)
-        (cl-sort (cl-subseq (cl-sort cands
-                              #'<
-                              :key #'length)
-                   0
-                   (min 500
-                     (length cands)))
-          #'>
-          :key (lambda (cand)
-                 (or (car (flx-score cand
-                            company-prefix
-                            company-flx-cache))
-                   0))))))
+        (let ((num-cands (length cands)))
+          (mapcar #'car
+            (cl-sort (mapcar
+                       (lambda (cand)
+                         (cons
+                           cand
+                           (or (car (flx-score cand
+                                      company-prefix
+                                      company-flx-cache))
+                             0)))
+                       (cl-subseq (cl-sort cands
+                                    #'<
+                                    :key #'length)
+                         0
+                         (min 500 num-cands)))
+              #'>
+              :key #'cdr))))))
 
   (cl-macrolet
     ((company-define-specific-modes (mode backend)
