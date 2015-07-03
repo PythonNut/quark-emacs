@@ -113,47 +113,46 @@
 ;;; ====================================
 ;;; iflib - switch buffers alt-tab style
 ;;; ====================================
-(defvar iflipb-running-p nil)
+(lexical-let ((iflipb-running-p))
+  (with-eval-after-load 'iflipb
+    (setq
+      iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
+      iflipb-wrap-around 't)
 
-(with-eval-after-load 'iflipb
-  (setq
-    iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
-    iflipb-wrap-around 't)
-
-  (defun iflipb-first-iflipb-buffer-switch-command ()
-    "Determines whether this is the first invocation of
+    (defun iflipb-first-iflipb-buffer-switch-command ()
+      "Determines whether this is the first invocation of
   iflipb-next-buffer or iflipb-previous-buffer this round."
-    iflipb-running-p))
+      iflipb-running-p))
 
-(defun iflipb-smart-buffer ()
-  (unless (fboundp 'iflipb-hydra/body)
-    (require 'hydra)
-    (defhydra iflipb-hydra
-      (:pre (setq hydra-is-helpful nil)
-        :post (setq hydra-is-helpful t))
-      ("<C-tab>"
-        (call-interactively #'iflipb-next-buffer))
-      ("TAB"
-        (call-interactively #'iflipb-next-buffer))
-      ("<C-S-iso-lefttab>"
-        (call-interactively #'iflipb-previous-buffer))
-      ("<backtab>"
-        (call-interactively #'iflipb-previous-buffer))))
-  (iflipb-hydra/body))
+  (defun iflipb-smart-buffer ()
+    (unless (fboundp 'iflipb-hydra/body)
+      (require 'hydra)
+      (defhydra iflipb-hydra
+        (:pre (setq hydra-is-helpful nil)
+          :post (setq hydra-is-helpful t))
+        ("<C-tab>"
+          (call-interactively #'iflipb-next-buffer))
+        ("TAB"
+          (call-interactively #'iflipb-next-buffer))
+        ("<C-S-iso-lefttab>"
+          (call-interactively #'iflipb-previous-buffer))
+        ("<backtab>"
+          (call-interactively #'iflipb-previous-buffer))))
+    (iflipb-hydra/body))
 
-(defun iflipb-next-buffer-smart ()
-  "A `hydra' enabled next-buffer"
-  (interactive)
-  (let ((iflipb-running-p t))
-    (call-interactively #'iflipb-next-buffer))
-  (iflipb-smart-buffer))
+  (defun iflipb-next-buffer-smart ()
+    "A `hydra' enabled next-buffer"
+    (interactive)
+    (let ((iflipb-running-p t))
+      (call-interactively #'iflipb-next-buffer))
+    (iflipb-smart-buffer))
 
-(defun iflipb-previous-buffer-smart ()
-  "A `hydra' enabled previous-buffer"
-  (interactive)
-  (let ((iflipb-running-p t))
-    (call-interactively #'iflipb-previous-buffer))
-  (iflipb-smart-buffer))
+  (defun iflipb-previous-buffer-smart ()
+    "A `hydra' enabled previous-buffer"
+    (interactive)
+    (let ((iflipb-running-p t))
+      (call-interactively #'iflipb-previous-buffer))
+    (iflipb-smart-buffer)))
 
 (global-set-key (kbd "<C-tab>") 'iflipb-next-buffer-smart)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'iflipb-previous-buffer-smart)
