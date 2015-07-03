@@ -111,7 +111,7 @@
                               #'<
                               :key #'length)
                    0
-                   (min 100
+                   (min 500
                      (length cands)))
           #'>
           :key (lambda (cand)
