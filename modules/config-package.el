@@ -105,8 +105,7 @@
      key-chord
      linum-relative
      load-dir
-     ;; magit
-     magit-filenotify
+     magit
      multiple-cursors
      rainbow-delimiters
      smartparens

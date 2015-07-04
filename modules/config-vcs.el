@@ -197,15 +197,9 @@ This requires the external program `diff' to be in your `exec-path'."
           (magit-unstaged-section-map #'magit-discard)
           (magit-untracked-section-map #'magit-discard)))))
 
-  (unless (version< emacs-version "24.4")
-    (require 'magit-filenotify)
-    (diminish 'magit-filenotify-mode))
-
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
     (lambda ()
-      (unless (file-remote-p default-directory)
-        (magit-filenotify-mode +1))
       (set-input-method "TeX")))
 
   (add-hook 'magit-log-mode-hook
