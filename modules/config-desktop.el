@@ -2,8 +2,8 @@
 
 (eval-when-compile
   (with-demoted-errors
+    (require 'dash)
     (require 'cl-lib)
-    (require 'key-chord)
     (require 'recentf)
     (require 'saveplace)
     (require 'savehist)
@@ -11,7 +11,7 @@
     (require 'evil-ex)
     (require 'config-modes)))
 
-(defvar file-name-mode-alist (list))
+(defvar file-name-mode-alist nil)
 
 (setq
   history-length 100
@@ -26,7 +26,6 @@
   '(kill-ring
      file-name-mode-alist
      search-ring
-
      regexp-search-ring)
 
   ;; remember more recent files
@@ -39,7 +38,7 @@
   (setq-default save-place t))
 
 (require 'savehist)
-(savehist-mode 1)
+(savehist-mode +1)
 
 ;; text properties severely bloat the history so delete them
 (defun unpropertize-savehist ()
