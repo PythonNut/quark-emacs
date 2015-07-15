@@ -82,7 +82,6 @@
      company
      company-anaconda
      diff-hl
-     dired-avfs
      dired-filter
      dired-subtree
      diminish

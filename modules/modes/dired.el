@@ -41,8 +41,6 @@
   (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
   (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer)
 
-  (require 'dired-avfs)
-
   (require 'dired-filter)
   (evil-define-key 'normal dired-mode-map "|" dired-filter-map)
 
