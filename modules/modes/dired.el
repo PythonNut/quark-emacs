@@ -5,6 +5,13 @@
     (require 'dired-x)
     (require 'ls-lisp)))
 
+(with-eval-after-load 'ls-lisp
+  (setq
+    ls-lisp-use-insert-directory-program nil
+    ls-lisp-support-shell-wildcards t
+    ls-lisp-dirs-first t
+    ls-lisp-verbosity nil))
+
 (with-eval-after-load 'dired
   (require 'ls-lisp)
   (require 'dired-x)
@@ -39,13 +46,4 @@
 
   (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
   (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
-  (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer)
-
-  (require 'dired-filter)
-  (evil-define-key 'normal dired-mode-map "|" dired-filter-map)
-
-  (setq
-    ls-lisp-use-insert-directory-program nil
-    ls-lisp-support-shell-wildcards t
-    ls-lisp-dirs-first t
-    ls-lisp-verbosity nil))
+  (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer))

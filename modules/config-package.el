@@ -82,8 +82,6 @@
      company
      company-anaconda
      diff-hl
-     dired-filter
-     dired-subtree
      diminish
      dtrt-indent
      easy-kill
