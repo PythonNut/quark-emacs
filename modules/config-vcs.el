@@ -12,18 +12,14 @@
   "Return a backup file name for REV or the current version of FILE.
 If MANUAL is non-nil it means that a name for backups created by
 the user should be returned."
-  (let* ((diff-hl-temp-location
-           (if (file-directory-p "/dev/shm/")
-             "/dev/shm/"
-             temporary-file-directory))
-          (auto-save-file-name-transforms
-            `((".*" ,diff-hl-temp-location t))))
+  (let* ((auto-save-file-name-transforms
+           `((".*" ,temporary-file-directory t))))
     (expand-file-name
       (concat (make-auto-save-file-name)
         ".~" (subst-char-in-string
                ?/ ?_ rev)
         (unless manual ".") "~")
-      diff-hl-temp-location)))
+      temporary-file-directory)))
 
 (defun diff-hl-create-revision (file revision)
   "Read REVISION of FILE into a buffer and return the buffer."
@@ -64,10 +60,8 @@ This requires the external program `diff' to be in your `exec-path'."
              (if (file-directory-p "/dev/shm/")
                "/dev/shm/"
                temporary-file-directory)))
-      (if (called-interactively-p 'any)
-        (diff rev (current-buffer) "-U 0" 'noasync)
-        (diff-no-select rev (current-buffer) "-U 0" 'noasync
-          (get-buffer-create " *diff-hl-diff*"))))))
+      (diff-no-select rev (current-buffer) "-U 0" 'noasync
+        (get-buffer-create " *diff-hl-diff*")))))
 
 (with-eval-after-load 'vc
   (defadvice vc-working-revision
