@@ -64,7 +64,6 @@
   (setq
     evil-snipe-scope 'visible
     evil-snipe-repeat-scope 'visible
-    evil-snipe-override-evil t
     evil-snipe-smart-case t)
 
   (evil-snipe-mode +1)
