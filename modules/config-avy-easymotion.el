@@ -18,15 +18,19 @@
     avy-background t
     avy-style 'de-bruijn
     avy-keys (string-to-list "jfkdls;aurieowncpqmxzb"))
-  (set-face-background 'avy-lead-face-0 nil)
-  (set-face-background 'avy-lead-face nil)
-  (set-face-foreground 'avy-lead-face-0 "#dc322f")
-  (set-face-foreground 'avy-lead-face "#b58900")
-  (set-face-attribute 'avy-lead-face nil :weight 'normal)
-  (set-face-attribute 'avy-lead-face-0 nil :weight 'extra-bold)
   (set-face-foreground 'avy-background-face "#586e75")
-  (set-face-background 'avy-lead-face-1 nil)
-  (set-face-foreground 'avy-lead-face-1 "#839493"))
+
+  (set-face-attribute 'avy-lead-face nil
+    :weight 'normal
+    :background nil
+    :foreground "#b58900")
+  (set-face-attribute 'avy-lead-face-0 nil
+    :weight 'extra-bold
+    :background nil
+    :foreground "#dc322f")
+  (set-face-attribute 'avy-lead-face-1 nil
+    :background nil
+    :foreground "#839493"))
 
 (with-eval-after-load 'evil-easymotion
   (setq
