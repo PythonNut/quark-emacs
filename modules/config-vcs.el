@@ -200,6 +200,8 @@ This requires the external program `diff' to be in your `exec-path'."
       (magit-filenotify-mode +1)
       (set-input-method "TeX")))
 
+  (add-hook 'with-editor-mode-hook 'evil-insert-state)
+
   (add-hook 'magit-log-mode-hook
     (lambda () (set-input-method "TeX"))))
 
