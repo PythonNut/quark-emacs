@@ -33,44 +33,49 @@
   (set-face-foreground 'rainbow-delimiters-depth-8-face "#7b88a5")
   (set-face-foreground 'rainbow-delimiters-depth-9-face "#659896")
 
-  (lexical-let ((rainbow-delimiters-switch nil)
-                 (rainbow-delimiters-face-cookies nil))
-    (defun rainbow-delimiters-focus-on ()
-      (unless (featurep 'hexrgb) (require 'hexrgb))
-      (setq rainbow-delimiters-face-cookies
-        (list
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-1-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-2-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-3-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-4-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-5-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-6-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-7-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-8-face)
-          (rainbow-delimiters-saturate 'rainbow-delimiters-depth-9-face))
-        rainbow-delimiters-switch t))
+  (setq
+    rainbow-delimiters-switch nil
+    rainbow-delimiters-face-cookies nil)
 
-    (defun rainbow-delimiters-focus-off ()
-      (mapc #'face-remap-remove-relative rainbow-delimiters-face-cookies)
-      (setq rainbow-delimiters-switch nil))
+  (make-variable-buffer-local 'rainbow-delimiters-switch)
+  (make-variable-buffer-local 'rainbow-delimiters-face-cookies)
 
-    (defun rainbow-delimiters-focus-on-maybe ()
-      "Display the show pair overlays."
-      (when (or (looking-at "[][(){}]")
+  (defun rainbow-delimiters-focus-on ()
+    (unless (featurep 'hexrgb) (require 'hexrgb))
+    (setq rainbow-delimiters-face-cookies
+      (list
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-1-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-2-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-3-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-4-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-5-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-6-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-7-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-8-face)
+        (rainbow-delimiters-saturate 'rainbow-delimiters-depth-9-face))
+      rainbow-delimiters-switch t))
+
+  (defun rainbow-delimiters-focus-off ()
+    (mapc #'face-remap-remove-relative rainbow-delimiters-face-cookies)
+    (setq rainbow-delimiters-switch nil))
+
+  (defun rainbow-delimiters-focus-on-maybe ()
+    "Display the show pair overlays."
+    (when (or (looking-at "[][(){}]")
+            (and
+              (evil-insert-state-p)
+              (looking-back "[][(){}]")))
+      (unless (or rainbow-delimiters-switch (minibufferp))
+        (rainbow-delimiters-focus-on))))
+
+  (defun rainbow-delimiters-focus-off-maybe ()
+    "Display the show pair overlays."
+    (unless (or (looking-at "[][(){}]")
               (and
                 (evil-insert-state-p)
                 (looking-back "[][(){}]")))
-        (unless (or rainbow-delimiters-switch (minibufferp))
-          (rainbow-delimiters-focus-on))))
-
-    (defun rainbow-delimiters-focus-off-maybe ()
-      "Display the show pair overlays."
-      (unless (or (looking-at "[][(){}]")
-                (and
-                  (evil-insert-state-p)
-                  (looking-back "[][(){}]")))
-        (when rainbow-delimiters-switch
-          (rainbow-delimiters-focus-off)))))
+      (when rainbow-delimiters-switch
+        (rainbow-delimiters-focus-off))))
 
   (run-with-idle-timer 0.6 t 'rainbow-delimiters-focus-on-maybe)
   (run-with-idle-timer 0.1 t 'rainbow-delimiters-focus-off-maybe))
