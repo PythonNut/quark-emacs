@@ -7,7 +7,6 @@
 (evil-set-initial-state #'diff-mode 'motion)
 (evil-set-initial-state #'backups-mode 'insert)
 (evil-set-initial-state #'erc-mode 'emacs)
-(evil-set-initial-state #'backup-walker-mode 'motion)
 (evil-set-initial-state #'package-menu-mode 'motion)
 (evil-set-initial-state #'undo-tree-visualizer-mode 'motion)
 (evil-set-initial-state #'profiler-report-mode 'motion)
