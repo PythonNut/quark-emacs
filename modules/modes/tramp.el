@@ -7,7 +7,7 @@
   ;; note that said cache is _not_ persistent
   (setq
     password-cache-expiry nil
-    tramp-default-method "scp"))
+    tramp-default-method "ssh"))
 
 ;; =================================
 ;; automatically request root access
