@@ -7,6 +7,7 @@
     (require 'config-modes)))
 
 (defvar company-flx-cache)
+(defvar company-flx-limit 500)
 
 (defun company-onetime-setup ()
   (require 'company)
@@ -120,7 +121,7 @@
                                     #'<
                                     :key #'length)
                          0
-                         (min 500 num-cands)))
+                         (min company-flx-limit num-cands)))
               #'>
               :key #'cdr))))))
 
