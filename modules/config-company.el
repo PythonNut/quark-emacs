@@ -113,23 +113,26 @@
       (lambda (cands)
         (let ((num-cands (length cands)))
           (mapcar #'car
-            (cl-sort (mapcar
-                       (lambda (cand)
-                         (cons
-                           cand
-                           (or (car (flx-score cand
-                                      company-prefix
-                                      company-flx-cache))
-                             0)))
-                       (if (< num-cands company-flx-limit)
-                         cands
-                         (cl-subseq (cl-sort cands
-                                      #'<
-                                      :key #'length)
-                           0
-                           (min company-flx-limit num-cands))))
-              #'>
-              :key #'cdr))))))
+            (sort (mapcar
+                    (lambda (cand)
+                      (cons
+                        cand
+                        (or (car (flx-score cand
+                                   company-prefix
+                                   company-flx-cache))
+                          0)))
+                    (if (< num-cands company-flx-limit)
+                      cands
+                      (let ((seq (sort cands
+                                   (lambda (c1 c2)
+                                     (< (length c1) (length c2)))))
+                             (end (min company-flx-limit num-cands))
+                             (result nil))
+                        (while (and (>= (setq end (1- end)) 0) seq)
+                          (push (pop seq) result))
+                        (nreverse result))))
+              (lambda (c1 c2)
+                (> (cdr c1) (cdr c2)))))))))
 
   (cl-macrolet
     ((company-define-specific-modes (mode backend)
