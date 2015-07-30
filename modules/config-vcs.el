@@ -154,8 +154,9 @@ This requires the external program `diff' to be in your `exec-path'."
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
-  (setq magit-completing-read-function
-    #'magit-ido-completing-read)
+  (setq
+    magit-push-always-verify nil
+    magit-completing-read-function #'magit-ido-completing-read)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
