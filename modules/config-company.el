@@ -121,11 +121,13 @@
                                       company-prefix
                                       company-flx-cache))
                              0)))
-                       (cl-subseq (cl-sort cands
-                                    #'<
-                                    :key #'length)
-                         0
-                         (min company-flx-limit num-cands)))
+                       (if (< num-cands company-flx-limit)
+                         cands
+                         (cl-subseq (cl-sort cands
+                                      #'<
+                                      :key #'length)
+                           0
+                           (min company-flx-limit num-cands))))
               #'>
               :key #'cdr))))))
 
