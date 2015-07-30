@@ -40,9 +40,13 @@
                         (concat "[^" (string x) "]*?" (string x)))
                       infix
                       "")))
-          (candidates (cl-remove-if-not
-                        (apply-partially 'string-match-p regexp)
-                        (all-completions prefix table predicate))))
+          (candidates
+            (let ((cands))
+              (dolist (cand (all-completions prefix table predicate))
+                (when (string-match-p regexp cand)
+                  (setq cands (cons cand cands))))
+              cands)))
+
     (if all-p
       ;; Implement completion-all-completions interface
       (when candidates
