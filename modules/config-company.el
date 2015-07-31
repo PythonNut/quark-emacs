@@ -40,12 +40,16 @@
                         (concat "[^" (string x) "]*?" (string x)))
                       infix
                       "")))
-          (candidates
-            (let ((cands))
-              (dolist (cand (all-completions prefix table predicate))
-                (when (string-match-p regexp cand)
-                  (setq cands (cons cand cands))))
-              cands)))
+          (candidates (all-completions prefix table
+                        (lambda (item)
+                          (and
+                            (if predicate
+                              (funcall predicate item)
+                              t)
+                            (string-match-p regexp
+                              (if (symbolp item)
+                                (symbol-name item)
+                                item)))))))
 
     (if all-p
       ;; Implement completion-all-completions interface
