@@ -37,19 +37,13 @@
           (regexp (concat "\\`"
                     (mapconcat
                       (lambda (x)
-                        (concat "[^" (string x) "]*?" (string x)))
+                        (concat "[^" (string x) "]*" (string x)))
                       infix
                       "")))
-          (candidates (all-completions prefix table
-                        (lambda (item)
-                          (and
-                            (if predicate
-                              (funcall predicate item)
-                              t)
-                            (string-match-p regexp
-                              (if (symbolp item)
-                                (symbol-name item)
-                                item)))))))
+          (candidates
+            (let ((completion-regexp-list
+                    (cons regexp completion-regexp-list)))
+              (all-completions prefix table predicate))))
 
     (if all-p
       ;; Implement completion-all-completions interface
@@ -58,11 +52,9 @@
         (setcdr (last candidates) (length prefix))
         candidates)
       ;; Implement completion-try-completions interface
-      (cond
-        ((and (= (length candidates) 1)
-           (equal infix (car candidates)))
-          t)
-        ((= (length candidates) 1)
+      (if (= (length candidates) 1)
+        (if (equal infix (car candidates))
+          t
           ;; Avoid quirk of double / for filename completion. I don't
           ;; know how this is *supposed* to be handled.
           (when (and (> (length (car candidates)) 0)
@@ -73,8 +65,7 @@
             (setq suffix (substring suffix 1)))
           (cons (concat prefix (car candidates) suffix)
             (length (concat prefix (car candidates)))))
-        ;; Do nothing, i.e leave string as it is.
-        (t (cons string point))))))
+        (cons string point)))))
 
 (defun completion-fuzzy-try-completion (string table predicate point)
   (completion-fuzzy-completion string table predicate point))
