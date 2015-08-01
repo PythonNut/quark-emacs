@@ -37,7 +37,8 @@
           (regexp (concat "\\`"
                     (mapconcat
                       (lambda (x)
-                        (concat "[^" (string x) "]*" (string x)))
+                        (setq x (string x))
+                        (concat "[^" x "]*" (regexp-quote x)))
                       infix
                       "")))
           (candidates
