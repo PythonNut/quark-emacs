@@ -4,6 +4,7 @@
 
 (delete-selection-mode +1)
 (global-hl-line-mode +1)
+(subword-mode +1)
 
 (add-hook 'find-file-hook 'auto-compression-mode)
 
