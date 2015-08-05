@@ -173,7 +173,7 @@
 
 (with-eval-after-load 'volatile-highlights
   (diminish #'volatile-highlights-mode)
-
+  (with-demoted-errors
   (vhl/define-extension 'my-evil-highlights
     'evil-yank
     'evil-paste-pop-proxy
@@ -189,6 +189,6 @@
 
   (vhl/install-extension 'my-undo-tree-highlights)
 
-  (volatile-highlights-mode +1))
+  (volatile-highlights-mode +1)))
 
 (provide 'config-ui)

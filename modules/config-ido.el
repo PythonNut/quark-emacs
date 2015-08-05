@@ -17,11 +17,11 @@
 (with-eval-after-load 'ido-ubiquitous
   (ido-ubiquitous-mode +1))
 
-(defadvice completing-read
-  (before autoload-ido-ubiquitous activate preactivate compile)
+(defun nadvice/completing-read-ido (old-fun &rest args)
   (require 'ido-ubiquitous)
-  (ad-disable-advice #'completing-read 'before 'autoload-ido-ubiquitous)
-  (ad-activate #'completing-read))
+  (advice-remove #'completing-read :before #'nadvice/completing-read-ido))
+
+(advice-add #'completing-read :before #'nadvice/completing-read-ido)
 
 (global-set-key (kbd "C-x b") #'ido-switch-buffer)
 (global-set-key (kbd "C-x f") #'ido-find-file)
