@@ -4,6 +4,7 @@
     (require 'undo-tree)))
 
 (with-eval-after-load 'evil
+  (eval-and-compile (require 'evil))
   (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
     #'undo-tree-visualizer-toggle-timestamps)
   (evil-define-key 'motion  undo-tree-visualizer-mode-map (kbd "d")

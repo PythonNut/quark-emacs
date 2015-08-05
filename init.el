@@ -4,6 +4,7 @@
 ;;(package-initialize)
 
 (setq load-prefer-newer t)
+(eval-when-compile (require 'cl))
 
 (if (member "-F" command-line-args)
   (progn

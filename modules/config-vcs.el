@@ -164,33 +164,33 @@ This requires the external program `diff' to be in your `exec-path'."
 
   (define-key magit-log-mode-map (kbd "j") #'next-line)
   (define-key magit-status-mode-map (kbd "j") #'next-line)
+  (eval-and-compile
+    (cl-macrolet
+      ((magit-setup-section-k (mode &optional command)
+         `(with-demoted-errors
+            (define-key ,mode (kbd "k") #'previous-line)
+            ,(when command
+               `(define-key ,mode (kbd "K") ,command)))))
 
-  (cl-macrolet
-    ((magit-setup-section-k (mode &optional command)
-       `(with-demoted-errors
-          (define-key ,mode (kbd "k") #'previous-line)
-          ,(when command
-             `(define-key ,mode (kbd "K") ,command)))))
-
-    (with-no-warnings
-      (generate-calls magit-setup-section-k
-        (
-          (magit-branch-section-map #'magit-branch-delete)
-          (magit-commit-section-map)
-          (magit-file-section-map #'magit-discard)
-          (magit-hunk-section-map #'magit-discard)
-          (magit-log-mode-map)
-          (magit-module-commit-section-map)
-          (magit-remote-section-map)
-          (magit-staged-section-map #'magit-discard)
-          (magit-stash-section-map #'magit-stash-drop)
-          (magit-stashes-section-map)
-          (magit-status-mode-map)
-          (magit-tag-section-map #'magit-tag-delete)
-          (magit-unpulled-section-map)
-          (magit-unpushed-section-map)
-          (magit-unstaged-section-map #'magit-discard)
-          (magit-untracked-section-map #'magit-discard)))))
+      (with-no-warnings
+        (generate-calls magit-setup-section-k
+          (
+            (magit-branch-section-map #'magit-branch-delete)
+            (magit-commit-section-map)
+            (magit-file-section-map #'magit-discard)
+            (magit-hunk-section-map #'magit-discard)
+            (magit-log-mode-map)
+            (magit-module-commit-section-map)
+            (magit-remote-section-map)
+            (magit-staged-section-map #'magit-discard)
+            (magit-stash-section-map #'magit-stash-drop)
+            (magit-stashes-section-map)
+            (magit-status-mode-map)
+            (magit-tag-section-map #'magit-tag-delete)
+            (magit-unpulled-section-map)
+            (magit-unpushed-section-map)
+            (magit-unstaged-section-map #'magit-discard)
+            (magit-untracked-section-map #'magit-discard))))))
 
   (with-eval-after-load 'magit-filenotify
     (diminish 'magit-filenotify-mode))
@@ -214,52 +214,53 @@ This requires the external program `diff' to be in your `exec-path'."
   (setq projectile-mode-line
     '(:eval (format (if (display-graphic-p) " ↠" " pro")))))
 
-(cl-macrolet
-  ((define-temp-projectile-binding (key func)
-     `(progn
-        (autoload ,func "projectile")
-        (global-set-key ,(kbd (concat "C-c p " key)) ,func))))
+(eval-and-compile
+  (cl-macrolet
+      ((define-temp-projectile-binding (key func)
+         `(progn
+            (autoload ,func "projectile")
+            (global-set-key ,(kbd (concat "C-c p " key)) ,func))))
 
-  (with-no-warnings
-    (generate-calls define-temp-projectile-binding
-      (
-        ("4 a" #'projectile-find-other-file-other-window)
-        ("4 b" #'projectile-switch-to-buffer-other-window)
-        ("4 C-o" #'projectile-display-buffer)
-        ("4 d" #'projectile-find-dir-other-window)
-        ("4 f" #'projectile-find-file-other-window)
-        ("4 g" #'projectile-find-file-dwim-other-window)
-        ("4 t" #'projectile-find-implementation-or-test-other-window)
-        ("!" #'projectile-run-shell-command-in-root)
-        ("&" #'projectile-run-async-shell-command-in-root)
-        ("a" #'projectile-find-other-file)
-        ("b" #'projectile-switch-to-buffer)
-        ("c" #'projectile-compile-project)
-        ("d" #'projectile-find-dir)
-        ("D" #'projectile-dired)
-        ("e" #'projectile-recentf)
-        ("f" #'projectile-find-file)
-        ("g" #'projectile-find-file-dwim)
-        ("F" #'projectile-find-file-in-known-projects)
-        ("i" #'projectile-invalidate-cache)
-        ("I" #'projectile-ibuffer)
-        ("j" #'projectile-find-tag)
-        ("k" #'projectile-kill-buffers)
-        ("l" #'projectile-find-file-in-directory)
-        ("m" #'projectile-commander)
-        ("o" #'projectile-multi-occur)
-        ("p" #'projectile-switch-project)
-        ("P" #'projectile-test-project)
-        ("r" #'projectile-replace)
-        ("R" #'projectile-regenerate-tags)
-        ("s a" #'helm-projectile-ack)
-        ("s g" #'projectile-grep)
-        ("s s" #'helm-projectile-ag)
-        ("S" #'projectile-save-project-buffers)
-        ("t" #'projectile-toggle-between-implementation-and-test)
-        ("T" #'projectile-find-test-file)
-        ("v" #'projectile-vc)
-        ("z" #'projectile-cache-current-file)
-        ("ESC" #'projectile-project-buffers-other-buffer)))))
+    (with-no-warnings
+      (generate-calls define-temp-projectile-binding
+                      (
+                       ("4 a" #'projectile-find-other-file-other-window)
+                       ("4 b" #'projectile-switch-to-buffer-other-window)
+                       ("4 C-o" #'projectile-display-buffer)
+                       ("4 d" #'projectile-find-dir-other-window)
+                       ("4 f" #'projectile-find-file-other-window)
+                       ("4 g" #'projectile-find-file-dwim-other-window)
+                       ("4 t" #'projectile-find-implementation-or-test-other-window)
+                       ("!" #'projectile-run-shell-command-in-root)
+                       ("&" #'projectile-run-async-shell-command-in-root)
+                       ("a" #'projectile-find-other-file)
+                       ("b" #'projectile-switch-to-buffer)
+                       ("c" #'projectile-compile-project)
+                       ("d" #'projectile-find-dir)
+                       ("D" #'projectile-dired)
+                       ("e" #'projectile-recentf)
+                       ("f" #'projectile-find-file)
+                       ("g" #'projectile-find-file-dwim)
+                       ("F" #'projectile-find-file-in-known-projects)
+                       ("i" #'projectile-invalidate-cache)
+                       ("I" #'projectile-ibuffer)
+                       ("j" #'projectile-find-tag)
+                       ("k" #'projectile-kill-buffers)
+                       ("l" #'projectile-find-file-in-directory)
+                       ("m" #'projectile-commander)
+                       ("o" #'projectile-multi-occur)
+                       ("p" #'projectile-switch-project)
+                       ("P" #'projectile-test-project)
+                       ("r" #'projectile-replace)
+                       ("R" #'projectile-regenerate-tags)
+                       ("s a" #'helm-projectile-ack)
+                       ("s g" #'projectile-grep)
+                       ("s s" #'helm-projectile-ag)
+                       ("S" #'projectile-save-project-buffers)
+                       ("t" #'projectile-toggle-between-implementation-and-test)
+                       ("T" #'projectile-find-test-file)
+                       ("v" #'projectile-vc)
+                       ("z" #'projectile-cache-current-file)
+                       ("ESC" #'projectile-project-buffers-other-buffer))))))
 
 (provide 'config-vcs)

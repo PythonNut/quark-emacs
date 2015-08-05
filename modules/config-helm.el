@@ -167,7 +167,8 @@
             '(helm-source-projectile-buffers-list))
           '(helm-source-buffers-list))
 
-        (if (semantic-active-p)
+        (if (and (featurep 'semantic)
+              (semantic-active-p))
           (progn
             (require 'helm-semantic)
             '(helm-source-semantic))

@@ -7,23 +7,24 @@
 
 ;;; === Evil motion section ===
 
-(defun evil-smart-visual-line ()
-  (unless (fboundp #'evil-visual-line-hydra/body)
-    (require 'hydra)
-    (defhydra evil-visual-line-hydra
-      (:pre (setq hydra-is-helpful nil)
-        :post (setq hydra-is-helpful t))
-      ("j" evil-next-visual-line)
-      ("k" evil-previous-visual-line)))
-  (evil-visual-line-hydra/body))
+(eval-and-compile
+  (defun evil-smart-visual-line ()
+    (unless (fboundp #'evil-visual-line-hydra/body)
+      (require 'hydra)
+      (defhydra evil-visual-line-hydra
+        (:pre (setq hydra-is-helpful nil)
+          :post (setq hydra-is-helpful t))
+        ("j" evil-next-visual-line)
+        ("k" evil-previous-visual-line)))
+    (evil-visual-line-hydra/body))
 
-(evil-define-motion evil-smart-next-visual-line (count)
-  (evil-next-visual-line count)
-  (evil-smart-visual-line))
+  (evil-define-motion evil-smart-next-visual-line (count)
+    (evil-next-visual-line count)
+    (evil-smart-visual-line))
 
-(evil-define-motion evil-smart-previous-visual-line (count)
-  (evil-previous-visual-line count)
-  (evil-smart-visual-line))
+  (evil-define-motion evil-smart-previous-visual-line (count)
+    (evil-previous-visual-line count)
+    (evil-smart-visual-line)))
 
 (define-key evil-motion-state-map "gj" #'evil-smart-next-visual-line)
 (define-key evil-motion-state-map "gk" #'evil-smart-previous-visual-line)

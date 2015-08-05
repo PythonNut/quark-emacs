@@ -36,6 +36,8 @@
   (setq
     evilem-style 'de-bruijn))
 
+(eval-and-compile (require 'evil-easymotion))
+
 (evilem-default-keybindings "SPC")
 
 (define-key evil-normal-state-map (kbd "SPC l") #'avy-goto-line)

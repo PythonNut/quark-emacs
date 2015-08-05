@@ -129,28 +129,28 @@
                         (nreverse result))))
               (lambda (c1 c2)
                 (> (cdr c1) (cdr c2)))))))))
+  (eval-and-compile
+    (cl-macrolet
+      ((company-define-specific-modes (mode backend)
+         `(add-hook ,mode
+            (lambda ()
+              (let ((old-backends company-backends))
+                (set (make-local-variable 'company-backends)
+                  (cons (cons
+                          ,backend
+                          (cdar old-backends))
+                    (cdr old-backends))))))))
 
-  (cl-macrolet
-    ((company-define-specific-modes (mode backend)
-       `(add-hook ,mode
-          (lambda ()
-            (let ((old-backends company-backends))
-              (set (make-local-variable 'company-backends)
-                (cons (cons
-                        ,backend
-                        (cdar old-backends))
-                  (cdr old-backends))))))))
-
-    (with-no-warnings
-      (generate-calls company-define-specific-modes
-        (
-          ('c++-mode-hook    'company-clang)
-          ('objc-mode-hook   'company-clang)
-          ('c-mode-hook      'company-clang)
-          ('css-mode-hook    'company-css)
-          ('java-mode-hook   'company-eclim)
-          ('nxml-mode-hook   'company-nxml)
-          ('python-mode-hook 'company-anaconda)))))
+      (with-no-warnings
+        (generate-calls company-define-specific-modes
+          (
+            ('c++-mode-hook    'company-clang)
+            ('objc-mode-hook   'company-clang)
+            ('c-mode-hook      'company-clang)
+            ('css-mode-hook    'company-css)
+            ('java-mode-hook   'company-eclim)
+            ('nxml-mode-hook   'company-nxml)
+            ('python-mode-hook 'company-anaconda))))))
 
   (defun company-complete-common-or-complete-full ()
     (interactive)
