@@ -23,9 +23,11 @@
                'java-mode
                'c-mode)))
 
-      (while my-c-modes
-        (sp-local-pair (car my-c-modes) "{" nil :post-handlers
+      (dolist (mode my-c-modes)
+        (sp-local-pair mode "/*" "*/" :post-handlers
+          '(:add
+             ("* ||\n[i]" "RET")))
+        (sp-local-pair mode "{" nil :post-handlers
           '(:add
              ("||\n[i]" "RET")
-             ("| " "SPC")))
-        (setq my-c-modes (cdr my-c-modes))))))
+             ("| " "SPC")))))))
