@@ -30,24 +30,20 @@
 (put 'evil-beginning-of-visual-line 'CUA 'move)
 
 ;; cua-cut the line if no region
-(defadvice cua-cut-region
-  (around whole-line-or-region
-    (&optional prefix)
-    activate preactivate compile)
+(defun nadvice/cua-cut-region (old-fun &optional prefix)
   (interactive "*p")
   (whole-line-or-region-call-with-region
     (lambda (beg end &optional prefix)
       (interactive "rP")
       (call-interactively
-        (ad-get-orig-definition 'cua-cut-region)
+        old-fun
         current-prefix-arg))
     prefix t t prefix))
 
+(advice-add #'cua-cut-region :around #'nadvice/cua-cut-region)
+
 ;; cua-yank a line if cut as a line
-(defadvice cua-paste
-  (around whole-line-or-region
-    (raw-prefix &optional string-in)
-    activate preactivate compile)
+(defun nadvice/cua-paste (raw-prefix &optional string-in)
   "Yank (paste) previously killed text.
 
 If the text to be yanked was killed with a whole-line-or-region
@@ -104,6 +100,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
           (evil-paste-before raw-prefix)
           (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))))))
 
+(advice-add #'cua-paste :override #'nadvice/cua-paste)
+
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
   (let ((str (thing-at-point 'line))
@@ -116,40 +114,35 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (setq easy-kill-try-things '(url email my-line)))
 
 ;; make evil respect whole-line-or-region
-(defadvice evil-paste-after
-  (before whole-line-or-region
-    activate preactivate compile)
+(defun nadvice/evil-paste-line (&rest args)
   (when (get-text-property 0 'whole-line-or-region (car kill-ring))
     (setf (car kill-ring)
       (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
-(defadvice evil-paste-after
-  (before whole-line-or-region
-    activate preactivate compile)
-  (when (get-text-property 0 'whole-line-or-region (car kill-ring))
-    (setf (car kill-ring)
-      (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
+(advice-add #'evil-paste-before :before #'nadvice/evil-paste-line)
+(advice-add #'evil-paste-after  :before #'nadvice/evil-paste-line)
+
 
 ;; unify evil-paste with cua rectangles
-(defadvice evil-paste-after
-  (around cua-rectangles
-    activate preactivate compile)
+(defun nadvice/evil-paste-after (old-fun &rest args)
   (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
         'rectangle--insert-for-yank)
-    (evil-with-state
+    (evil-with-state 'normal
       (call-interactively #'evil-append)
       (call-interactively #'cua-paste))
-    ad-do-it))
+    (apply old-fun args)))
 
-(defadvice evil-paste-before
-  (around cua-rectangles
-    activate preactivate compile)
+
+(defun nadvice/evil-paste-before (old-fun &rest args)
   (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
         'rectangle--insert-for-yank)
-    (evil-with-state
+    (evil-with-state 'normal
       (call-interactively #'evil-insert)
       (call-interactively #'cua-paste))
-    ad-do-it))
+    (apply old-fun args)))
+
+(advice-add #'evil-paste-after  :around #'nadvice/evil-paste-after)
+(advice-add #'evil-paste-before :around #'nadvice/evil-paste-before)
 
 (define-key evil-insert-state-map (kbd "C-w") nil)
 
@@ -180,9 +173,10 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
     (bracketed-paste-setup)
 
     ;; fix display corruption in certain terminals when using isearch
-    (defadvice isearch-printing-char
-      (after redisplay activate preactivate compile)
+    (defun nadvice/isearch-printing-char (&rest args)
       (redraw-display))
+
+    (advice-add #'isearch-printing-char :after #'nadvice/isearch-printing-char)
 
     (when (getenv "TMUX")
       (run-hooks 'terminal-init-xterm-hook))

@@ -25,25 +25,23 @@
       icicle-show-multi-completion-flag t
       icicle-yank-function #'cua-paste)))
 
-(defun auto-icicle (func args)
-  (if icicle-mode
-    (call-interactively (ad-get-orig-definition func) args)
+(defun nadvice/auto-icicle (old-func &rest args)
+  (interactive)
+  (if (and
+        (not icicle-mode)
+        (called-interactively-p 'any))
     (unwind-protect
       (progn
         (cl-letf (((symbol-function 'message) #'format))
           (icicle-mode +1)
           (run-hooks 'icicle-init-hook))
-        (call-interactively (ad-get-orig-definition func) args))
+        (call-interactively old-func))
       (cl-letf (((symbol-function 'message) #'format))
-        (icicle-mode -1)))))
+        (icicle-mode -1)))
+    (call-interactively old-func)))
 
 (defmacro auto-icicle-macro (func)
-  `(defadvice ,(cadr func)
-     (around icy-mode (&rest args) activate preactivate compile)
-     (interactive)
-     (if (called-interactively-p 'any)
-       (auto-icicle ,func args)
-       ad-do-it)))
+  `(advice-add ,func :around #'nadvice/auto-icicle))
 
 (defmacro autoload-icicle (func)
   `(autoload ,func "icicles" nil t))

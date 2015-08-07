@@ -65,22 +65,21 @@
 (add-hook 'find-file-hook #'my-edit-file-as-root-maybe)
 
 ;; also fallback to root if file cannot be read
-(defadvice find-file-noselect-1
-  (around edit-with-root (buf filename nowarn rawfile truename number)
-    activate preactivate compile)
+(defun nadvice/find-file-noselect-1 (old-fun buf filename &rest args)
   (condition-case nil
-    ad-do-it
+      (apply old-fun buf filename args)
     (file-error
       (if (and
             (not (my-root-file-name-p filename))
             (y-or-n-p "File is not readable. Open with root? "))
         (setq ad-return-value
           (let ((filename (my-make-root-file-name (file-truename filename))))
-            (find-file-noselect-1
+            (apply #'find-file-noselect-1
               (or
                 (get-file-buffer filename)
                 (create-file-buffer filename))
               filename
-              nowarn rawfile truename number)))
-        (signal 'file-error (list "File is not readable"
-                              filename))))))
+              args)))
+        (signal 'file-error (list "File is not readable" filename))))))
+
+(advice-add #'find-file-noselect-1 :around #'nadvice/find-file-noselect-1)

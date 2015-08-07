@@ -64,25 +64,26 @@ This requires the external program `diff' to be in your `exec-path'."
         (get-buffer-create " *diff-hl-diff*")))))
 
 (with-eval-after-load 'vc
-  (defadvice vc-working-revision
-    (around concrete-revision (file &optional backend concrete) activate preactivate compile)
-    (setq ad-return-value
-      (if concrete
-        (vc-call-backend backend 'working-revision file t)
-        (or (vc-file-getprop file 'vc-working-revision)
-          (progn
-            (setq backend (or backend (vc-responsible-backend file)))
-            (when backend
-              (vc-file-setprop file 'vc-working-revision
-                (vc-call-backend backend 'working-revision file)))))))))
+  (defun nadvice/vc-working-revision (file &optional backend concrete)
+    (if concrete
+      (vc-call-backend backend 'working-revision file t)
+      (or (vc-file-getprop file 'vc-working-revision)
+        (progn
+          (setq backend (or backend (vc-responsible-backend file)))
+          (when backend
+            (vc-file-setprop file 'vc-working-revision
+              (vc-call-backend backend 'working-revision file)))))))
+  (advice-add #'vc-working-revision :override #'nadvice/vc-working-revision))
 
 (with-eval-after-load 'vc-git
-  (defadvice vc-git-working-revision
-    (around use-hashes-only (file &optional concrete) activate preactivate compile)
+  (defun nadvice/vc-git-working-revision (old-fun file &optional concrete)
     "Git-specific version of `vc-working-revision'."
     (if concrete
-      (setq ad-return-value (vc-git--rev-parse ad-do-it))
-      ad-do-it)))
+      (vc-git--rev-parse (funcall old-fun file))
+      (funcall old-fun file)))
+
+  (advice-add #'vc-git-working-revision :around
+    #'nadvice/vc-git-working-revision))
 
 (with-eval-after-load 'diff-hl
   (defvar diff-hl-modified-tick 0)
@@ -90,61 +91,62 @@ This requires the external program `diff' to be in your `exec-path'."
 
   (setq diff-hl-draw-borders nil)
 
-  (defadvice diff-hl-update
-    (around flydiff (&optional auto) activate preactivate compile)
+  (defun nadvice/diff-hl-update (old-fun &optional auto)
     (unless (and auto
               (or
                 (= diff-hl-modified-tick (buffer-modified-tick))
                 (file-remote-p default-directory)
                 (not (buffer-modified-p))))
-      ad-do-it))
+      (funcall old-fun)))
 
-  (defadvice diff-hl-changes
-    (around flydiff activate preactivate compile)
-    (setq ad-return-value
-      (let* ((file buffer-file-name)
-              (backend (vc-backend file)))
-        (when backend
-          (let ((state (vc-state file backend)))
-            (cond
-              ((or
-                 (buffer-modified-p)
-                 (eq state 'edited)
-                 (and (eq state 'up-to-date)
-                   ;; VC state is stale in after-revert-hook.
-                   (or revert-buffer-in-progress-p
-                     ;; Diffing against an older revision.
-                     diff-hl-reference-revision)))
-                (let (diff-auto-refine-mode res)
-                  (with-current-buffer (diff-hl-diff-buffer-with-head)
-                    (goto-char (point-min))
-                    (unless (eobp)
-                      (ignore-errors
-                        (diff-beginning-of-hunk t))
-                      (while (looking-at diff-hunk-header-re-unified)
-                        (let ((line (string-to-number (match-string 3)))
-                               (len (let ((m (match-string 4)))
-                                      (if m (string-to-number m) 1)))
-                               (beg (point)))
-                          (diff-end-of-hunk)
-                          (let* ((inserts (diff-count-matches "^\\+" beg (point)))
-                                  (deletes (diff-count-matches "^-" beg (point)))
-                                  (type (cond ((zerop deletes) 'insert)
-                                          ((zerop inserts) 'delete)
-                                          (t 'change))))
-                            (when (eq type 'delete)
-                              (setq len 1)
-                              (cl-incf line))
-                            (push (list line len type) res))))))
-                  (setq diff-hl-modified-tick (buffer-modified-tick))
-                  (nreverse res)))
-              ((eq state 'added)
-                `((1 ,(line-number-at-pos (point-max)) insert)))
-              ((eq state 'removed)
-                `((1 ,(line-number-at-pos (point-max)) delete)))))))))
+  (defun nadvice/diff-hl-changes (&rest args)
+    (let* ((file buffer-file-name)
+            (backend (vc-backend file)))
+      (when backend
+        (let ((state (vc-state file backend)))
+          (cond
+            ((or
+               (buffer-modified-p)
+               (eq state 'edited)
+               (and (eq state 'up-to-date)
+                 ;; VC state is stale in after-revert-hook.
+                 (or revert-buffer-in-progress-p
+                   ;; Diffing against an older revision.
+                   diff-hl-reference-revision)))
+              (let (diff-auto-refine-mode res)
+                (with-current-buffer (diff-hl-diff-buffer-with-head)
+                  (goto-char (point-min))
+                  (unless (eobp)
+                    (ignore-errors
+                      (diff-beginning-of-hunk t))
+                    (while (looking-at diff-hunk-header-re-unified)
+                      (let ((line (string-to-number (match-string 3)))
+                             (len (let ((m (match-string 4)))
+                                    (if m (string-to-number m) 1)))
+                             (beg (point)))
+                        (diff-end-of-hunk)
+                        (let* ((inserts (diff-count-matches "^\\+" beg (point)))
+                                (deletes (diff-count-matches "^-" beg (point)))
+                                (type (cond ((zerop deletes) 'insert)
+                                        ((zerop inserts) 'delete)
+                                        (t 'change))))
+                          (when (eq type 'delete)
+                            (setq len 1)
+                            (cl-incf line))
+                          (push (list line len type) res))))))
+                (setq diff-hl-modified-tick (buffer-modified-tick))
+                (nreverse res)))
+            ((eq state 'added)
+              `((1 ,(line-number-at-pos (point-max)) insert)))
+            ((eq state 'removed)
+              `((1 ,(line-number-at-pos (point-max)) delete))))))))
 
-  (defadvice diff-hl-overlay-modified
-    (around preserve-overlays activate preactivate compile))
+  (defun nadvice/diff-hl-overlay-modified (&rest args))
+
+  (advice-add #'diff-hl-update :around #'nadvice/diff-hl-update)
+  (advice-add #'diff-hl-changes :override #'nadvice/diff-hl-changes)
+  (advice-add #'diff-hl-overlay-modified :override
+    #'nadvice/diff-hl-overlay-modified)
 
   (add-hook 'diff-hl-mode-hook
     (lambda ()
