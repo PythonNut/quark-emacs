@@ -32,37 +32,37 @@
          "\\.zwc\\.old$"
          "\\.zwc$"))))
 
-(defun nadvice/helm-score-candidate-for-pattern (old-fun &rest args)
-  (or
-    (car (flx-score
+(with-eval-after-load 'helm
+  (defun nadvice/helm-score-candidate-for-pattern (old-fun candidate pattern)
+    (or
+     (car (flx-score
            (substring-no-properties candidate)
            (substring-no-properties pattern)
            helm-flx-cache))
-    0))
+     0))
 
-(defun nadvice/helm-fuzzy-default-highlight-match (old-fun &rest args)
-  (let* ((pair (and (consp candidate) candidate))
-          (display (if pair (car pair) candidate))
-          (real (cdr pair)))
-    (with-temp-buffer
-      (insert display)
-      (goto-char (point-min))
-      (if (string-match-p " " helm-pattern)
-        (cl-loop with pattern = (split-string helm-pattern)
-          for p in pattern
-          do (when (search-forward (substring-no-properties p) nil t)
-               (add-text-properties
-                 (match-beginning 0) (match-end 0) '(face helm-match))))
-        (cl-loop with pattern = (cdr (flx-score
-                                       (substring-no-properties display)
-                                       helm-pattern helm-flx-cache))
-          for index in pattern
-          do (add-text-properties
-               (1+ index) (+ 2 index) '(face helm-match))))
-      (setq display (buffer-string)))
-    (if real (cons display real) display)))
+  (defun nadvice/helm-fuzzy-default-highlight-match (old-fun candidate)
+    (let* ((pair (and (consp candidate) candidate))
+           (display (if pair (car pair) candidate))
+           (real (cdr pair)))
+      (with-temp-buffer
+        (insert display)
+        (goto-char (point-min))
+        (if (string-match-p " " helm-pattern)
+            (cl-loop with pattern = (split-string helm-pattern)
+                     for p in pattern
+                     do (when (search-forward (substring-no-properties p) nil t)
+                          (add-text-properties
+                           (match-beginning 0) (match-end 0) '(face helm-match))))
+          (cl-loop with pattern = (cdr (flx-score
+                                        (substring-no-properties display)
+                                        helm-pattern helm-flx-cache))
+                   for index in pattern
+                   do (add-text-properties
+                       (1+ index) (+ 2 index) '(face helm-match))))
+        (setq display (buffer-string)))
+      (if real (cons display real) display)))
 
-(with-eval-after-load 'helm
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
