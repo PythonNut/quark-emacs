@@ -19,7 +19,7 @@
 
 (defun nadvice/completing-read-ido (old-fun &rest args)
   (require 'ido-ubiquitous)
-  (advice-remove #'completing-read :before #'nadvice/completing-read-ido))
+  (advice-remove #'completing-read #'nadvice/completing-read-ido))
 
 (advice-add #'completing-read :before #'nadvice/completing-read-ido)
 
