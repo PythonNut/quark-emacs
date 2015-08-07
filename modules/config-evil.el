@@ -68,13 +68,11 @@
 (define-key evil-motion-state-map (kbd "C-z") nil)
 
 ;; indent pasted regions in evil
-(defadvice evil-paste-before
-  (around auto-indent activate preactivate compile)
-  (indent-region (point) (+ (point) (length ad-do-it))))
+(defun nadvice/evil-paste-indent (old-fun &rest args)
+  (indent-region (point) (+ (point) (length (apply old-fun args)))))
 
-(defadvice evil-paste-after
-  (around auto-indent activate preactivate compile)
-  (indent-region (point) (+ (point) (length ad-do-it))))
+(advice-add #'evil-paste-before :around #'nadvice/evil-paste-indent)
+(advice-add #'evil-paste-after :around #'nadvice/evil-paste-indent)
 
 (lexical-let ((evil-mode-line-face-cookies nil))
   (defun evil-set-mode-line-face ()

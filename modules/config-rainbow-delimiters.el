@@ -75,7 +75,7 @@
     (when (or (looking-at "[][(){}]")
             (and
               (evil-insert-state-p)
-              (looking-back "[][(){}]")))
+              (looking-back "[][(){}]" (1- (point)))))
       (unless (or rainbow-delimiters-switch (minibufferp))
         (rainbow-delimiters-focus-on))))
 
@@ -84,7 +84,7 @@
     (unless (or (looking-at "[][(){}]")
               (and
                 (evil-insert-state-p)
-                (looking-back "[][(){}]")))
+                (looking-back "[][(){}]" (1- (point)))))
       (when rainbow-delimiters-switch
         (rainbow-delimiters-focus-off))))
 

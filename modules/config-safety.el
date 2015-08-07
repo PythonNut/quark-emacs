@@ -22,20 +22,17 @@
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
-(defadvice switch-to-buffer
-  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-(defadvice other-window
-  (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
+(defun nadvice/save-buffer-maybe (&rest args)
+  (save-buffer-maybe))
+
+(advice-add #'switch-to-buffer :before #'nadvice/save-buffer-maybe)
+(advice-add #'other-window     :before #'nadvice/save-buffer-maybe)
 
 (with-eval-after-load 'windmove
-  (defadvice windmove-up
-    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-  (defadvice windmove-down
-    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-  (defadvice windmove-left
-    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe))
-  (defadvice windmove-right
-    (before save-buffer-maybe activate preactivate compile) (save-buffer-maybe)))
+  (advice-add #'windmove-up    :before #'nadvice/save-buffer-maybe)
+  (advice-add #'windmove-down  :before #'nadvice/save-buffer-maybe)
+  (advice-add #'windmove-left  :before #'nadvice/save-buffer-maybe)
+  (advice-add #'windmove-right :before #'nadvice/save-buffer-maybe))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups

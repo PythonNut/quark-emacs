@@ -43,25 +43,32 @@
 
   ;; compress undo with xz
   (when (executable-find "xz")
-    (defadvice undo-tree-make-history-save-file-name
-      (after undo-tree activate)
-      (setq ad-return-value (concat (make-auto-save-file-name) ".undo.xz")))
+    (defun nadvice/undo-tree-make-history-save-file-name (ret)
+      (concat (make-auto-save-file-name) ".undo.xz"))
 
-    (defadvice undo-tree-load-history (around quiet-compress activate)
+    (defun nadvice/undo-tree-load-history (old-fun &rest args)
       (let ((jka-compr-verbose nil))
-        ad-do-it)))
+        (apply old-fun args)))
+
+    (advice-add #'undo-tree-make-history-save-file-name
+      :filter-return
+      #'nadvice/undo-tree-make-history-save-file-name)
+    (advice-add #'undo-tree-load-history
+      :around
+      #'nadvice/undo-tree-load-history))
 
   ;; Keep region when undoing in region
-  (defadvice undo-tree-undo
-    (around keep-region activate preactivate compile)
+  (defun nadvice/undo-tree-undo (old-fun &rest args)
     (if (use-region-p)
-      (let ((m (set-marker (make-marker) (mark)))
-             (p (set-marker (make-marker) (point))))
-        ad-do-it
-        (goto-char p)
-        (set-mark m)
-        (set-marker p nil)
-        (set-marker m nil))
-      ad-do-it)))
+        (let ((m (set-marker (make-marker) (mark)))
+              (p (set-marker (make-marker) (point))))
+          ad-do-it
+          (goto-char p)
+          (set-mark m)
+          (set-marker p nil)
+          (set-marker m nil))
+      (apply old-fun args)))
+
+  (advice-add #'undo-tree-undo :around #'nadvice/undo-tree-undo))
 
 (provide 'config-undo)

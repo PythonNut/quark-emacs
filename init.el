@@ -2,9 +2,18 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;;(package-initialize)
+(require 'cl-lib)
 
 (setq load-prefer-newer t)
 (eval-when-compile (require 'cl))
+
+(defun nadvice/load-quiet (args)
+  (cl-destructuring-bind
+    (file &optional noerror nomessage nosuffix must-suffix)
+    args
+    (let ((nomessage t))
+      (list
+        file noerror nomessage nosuffix must-suffix))))
 
 (if (member "-F" command-line-args)
   (progn
@@ -30,10 +39,7 @@
   ;; suppress the GNU spam
   (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-  (defadvice load (before quiet-loading
-                    (FILE &optional NOERROR NOMESSAGE NOSUFFIX MUST-SUFFIX)
-                    activate preactivate compile)
-    (setq NOMESSAGE t))
+  (advice-add #'load :filter-args #'nadvice/load-quiet)
 
   (load (setq custom-file (concat user-emacs-directory "custom.el")))
 
@@ -77,5 +83,4 @@
                 user-emacs-directory
                 "modules/modes/"))
 
-  (ad-disable-advice 'load 'before 'quiet-loading)
-  (ad-activate 'load))
+  (advice-remove #'load #'nadvice/load-quiet))

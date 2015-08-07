@@ -1,7 +1,7 @@
-
-(defadvice load-theme
-  (after load-theme-hook activate preactivate compile)
+(defun nadvice/load-theme (old-fun &rest args)
   (run-hooks 'load-theme-hook))
+
+(advice-add #'load-theme :after #'nadvice/load-theme)
 
 (add-hook 'load-theme-hook
   (lambda ()

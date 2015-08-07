@@ -14,15 +14,18 @@
   (global-semantic-idle-scheduler-mode +1)
   (global-semantic-idle-summary-mode +1))
 
-(defadvice semantic-idle-summary-idle-function
-  (around show-flycheck-error activate preactivate compile)
+(defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
   (if (and
-        (featurep 'flycheck)
-        flycheck-mode
-        (progn (require 's)
-          (flycheck-overlay-errors-at (point))))
-    (flycheck-display-error-at-point)
-    ad-do-it))
+       (featurep 'flycheck)
+       flycheck-mode
+       (progn (require 's)
+              (flycheck-overlay-errors-at (point))))
+      (flycheck-display-error-at-point)
+    (apply old-fun args)))
+
+(advice-add #'semantic-idle-summary-idle-function
+   :around
+   #'nadvice/semantic-idle-summary-idle-function)
 
 ;;; ====================================
 ;;; flycheck - real-time syntax checking
@@ -84,10 +87,11 @@
 ;;; Flyspell - inline real time spell check
 ;;; =======================================
 (with-eval-after-load 'ispell
-  (defadvice ispell-init-process
-    (around hide-startup activate preactivate compile)
+  (defun nadvice/ispell-init-process (old-fun &rest args)
     (cl-letf (((symbol-function 'message) #'format))
-      ad-do-it)))
+      (apply old-fun args)))
+
+  (advice-add #'ispell-init-process :around #'nadvice/ispell-init-process))
 
 (with-eval-after-load 'flyspell
   (setq

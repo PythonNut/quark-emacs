@@ -17,17 +17,17 @@
 
 (show-paren-mode +1)
 
-(defadvice show-paren-function
-  (after show-matching-paren-offscreen activate preactivate compile)
+(defun nadvice/show-paren-function ()
   "If the matching paren is offscreen, show the matching line in the
-        echo area. Has no effect if the character before point is not of
-        the syntax class ')'."
-  (interactive)
+echo area. Has no effect if the character before point is not of
+the syntax class ')'."
   (let* ((cb (char-before (point)))
-          (matching-text (and cb
-                           (char-equal (char-syntax cb) ?\) )
-                           (blink-matching-open))))
+         (matching-text (and cb
+                             (char-equal (char-syntax cb) ?\) )
+                             (blink-matching-open))))
     (when matching-text (message matching-text))))
+
+(advice-add #'show-paren-function :after #'nadvice/show-paren-function)
 
 (with-eval-after-load 'multiple-cursors
   (define-key mc/keymap (kbd "<return>") nil)
@@ -173,7 +173,7 @@
 
 (with-eval-after-load 'volatile-highlights
   (diminish #'volatile-highlights-mode)
-
+  (with-demoted-errors
   (vhl/define-extension 'my-evil-highlights
     'evil-yank
     'evil-paste-pop-proxy
@@ -189,7 +189,7 @@
 
   (vhl/install-extension 'my-undo-tree-highlights)
 
-  (volatile-highlights-mode +1))
+  (volatile-highlights-mode +1)))
 
 (defun restart-emacs ()
   (interactive)

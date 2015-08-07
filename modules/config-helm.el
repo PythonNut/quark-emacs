@@ -15,9 +15,12 @@
     (require 'projectile)
     (require 'semantic)))
 
+(defvar helm-flx-cache)
+
 (with-eval-after-load 'helm-files
   (setq
     helm-ff-skip-boring-files t
+    helm-recentf-fuzzy-match t
     helm-boring-file-regexp-list
     (append helm-boring-file-regexp-list
       '(
@@ -29,55 +32,55 @@
          "\\~$"
          "\\.zwc\\.old$"
          "\\.zwc$"))))
+(defun nadvice/helm-score-candidate-for-pattern (old-fun candidate pattern)
+  (or
+    (car (flx-score
+           (substring-no-properties candidate)
+           (substring-no-properties pattern)
+           helm-flx-cache))
+    0))
+
+(defun nadvice/helm-fuzzy-default-highlight-match (old-fun candidate)
+  (let* ((pair (and (consp candidate) candidate))
+          (display (if pair (car pair) candidate))
+          (real (cdr pair)))
+    (with-temp-buffer
+      (insert display)
+      (goto-char (point-min))
+      (if (string-match-p " " helm-pattern)
+        (cl-loop with pattern = (split-string helm-pattern)
+          for p in pattern
+          do (when (search-forward (substring-no-properties p) nil t)
+               (add-text-properties
+                 (match-beginning 0) (match-end 0) '(face helm-match))))
+        (cl-loop with pattern = (cdr (flx-score
+                                       (substring-no-properties display)
+                                       helm-pattern helm-flx-cache))
+          for index in pattern
+          do (add-text-properties
+               (1+ index) (+ 2 index) '(face helm-match))))
+      (setq display (buffer-string)))
+    (if real (cons display real) display)))
 
 (with-eval-after-load 'helm
+  (advice-add #'helm-score-candidate-for-pattern
+    :around
+    #'nadvice/helm-score-candidate-for-pattern)
+  (advice-add #'helm-fuzzy-default-highlight-match
+    :around
+    #'nadvice/helm-fuzzy-default-highlight-match)
+
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-z")  'helm-select-action)
 
   (require 'flx)
-  (defvar helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file))
-  (defadvice helm-score-candidate-for-pattern
-    (around flx-score (candidate pattern) activate preactivate compile)
-    (setq ad-return-value
-      (or
-        (car (flx-score
-               (substring-no-properties candidate)
-               (substring-no-properties pattern)
-               helm-flx-cache))
-        0)))
-
-  (defadvice helm-fuzzy-default-highlight-match
-    (around flx-highlight (candidate) activate preactivate compile)
-    "The default function to highlight matches in fuzzy matching.
-  It is meant to use with `filter-one-by-one' slot."
-    (setq ad-return-value
-      (let* ((pair (and (consp candidate) candidate))
-              (display (if pair (car pair) candidate))
-              (real (cdr pair)))
-        (with-temp-buffer
-          (insert display)
-          (goto-char (point-min))
-          (if (string-match-p " " helm-pattern)
-            (cl-loop with pattern = (split-string helm-pattern)
-              for p in pattern
-              do (when (search-forward (substring-no-properties p) nil t)
-                   (add-text-properties
-                     (match-beginning 0) (match-end 0) '(face helm-match))))
-            (cl-loop with pattern = (cdr (flx-score
-                                           (substring-no-properties display)
-                                           helm-pattern helm-flx-cache))
-              for index in pattern
-              do (add-text-properties
-                   (1+ index) (+ 2 index) '(face helm-match))))
-          (setq display (buffer-string)))
-        (if real (cons display real) display))))
 
   (setq
+    helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file)
     helm-buffers-fuzzy-matching t
     helm-imenu-fuzzy-match t
-    helm-recentf-fuzzy-match t
     helm-locate-fuzzy-match nil
     helm-M-x-fuzzy-match t
     helm-semantic-fuzzy-match t
@@ -225,17 +228,15 @@
                 "> ")
       :buffer "*helm-omni*")))
 
-(defun evil-paste-pop-proxy (&rest args)
-  (apply (ad-get-orig-definition #'evil-paste-pop) args))
-
-(defadvice evil-paste-pop
-  (around auto-helm-omni (&rest args) activate preactivate compile)
+(defun nadvice/evil-paste-pop (old-fun &rest args)
   (if (memq last-command
         '(evil-paste-after
            evil-paste-before
            evil-visual-paste))
-    (apply #'evil-paste-pop-proxy args)
+    (apply old-fun args)
     (call-interactively #'my-helm-omni)))
+
+(advice-add #'evil-paste-pop :around #'nadvice/evil-paste-pop)
 
 (define-key evil-insert-state-map (kbd "C-p") #'my-helm-omni)
 

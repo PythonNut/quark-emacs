@@ -59,9 +59,11 @@
 (add-hook 'kill-emacs-hook #'unpropertize-savehist)
 (add-hook 'savehist-save-hook #'unpropertize-savehist)
 
-(defadvice recentf-cleanup (around quiet activate preactivate compile)
+(defun nadvice/recentf-quiet (old-fun &rest args)
   (cl-letf (((symbol-function 'message) #'format))
-    ad-do-it))
+    (apply old-fun args)))
+
+(advice-add #'recentf-cleanup :around #'nadvice/recentf-quiet)
 
 (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 

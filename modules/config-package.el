@@ -135,23 +135,23 @@
        yasnippet
        company)))
 
+(defun nadvice/idle-require-quiet (old-fun &rest args)
+  (advice-add #'load :filter-args #'nadvice/load-quiet)
+  (with-demoted-errors
+    (cl-letf (((symbol-function 'message) #'format))
+      (apply old-fun args)))
+  (advice-remove #'load #'nadvice/load-quiet)
+  (when (null idle-require-symbols)
+    (message "")))
+
+(eval-after-load 'idle-require
+  (advice-add #'idle-require-load-next :around #'nadvice/idle-require-quiet))
+
 (if (not (daemonp))
   (add-hook 'emacs-startup-hook
     (lambda ()
       (run-with-idle-timer 0.5 nil
         (lambda ()
-          (defadvice idle-require-load-next
-            (around quiet activate preactivate compile)
-            (ad-enable-advice 'load 'before 'quiet-loading)
-            (ad-activate 'load)
-            (with-demoted-errors
-              (cl-letf (((symbol-function 'message) #'format))
-                ad-do-it))
-            (ad-disable-advice 'load 'before 'quiet-loading)
-            (ad-activate 'load)
-            (when (null idle-require-symbols)
-              (message "")))
-
           (idle-require-mode +1)))))
 
   (message "loading symbols for server")
