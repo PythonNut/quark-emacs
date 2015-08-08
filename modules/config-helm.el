@@ -32,15 +32,34 @@
          "\\~$"
          "\\.zwc\\.old$"
          "\\.zwc$"))))
-(defun nadvice/helm-score-candidate-for-pattern (old-fun candidate pattern)
-  (or
-    (car (flx-score
-           (substring-no-properties candidate)
-           (substring-no-properties pattern)
-           helm-flx-cache))
-    0))
 
-(defun nadvice/helm-fuzzy-default-highlight-match (old-fun candidate)
+(defun helm-fuzzy-matching-custom-sort-fn (candidates _source &optional use-real)
+  (if (string= helm-pattern "")
+    candidates
+    (cl-letf* ((table-scr (make-hash-table :test 'equal))
+                ((symbol-function 'score-cand)
+                  (lambda  (cand)
+                    (setq cand
+                      (if (consp cand)
+                        (if use-real (cdr cand) (car cand))
+                        cand))
+                    (or
+                      (gethash cand table-scr)
+                      (puthash cand
+                        (or
+                          (car (flx-score
+                                 (substring-no-properties cand)
+                                 (substring-no-properties helm-pattern)
+                                 helm-flx-cache))
+                          0)
+                        table-scr)))))
+      (sort candidates
+        (lambda (s1 s2)
+          (>
+            (score-cand s1)
+            (score-cand s2)))))))
+
+(defun helm-fuzzy-custom-highlight-match (candidate)
   (let* ((pair (and (consp candidate) candidate))
           (display (if pair (car pair) candidate))
           (real (cdr pair)))
@@ -63,13 +82,6 @@
     (if real (cons display real) display)))
 
 (with-eval-after-load 'helm
-  (advice-add #'helm-score-candidate-for-pattern
-    :around
-    #'nadvice/helm-score-candidate-for-pattern)
-  (advice-add #'helm-fuzzy-default-highlight-match
-    :around
-    #'nadvice/helm-fuzzy-default-highlight-match)
-
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
@@ -78,6 +90,8 @@
   (require 'flx)
 
   (setq
+    helm-fuzzy-sort-fn #'helm-fuzzy-matching-custom-sort-fn
+    helm-fuzzy-matching-highlight-fn #'helm-fuzzy-custom-highlight-match
     helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file)
     helm-buffers-fuzzy-matching t
     helm-imenu-fuzzy-match t
