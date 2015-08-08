@@ -1,17 +1,19 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'auto-indent-mode)
+    (require 'adaptive-wrap)
     (require 'diminish)))
 
 (require 'config-indent)
-
 (require 'adaptive-wrap)
+
+(setq
+  adaptive-wrap-extra-indent 2
+  require-final-newline t
+  line-move-visual t)
 
 (add-hook 'visual-line-mode-hook
   (lambda ()
-    (setq
-      adaptive-wrap-extra-indent 2
-      line-move-visual t)
     (adaptive-wrap-prefix-mode +1)
     (diminish 'visual-line-mode)))
 
@@ -33,7 +35,6 @@
 
 ;; autoload ws-butler on file open
 (add-hook 'find-file-hook #'ws-butler-global-mode)
-(setq require-final-newline t)
 
 ;; ws-butler also load highlight-changes-mode
 (with-eval-after-load 'ws-butler
