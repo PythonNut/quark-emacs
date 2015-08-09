@@ -201,6 +201,6 @@ the syntax class ')'."
         (call-process "sh" nil nil nil "-c" "emacs &")
         (suspend-emacs "(sleep 1; emacs -nw < `tty`) & fg; fg")))
     t)
-  (kill-emacs))
+  (save-buffers-kill-emacs))
 
 (provide 'config-ui)
