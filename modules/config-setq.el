@@ -9,6 +9,7 @@
   inhibit-default-init t
   inhibit-startup-echo-area-message t
   inhibit-startup-screen t
+  inhibit-x-resources t
   interprogram-cut-function #'x-select-text
   interprogram-paste-function #'x-selection-value
   jit-lock-defer-time 0.04
