@@ -81,6 +81,23 @@
       (setq display (buffer-string)))
     (if real (cons display real) display)))
 
+(setq
+  helm-fuzzy-sort-fn #'helm-fuzzy-matching-custom-sort-fn
+  helm-fuzzy-matching-highlight-fn #'helm-fuzzy-custom-highlight-match
+
+  helm-M-x-fuzzy-match t
+  helm-recentf-fuzzy-match t
+  helm-buffers-fuzzy-matching t
+  helm-completion-in-region-fuzzy-match t
+  helm-imenu-fuzzy-match t
+  helm-locate-fuzzy-match nil
+  helm-mode-fuzzy-match t
+  helm-semantic-fuzzy-match t
+
+  helm-case-fold-search 'smart
+  helm-ff-transformer-show-only-basename nil
+  helm-ff-newfile-prompt-p nil)
+
 (with-eval-after-load 'helm
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
@@ -89,20 +106,7 @@
 
   (require 'flx)
 
-  (setq
-    helm-fuzzy-sort-fn #'helm-fuzzy-matching-custom-sort-fn
-    helm-fuzzy-matching-highlight-fn #'helm-fuzzy-custom-highlight-match
-    helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file)
-    helm-buffers-fuzzy-matching t
-    helm-imenu-fuzzy-match t
-    helm-locate-fuzzy-match nil
-    helm-M-x-fuzzy-match t
-    helm-semantic-fuzzy-match t
-
-    helm-case-fold-search 'smart
-    helm-ff-transformer-show-only-basename nil
-    helm-ff-newfile-prompt-p nil)
-
+  (setq helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file))
   (set-face-attribute 'helm-selection nil :underline nil))
 
 (with-eval-after-load 'helm-buffers
