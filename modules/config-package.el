@@ -11,7 +11,6 @@
   package-enable-at-startup nil
   package-archives
   '(("gnu" . "http://elpa.gnu.org/packages/")
-     ("elpa" . "http://tromey.com/elpa/")
      ("melpa" . "http://melpa.org/packages/")))
 
 (package-initialize)
