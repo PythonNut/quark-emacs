@@ -158,7 +158,8 @@ This requires the external program `diff' to be in your `exec-path'."
 (with-eval-after-load 'magit
   (setq
     magit-push-always-verify nil
-    magit-completing-read-function #'magit-ido-completing-read)
+    magit-completing-read-function #'magit-ido-completing-read
+    magit-diff-refine-hunk t)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
