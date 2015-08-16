@@ -7,14 +7,15 @@
     (require 'evil-surround)))
 
 (setq
+  evil-auto-indent t
+  evil-ex-complete-emacs-commands t
+  evil-magic 'very-magic
+  evil-search-module 'evil-search
+  evil-shift-width 2
   evil-toggle-key "C-M-z"
   evil-want-C-w-delete nil
   evil-want-C-w-in-emacs-state nil
-  evil-ex-complete-emacs-commands t
-  evil-want-fine-undo t
-  evil-search-module 'evil-search
-  evil-magic 'very-magic
-  evil-shift-width 2)
+  evil-want-fine-undo t)
 
 (setq-default
   evil-symbol-word-search t)
