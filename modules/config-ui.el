@@ -27,7 +27,7 @@ the syntax class ')'."
                              (blink-matching-open))))
     (when matching-text (message matching-text))))
 
-(advice-add #'show-paren-function :after #'nadvice/show-paren-function)
+(advice-add 'show-paren-function :after #'nadvice/show-paren-function)
 
 (with-eval-after-load 'multiple-cursors
   (define-key mc/keymap (kbd "<return>") nil)

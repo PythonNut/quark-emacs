@@ -50,10 +50,10 @@
       (let ((jka-compr-verbose nil))
         (apply old-fun args)))
 
-    (advice-add #'undo-tree-make-history-save-file-name
+    (advice-add 'undo-tree-make-history-save-file-name
       :filter-return
       #'nadvice/undo-tree-make-history-save-file-name)
-    (advice-add #'undo-tree-load-history
+    (advice-add 'undo-tree-load-history
       :around
       #'nadvice/undo-tree-load-history))
 
@@ -69,6 +69,6 @@
           (set-marker m nil))
       (apply old-fun args)))
 
-  (advice-add #'undo-tree-undo :around #'nadvice/undo-tree-undo))
+  (advice-add 'undo-tree-undo :around #'nadvice/undo-tree-undo))
 
 (provide 'config-undo)

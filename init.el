@@ -39,7 +39,7 @@
   ;; suppress the GNU spam
   (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-  (advice-add #'load :filter-args #'nadvice/load-quiet)
+  (advice-add 'load :filter-args #'nadvice/load-quiet)
 
   (load (setq custom-file (concat user-emacs-directory "custom.el")))
 
@@ -83,4 +83,4 @@
                 user-emacs-directory
                 "modules/modes/"))
 
-  (advice-remove #'load #'nadvice/load-quiet))
+  (advice-remove 'load #'nadvice/load-quiet))

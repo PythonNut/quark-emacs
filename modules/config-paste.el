@@ -40,7 +40,7 @@
         current-prefix-arg))
     prefix t t prefix))
 
-(advice-add #'cua-cut-region :around #'nadvice/cua-cut-region)
+(advice-add 'cua-cut-region :around #'nadvice/cua-cut-region)
 
 ;; cua-yank a line if cut as a line
 (defun nadvice/cua-paste (raw-prefix &optional string-in)
@@ -100,7 +100,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
           (evil-paste-before raw-prefix)
           (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))))))
 
-(advice-add #'cua-paste :override #'nadvice/cua-paste)
+(advice-add 'cua-paste :override #'nadvice/cua-paste)
 
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
@@ -119,8 +119,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
     (setf (car kill-ring)
       (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
-(advice-add #'evil-paste-before :before #'nadvice/evil-paste-line)
-(advice-add #'evil-paste-after  :before #'nadvice/evil-paste-line)
+(advice-add 'evil-paste-before :before #'nadvice/evil-paste-line)
+(advice-add 'evil-paste-after  :before #'nadvice/evil-paste-line)
 
 
 ;; unify evil-paste with cua rectangles
@@ -141,8 +141,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (call-interactively #'cua-paste))
     (apply old-fun args)))
 
-(advice-add #'evil-paste-after  :around #'nadvice/evil-paste-after)
-(advice-add #'evil-paste-before :around #'nadvice/evil-paste-before)
+(advice-add 'evil-paste-after  :around #'nadvice/evil-paste-after)
+(advice-add 'evil-paste-before :around #'nadvice/evil-paste-before)
 
 (define-key evil-insert-state-map (kbd "C-w") nil)
 
@@ -176,7 +176,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
     (defun nadvice/isearch-printing-char (&rest args)
       (redraw-display))
 
-    (advice-add #'isearch-printing-char :after #'nadvice/isearch-printing-char)
+    (advice-add 'isearch-printing-char :after #'nadvice/isearch-printing-char)
 
     (when (getenv "TMUX")
       (run-hooks 'terminal-init-xterm-hook))

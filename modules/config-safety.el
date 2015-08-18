@@ -25,14 +25,14 @@
 (defun nadvice/save-buffer-maybe (&rest args)
   (save-buffer-maybe))
 
-(advice-add #'switch-to-buffer :before #'nadvice/save-buffer-maybe)
-(advice-add #'other-window     :before #'nadvice/save-buffer-maybe)
+(advice-add 'switch-to-buffer :before #'nadvice/save-buffer-maybe)
+(advice-add 'other-window     :before #'nadvice/save-buffer-maybe)
 
 (with-eval-after-load 'windmove
-  (advice-add #'windmove-up    :before #'nadvice/save-buffer-maybe)
-  (advice-add #'windmove-down  :before #'nadvice/save-buffer-maybe)
-  (advice-add #'windmove-left  :before #'nadvice/save-buffer-maybe)
-  (advice-add #'windmove-right :before #'nadvice/save-buffer-maybe))
+  (advice-add 'windmove-up    :before #'nadvice/save-buffer-maybe)
+  (advice-add 'windmove-down  :before #'nadvice/save-buffer-maybe)
+  (advice-add 'windmove-left  :before #'nadvice/save-buffer-maybe)
+  (advice-add 'windmove-right :before #'nadvice/save-buffer-maybe))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups

@@ -63,7 +63,7 @@
   (cl-letf (((symbol-function 'message) #'format))
     (apply old-fun args)))
 
-(advice-add #'recentf-cleanup :around #'nadvice/recentf-quiet)
+(advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
 
 (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 

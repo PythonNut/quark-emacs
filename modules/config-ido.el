@@ -21,7 +21,7 @@
   (require 'ido-ubiquitous)
   (advice-remove #'completing-read #'nadvice/completing-read-ido))
 
-(advice-add #'completing-read :before #'nadvice/completing-read-ido)
+(advice-add 'completing-read :before #'nadvice/completing-read-ido)
 
 (global-set-key (kbd "C-x b") #'ido-switch-buffer)
 (global-set-key (kbd "C-x f") #'ido-find-file)

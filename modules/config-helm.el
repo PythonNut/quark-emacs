@@ -254,7 +254,7 @@
     (apply old-fun args)
     (call-interactively #'my-helm-omni)))
 
-(advice-add #'evil-paste-pop :around #'nadvice/evil-paste-pop)
+(advice-add 'evil-paste-pop :around #'nadvice/evil-paste-pop)
 
 (define-key evil-insert-state-map (kbd "C-p") #'my-helm-omni)
 

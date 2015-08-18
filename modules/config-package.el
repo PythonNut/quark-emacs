@@ -135,7 +135,7 @@
        company)))
 
 (defun nadvice/idle-require-quiet (old-fun &rest args)
-  (advice-add #'load :filter-args #'nadvice/load-quiet)
+  (advice-add 'load :filter-args #'nadvice/load-quiet)
   (with-demoted-errors
     (cl-letf (((symbol-function 'message) #'format))
       (apply old-fun args)))
@@ -144,7 +144,7 @@
     (message "")))
 
 (eval-after-load 'idle-require
-  (advice-add #'idle-require-load-next :around #'nadvice/idle-require-quiet))
+  (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
 
 (if (not (daemonp))
   (add-hook 'emacs-startup-hook

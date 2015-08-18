@@ -23,9 +23,9 @@
       (flycheck-display-error-at-point)
     (apply old-fun args)))
 
-(advice-add #'semantic-idle-summary-idle-function
-   :around
-   #'nadvice/semantic-idle-summary-idle-function)
+(advice-add 'semantic-idle-summary-idle-function
+  :around
+  #'nadvice/semantic-idle-summary-idle-function)
 
 ;;; ====================================
 ;;; flycheck - real-time syntax checking
@@ -91,7 +91,7 @@
     (cl-letf (((symbol-function 'message) #'format))
       (apply old-fun args)))
 
-  (advice-add #'ispell-init-process :around #'nadvice/ispell-init-process))
+  (advice-add 'ispell-init-process :around #'nadvice/ispell-init-process))
 
 (with-eval-after-load 'flyspell
   (setq
