@@ -10,19 +10,19 @@
 (add-hook 'icicle-init-hook
   (lambda ()
     (setq
+      icicle-max-candidates 1000
+      icicle-sorting-max-candidates 1000
+
       icicle-sort-comparer #'icicle-file-type-less-p
       icicle-Completions-text-scale-decrease 0
-      icicle-TAB-completion-methods '(vanilla substring)
-      icicle-default-cycling-mode 'apropos
+      ;; icicle-TAB-completion-methods '(vanilla substring)
+      ;; icicle-default-cycling-mode 'apropos
       icicle-expand-input-to-common-match 1
       icicle-highlight-lighter-flag nil
-      icicle-incremental-completion nil
+      ;; icicle-incremental-completion nil
       icicle-apropos-complete-keys (list (kbd "<tab>"))
       icicle-prefix-complete-keys (list (kbd "<backtab>"))
-      icicle-search-highlight-all-current-flag t
       icicle-show-Completions-help-flag nil
-      icicle-show-Completions-initially-flag nil
-      icicle-show-multi-completion-flag t
       icicle-yank-function #'cua-paste)))
 
 (defun nadvice/auto-icicle (old-func &rest args)
