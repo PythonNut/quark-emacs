@@ -47,4 +47,16 @@
 
 (defalias 'yes-or-no-p #'y-or-n-p)
 
+(defun restart-emacs ()
+  (interactive)
+  ;; We need the new emacs to be spawned after all kill-emacs-hooks
+  ;; have been processed and there is nothing interesting left
+  (add-hook 'kill-emacs-hook
+    (lambda ()
+      (if (display-graphic-p)
+        (call-process "sh" nil nil nil "-c" "emacs &")
+        (suspend-emacs "(sleep 1; emacs -nw < `tty`) & fg; fg")))
+    t)
+  (save-buffers-kill-emacs))
+
 (provide 'config-setq)
