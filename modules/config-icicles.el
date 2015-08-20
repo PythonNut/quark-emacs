@@ -15,12 +15,9 @@
 
       icicle-sort-comparer #'icicle-file-type-less-p
       icicle-Completions-text-scale-decrease 0
-      ;; icicle-TAB-completion-methods '(vanilla substring)
-      ;; icicle-default-cycling-mode 'apropos
       icicle-expand-input-to-common-match 1
       icicle-highlight-lighter-flag nil
       ;; icicle-incremental-completion nil
-      icicle-apropos-complete-keys (list (kbd "<tab>"))
       icicle-prefix-complete-keys (list (kbd "<backtab>"))
       icicle-show-Completions-help-flag nil
       icicle-yank-function #'cua-paste)))
