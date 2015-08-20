@@ -18,6 +18,48 @@
   (lambda ()
     (add-hook 'first-change-hook #'company-onetime-setup)))
 
+(defun completion-fuzzy-commonality (s1 s2)
+  (setq
+    s1 (string-to-list (copy-seq s1))
+    s2 (string-to-list (copy-seq s2)))
+  (if (> (length s1) (length s2))
+    (cl-rotatef s1 s2))
+  (let ((res))
+    (dolist (char s1)
+      (when-let ((idx (position char s2)))
+        (push char res)
+        (setq s2 (cl-subseq s2 (1+ idx)))))
+    (concat (nreverse res))))
+
+(defun completion-fuzzy-find-holes (merged str)
+  (let ((holes) (idx))
+    (dolist (i (number-sequence 0 (1- (length merged))))
+      (setq idx
+        (position
+          (elt merged i)
+          str))
+      (when (> idx 0)
+        (push i holes))
+      (setq str (cl-subseq str (1+ idx))))
+    (when (/= 0 (length str))
+      (push (length merged) holes))
+    holes))
+
+(defun completion-fuzzy-merge (strs)
+  (let ((common (car strs))
+         (holes))
+
+    (dolist (str strs)
+      (setq common
+        (completion-fuzzy-commonality common str)))
+
+    (setq holes (make-vector (1+ (length common)) 0))
+    (dolist (str strs)
+      (dolist (hole (completion-fuzzy-find-holes common str))
+        (cl-incf (elt holes hole))))
+
+    (cons common (position (reduce #'max holes) holes))))
+
 (defun completion-fuzzy-completion (string table predicate point
                                      &optional all-p)
   (let* ((beforepoint (substring string 0 point))
@@ -66,7 +108,12 @@
             (setq suffix (substring suffix 1)))
           (cons (concat prefix (car candidates) suffix)
             (length (concat prefix (car candidates)))))
-        (cons string point)))))
+        (if (= (length infix) 0)
+          (cons string point)
+          (let ((merged (completion-fuzzy-merge candidates)))
+            (cons
+              (concat prefix (car merged) suffix)
+              (+ (length prefix) (cdr merged)))))))))
 
 (defun completion-fuzzy-try-completion (string table predicate point)
   (completion-fuzzy-completion string table predicate point))
