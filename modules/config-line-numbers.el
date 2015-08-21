@@ -7,8 +7,8 @@
 
   (require 'linum-relative)
 
-  ;; truncate current line to four digits
-  (defun linum-relative (line-number)
+  ;; truncate current line to three digits
+  (defun nadvice/linum-relative (line-number)
     (let* ((diff1 (abs (- line-number linum-relative-last-pos)))
             (diff (if (minusp diff1)
                     diff1
@@ -22,6 +22,7 @@
             (face (if current-p 'linum-relative-current-face 'linum)))
       (propertize (format linum-relative-format current-symbol) 'face face)))
 
+  (advice-add 'linum-relative :override #'nadvice/linum-relative)
 
   (setq
     linum-relative-current-symbol ""
