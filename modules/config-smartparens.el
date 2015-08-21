@@ -11,8 +11,6 @@
 
 (setq
   sp-autoinsert-quote-if-followed-by-closing-pair nil
-  sp-autoescape-string-quote nil
-  sp-autoescape-string-quote-if-empty nil
   sp-cancel-autoskip-on-backward-movement nil)
 
 (smartparens-global-mode +1)
