@@ -58,7 +58,7 @@
       (dolist (hole (completion-fuzzy-find-holes common str))
         (cl-incf (elt holes hole))))
 
-    (cons common (position (reduce #'max holes) holes))))
+    (cons common (append holes nil))))
 
 (defun completion-fuzzy-completion (string table predicate point
                                      &optional all-p)
@@ -110,10 +110,22 @@
             (length (concat prefix (car candidates)))))
         (if (= (length infix) 0)
           (cons string point)
-          (let ((merged (completion-fuzzy-merge candidates)))
+          (cl-destructuring-bind (merged . holes)
+            (completion-fuzzy-merge candidates)
             (cons
-              (concat prefix (car merged) suffix)
-              (+ (length prefix) (cdr merged)))))))))
+              (concat prefix merged suffix)
+              (+ (length prefix)
+                (if (string= infix merged)
+                  (if (< point (+ (length prefix) (length infix)))
+                    (length infix)
+                    (while (/= point
+                             (+ (length prefix)
+                               (position (apply #'max holes) holes)))
+                      (setf (elt holes (position (apply #'max holes) holes)) 0))
+                    (setf (elt holes (position (apply #'max holes) holes)) 0)
+                    (print holes)
+                    (position (apply #'max holes) holes))
+                  (position (apply #'max holes) holes))))))))))
 
 (defun completion-fuzzy-try-completion (string table predicate point)
   (completion-fuzzy-completion string table predicate point))
