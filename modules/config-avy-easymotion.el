@@ -56,16 +56,18 @@
 
 (evilem-define (kbd "SPC s") 'evil-snipe-repeat
   (lambda ()
-    (ignore-errors
-      (call-interactively #'evil-snipe-s)))
+    (save-excursion
+      (ignore-errors
+        (call-interactively #'evil-snipe-s))))
   nil
   ((evil-snipe-enable-highlight)
     (evil-snipe-enable-incremental-highlight)))
 
 (evilem-define (kbd "SPC S") 'evil-snipe-repeat-reverse
   (lambda ()
-    (ignore-errors
-      (call-interactively #'evil-snipe-S)))
+    (save-excursion
+      (ignore-errors
+        (call-interactively #'evil-snipe-S))))
   nil
   ((evil-snipe-enable-highlight)
     (evil-snipe-enable-incremental-highlight)))
