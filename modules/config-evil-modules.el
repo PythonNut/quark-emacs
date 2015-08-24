@@ -66,6 +66,9 @@
     evil-snipe-repeat-scope 'visible
     evil-snipe-smart-case t)
 
+  (set-face-attribute 'evil-snipe-matches-face nil
+    :background "#586e75")
+
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
 
