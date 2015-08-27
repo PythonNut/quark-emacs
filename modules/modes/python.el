@@ -11,7 +11,8 @@
 (add-hook 'python-mode-hook
   (lambda ()
     ;; conflicts with `eldoc-mode'
-    (semantic-idle-summary-mode -1)))
+    (semantic-idle-summary-mode -1)
+    (setq mode-name "Py")))
 
 (with-eval-after-load 'python
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
