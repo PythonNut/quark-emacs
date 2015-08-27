@@ -59,4 +59,18 @@
     t)
   (save-buffers-kill-emacs))
 
+(defun recompile-config ()
+  (interactive)
+  (byte-compile-file (concat
+                       user-emacs-directory
+                       "init.el"))
+  (funcall
+    (if (require 'async-bytecomp nil t)
+      #'async-byte-recompile-directory
+      #'byte-recompile-directory)
+    (concat
+      user-emacs-directory
+      "modules/")
+    0))
+
 (provide 'config-setq)
