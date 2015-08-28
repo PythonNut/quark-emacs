@@ -21,13 +21,17 @@
 (with-eval-after-load 'anaconda-mode
   (diminish 'anaconda-mode " ✶"))
 
-(autoload #'cython-mode "cython-mode")
 (add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
 (add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
 (add-to-list 'auto-mode-alist '("\\.pxi\\'" . python-mode))
 
-(with-eval-after-load 'sage-mode
-  (require 'sage))
+(evil-set-initial-state 'sage-shell-mode 'insert)
 
-(autoload #'sage-mode "sage-mode")
-(add-to-list 'auto-mode-alist '("\\.sage\\'" . sage-mode))
+(add-hook 'sage-shell-mode-hook #'eldoc-mode)
+(add-hook 'sage-shell:sage-mode-hook #'eldoc-mode)
+
+(add-hook 'sage-shell-mode-hook
+  (lambda () (semantic-idle-summary-mode -1)))
+
+(add-hook 'sage-shell:sage-mode-hook
+  (lambda () (semantic-idle-summary-mode -1)))

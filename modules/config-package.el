@@ -66,6 +66,7 @@
      matlab-mode
      php-mode
      pkgbuild-mode
+     sage-shell-mode
      sass-mode
      scss-mode
      web-mode
