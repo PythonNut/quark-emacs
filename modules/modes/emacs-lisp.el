@@ -24,6 +24,7 @@
       lisp-body-indent 2
       mode-name (if (display-graphic-p) "λ" "EL"))
 
+    (eldoc-mode +1)
     (auto-indent-mode -1)
     (aggressive-indent-mode +1)
     (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)))
