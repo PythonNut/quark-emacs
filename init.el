@@ -31,11 +31,6 @@
       (when condition
         `(progn ,@body))))
 
-  ;; polyfill with-eval-after-load
-  (when* (version< emacs-version "24.4")
-    (defmacro with-eval-after-load (thing &rest sexps)
-      `(eval-after-load ,thing '(progn ,@sexps))))
-
   ;; suppress the GNU spam
   (add-hook 'emacs-startup-hook (lambda () (message "")))
 
