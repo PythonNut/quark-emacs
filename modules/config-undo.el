@@ -60,13 +60,13 @@
   ;; Keep region when undoing in region
   (defun nadvice/undo-tree-undo (old-fun &rest args)
     (if (use-region-p)
-        (let ((m (set-marker (make-marker) (mark)))
-              (p (set-marker (make-marker) (point))))
-          ad-do-it
-          (goto-char p)
-          (set-mark m)
-          (set-marker p nil)
-          (set-marker m nil))
+      (let ((m (set-marker (make-marker) (mark)))
+             (p (set-marker (make-marker) (point))))
+        (apply old-fun args)
+        (goto-char p)
+        (set-mark m)
+        (set-marker p nil)
+        (set-marker m nil))
       (apply old-fun args)))
 
   (advice-add 'undo-tree-undo :around #'nadvice/undo-tree-undo))
