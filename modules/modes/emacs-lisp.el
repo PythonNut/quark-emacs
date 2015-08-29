@@ -17,6 +17,9 @@
   (auto-compile-on-save-mode +1)
   (remove-hook 'before-save-hook #'auto-compile-onetime-setup t))
 
+(with-eval-after-load 'eldoc
+  (diminish 'eldoc-mode))
+
 (add-hook 'emacs-lisp-mode-hook
   (lambda ()
     (setq
