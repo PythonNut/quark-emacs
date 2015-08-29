@@ -96,7 +96,6 @@
      hexrgb
      hydra
      icicles
-     idomenu
      iflipb
      impatient-mode
      idle-require

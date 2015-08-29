@@ -265,4 +265,6 @@
 (define-key evil-motion-state-map (kbd "C-c C-o") #'my-helm-omni)
 (define-key evil-replace-state-map (kbd "C-c C-o") #'my-helm-omni)
 
+(global-set-key (kbd "M-=") #'helm-semantic-or-imenu)
+
 (provide 'config-helm)

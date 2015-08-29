@@ -1,7 +1,6 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'ido)
-    (require 'idomenu)
     (require 'ido-vertical-mode)
     (require 'flx-isearch)
     (require 'ido-ubiquitous)
@@ -47,8 +46,6 @@
       "smex-items")))
 
 (global-set-key (kbd "M-x") #'smex)
-
-(global-set-key (kbd "M-=") #'idomenu)
 
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
