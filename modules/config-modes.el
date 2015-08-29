@@ -6,7 +6,11 @@
 (global-hl-line-mode +1)
 (subword-mode +1)
 
-(add-hook 'find-file-hook 'auto-compression-mode)
+(defun auto-compression-onetime-setup ()
+  (auto-compression-mode +1)
+  (remove-hook 'find-file-hook #'auto-compression-onetime-setup))
+
+(add-hook 'find-file-hook #'auto-compression-onetime-setup)
 
 ;; encryption mode
 (setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
