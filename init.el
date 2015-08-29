@@ -32,6 +32,8 @@
         `(progn ,@body))))
 
   ;; suppress the GNU spam
+  (with-eval-after-load 'startup
+    (fset 'display-startup-echo-area-message (lambda ())))
   (add-hook 'emacs-startup-hook (lambda () (message "")))
 
   (advice-add 'load :filter-args #'nadvice/load-quiet)
