@@ -93,7 +93,6 @@
      helm-ag
      helm-git-grep
      helm-projectile
-     hexrgb
      hydra
      icicles
      iflipb

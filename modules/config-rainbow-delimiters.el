@@ -10,14 +10,6 @@
 (make-variable-buffer-local 'rainbow-delimiters-switch)
 (make-variable-buffer-local 'rainbow-delimiters-face-cookies)
 
-(defun rainbow-delimiters-saturate (face &optional degree)
-  "Adjust the saturation of the given face by the given degree"
-  (unless (featurep 'hexrgb) (require 'hexrgb))
-  (face-remap-add-relative ,face
-    (list (list ':foreground (hexrgb-increment-saturation
-                               (face-attribute ,face :foreground) 0.5))
-      ,face)))
-
 ;; the equivalent of a global mode, but does not
 ;; turn on for odd non-programming modes
 (add-hook 'prog-mode-hook
