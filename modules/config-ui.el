@@ -220,4 +220,6 @@ the syntax class ')'."
 
 (global-auto-highlight-symbol-mode +1)
 
+(global-set-key (kbd "<remap> <just-one-space>") #'cycle-spacing)
+
 (provide 'config-ui)
