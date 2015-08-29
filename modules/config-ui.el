@@ -174,21 +174,50 @@ the syntax class ')'."
 (with-eval-after-load 'volatile-highlights
   (diminish #'volatile-highlights-mode)
   (with-demoted-errors
-  (vhl/define-extension 'my-evil-highlights
-    'evil-yank
-    'evil-paste-pop-proxy
-    'evil-paste-pop-next
-    'evil-paste-after
-    'evil-paste-before)
+    (vhl/define-extension 'my-evil-highlights
+      'evil-yank
+      'evil-paste-pop-proxy
+      'evil-paste-pop-next
+      'evil-paste-after
+      'evil-paste-before)
 
-  (vhl/install-extension 'my-evil-highlights)
+    (vhl/install-extension 'my-evil-highlights)
 
-  (vhl/define-extension 'my-undo-tree-highlights
-    'undo-tree-undo
-    'undo-tree-redo)
+    (vhl/define-extension 'my-undo-tree-highlights
+      'undo-tree-undo
+      'undo-tree-redo)
 
-  (vhl/install-extension 'my-undo-tree-highlights)
+    (vhl/install-extension 'my-undo-tree-highlights)
 
-  (volatile-highlights-mode +1)))
+    (volatile-highlights-mode +1)))
+
+(with-eval-after-load 'auto-highlight-symbol
+  (setq
+    ahs-idle-interval 0.3))
+
+(require 'auto-highlight-symbol)
+(add-hook 'auto-highlight-symbol-mode-hook
+  (lambda ()
+    (diminish 'auto-highlight-symbol-mode)
+    (set-face-attribute 'ahs-plugin-defalt-face nil
+      :foreground nil)
+    (set-face-attribute 'ahs-face nil
+      :foreground nil
+      :background "#073642")
+    (set-face-attribute 'ahs-definition-face nil
+      :foreground nil
+      :background "#073642"
+      :underline '(:color "#268bd2"))
+    (set-face-attribute 'ahs-warning-face nil
+      :foreground nil
+      :underline '(:color "yellow"))
+    (set-face-attribute 'ahs-plugin-bod-face nil
+      :foreground nil
+      :underline '(:color "purple"))
+    (set-face-attribute 'ahs-plugin-whole-buffer-face nil
+      :foreground nil
+      :underline '(:color "black"))))
+
+(global-auto-highlight-symbol-mode +1)
 
 (provide 'config-ui)

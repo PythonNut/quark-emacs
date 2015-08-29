@@ -76,6 +76,7 @@
      aggressive-indent
      anaconda-mode
      auto-compile
+     auto-highlight-symbol
      auto-indent-mode
      avy
      bracketed-paste
