@@ -7,12 +7,12 @@
 (require 'config-icicles)
 
 ;; bind command to switch to minibuffer
-(defun switch-to-minibuffer-window ()
+(defun switch-to-minibuffer-window (arg)
   "switch to minibuffer window (if active)"
-  (interactive)
+  (interactive "p")
   (if (active-minibuffer-window)
     (select-window (active-minibuffer-window))
-    (message "Minibuffer is not active")))
+    (other-window arg)))
 
 (global-set-key (kbd "C-'") #'switch-to-minibuffer-window)
 
