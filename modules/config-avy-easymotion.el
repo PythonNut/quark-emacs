@@ -72,7 +72,4 @@
   ((evil-snipe-enable-highlight)
     (evil-snipe-enable-incremental-highlight)))
 
-(define-key evil-insert-state-map (kbd "M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
-(define-key evil-emacs-state-map (kbd "M-SPC") (lookup-key evil-motion-state-map (kbd "SPC")))
-
 (provide 'config-avy-easymotion)
