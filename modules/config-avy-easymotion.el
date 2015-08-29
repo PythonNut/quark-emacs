@@ -13,6 +13,8 @@
 (key-chord-define evil-emacs-state-map "jc" #'avy-goto-char)
 (key-chord-define evil-emacs-state-map "jl" #'avy-goto-line)
 
+(global-set-key (kbd "<remap> <goto-line>") #'avy-goto-line)
+
 (with-eval-after-load 'avy
   (setq
     avy-background t
