@@ -15,6 +15,11 @@
   (defalias 'redo #'undo-tree-redo)
   (defalias 'undo #'undo-tree-undo)
 
+  ;; keep undo-tree from overriding C-x r
+  (define-key undo-tree-map (kbd "C-x r u") nil)
+  (define-key undo-tree-map (kbd "C-x r U") nil)
+  (define-key undo-tree-map (kbd "C-x r") nil)
+
   (key-chord-define evil-emacs-state-map "uu" #'undo-tree-visualize)
   (key-chord-define evil-insert-state-map "uu" #'undo-tree-visualize)
 

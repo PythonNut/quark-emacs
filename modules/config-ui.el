@@ -1,6 +1,8 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'cl-lib)
+    (require 'cl)
+    (require 'hydra)
     (require 'key-chord)
     (require 'evil)
     (require 'diminish)
@@ -221,5 +223,49 @@ the syntax class ')'."
 (global-auto-highlight-symbol-mode +1)
 
 (global-set-key (kbd "<remap> <just-one-space>") #'cycle-spacing)
+
+(defun smart-registers-and-rectangles ()
+  (interactive)
+  (unless (fboundp 'hydra/registers-and-rectangles/body)
+    (require 'hydra)
+    (defhydra hydra/registers-and-rectangles (:color blue :hint nil)
+      "
+REGISTER                     │   RECTANGLE
+^_SPC_^ point →    ^_i_^ insert ←    │   ^_c_^ clear    ^_r_^ copy-to-register
+^_f_^ frameset →   ^_U_^ undo ←      │   ^_d_^ delete   ^_M-w_^ copy-as-kill
+^_n_^ number →     ^_u_^ undo →      │   ^_k_^ kill     ^_t_^ string
+^_x_^ copy →       ^_+_^ increment   │   ^_o_^ open     ^_N_^ number-lines
+^_w_^ windows →                  │   ^_y_^ yank"
+      ("U"     undo-tree-restore-state-from-register)
+      ("u"     undo-tree-save-state-to-register)
+      ("C-@"   point-to-register)
+      ("SPC"   point-to-register)
+      ("+"     increment-register :color red)
+      ("N"     rectangle-number-lines)
+      ("b"     bookmark-jump)
+      ("c"     clear-rectangle)
+      ("d"     delete-rectangle)
+      ("f"     frameset-to-register)
+      ("g"     insert-register)
+      ("i"     insert-register)
+      ("j"     jump-to-register)
+      ("k"     kill-rectangle)
+      ("l"     bookmark-bmenu-list)
+      ("m"     bookmark-set)
+      ("n"     number-to-register)
+      ("o"     open-rectangle)
+      ("r"     copy-rectangle-to-register)
+      ("s"     copy-to-register)
+      ("t"     string-rectangle)
+      ("w"     window-configuration-to-register)
+      ("x"     copy-to-register)
+      ("y"     yank-rectangle)
+      ("C-SPC" point-to-register)
+      ("M-w"   copy-rectangle-as-kill)
+      ("ESC w" copy-rectangle-as-kill)))
+  (hydra/registers-and-rectangles/body))
+
+(global-set-key (kbd "C-x r") nil)
+(global-set-key (kbd "C-x r") #'smart-registers-and-rectangles)
 
 (provide 'config-ui)
