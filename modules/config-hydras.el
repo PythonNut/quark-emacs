@@ -8,12 +8,12 @@
     (require 'hydra)
     (defhydra hydra/registers-and-rectangles (:color blue :hint nil :idle 0.3)
       "
-REGISTER                     │   RECTANGLE
-^_SPC_^ point →    ^_i_^ insert ←    │   ^_c_^ clear    ^_r_^ copy-to-register
-^_f_^ frameset →   ^_U_^ undo ←      │   ^_d_^ delete   ^_M-w_^ copy-as-kill
-^_n_^ number →     ^_u_^ undo →      │   ^_k_^ kill     ^_t_^ string
-^_x_^ copy →       ^_+_^ increment   │   ^_o_^ open     ^_N_^ number-lines
-^_w_^ windows →                  │   ^_y_^ yank"
+REGISTER^^^^                     │   RECTANGLE
+_SPC_ point →    _i_ insert ←    │   _c_ clear    _r_ copy-to-register
+_f_ frameset →   _U_ undo ←      │   _d_ delete   _M-w_ copy-as-kill
+_n_ number →     _u_ undo →      │   _k_ kill     _t_ string
+_x_ copy →       _+_ increment   │   _o_ open     _N_ number-lines
+_w_ windows →  ^^                │   _y_ yank"
       ("U"     undo-tree-restore-state-from-register)
       ("u"     undo-tree-save-state-to-register)
       ("C-@"   point-to-register)
@@ -52,12 +52,12 @@ REGISTER                     │   RECTANGLE
     (require 'hydra)
     (defhydra hydra/icicle-search-map (:color blue :hint nil :idle 0.3)
       "
-^_f_^   file     ^_D_^ defs-full    ^_,_^  tags                ^_g_^ grep-saved-file-cands
-^_b_^   buffer   ^_j_^ bookmark     ^_x_^ xml-element          ^_X_^ xml-element-text-node
-^_l_^   lines    ^_k_^ keywords     ^_J_^ bookmarks-together   ^_o_^ occur
-^_w_^   word     ^_p_^ paragraphs   ^_c_^ char-property        ^_i_^ imenu
-^_d_^   defs     ^_s_^ sentences    ^_O_^ overlay-property     ^_I_^ imenu-full
-^_C-l_^ pages    ^_t_^ thing        ^_T_^ text-property"
+_f_   file     _D_ defs-full    _,_  tags                _g_ grep-saved-file-cands
+_b_   buffer   _j_ bookmark     _x_ xml-element          _X_ xml-element-text-node
+_l_   lines    _k_ keywords     _J_ bookmarks-together   _o_ occur
+_w_   word     _p_ paragraphs   _c_ char-property        _i_ imenu
+_d_   defs     _s_ sentences    _O_ overlay-property     _I_ imenu-full
+_C-l_ pages    _t_ thing        _T_ text-property"
       ("C-l" icicle-search-pages)
       (","   icicle-tags-search)
       ("D"   icicle-search-defs-full)
@@ -90,11 +90,11 @@ REGISTER                     │   RECTANGLE
     (require 'hydra)
     (defhydra hydra/isearch-map (:color blue :hint nil :idle 0.3)
       "
-Isearch^^^^          Highlight
-^_._^ → symbol @ ·   ^_h._^ symbol @ ·   ^_hu_^ unhiglight regex
-^___^ → symbol       ^_hl_^ lines        ^_hf_^ HL find patterns
-^_w_^ → word         ^_hp_^ phrase       ^_hw_^ HL write patterns
-^_o_^ occur          ^_hr_^ regex        ^_M-s_^ Icicle search ..."
+Isearch^^          │   Highlight
+_._ → symbol @ ·   │   _h._ symbol @ ·   _hu_ unhiglight regex
+___ → symbol       │   _hl_ lines        _hf_ HL find patterns
+_w_ → word         │   _hp_ phrase       _hw_ HL write patterns
+_o_ occur          │   _hr_ regex        _M-s_ Icicle search ..."
       ("."   isearch-forward-symbol-at-point)
       ("-"   isearch-forward-symbol)
       ("o"   helm-occur)
@@ -118,11 +118,11 @@ Isearch^^^^          Highlight
     (require 'hydra)
     (defhydra hydra/frame-tools (:color blue :hint nil :idle 0.3)
       "
-Frame^^^^              Other Frame
-^_0_^  delete          ^_f_^ find file       ^_f_^ find file read only
-^_1_^  delete others   ^_d_^ dired           ^_m_^ compose mail
-^_2_^  make            ^_b_^ switch buffer   ^_._^ find tag
-^_o_^  other           ^_C-o_^ display buffer"
+Frame^^              │   Other Frame
+_0_  delete          │   _f_ find file         _f_ find file read only
+_1_  delete others   │   _d_ dired             _m_ compose mail
+_2_  make            │   _b_ switch buffer     _._ find tag
+_o_  other           │   _C-o_ display buffer"
       ("C-f" find-file-other-frame)
       ("C-o" display-buffer-other-frame)
       ("."   find-tag-other-frame)
@@ -146,11 +146,11 @@ Frame^^^^              Other Frame
     (require 'hydra)
     (defhydra hydra/window-tools (:color blue :hint nil :idle 0.3)
       "
-Window^^^^                        Other window
-^_0_^    kill buffer and window   ^_f_^ find file       ^_a_^ add change log entry
-^_c_^    clone indirect           ^_d_^ dired           ^_r_^ find file read only
-^_C-j_^  dired jump               ^_b_^ switch buffer   ^_m_^ compose mail
-^_C-o_^  display buffer           ^_._^ find tag"
+Window^^                     │   Other window
+_0_  kill buffer & window    │   _f_ find file       _a_ add changelog entry
+_c_  clone indirect          │   _d_ dired           _r_ find file read only
+_C-j_  dired jump            │   _b_ switch buffer   _m_ compose mail
+_C-o_  display buffer        │   _._ find tag"
       ("C-f" find-file-other-window)
       ("C-j" dired-jump-other-window)
       ("C-o" display-buffer)
