@@ -97,26 +97,7 @@
 (cl-macrolet
   ((sp-define-bindings (key func)
      `(progn
-        (evil-define-key 'motion sp-keymap ,key ,func))))
-
-  (with-no-warnings
-    (generate-calls sp-define-bindings
-      (
-        ((kbd "C-M-f") #'evil-forward-sexp)
-        ((kbd "C-M-b") #'evil-backward-sexp)
-
-        ((kbd "C-M-d") #'evil-down-sexp)
-        ((kbd "C-M-S-d") #'evil-backward-down-sexp)
-
-        ((kbd "C-M-u") #'evil-up-sexp)
-        ((kbd "C-M-S-u") #'evil-backward-up-sexp)
-
-        ((kbd "C-M-n") #'evil-next-sexp)
-        ((kbd "C-M-p") #'evil-previous-sexp)))))
-
-(cl-macrolet
-  ((sp-define-bindings (key func)
-     `(progn
+        (evil-define-key 'motion sp-keymap ,key ,func)
         (evil-define-key 'insert sp-keymap ,key ,func)
         (evil-define-key 'emacs sp-keymap ,key ,func)
 
