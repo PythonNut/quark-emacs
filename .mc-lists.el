@@ -15,6 +15,7 @@
      cua-exchange-point-and-mark
      cua-paste
      cua-paste-pop
+     cycle-spacing
      delete-horizontal-space
      easy-kill
      electric-newline-and-maybe-indent
