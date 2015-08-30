@@ -180,27 +180,36 @@
 (defun evil-sp-move ()
   (unless (fboundp 'evil-sp-move-hydra/body)
     (require 'hydra)
-    (defhydra evil-sp-move-hydra ()
-      "sexp"
-      ("f" evil-forward-sexp "→")
-      ("b" evil-backward-sexp "←")
-      ("d" evil-down-sexp "↘")
-      ("D" evil-backward-down-sexp "↙")
-      ("u" evil-up-sexp "↗")
-      ("U" evil-backward-up-sexp "↖")
-      ("n" evil-next-sexp "⇒")
-      ("p" evil-previous-sexp "⇐")))
+    (defhydra evil-sp-move-hydra (:hint nil :idle 0.3)
+      "
+[_U_] ↰↱ [_u_]
+[_b_] ←→ [_f_]  [_p_] ←  next  → [_n_]
+[_D_] ↲↳ [_d_] "
+      ("f" evil-forward-sexp)
+      ("b" evil-backward-sexp)
+      ("d" evil-down-sexp)
+      ("D" evil-backward-down-sexp)
+      ("u" evil-up-sexp)
+      ("U" evil-backward-up-sexp)
+      ("n" evil-next-sexp)
+      ("p" evil-previous-sexp)))
   (evil-sp-move-hydra/body))
 
 (defun evil-sp-barfslurp ()
   (unless (fboundp 'evil-sp-barfslurp-hydra/body)
     (require 'hydra)
-    (defhydra evil-sp-barfslurp-hydra ()
-      "sexp"
-      ("," sp-forward-slurp-sexp "← slurp")
-      ("." sp-forward-barf-sexp "→ barf")
-      ("<" sp-backward-slurp-sexp "→ slurp")
-      (">" sp-backward-barf-sexp "← barf")))
+    (defhydra evil-sp-barfslurp-hydra (:hint nil :idle 0.3)
+      "
+                                        [_<_] ← barf  → [_._]
+                                        [_>_] ← slurp → [_,_]
+                                        [_a_] ← emit  → [_e_]
+"
+      ("," sp-forward-slurp-sexp)
+      ("." sp-forward-barf-sexp)
+      ("<" sp-backward-slurp-sexp)
+      (">" sp-backward-barf-sexp)
+      ("a" sp-absorb-sexp)
+      ("e" sp-emit-sexp)))
   (evil-sp-barfslurp-hydra/body))
 
 (evil-define-command evil-sp-forward-sexp (&rest args)
@@ -253,34 +262,39 @@
   (evil-sp-barfslurp))
 
 ;; evil normal mode bindings
-(define-prefix-command 'sp-sexp-ops)
-(cl-macrolet
-  ((sp-define-bindings (key func)
-     `(progn
-        (define-key evil-normal-state-map ,key ,func))))
-  (generate-calls sp-define-bindings
-    (
-      ("gs" #'sp-sexp-ops)
-      ("gsf" #'evil-sp-forward-sexp)
-      ("gsb" #'evil-sp-backward-sexp)
-      ("gsd" #'evil-sp-down-sexp)
-      ("gsD" #'evil-sp-backward-down-sexp)
-      ("gsu" #'evil-sp-up-sexp)
-      ("gsU" #'evil-sp-backward-up-sexp)
-      ("gsn" #'evil-sp-next-sexp)
-      ("gsp" #'evil-sp-previous-exp)
-      ("gsk" #'sp-kill-sexp)
-      ("gsK" #'sp-backward-kill-sexp)
-      ("gsw" #'sp-unwrap-sexp)
-      ("gsW" #'sp-backward-unwrap-sexp)
-      ("gss" #'sp-split-sexp)
-      ("gsj" #'sp-join-sexp)
-      ("gsa" #'sp-absorb-sexp)
-      ("gse" #'sp-emit-sexp)
-      ("gs," #'evil-sp-forward-slurp-sexp)
-      ("gs." #'evil-sp-forward-barf-sexp)
-      ("gs<" #'evil-sp-backward-barf-sexp)
-      ("gs>" #'evil-sp-backward-slurp-sexp))))
+(defun smart-smartparens-tools ()
+  (interactive)
+  (unless (fboundp 'hydra/smartparens-tools/body)
+    (require 'hydra)
+    (defhydra hydra/smartparens-tools (:color blue :hint nil :idle 0.3)
+      "
+[_U_] ↰↱ [_u_]  [_K_] ←  kill  → [_k_]  [_<_] ← barf  → [_._]   [_s_] split
+[_b_] ←→ [_f_]  [_p_] ←  next  → [_n_]  [_>_] ← slurp → [_,_]   [_j_] join
+[_D_] ↲↳ [_d_]  [_W_] ← unwrap → [_w_]  [_a_] ← emit  → [_e_]"
+       ("f" evil-sp-forward-sexp)
+       ("b" evil-sp-backward-sexp)
+       ("d" evil-sp-down-sexp)
+       ("D" evil-sp-backward-down-sexp)
+       ("u" evil-sp-up-sexp)
+       ("U" evil-sp-backward-up-sexp)
+       ("n" evil-sp-next-sexp)
+       ("p" evil-sp-previous-exp)
+       ("k" sp-kill-sexp)
+       ("K" sp-backward-kill-sexp)
+       ("w" sp-unwrap-sexp)
+       ("W" sp-backward-unwrap-sexp)
+       ("s" sp-split-sexp)
+       ("j" sp-join-sexp)
+       ("a" sp-absorb-sexp)
+       ("e" sp-emit-sexp)
+       ("," evil-sp-forward-slurp-sexp)
+       ("." evil-sp-forward-barf-sexp)
+       ("<" evil-sp-backward-barf-sexp)
+       (">" evil-sp-backward-slurp-sexp)))
+
+  (hydra/smartparens-tools/body))
+
+(define-key evil-normal-state-map "gs" #'smart-smartparens-tools)
 
 (defun my-sp-pair-function (id action context)
   (if (eq action 'insert)
