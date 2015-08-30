@@ -57,4 +57,18 @@
   (interactive)
   (call-process "kill" nil nil nil "-9" (number-to-string (emacs-pid))))
 
+(show-paren-mode +1)
+
+(defun nadvice/show-paren-function ()
+  "If the matching paren is offscreen, show the matching line in the
+echo area. Has no effect if the character before point is not of
+the syntax class ')'."
+  (let* ((cb (char-before (point)))
+          (matching-text (and cb
+                           (char-equal (char-syntax cb) ?\) )
+                           (blink-matching-open))))
+    (when matching-text (message matching-text))))
+
+(advice-add 'show-paren-function :after #'nadvice/show-paren-function)
+
 (provide 'config-modes)
