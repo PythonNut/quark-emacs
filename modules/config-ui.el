@@ -17,6 +17,7 @@
 (require 'config-smartparens)
 (require 'config-rainbow-delimiters)
 
+(require 'config-hydras)
 
 (with-eval-after-load 'multiple-cursors
   (define-key mc/keymap (kbd "<return>") nil)
@@ -210,115 +211,5 @@
 (global-auto-highlight-symbol-mode +1)
 
 (global-set-key (kbd "<remap> <just-one-space>") #'cycle-spacing)
-
-(defun smart-registers-and-rectangles ()
-  (interactive)
-  (unless (fboundp 'hydra/registers-and-rectangles/body)
-    (require 'hydra)
-    (defhydra hydra/registers-and-rectangles (:color blue :hint nil :idle 0.3)
-      "
-REGISTER                     │   RECTANGLE
-^_SPC_^ point →    ^_i_^ insert ←    │   ^_c_^ clear    ^_r_^ copy-to-register
-^_f_^ frameset →   ^_U_^ undo ←      │   ^_d_^ delete   ^_M-w_^ copy-as-kill
-^_n_^ number →     ^_u_^ undo →      │   ^_k_^ kill     ^_t_^ string
-^_x_^ copy →       ^_+_^ increment   │   ^_o_^ open     ^_N_^ number-lines
-^_w_^ windows →                  │   ^_y_^ yank"
-      ("U"     undo-tree-restore-state-from-register)
-      ("u"     undo-tree-save-state-to-register)
-      ("C-@"   point-to-register)
-      ("SPC"   point-to-register)
-      ("+"     increment-register :color red)
-      ("N"     rectangle-number-lines)
-      ("b"     bookmark-jump)
-      ("c"     clear-rectangle)
-      ("d"     delete-rectangle)
-      ("f"     frameset-to-register)
-      ("g"     insert-register)
-      ("i"     insert-register)
-      ("j"     jump-to-register)
-      ("k"     kill-rectangle)
-      ("l"     bookmark-bmenu-list)
-      ("m"     bookmark-set)
-      ("n"     number-to-register)
-      ("o"     open-rectangle)
-      ("r"     copy-rectangle-to-register)
-      ("s"     copy-to-register)
-      ("t"     string-rectangle)
-      ("w"     window-configuration-to-register)
-      ("x"     copy-to-register)
-      ("y"     yank-rectangle)
-      ("C-SPC" point-to-register)
-      ("M-w"   copy-rectangle-as-kill)
-      ("ESC w" copy-rectangle-as-kill)))
-  (hydra/registers-and-rectangles/body))
-
-(global-set-key (kbd "C-x r") nil)
-(global-set-key (kbd "C-x r") #'smart-registers-and-rectangles)
-
-(defun smart-icicle-search-map ()
-  (interactive)
-  (unless (fboundp 'hydra/icicle-search-map/body)
-    (require 'hydra)
-    (defhydra hydra/icicle-search-map (:color blue :hint nil :idle 0.3)
-      "
-^_f_^   file     ^_D_^ defs-full    ^_,_^  tags                ^_g_^ grep-saved-file-cands
-^_b_^   buffer   ^_j_^ bookmark     ^_x_^ xml-element          ^_X_^ xml-element-text-node
-^_l_^   lines    ^_k_^ keywords     ^_J_^ bookmarks-together   ^_o_^ occur
-^_w_^   word     ^_p_^ paragraphs   ^_c_^ char-property        ^_i_^ imenu
-^_d_^   defs     ^_s_^ sentences    ^_O_^ overlay-property     ^_I_^ imenu-full
-^_C-l_^ pages    ^_t_^ thing        ^_T_^ text-property"
-      ("C-l" icicle-search-pages)
-      (","   icicle-tags-search)
-      ("D"   icicle-search-defs-full)
-      ("I"   icicle-imenu-full)
-      ("J"   icicle-search-bookmarks-together)
-      ("O"   icicle-search-overlay-property)
-      ("T"   icicle-search-text-property)
-      ("X"   icicle-search-xml-element-text-node)
-      ("b"   icicle-search-buffer)
-      ("c"   icicle-search-char-property)
-      ("d"   icicle-search-defs)
-      ("f"   icicle-search-file)
-      ("g"   icicle-grep-saved-file-candidates)
-      ("i"   icicle-imenu)
-      ("j"   icicle-search-bookmark)
-      ("k"   icicle-search-keywords)
-      ("l"   icicle-search-lines)
-      ("o"   icicle-occur)
-      ("p"   icicle-search-paragraphs)
-      ("s"   icicle-search-sentences)
-      ("t"   icicle-search-thing)
-      ("w"   icicle-search-word)
-      ("x"   icicle-search-xml-element)))
-
-  (hydra/icicle-search-map/body))
-
-(defun smart-isearch-map ()
-  (interactive)
-  (unless (fboundp 'hydra/isearch-map/body)
-    (require 'hydra)
-    (defhydra hydra/isearch-map (:color blue :hint nil :idle 0.3)
-      "
-Isearch^^^^          Highlight
-^_._^ → symbol @ ·   ^_h._^ symbol @ ·   ^_hu_^ unhiglight regex
-^___^ → symbol       ^_hl_^ lines        ^_hf_^ HL find patterns
-^_w_^ → word         ^_hp_^ phrase       ^_hw_^ HL write patterns
-^_o_^ occur          ^_hr_^ regex        ^_M-s_^ Icicle search ..."
-      ("."   isearch-forward-symbol-at-point)
-      ("-"   isearch-forward-symbol)
-      ("o"   helm-occur)
-      ("w"   isearch-forward-word)
-      ("h."  highlight-symbol-at-point)
-      ("hf"  hi-lock-find-patterns)
-      ("hl"  highlight-lines-matching-regexp)
-      ("hp"  highlight-phrase)
-      ("hr"  highlight-regexp)
-      ("hu"  unhighlight-regexp)
-      ("hw"  hi-lock-write-interactive-patterns)
-      ("M-s" smart-icicle-search-map)))
-
-  (hydra/isearch-map/body))
-
-(global-set-key (kbd "M-s") #'smart-isearch-map)
 
 (provide 'config-ui)
