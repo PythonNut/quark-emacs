@@ -15,6 +15,19 @@
 
 (global-set-key (kbd "<remap> <goto-line>") #'avy-goto-line)
 
+;; `C-u a` jumps to `a`.
+(defun nadvice/self-insert-command (old-fun &optional arg)
+  (interactive "P")
+  (cond
+    ((consp arg)
+      (avy-goto-char last-command-event))
+    ((eq '- arg)
+      (message "Negative argument not implemented"))
+    ((or (numberp arg) (not arg))
+      (funcall old-fun (or arg 1)))))
+
+(advice-add 'self-insert-command :around #'nadvice/self-insert-command)
+
 (with-eval-after-load 'avy
   (setq
     avy-background t
