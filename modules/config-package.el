@@ -143,7 +143,7 @@
   (when (null idle-require-symbols)
     (message "")))
 
-(eval-after-load 'idle-require
+(with-eval-after-load 'idle-require
   (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
 
 (if (not (daemonp))
