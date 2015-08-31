@@ -4,7 +4,9 @@
 
 (require 'config-ido)
 (require 'config-helm)
-(require 'config-icicles)
+
+(unless my/slow-device
+  (require 'config-icicles))
 
 ;; bind command to switch to minibuffer
 (defun switch-to-minibuffer-window (arg)
@@ -44,6 +46,5 @@
   (lambda ()
     (make-variable-buffer-local 'global-hl-line-mode)
     (setq global-hl-line-mode nil)))
-
 
 (provide 'config-minibuffer)

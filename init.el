@@ -15,13 +15,18 @@
       (list
         file noerror nomessage nosuffix must-suffix))))
 
-(if (member "-F" command-line-args)
+(if (member "-E" command-line-args)
   (progn
     ;; skip and load minimal init instead
-    (delete "-F" command-line-args)
+    (delete "-E" command-line-args)
     (load (concat user-emacs-directory "init-minimal")))
 
+  (defvar my/slow-device nil)
   (eval-when-compile (require 'cl-lib))
+
+  (when (member "-F" command-line-args)
+    (delete "-F" command-line-args)
+    (setq my/slow-device t))
 
   (eval-and-compile
     (add-to-list 'load-path

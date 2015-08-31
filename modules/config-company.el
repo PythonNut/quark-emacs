@@ -138,7 +138,8 @@
      completion-fuzzy-all-completions
      "Simple fuzzy completion, which never alters the string to complete, unless a unique match exists."))
 
-(setq completion-styles (list 'fuzzy))
+(unless my/slow-device
+  (setq completion-styles (list 'fuzzy)))
 
 (with-eval-after-load 'company
   (global-company-mode +1)
