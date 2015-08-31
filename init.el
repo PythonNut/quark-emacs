@@ -2,10 +2,11 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;;(package-initialize)
-(require 'cl-lib)
-
 (setq load-prefer-newer t)
-(eval-when-compile (require 'cl))
+
+(eval-when-compile
+  (require 'cl)
+  (require 'cl-lib))
 
 (defun nadvice/load-quiet (args)
   (cl-destructuring-bind
@@ -22,7 +23,6 @@
     (load (concat user-emacs-directory "init-minimal")))
 
   (defvar my/slow-device nil)
-  (eval-when-compile (require 'cl-lib))
 
   (when (member "-F" command-line-args)
     (delete "-F" command-line-args)
