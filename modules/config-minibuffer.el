@@ -2,9 +2,6 @@
   (with-demoted-errors
     (require 'ido-ubiquitous)))
 
-(require 'config-ido)
-(require 'config-helm)
-
 (unless my/slow-device
   (require 'config-icicles))
 
