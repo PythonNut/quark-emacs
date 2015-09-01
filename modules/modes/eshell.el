@@ -4,7 +4,7 @@
     (require 'em-smart)
     (require 'em-unix)))
 
-(defun generic-term-init ()
+(defun my/generic-term-init ()
   ;; this disables key-chord-mode
   (set (make-local-variable 'input-method-function) nil)
   (adaptive-wrap-prefix-mode -1)
@@ -19,19 +19,30 @@
     scroll-margin 0
     smooth-scroll-margin 0))
 
-(add-hook 'term-mode-hook #'generic-term-init)
-(add-hook 'shell-mode-hook #'generic-term-init)
-(add-hook 'eshell-mode-hook #'generic-term-init)
+(add-hook 'term-mode-hook #'my/generic-term-init)
+(add-hook 'shell-mode-hook #'my/generic-term-init)
+(add-hook 'eshell-mode-hook #'my/generic-term-init)
 
 (add-hook 'eshell-mode-hook
   (lambda ()
-    (company-mode -1)))
+    (make-variable-buffer-local 'company-idle-delay)))
 
 (defun eshell/clear ()
   (interactive)
   (let ((inhibit-read-only t)) (erase-buffer)))
 
+(defun eshell-onetime-setup ()
+  (define-key eshell-mode-map (kbd "<tab>") #'company-complete)
+  (remove-hook 'eshell-mode-hook #'eshell-onetime-setup))
+
 (with-eval-after-load 'eshell
+  (add-hook 'eshell-directory-change-hook
+    (lambda ()
+      (setq company-idle-delay
+        (if (file-remote-p default-directory)
+          nil
+          0.1))))
+  (add-hook 'eshell-mode-hook #'eshell-onetime-setup)
   (setq
     eshell-scroll-to-bottom-on-input t
     eshell-scroll-show-maximum-output nil
@@ -40,4 +51,3 @@
     eshell-mv-interactive-query t
     eshell-rm-interactive-query t
     eshell-mv-overwrite-files nil))
-
