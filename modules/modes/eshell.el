@@ -50,6 +50,10 @@
           0.1))))
   (add-hook 'eshell-mode-hook #'eshell-onetime-setup)
   (setq
+    eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'"
+    eshell-cmpl-file-ignore "\\(\\.elc\\|\\.zwc\\|\\.pyc\\|~\\|\\.swp\\)\\'"
+    eshell-cmpl-ignore-case t
+
     eshell-scroll-to-bottom-on-input t
     eshell-scroll-show-maximum-output nil
     eshell-cp-interactive-query t
