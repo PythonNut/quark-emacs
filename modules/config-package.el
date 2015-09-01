@@ -50,6 +50,7 @@
      evil-snipe
      evil-surround
      evil-visualstar
+     evil-quickscope
 
      ;; major modes
      coffee-mode

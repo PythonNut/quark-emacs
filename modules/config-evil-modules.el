@@ -2,7 +2,8 @@
   (with-demoted-errors
     (require 'evil)
     (require 'evil-snipe)
-    (require 'evil-nerd-commenter)))
+    (require 'evil-nerd-commenter)
+    (require 'evil-quickscope)))
 
 (evil-set-initial-state #'diff-mode 'motion)
 (evil-set-initial-state #'backups-mode 'insert)
@@ -103,5 +104,31 @@
 (define-key evil-visual-state-map "T" #'evil-snipe-T)
 (define-key evil-visual-state-map "s" #'evil-snipe-s)
 (define-key evil-visual-state-map "S" #'evil-snipe-S)
+
+(with-eval-after-load 'evil-quickscope
+  (setq
+    evil-quickscope-word-separator " -./")
+  (set-face-attribute 'evil-quickscope-first-face nil
+    :inherit nil)
+  (if (display-graphic-p)
+    (set-face-attribute 'evil-quickscope-second-face nil
+      :underline '(:style wave)
+      :inherit nil)
+    (set-face-attribute 'evil-quickscope-second-face nil
+      :inherit nil))
+
+  (defun nadvice/evil-quickscope-update-overlays-bidirectional ()
+    "Update overlays in both directions from point."
+    (evil-quickscope-remove-overlays)
+    (when (memq evil-state '(normal motion))
+      (evil-quickscope-apply-overlays-forward)
+      (evil-quickscope-apply-overlays-backward)))
+
+  (advice-add
+    'evil-quickscope-update-overlays-bidirectional
+    :override
+    #'nadvice/evil-quickscope-update-overlays-bidirectional))
+
+(global-evil-quickscope-always-mode +1)
 
 (provide 'config-evil-modules)
