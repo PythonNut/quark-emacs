@@ -27,10 +27,6 @@
   (lambda ()
     (make-variable-buffer-local 'company-idle-delay)))
 
-(defun eshell/clear ()
-  (interactive)
-  (let ((inhibit-read-only t)) (erase-buffer)))
-
 (defun eshell-kill-whole-line ()
   (interactive)
   (eshell-bol)
@@ -61,3 +57,18 @@
     eshell-mv-interactive-query t
     eshell-rm-interactive-query t
     eshell-mv-overwrite-files nil))
+
+(defun eshell/clear ()
+  (interactive)
+  (let ((inhibit-read-only t)) (erase-buffer)))
+
+(defun eshell/emacs (&rest args)
+  "Invoke `find-file' on the file.
+\"emacs +42 foo\" also goes to line 42 in the buffer."
+  (while args
+    (if (string-match "\\`\\+\\([0-9]+\\)\\'" (car args))
+      (let* ((line (string-to-number (match-string 1 (pop args))))
+              (file (pop args)))
+        (find-file file)
+        (goto-line line))
+      (find-file (pop args)))))
