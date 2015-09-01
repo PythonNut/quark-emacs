@@ -31,8 +31,18 @@
   (interactive)
   (let ((inhibit-read-only t)) (erase-buffer)))
 
+(defun eshell-kill-whole-line ()
+  (interactive)
+  (eshell-bol)
+  (kill-line))
+
 (defun eshell-onetime-setup ()
-  (define-key eshell-mode-map (kbd "<tab>") #'company-complete)
+  (evil-define-key 'insert eshell-mode-map (kbd "<tab>") #'company-complete)
+  (evil-define-key 'insert eshell-mode-map (kbd "C-a") #'eshell-bol)
+  (evil-define-key 'insert eshell-mode-map (kbd "<home>") #'eshell-bol)
+  (evil-define-key 'insert eshell-mode-map (kbd "<C-S-backspace>") #'eshell-kill-whole-line)
+  (evil-define-key 'insert eshell-mode-map (kbd "C-r") #'eshell-isearch-backward)
+
   (remove-hook 'eshell-mode-hook #'eshell-onetime-setup))
 
 (with-eval-after-load 'eshell
