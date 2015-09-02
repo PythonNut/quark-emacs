@@ -108,18 +108,6 @@
 ;; Change modeline color by Evil state
 (add-hook 'post-command-hook #'evil-set-mode-line-face)
 
-;; switch to insert state if I set an emacs-style mark
-(define-key evil-normal-state-map (kbd "C-SPC")
-  (lambda () (interactive)
-    (evil-insert-state)
-    (execute-kbd-macro (kbd "C-SPC"))))
-
-(define-key evil-normal-state-map (kbd "C-RET")
-  (lambda ()
-    (interactive)
-    (evil-insert-state)
-    (cua-set-rectangle-mark)))
-
 (define-key evil-insert-state-map (kbd "C-s")
   (lambda ()
     (interactive)
