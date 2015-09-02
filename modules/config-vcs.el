@@ -171,6 +171,9 @@ This requires the external program `diff' to be in your `exec-path'."
     (cl-macrolet
       ((magit-setup-section-k (mode &optional command)
          `(with-demoted-errors
+            (define-key ,mode (kbd "<C-tab>") nil)
+            (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
+            (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
             (define-key ,mode (kbd "k") #'previous-line)
             ,(when command
                `(define-key ,mode (kbd "K") ,command)))))
