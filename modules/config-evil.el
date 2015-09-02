@@ -17,6 +17,8 @@
   evil-want-C-w-in-emacs-state nil
   evil-want-fine-undo t)
 
+(fset 'evil-visual-update-x-selection 'ignore)
+
 (setq-default
   evil-symbol-word-search t)
 
