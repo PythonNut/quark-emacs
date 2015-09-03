@@ -98,4 +98,16 @@
         (append auto-mode-alist
           (list (cons buffer-file-name major-mode)))))))
 
+(with-eval-after-load 'desktop
+  (setq desktop-path '("~/.emacs.d/desktop"))
+  (setq desktop-dirname "~/.emacs.d/desktop")
+  (setq desktop-base-file-name "emacs-desktop"))
+
+(defun desktop-autosave ()
+  (cl-letf (((symbol-function 'message) #'format)
+             ((symbol-function 'y-or-n-p) (lambda (prompt) t)))
+    (desktop-save-in-desktop-dir)))
+
+(add-hook 'auto-save-hook 'desktop-autosave)
+
 (provide 'config-desktop)
