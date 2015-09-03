@@ -41,7 +41,7 @@
   delete-old-versions t ;; Don't Ask to delete excess backup versions
   backup-by-copying t   ;; Copy linked files, don't rename.
   backup-by-copying-when-linked t ;; copy links too
-  auto-save-timeout 10   ;; auto-save after 10s of idle time
+  auto-save-timeout 3    ;; auto-save after 10s of idle time
   auto-save-interval 200 ;; auto-save after 200 chars
   vc-make-backup-files t ;; because we don't commit every save
   )
