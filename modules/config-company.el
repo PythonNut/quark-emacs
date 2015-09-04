@@ -18,18 +18,42 @@
   (lambda ()
     (add-hook 'first-change-hook #'company-onetime-setup)))
 
-(defun completion-fuzzy-commonality (s1 s2)
-  (setq
-    s1 (string-to-list (copy-seq s1))
-    s2 (string-to-list (copy-seq s2)))
-  (if (> (length s1) (length s2))
-    (cl-rotatef s1 s2))
-  (let ((res) (idx))
-    (dolist (char s1)
-      (when (setq idx (position char s2))
-        (push char res)
-        (setq s2 (cl-subseq s2 (1+ idx)))))
-    (concat (nreverse res))))
+(defun completion-fuzzy-commonality (strs)
+  (let ((hash-value (gethash strs commonality-cache nil)))
+    (if hash-value
+      (if (eq hash-value 'nothing)
+        nil
+        hash-value)
+
+      (setq strs (mapcar #'string-to-list strs))
+      (let ((res) (tried) (idx))
+        (dolist (char (car strs))
+          (unless (memq char tried)
+            (catch 'notfound
+              (setq idx (mapcar (lambda (str)
+                                  (or
+                                    (position char str)
+                                    (throw 'notfound nil)))
+                          strs))
+              (push (cons char
+                      (completion-fuzzy-commonality
+                        (cl-mapcar (lambda (str idx)
+                                     (cl-subseq str (1+ idx)))
+                          strs idx)))
+                res)
+              (push char tried))))
+        (setq  res (if res
+                     (cl-reduce
+                       (lambda (a b)
+                         (if (> (length a) (length b)) a b))
+                       res)
+                     nil))
+        (puthash strs
+          (if res
+            res
+            'nothing)
+          commonality-cache)
+        res))))
 
 (defun completion-fuzzy-find-holes (merged str)
   (let ((holes) (idx))
@@ -46,13 +70,9 @@
     holes))
 
 (defun completion-fuzzy-merge (strs)
-  (let ((common (car strs))
-         (holes))
-
-    (dolist (str strs)
-      (setq common
-        (completion-fuzzy-commonality common str)))
-
+  (let* ((commonality-cache (make-hash-table :test 'equal :size 200))
+          (common (concat (completion-fuzzy-commonality strs)))
+          (holes))
     (setq holes (make-vector (1+ (length common)) 0))
     (dolist (str strs)
       (dolist (hole (completion-fuzzy-find-holes common str))
