@@ -135,17 +135,7 @@
             (cons
               (concat prefix merged suffix)
               (+ (length prefix)
-                (if (string= infix merged)
-                  (if (< point (+ (length prefix) (length infix)))
-                    (length infix)
-                    (while (/= point
-                             (+ (length prefix)
-                               (position (apply #'max holes) holes)))
-                      (setf (elt holes (position (apply #'max holes) holes)) 0))
-                    (setf (elt holes (position (apply #'max holes) holes)) 0)
-                    (print holes)
-                    (position (apply #'max holes) holes))
-                  (position (apply #'max holes) holes))))))))))
+                (position (apply #'max holes) holes)))))))))
 
 (defun completion-fuzzy-try-completion (string table predicate point)
   (completion-fuzzy-completion string table predicate point))
