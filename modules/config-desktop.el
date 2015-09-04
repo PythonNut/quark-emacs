@@ -3,6 +3,7 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'dash)
+    (require 'desktop)
     (require 'cl-lib)
     (require 'recentf)
     (require 'saveplace)
@@ -99,15 +100,16 @@
           (list (cons buffer-file-name major-mode)))))))
 
 (with-eval-after-load 'desktop
-  (setq desktop-path '("~/.emacs.d/desktop"))
-  (setq desktop-dirname "~/.emacs.d/desktop")
-  (setq desktop-base-file-name "emacs-desktop"))
+  (setq
+    desktop-path '("~/.emacs.d/desktop")
+    desktop-dirname "~/.emacs.d/desktop"
+    desktop-base-file-name "emacs-desktop"))
 
 (defun desktop-autosave ()
   (cl-letf (((symbol-function 'message) #'format)
              ((symbol-function 'y-or-n-p) (lambda (prompt) t)))
     (desktop-save-in-desktop-dir)))
 
-(add-hook 'auto-save-hook 'desktop-autosave)
+(run-with-idle-timer 3 t #'desktop-autosave)
 
 (provide 'config-desktop)
