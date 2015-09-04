@@ -117,7 +117,6 @@
              ((symbol-function 'y-or-n-p) (lambda (prompt) t)))
     (desktop-save-in-desktop-dir)))
 
-(run-with-idle-timer 3 t #'desktop-autosave)
 (defun desktop-load (&optional arg)
   (interactive "p")
   (if (= arg 4)
@@ -133,5 +132,19 @@
       (desktop-remove))
     (desktop-read)))
 
+(defvar desktop-auto-save-timer
+  (run-with-idle-timer 3 nil #'desktop-autosave))
+
+(add-hook 'focus-out-hook
+  (lambda ()
+    (cancel-timer desktop-auto-save-timer)
+    (setq desktop-auto-save-timer
+      (run-with-idle-timer 0.2 nil #'desktop-autosave))))
+
+(add-hook 'focus-in-hook
+  (lambda ()
+    (cancel-timer desktop-auto-save-timer)
+    (setq desktop-auto-save-timer
+      (run-with-idle-timer 3 nil #'desktop-autosave))))
 
 (provide 'config-desktop)
