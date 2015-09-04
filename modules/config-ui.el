@@ -188,15 +188,27 @@
 (add-hook 'auto-highlight-symbol-mode-hook
   (lambda ()
     (diminish 'auto-highlight-symbol-mode)
-    (set-face-attribute 'ahs-plugin-defalt-face nil
-      :foreground nil)
-    (set-face-attribute 'ahs-face nil
-      :foreground nil
-      :background "#073642")
-    (set-face-attribute 'ahs-definition-face nil
-      :foreground nil
-      :background "#073642"
-      :underline '(:color "#268bd2"))
+    (if (display-graphic-p)
+      (progn
+        (set-face-attribute 'ahs-face nil
+          :foreground nil
+          :background "#073642")
+        (set-face-attribute 'ahs-definition-face nil
+          :foreground nil
+          :background "#073642"
+          :underline '(:color "#268bd2")))
+
+      (set-face-attribute 'ahs-plugin-defalt-face nil
+        :foreground nil
+        :background "grey20")
+      (set-face-attribute 'ahs-face nil
+        :foreground nil
+        :background "grey20")
+      (set-face-attribute 'ahs-definition-face nil
+        :foreground nil
+        :background "grey20"
+        :underline '(:color "#268bd2")))
+
     (set-face-attribute 'ahs-warning-face nil
       :foreground nil
       :underline '(:color "yellow"))
