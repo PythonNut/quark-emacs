@@ -129,6 +129,7 @@
     :override
     #'nadvice/evil-quickscope-update-overlays-bidirectional))
 
-(global-evil-quickscope-always-mode +1)
+(unless my/slow-device
+  (global-evil-quickscope-always-mode +1))
 
 (provide 'config-evil-modules)

@@ -185,7 +185,6 @@
   (setq
     ahs-idle-interval 0.3))
 
-(require 'auto-highlight-symbol)
 (add-hook 'auto-highlight-symbol-mode-hook
   (lambda ()
     (diminish 'auto-highlight-symbol-mode)
@@ -208,7 +207,9 @@
       :foreground nil
       :underline '(:color "black"))))
 
-(global-auto-highlight-symbol-mode +1)
+(unless my/slow-device
+  (require 'auto-highlight-symbol)
+  (global-auto-highlight-symbol-mode +1))
 
 (global-set-key (kbd "<remap> <just-one-space>") #'cycle-spacing)
 
