@@ -85,9 +85,6 @@ ac-comphist.dat
 /srecode-map.el
 
 
-# desktop files
-/desktop
-
 # misc
 *.undo.xz
 *#
