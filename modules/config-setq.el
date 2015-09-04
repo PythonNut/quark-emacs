@@ -51,7 +51,7 @@
   (interactive "p")
   ;; We need the new emacs to be spawned after all kill-emacs-hooks
   ;; have been processed and there is nothing interesting left
-  (if (/= arg 4)
+  (if (and (called-interactively-p 'any) (/= arg 4))
     (add-hook 'kill-emacs-hook
       (lambda ()
         (if (display-graphic-p)
