@@ -80,4 +80,15 @@
       "modules/")
     0))
 
+(defun emergency-fix-config ()
+  (interactive)
+  (let ((default-directory user-emacs-directory))
+    (shell-command "git stash")
+    (shell-command "git pull --rebase"))
+  (with-demoted-errors
+    (delete-directory (concat user-emacs-directory "elpa") t t))
+  (my/ensure-packages-are-installed my/required-packages)
+  (byte-recompile-config)
+  (restart-emacs))
+
 (provide 'config-setq)
