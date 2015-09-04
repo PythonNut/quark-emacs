@@ -69,7 +69,7 @@
       t))
   (save-buffers-kill-emacs))
 
-(defun recompile-config ()
+(defun byte-recompile-config ()
   (interactive)
   (byte-compile-file (concat
                        user-emacs-directory
