@@ -101,16 +101,21 @@
 
 (with-eval-after-load 'desktop
   (setq
-    desktop-path '("~/.emacs.d/desktop")
-    desktop-dirname "~/.emacs.d/desktop"
-    desktop-base-file-name "emacs-desktop"))
+    desktop-path '("~/.emacs.d/desktop/")
+    desktop-dirname "~/.emacs.d/desktop/"
+    desktop-base-file-name "emacs-desktop"
+    desktop-base-lock-name "emacs-desktop.lock"))
 
 (defun desktop-autosave (&optional arg)
   (interactive "p")
   (if (called-interactively-p 'any)
     (if (= arg 4)
-      (let ((desktop-base-file-name
-              (read-from-minibuffer "Session name: ")))
+      (let* ((desktop-base-file-name
+               (read-from-minibuffer "Session name: "))
+              (desktop-base-lock-name
+                (concat
+                  desktop-base-file-name
+                  ".lock")))
         (desktop-save-in-desktop-dir))
       (desktop-save-in-desktop-dir)))
   (cl-letf (((symbol-function 'message) #'format)
@@ -127,7 +132,11 @@
             (desktop-base-file-name (completing-read
                                       "Complete a foo: "
                                       files
-                                      nil t)))
+                                      nil t))
+            (desktop-base-lock-name
+              (concat
+                desktop-base-file-name
+                ".lock")))
       (desktop-read)
       (desktop-remove))
     (desktop-read)))
