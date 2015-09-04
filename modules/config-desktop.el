@@ -34,9 +34,12 @@
   recentf-max-saved-items 200
   recentf-max-menu-items 30)
 
-(if (fboundp 'save-place-mode)
-  (save-place-mode +1)
-  (setq-default save-place t))
+(with-eval-after-load 'saveplace
+  (if (fboundp 'save-place-mode)
+    (save-place-mode +1)
+    (setq-default save-place t)))
+
+(add-hook 'find-file-hook (lambda () (require 'saveplace)))
 
 (require 'savehist)
 (savehist-mode +1)
