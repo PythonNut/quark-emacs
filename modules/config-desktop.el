@@ -105,11 +105,33 @@
     desktop-dirname "~/.emacs.d/desktop"
     desktop-base-file-name "emacs-desktop"))
 
-(defun desktop-autosave ()
+(defun desktop-autosave (&optional arg)
+  (interactive "p")
+  (if (called-interactively-p 'any)
+    (if (= arg 4)
+      (let ((desktop-base-file-name
+              (read-from-minibuffer "Session name: ")))
+        (desktop-save-in-desktop-dir))
+      (desktop-save-in-desktop-dir)))
   (cl-letf (((symbol-function 'message) #'format)
              ((symbol-function 'y-or-n-p) (lambda (prompt) t)))
     (desktop-save-in-desktop-dir)))
 
 (run-with-idle-timer 3 t #'desktop-autosave)
+(defun desktop-load (&optional arg)
+  (interactive "p")
+  (if (= arg 4)
+    (let* ((files (cl-remove-if
+                    (lambda (item)
+                      (string-match-p "^\\(\\..*\\|.*\.lock\\)$" item))
+                    (directory-files desktop-dirname)))
+            (desktop-base-file-name (completing-read
+                                      "Complete a foo: "
+                                      files
+                                      nil t)))
+      (desktop-read)
+      (desktop-remove))
+    (desktop-read)))
+
 
 (provide 'config-desktop)
