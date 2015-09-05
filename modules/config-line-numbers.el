@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 (eval-when-compile
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (require 'linum-relative)))
 
 (with-eval-after-load 'linum

@@ -3,7 +3,7 @@
 (require 'smartparens-config)
 
 (eval-when-compile
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (require 'evil)
     (require 'key-chord)
     (require 'hydra)

@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 (eval-when-compile
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
     (require 'evil)
     (require 'key-chord)

@@ -3,7 +3,7 @@
 (require 'evil)
 
 (eval-when-compile
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (require 'evil)
     (require 'evil-surround)))
 

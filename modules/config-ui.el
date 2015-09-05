@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
 (eval-when-compile
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
     (require 'hydra)
     (require 'key-chord)
@@ -166,7 +166,7 @@
 
 (with-eval-after-load 'volatile-highlights
   (diminish #'volatile-highlights-mode)
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (vhl/define-extension 'my-evil-highlights
       'evil-yank
       'evil-paste-pop-proxy

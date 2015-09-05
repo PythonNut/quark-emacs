@@ -2,7 +2,7 @@
 ;; Automatically save and restore sessions
 
 (eval-when-compile
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (require 'dash)
     (require 'desktop)
     (require 'cl-lib)
@@ -48,7 +48,7 @@
 ;; text properties severely bloat the history so delete them
 (defun my/unpropertize-savehist ()
   (mapc (lambda (list)
-          (with-demoted-errors
+          (with-demoted-errors "Error: %s"
             (when (boundp list)
               (set list (mapcar #'substring-no-properties (eval list))))))
     '(

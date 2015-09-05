@@ -3,7 +3,7 @@
 (require 'package)
 
 (eval-when-compile
-  (with-demoted-errors
+  (with-demoted-errors "Load error: %s"
     (require 'cl-lib)))
 
 ;; Package archives
