@@ -107,7 +107,7 @@
 
 (my/ensure-packages-are-installed my/required-packages)
 
-(add-to-list 'load-path (concat user-emacs-directory "personal/"))
+(add-to-list 'load-path (expand-file-name "personal/" user-emacs-directory))
 
 (with-eval-after-load 'idle-require
   (add-hook 'idle-require-mode-hook

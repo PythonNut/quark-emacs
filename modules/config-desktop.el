@@ -18,9 +18,9 @@
   history-length 100
   history-delete-duplicates t
 
-  save-place-file (concat user-emacs-directory ".saveplace")
+  save-place-file (expand-file-name ".saveplace" user-emacs-directory)
 
-  savehist-file (concat user-emacs-directory ".savehist")
+  savehist-file (expand-file-name ".savehist" user-emacs-directory)
   savehist-autosave-interval 180
   savehist-save-minibuffer-history t
   savehist-additional-variables
@@ -30,7 +30,7 @@
      regexp-search-ring)
 
   ;; remember more recent files
-  recentf-save-file (concat user-emacs-directory ".recentf")
+  recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
   recentf-max-saved-items 200
   recentf-max-menu-items 30)
 
@@ -104,8 +104,8 @@
 
 (with-eval-after-load 'desktop
   (setq
-    desktop-path '("~/.emacs.d/desktop/")
-    desktop-dirname "~/.emacs.d/desktop/"
+    desktop-dirname (expand-file-name "desktop/" user-emacs-directory)
+    desktop-path (list desktop-dirname)
     desktop-base-file-name "emacs-desktop"
     desktop-base-lock-name "emacs-desktop.lock"))
 

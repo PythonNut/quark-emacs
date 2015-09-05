@@ -2,9 +2,12 @@
   (with-demoted-errors
     (require 'autorevert)))
 
-(defvar backup-location (concat user-emacs-directory "data/backups"))
-(defvar autosave-location (concat user-emacs-directory "data/autosave"))
-(defvar tramp-backup-directory (concat user-emacs-directory "data/tramp-backups"))
+(defvar backup-location
+  (expand-file-name "data/backups" user-emacs-directory))
+(defvar autosave-location
+  (expand-file-name "data/autosave" user-emacs-directory))
+(defvar tramp-backup-directory
+  (expand-file-name "data/tramp-backups" user-emacs-directory))
 
 (setq backup-directory-alist
   `((".*" . ,backup-location)))

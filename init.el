@@ -30,7 +30,7 @@
 
   (eval-and-compile
     (add-to-list 'load-path
-      (concat user-emacs-directory "modules/"))
+      (expand-file-name "modules/" user-emacs-directory))
     
     (defmacro when* (condition &rest body)
       (when condition

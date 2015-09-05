@@ -107,9 +107,9 @@
   
   ;; backup locations
   backup-directory-alist
-  `((".*" . ,(concat user-emacs-directory "data/backups")))
+  `((".*" . ,(expand-file-name "data/backups" user-emacs-directory)))
   auto-save-file-name-transforms
-  `((".*" ,(concat user-emacs-directory "data/autosave") t))
+  `((".*" ,(expand-file-name "data/autosave" user-emacs-directory) t))
 
   ;; auto-save parameters
   version-control t 

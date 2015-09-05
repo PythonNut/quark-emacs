@@ -8,7 +8,8 @@
 
 (setq
   ido-enable-flex-matching t
-  ido-save-directory-list-file (concat user-emacs-directory "ido.last")
+  ido-save-directory-list-file
+  (expand-file-name "ido.last" user-emacs-directory)
   ido-use-faces nil)
 
 (ido-mode +1)
@@ -41,9 +42,9 @@
 
 (with-eval-after-load 'smex
   (setq smex-save-file
-    (concat
-      user-emacs-directory
-      "smex-items")))
+    (expand-file-name
+      "smex-items"
+      user-emacs-directory)))
 
 (global-set-key (kbd "M-x") #'smex)
 

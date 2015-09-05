@@ -71,13 +71,13 @@
 
 (defun byte-recompile-config ()
   (interactive)
-  (byte-compile-file (concat
-                       user-emacs-directory
-                       "init.el"))
+  (byte-compile-file (expand-file-name
+                       "init.el"
+                       user-emacs-directory))
   (byte-recompile-directory
-    (concat
-      user-emacs-directory
-      "modules/")
+    (expand-file-name
+      "modules/"
+      user-emacs-directory)
     0))
 
 (defun emergency-fix-config ()
@@ -86,7 +86,7 @@
     (shell-command "git stash")
     (shell-command "git pull --rebase"))
   (with-demoted-errors
-    (delete-directory (concat user-emacs-directory "elpa") t t))
+    (delete-directory (expand-file-name "elpa" user-emacs-directory) t t))
   (my/ensure-packages-are-installed my/required-packages)
   (byte-recompile-config)
   (restart-emacs))

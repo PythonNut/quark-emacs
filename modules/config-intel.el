@@ -16,11 +16,11 @@
 
 (defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
   (if (and
-       (featurep 'flycheck)
-       flycheck-mode
-       (progn (require 's)
-              (flycheck-overlay-errors-at (point))))
-      (flycheck-display-error-at-point)
+        (featurep 'flycheck)
+        flycheck-mode
+        (progn (require 's)
+          (flycheck-overlay-errors-at (point))))
+    (flycheck-display-error-at-point)
     (apply old-fun args)))
 
 (advice-add 'semantic-idle-summary-idle-function
@@ -140,9 +140,9 @@
       (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
   (setq
     yas-snippet-dirs (list
-                       (concat
-                         user-emacs-directory
-                         "data/snippets")))
+                       (expand-file-name
+                         "data/snippets"
+                         user-emacs-directory)))
   (yas-global-mode +1)
   (yas-reload-all))
 
