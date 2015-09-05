@@ -44,7 +44,8 @@
   `(progn
      ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
 
-(key-chord-mode +1)
+(cl-letf (((symbol-function 'message) #'format))
+  (key-chord-mode +1))
 
 (defun really-kill-emacs ()
   "Like `kill-emacs', but ignores `kill-emacs-hook'."
