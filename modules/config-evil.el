@@ -4,7 +4,6 @@
 
 (eval-when-compile
   (with-demoted-errors
-    (require 'cl)
     (require 'evil)
     (require 'evil-surround)))
 
@@ -79,7 +78,7 @@
 (advice-add 'evil-paste-before :around #'nadvice/evil-paste-indent)
 (advice-add 'evil-paste-after :around #'nadvice/evil-paste-indent)
 
-(lexical-let ((my/evil-mode-line-face-cookies nil))
+(let ((my/evil-mode-line-face-cookies nil))
   (defun my/evil-set-mode-line-face ()
     (let ((color
             (if (< (display-color-cells) 256)

@@ -3,7 +3,6 @@
 (eval-when-compile
   (with-demoted-errors
     (require 'cl-lib)
-    (require 'cl)
     (require 'hydra)
     (require 'key-chord)
     (require 'evil)
@@ -103,7 +102,7 @@
 ;;; ====================================
 ;;; iflib - switch buffers alt-tab style
 ;;; ====================================
-(lexical-let ((iflipb-running-p))
+(let ((my/iflipb-running-p))
   (with-eval-after-load 'iflipb
     (setq
       iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
@@ -129,7 +128,7 @@
     (defun nadvice/iflipb-first-iflipb-buffer-switch-command ()
       "Determines whether this is the first invocation of
   iflipb-next-buffer or iflipb-previous-buffer this round."
-      iflipb-running-p)
+      my/iflipb-running-p)
 
     (advice-add 'iflipb-first-iflipb-buffer-switch-command :override
       #'nadvice/iflipb-first-iflipb-buffer-switch-command))
@@ -137,14 +136,14 @@
   (defun iflipb-next-buffer-smart ()
     "A `hydra' enabled next-buffer"
     (interactive)
-    (let ((iflipb-running-p t))
+    (let ((my/iflipb-running-p t))
       (call-interactively #'iflipb-next-buffer))
     (my/iflipb-smart-buffer))
 
   (defun iflipb-previous-buffer-smart ()
     "A `hydra' enabled previous-buffer"
     (interactive)
-    (let ((iflipb-running-p t))
+    (let ((my/iflipb-running-p t))
       (call-interactively #'iflipb-previous-buffer))
     (my/iflipb-smart-buffer)))
 

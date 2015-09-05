@@ -6,7 +6,6 @@
 (setq load-prefer-newer t)
 
 (eval-when-compile
-  (require 'cl)
   (require 'cl-lib))
 
 (defun nadvice/load-quiet (args)
