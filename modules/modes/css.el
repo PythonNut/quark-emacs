@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (with-eval-after-load 'css-mode
   (sp-local-pair 'css-mode "{" nil :post-handlers
     '(:add
