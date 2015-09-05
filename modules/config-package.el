@@ -2,9 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors
-    (require 'cl-lib)
-    (require 'idle-require)
-    (require 'diminish)))
+    (require 'cl-lib)))
 
 ;; Package archives
 (setq
