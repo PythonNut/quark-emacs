@@ -72,10 +72,10 @@
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this)
 
 ;; directional window movement
-(global-set-key (kbd "<M-left>")  'windmove-left)
-(global-set-key (kbd "<M-right>") 'windmove-right)
-(global-set-key (kbd "<M-up>")    'windmove-up)
-(global-set-key (kbd "<M-down>")  'windmove-down)
+(global-set-key (kbd "<M-left>")  #'windmove-left)
+(global-set-key (kbd "<M-right>") #'windmove-right)
+(global-set-key (kbd "<M-up>")    #'windmove-up)
+(global-set-key (kbd "<M-down>")  #'windmove-down)
 
 (defun my/framemove-onetime-setup ()
   (windmove-default-keybindings 'meta)
