@@ -16,7 +16,6 @@
   sp-cancel-autoskip-on-backward-movement nil)
 
 (smartparens-global-mode +1)
-;; (raise-minor-mode-map-alist 'my/smartparens-mode-map)
 
 ;; define smartparens motions as evil motions
 (evil-define-motion evil-forward-sexp (count)
