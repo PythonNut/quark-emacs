@@ -47,6 +47,13 @@
 
   (message "[                ]")
   (require 'config-setq)
+
+  (defun my/automatic-repair ()
+    (message "Init did not complete! Attempting automatic repairs.")
+    (byte-recompile-config))
+
+  (add-hook 'emacs-startup-hook #'my/automatic-repair)
+
   (message "[=               ]")
   (require 'config-package)
   (message "[==              ]")
@@ -89,4 +96,5 @@
                 user-emacs-directory
                 "modules/modes/"))
 
-  (advice-remove 'load #'nadvice/load-quiet))
+  (advice-remove 'load #'nadvice/load-quiet)
+  (remove-hook 'emacs-startup-hook #'my/automatic-repair))
