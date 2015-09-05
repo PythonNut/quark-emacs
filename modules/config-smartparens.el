@@ -162,10 +162,7 @@
   (unless (fboundp 'evil-sp-move-hydra/body)
     (require 'hydra)
     (defhydra evil-sp-move-hydra (:hint nil :idle 0.3)
-      "
-[_U_] ↰↱ [_u_]
-[_b_] ←→ [_f_]  [_p_] ←  next  → [_n_]
-[_D_] ↲↳ [_d_] "
+      "[_U_] ↰↱ [_u_]  [_b_] ←→ [_f_]  [_D_] ↲↳ [_d_]  [_p_] ←  next  → [_n_]"
       ("f" evil-forward-sexp)
       ("b" evil-backward-sexp)
       ("d" evil-down-sexp)
@@ -180,11 +177,7 @@
   (unless (fboundp 'evil-sp-barfslurp-hydra/body)
     (require 'hydra)
     (defhydra evil-sp-barfslurp-hydra (:hint nil :idle 0.3)
-      "
-                                        [_<_] ← barf  → [_._]
-                                        [_>_] ← slurp → [_,_]
-                                        [_a_] ← emit  → [_e_]
-"
+      "[_<_] ← barf  → [_._]  [_>_] ← slurp → [_,_]  [_a_] ← emit  → [_e_]"
       ("," sp-forward-slurp-sexp)
       ("." sp-forward-barf-sexp)
       ("<" sp-backward-slurp-sexp)
