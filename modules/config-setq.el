@@ -71,14 +71,15 @@
 
 (defun byte-recompile-config ()
   (interactive)
-  (byte-compile-file (expand-file-name
-                       "init.el"
-                       user-emacs-directory))
-  (byte-recompile-directory
-    (expand-file-name
-      "modules/"
-      user-emacs-directory)
-    0))
+  (when (byte-compile-file (expand-file-name
+                             "init.el"
+                             user-emacs-directory))
+    (not (string-match-p "failed"
+           (byte-recompile-directory
+             (expand-file-name
+               "modules/"
+               user-emacs-directory)
+             0)))))
 
 (defun emergency-fix-config ()
   (interactive)

@@ -51,7 +51,10 @@
 
   (defun my/automatic-repair ()
     (message "Init did not complete! Attempting automatic repairs.")
-    (byte-recompile-config))
+    (sit-for 1)
+    (unless (byte-recompile-config)
+      (when (y-or-n-p "Automatic repair failed. Try emergency rebuild? ")
+        (emergency-fix-config))))
 
   (add-hook 'emacs-startup-hook #'my/automatic-repair)
 
