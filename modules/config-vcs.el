@@ -72,7 +72,13 @@
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
 
   (add-hook 'magit-log-mode-hook
-    (lambda () (set-input-method "TeX"))))
+    (lambda () (set-input-method "TeX")))
+
+  (defun nadvice/magit-revert-buffers (&rest args)
+    (run-with-timer 1 nil #'message ""))
+
+  (advice-add 'magit-revert-buffers :after
+    #'nadvice/magit-revert-buffers))
 
 (global-set-key (kbd "C-c C-c s") #'svn-status)
 
