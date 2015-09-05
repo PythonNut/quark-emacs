@@ -56,7 +56,7 @@
       (lambda ()
         (if (display-graphic-p)
           (call-process "sh" nil nil nil "-c" "emacs &")
-          (suspend-emacs "(sleep 1; emacs -nw < `tty`) & fg; fg")))
+          (suspend-emacs "(emacs -nw < `tty`) & fg; fg")))
       t)
 
     (desktop-save-in-desktop-dir)
@@ -65,7 +65,7 @@
         (if (display-graphic-p)
           (call-process "sh" nil nil nil "-c" "emacs --eval '(desktop-read)'&")
           (suspend-emacs
-            "(sleep 1; emacs --eval '(desktop-read)' -nw < `tty`) & fg; fg")))
+            "(emacs --eval '(desktop-read)' -nw < `tty`) & fg; fg")))
       t))
   (save-buffers-kill-emacs))
 
