@@ -109,6 +109,9 @@
 
 (my/ensure-packages-are-installed my/required-packages)
 
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'idle-require)))
 (add-to-list 'load-path (expand-file-name "personal/" user-emacs-directory))
 
 (with-eval-after-load 'idle-require
@@ -154,6 +157,7 @@
     (let ((name (symbol-name sym)))
       (unless (string= name "idle-require")
         (message (format "Loading %s..." name))
-        (with-demoted-errors (require sym nil t))))))
+        (with-demoted-errors "Idle load error: %s"
+          (require sym nil t))))))
 
 (provide 'config-package)
