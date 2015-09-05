@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (defun nadvice/load-theme (old-fun &rest args)
   (run-hooks 'load-theme-hook))
 

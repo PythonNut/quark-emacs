@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 ;; Automatically save and restore sessions
 
 (eval-when-compile

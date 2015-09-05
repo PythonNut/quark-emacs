@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (eval-when-compile
   (with-demoted-errors
     (require 'ido-ubiquitous)))

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (setq
   mouse-wheel-scroll-amount '(3 ((shift) . 1))
   redisplay-dont-pause t

@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (require 'evil)
 
 (eval-when-compile

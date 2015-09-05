@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (require 'smartparens-config)
 
 (eval-when-compile

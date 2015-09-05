@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (setq
   ad-redefinition-action 'accept
   cursor-type 'box

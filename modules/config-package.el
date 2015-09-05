@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t -*-
+
 (require 'package)
 
 (eval-when-compile
