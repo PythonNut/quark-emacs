@@ -87,8 +87,6 @@
   (message "[==============   ]")
   (require 'config-intel)
   (message "[===============  ]")
-  (require 'config-solarized)
-  (message "[================ ]")
 
   (defun my/recursively-load-dir (dir)
     (let ((suffixes (get-load-suffixes))
@@ -108,6 +106,8 @@
       "modules/modes/"
       user-emacs-directory))
 
+  (message "[================ ]")
+  (require 'config-solarized)
   (message "[=================]")
 
   (advice-remove 'load #'nadvice/load-quiet)
