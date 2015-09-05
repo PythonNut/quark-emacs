@@ -30,11 +30,7 @@
 
   (eval-and-compile
     (add-to-list 'load-path
-      (expand-file-name "modules/" user-emacs-directory))
-    
-    (defmacro when* (condition &rest body)
-      (when condition
-        `(progn ,@body))))
+                 (expand-file-name "modules/" user-emacs-directory)))
 
   ;; suppress the GNU spam
   (setq inhibit-startup-echo-area-message "pythonnut")
