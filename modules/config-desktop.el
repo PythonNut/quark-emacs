@@ -159,4 +159,11 @@
     (setq desktop-auto-save-timer
       (run-with-idle-timer 3 nil #'desktop-autosave))))
 
+(with-eval-after-load 'desktop
+  (defun nadvice/desktop-claim-lock (&optional dirname)
+    (write-region (number-to-string (emacs-pid)) nil
+      (desktop-full-lock-name dirname) nil 1))
+
+  (advice-add #'desktop-claim-lock :override #'nadvice/desktop-claim-lock))
+
 (provide 'config-desktop)
