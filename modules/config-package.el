@@ -92,7 +92,6 @@
      idle-require
      key-chord
      linum-relative
-     load-dir
      ;; magit
      magit-filenotify
      multiple-cursors

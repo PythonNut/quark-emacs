@@ -54,47 +54,57 @@
 
   (add-hook 'emacs-startup-hook #'my/automatic-repair)
 
-  (message "[=               ]")
+  (message "[=                ]")
   (require 'config-package)
-  (message "[==              ]")
+  (message "[==               ]")
   (require 'config-modes)
-  (message "[===             ]")
+  (message "[===              ]")
   (require 'config-desktop)
-  (message "[====            ]")
+  (message "[====             ]")
   (require 'config-safety)
-  (message "[=====           ]")
+  (message "[=====            ]")
   (require 'config-evil)
-  (message "[======          ]")
+  (message "[======           ]")
   (require 'config-ui)
-  (message "[=======         ]")
+  (message "[=======          ]")
   (require 'config-whitespace)
-  (message "[========        ]")
+  (message "[========         ]")
   (require 'config-paste)
-  (message "[=========       ]")
+  (message "[=========        ]")
   (require 'config-company)
-  (message "[==========      ]")
+  (message "[==========       ]")
   (require 'config-vcs)
-  (message "[===========     ]")
+  (message "[===========      ]")
   (require 'config-ido)
-  (message "[============    ]")
+  (message "[============     ]")
   (require 'config-helm)
-  (message "[=============   ]")
+  (message "[=============    ]")
   (require 'config-minibuffer)
-  (message "[==============  ]")
+  (message "[==============   ]")
   (require 'config-intel)
-  (message "[=============== ]")
+  (message "[===============  ]")
   (require 'config-solarized)
-  (message "[================]")
+  (message "[================ ]")
 
-  (eval-when-compile
-    (ignore-errors
-      (require 'load-dir)))
+  (defun my/recursively-load-dir (dir)
+    (let ((suffixes (get-load-suffixes))
+           (already-loaded))
+      (dolist (f (directory-files dir t
+                   directory-files-no-dot-files-regexp))
+        (if (file-directory-p f)
+          (my/recursively-load-dir f)
+          (when (member (file-name-extension f t) suffixes)
+            (setq f (file-name-sans-extension f))
+            (unless (member f already-loaded)
+              (load f)
+              (push f already-loaded)))))))
 
-  (setq
-    load-dir-debug nil
-    load-dirs (concat
-                user-emacs-directory
-                "modules/modes/"))
+  (my/recursively-load-dir
+    (expand-file-name
+      "modules/modes/"
+      user-emacs-directory))
+
+  (message "[=================]")
 
   (advice-remove 'load #'nadvice/load-quiet)
   (remove-hook 'emacs-startup-hook #'my/automatic-repair))
