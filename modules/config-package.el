@@ -58,18 +58,11 @@
      gitattributes-mode
      gitconfig-mode
      gitignore-mode
-     haskell-mode
      ;; js2-mode
      js2-refactor
      json-mode
-     julia-mode
      markdown-mode
-     matlab-mode
      php-mode
-     pkgbuild-mode
-     sage-shell-mode
-     sass-mode
-     scss-mode
      web-mode
      yaml-mode
 
