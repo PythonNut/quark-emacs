@@ -5,7 +5,7 @@
     (require 'magit)
     (require 'diff-hl)))
 
-(unless my/slow-device
+(unless (bound-and-true-p my/slow-device)
   (add-hook 'find-file-hook
     (lambda ()
       (when (display-graphic-p)

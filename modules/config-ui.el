@@ -222,7 +222,8 @@
       :foreground nil
       :underline '(:color "black"))))
 
-(unless (or my/slow-device (< (display-color-cells) 256))
+(unless (or (bound-and-true-p my/slow-device)
+          (< (display-color-cells) 256))
   (require 'auto-highlight-symbol)
   (global-auto-highlight-symbol-mode +1))
 

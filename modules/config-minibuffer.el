@@ -4,7 +4,7 @@
   (with-demoted-errors
     (require 'ido-ubiquitous)))
 
-(unless my/slow-device
+(unless (bound-and-true-p my/slow-device)
   (require 'config-icicles))
 
 ;; bind command to switch to minibuffer

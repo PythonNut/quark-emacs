@@ -131,7 +131,8 @@
     :override
     #'nadvice/evil-quickscope-update-overlays-bidirectional))
 
-(unless (or my/slow-device (< (display-color-cells) 256))
+(unless (or (bound-and-true-p my/slow-device)
+          (< (display-color-cells) 256))
   (global-evil-quickscope-always-mode +1))
 
 (provide 'config-evil-modules)

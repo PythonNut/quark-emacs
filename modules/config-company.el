@@ -150,7 +150,7 @@
      completion-fuzzy-all-completions
      "Simple fuzzy completion, which never alters the string to complete, unless a unique match exists."))
 
-(unless my/slow-device
+(unless (bound-and-true-p my/slow-device)
   (setq completion-styles (list 'fuzzy)))
 
 (with-eval-after-load 'company
