@@ -80,8 +80,6 @@
   (advice-add 'magit-revert-buffers :after
     #'nadvice/magit-revert-buffers))
 
-(global-set-key (kbd "C-c C-c s") #'svn-status)
-
 (with-eval-after-load 'projectile
   (projectile-global-mode +1)
   (require 'magit)
