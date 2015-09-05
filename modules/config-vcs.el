@@ -3,10 +3,12 @@
     (require 'magit)
     (require 'diff-hl)))
 
-(add-hook 'find-file-hook
-  (lambda ()
-    (diff-hl-mode +1)
-    (diff-hl-update)))
+(unless my/slow-device
+  (add-hook 'find-file-hook
+    (lambda ()
+      (when (display-graphic-p)
+        (diff-hl-mode +1)
+        (diff-hl-update)))))
 
 (with-eval-after-load 'diff-hl
   (setq diff-hl-draw-borders nil)
