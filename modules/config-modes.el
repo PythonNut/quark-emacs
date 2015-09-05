@@ -7,11 +7,11 @@
 (global-hl-line-mode +1)
 (subword-mode +1)
 
-(defun auto-compression-onetime-setup ()
+(defun my/auto-compression-onetime-setup ()
   (auto-compression-mode +1)
-  (remove-hook 'find-file-hook #'auto-compression-onetime-setup))
+  (remove-hook 'find-file-hook #'my/auto-compression-onetime-setup))
 
-(add-hook 'find-file-hook #'auto-compression-onetime-setup)
+(add-hook 'find-file-hook #'my/auto-compression-onetime-setup)
 
 ;; encryption mode
 (setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
@@ -26,22 +26,22 @@
       (let ((buffer-file-name (buffer-name)))
         (set-auto-mode)))))
 
-(defun raise-minor-mode-map-alist (mode-symbol)
+(defun my/raise-minor-mode-map-alist (mode-symbol)
   "Raise `minor-mode-map-alist' priority of MODE-SYMBOL."
   (let ((x (assq mode-symbol minor-mode-map-alist)))
     (and x (setq minor-mode-map-alist (cons x (delq x minor-mode-map-alist))))))
 
-(defun lower-minor-mode-map-alist (mode-symbol)
+(defun my/lower-minor-mode-map-alist (mode-symbol)
   "Lower `minor-mode-map-alist' priority of MODE-SYMBOL."
   (let ((rel (assq mode-symbol minor-mode-map-alist)))
     (setq minor-mode-map-alist (append (delete rel minor-mode-map-alist) (list rel)))))
 
 ;; basically, a mapcar for macros
-(defmacro generate-calls (operator arglists)
+(defmacro my/generate-calls (operator arglists)
   `(progn
      ,@(mapcar (lambda (arglist) `(,operator ,@arglist)) arglists)))
 
-(defmacro generate-calls-single (operator arglists)
+(defmacro my/generate-calls-single (operator arglists)
   `(progn
      ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
 

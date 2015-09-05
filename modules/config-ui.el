@@ -28,7 +28,7 @@
      `(autoload ,func "multiple-cursors")))
 
   (with-no-warnings
-    (generate-calls-single autoload-multiple-cursors
+    (my/generate-calls-single autoload-multiple-cursors
       (
         #'mc/mark-lines
         #'mc/mark-next-lines
@@ -76,17 +76,15 @@
 (global-set-key (kbd "<M-up>")    'windmove-up)
 (global-set-key (kbd "<M-down>")  'windmove-down)
 
-(defun framemove-onetime-setup ()
+(defun my/framemove-onetime-setup ()
   (windmove-default-keybindings 'meta)
   (require 'framemove)
-  (remove-hook 'before-make-frame-hook
-    #'framemove-onetime-setup))
+  (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup))
 
 ;; directional frame movement too
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (add-hook 'before-make-frame-hook
-      #'framemove-onetime-setup)))
+    (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
 (with-eval-after-load 'framemove
   (setq framemove-hook-into-windmove t))
@@ -109,57 +107,61 @@
       iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
       iflipb-wrap-around 't)
 
-    (defun iflipb-first-iflipb-buffer-switch-command ()
+    (defun my/iflipb-smart-buffer ()
+      (unless (fboundp 'iflipb-hydra/body)
+        (require 'hydra)
+        (defhydra iflipb-hydra
+          (:pre (setq hydra-is-helpful nil)
+            :post (setq hydra-is-helpful t))
+          ("<C-tab>"
+            (call-interactively #'iflipb-next-buffer))
+          ("TAB"
+            (call-interactively #'iflipb-next-buffer))
+          ("<C-S-iso-lefttab>"
+            (call-interactively #'iflipb-previous-buffer))
+          ("<backtab>"
+            (call-interactively #'iflipb-previous-buffer))))
+
+      (iflipb-hydra/body))
+
+    (defun nadvice/iflipb-first-iflipb-buffer-switch-command ()
       "Determines whether this is the first invocation of
   iflipb-next-buffer or iflipb-previous-buffer this round."
-      iflipb-running-p))
+      iflipb-running-p)
 
-  (defun iflipb-smart-buffer ()
-    (unless (fboundp 'iflipb-hydra/body)
-      (require 'hydra)
-      (defhydra iflipb-hydra
-        (:pre (setq hydra-is-helpful nil)
-          :post (setq hydra-is-helpful t))
-        ("<C-tab>"
-          (call-interactively #'iflipb-next-buffer))
-        ("TAB"
-          (call-interactively #'iflipb-next-buffer))
-        ("<C-S-iso-lefttab>"
-          (call-interactively #'iflipb-previous-buffer))
-        ("<backtab>"
-          (call-interactively #'iflipb-previous-buffer))))
-    (iflipb-hydra/body))
+    (advice-add 'iflipb-first-iflipb-buffer-switch-command :override
+      #'nadvice/iflipb-first-iflipb-buffer-switch-command))
 
   (defun iflipb-next-buffer-smart ()
     "A `hydra' enabled next-buffer"
     (interactive)
     (let ((iflipb-running-p t))
       (call-interactively #'iflipb-next-buffer))
-    (iflipb-smart-buffer))
+    (my/iflipb-smart-buffer))
 
   (defun iflipb-previous-buffer-smart ()
     "A `hydra' enabled previous-buffer"
     (interactive)
     (let ((iflipb-running-p t))
       (call-interactively #'iflipb-previous-buffer))
-    (iflipb-smart-buffer)))
+    (my/iflipb-smart-buffer)))
 
-(global-set-key (kbd "<C-tab>") 'iflipb-next-buffer-smart)
-(global-set-key (kbd "C-S-<iso-lefttab>") 'iflipb-previous-buffer-smart)
+(global-set-key (kbd "<C-tab>") #'iflipb-next-buffer-smart)
+(global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer-smart)
 
-(global-set-key (kbd "C-c TAB") 'iflipb-next-buffer-smart)
-(global-set-key (kbd "C-c <backtab>") 'iflipb-previous-buffer-smart)
+(global-set-key (kbd "C-c TAB") #'iflipb-next-buffer-smart)
+(global-set-key (kbd "C-c <backtab>") #'iflipb-previous-buffer-smart)
 
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
 
-(defun vhl-onetime-setup ()
+(defun my/vhl-onetime-setup ()
   (require 'volatile-highlights)
-  (remove-hook 'first-change-hook #'vhl-onetime-setup))
+  (remove-hook 'first-change-hook #'my/vhl-onetime-setup))
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (add-hook 'first-change-hook #'vhl-onetime-setup)))
+    (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
 
 (with-eval-after-load 'volatile-highlights
   (diminish #'volatile-highlights-mode)

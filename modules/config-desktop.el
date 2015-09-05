@@ -45,7 +45,7 @@
 (savehist-mode +1)
 
 ;; text properties severely bloat the history so delete them
-(defun unpropertize-savehist ()
+(defun my/unpropertize-savehist ()
   (mapc (lambda (list)
           (with-demoted-errors
             (when (boundp list)
@@ -60,8 +60,8 @@
        extended-command-history
        evil-ex-history)))
 
-(add-hook 'kill-emacs-hook #'unpropertize-savehist)
-(add-hook 'savehist-save-hook #'unpropertize-savehist)
+(add-hook 'kill-emacs-hook #'my/unpropertize-savehist)
+(add-hook 'savehist-save-hook #'my/unpropertize-savehist)
 
 (defun nadvice/recentf-quiet (old-fun &rest args)
   (cl-letf (((symbol-function 'message) #'format))
@@ -71,7 +71,7 @@
 
 (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 
-(defun my-compress-alist (alist)
+(defun my/compress-alist (alist)
   "Remove shadowed keys from alist"
   (let ((result))
     (mapc (lambda (elem)
@@ -85,7 +85,7 @@
     (require 'dash)
     (setq file-name-mode-alist
       (-take history-length
-        (my-compress-alist file-name-mode-alist)))))
+        (my/compress-alist file-name-mode-alist)))))
 
 (add-hook 'after-change-major-mode-hook
   (lambda ()

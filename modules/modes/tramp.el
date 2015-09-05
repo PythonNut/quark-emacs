@@ -12,7 +12,7 @@
 ;; =================================
 ;; automatically request root access
 ;; =================================
-(defun my-root-file-name-p (file-name)
+(defun my/root-file-name-p (file-name)
   (and
     (featurep 'tramp)
     (tramp-tramp-file-p file-name)
@@ -20,7 +20,7 @@
       (string= "root"
         (substring-no-properties parsed-user)))))
 
-(defun my-make-root-file-name (file-name)
+(defun my/make-root-file-name (file-name)
   (require 'tramp)
   (let ((sudo (let ((default-directory
                       (file-name-directory file-name)))
@@ -49,31 +49,31 @@
   "Find file as root"
   (interactive)
   (find-alternate-file
-    (my-make-root-file-name buffer-file-name)))
+    (my/make-root-file-name buffer-file-name)))
 
-(defun my-edit-file-as-root-maybe ()
+(defun my/edit-file-as-root-maybe ()
   "Find file as root if necessary."
   (when (and
           buffer-file-name
           (not (file-writable-p buffer-file-name))
           (not (string= user-login-name
                  (nth 3 (file-attributes buffer-file-name 'string))))
-          (not (my-root-file-name-p buffer-file-name))
+          (not (my/root-file-name-p buffer-file-name))
           (y-or-n-p "File is not writable. Open with root? "))
     (edit-file-as-root)))
 
-(add-hook 'find-file-hook #'my-edit-file-as-root-maybe)
+(add-hook 'find-file-hook #'my/edit-file-as-root-maybe)
 
 ;; also fallback to root if file cannot be read
 (defun nadvice/find-file-noselect-1 (old-fun buf filename &rest args)
   (condition-case nil
-      (apply old-fun buf filename args)
+    (apply old-fun buf filename args)
     (file-error
       (if (and
-            (not (my-root-file-name-p filename))
+            (not (my/root-file-name-p filename))
             (y-or-n-p "File is not readable. Open with root? "))
         (setq ad-return-value
-          (let ((filename (my-make-root-file-name (file-truename filename))))
+          (let ((filename (my/make-root-file-name (file-truename filename))))
             (apply #'find-file-noselect-1
               (or
                 (get-file-buffer filename)

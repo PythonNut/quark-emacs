@@ -47,10 +47,10 @@
   (cl-macrolet
     ((setup-icicles (commands)
        `(with-no-warnings
-          (generate-calls-single autoload-icicle ,commands)
+          (my/generate-calls-single autoload-icicle ,commands)
           (with-eval-after-load 'icicles
             (run-hooks 'icicle-init-hook)
-            (generate-calls-single auto-icicle-macro ,commands)))))
+            (my/generate-calls-single auto-icicle-macro ,commands)))))
 
     (setup-icicles
       (

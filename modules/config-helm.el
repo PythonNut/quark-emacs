@@ -33,7 +33,7 @@
          "\\.zwc\\.old$"
          "\\.zwc$"))))
 
-(defun helm-fuzzy-matching-custom-sort-fn (candidates _source &optional use-real)
+(defun my/helm-fuzzy-matching-sort-fn (candidates _source &optional use-real)
   (if (string= helm-pattern "")
     candidates
     (cl-letf* ((table-scr (make-hash-table :test 'equal))
@@ -59,7 +59,7 @@
             (score-cand s1)
             (score-cand s2)))))))
 
-(defun helm-fuzzy-custom-highlight-match (candidate)
+(defun my/helm-fuzzy-highlight-match (candidate)
   (let* ((pair (and (consp candidate) candidate))
           (display (if pair (car pair) candidate))
           (real (cdr pair)))
@@ -82,8 +82,8 @@
     (if real (cons display real) display)))
 
 (setq
-  helm-fuzzy-sort-fn #'helm-fuzzy-matching-custom-sort-fn
-  helm-fuzzy-matching-highlight-fn #'helm-fuzzy-custom-highlight-match
+  helm-fuzzy-sort-fn #'my/helm-fuzzy-matching-sort-fn
+  helm-fuzzy-matching-highlight-fn #'my/helm-fuzzy-highlight-match
 
   helm-M-x-fuzzy-match t
   helm-recentf-fuzzy-match t
@@ -142,7 +142,7 @@
 
 (global-set-key (kbd "M-:") #'helm-eval-expression)
 
-(defun my-helm-buffers (&rest arg)
+(defun my/helm-buffers (&rest arg)
   (interactive)
   (require 'helm-buffers)
   (require 'helm-files)
@@ -157,10 +157,10 @@
     :prompt "> "
     :buffer "*helm-find-buffers"))
 
-(global-set-key (kbd "C-x C-b") #'my-helm-buffers)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-b") #'my/helm-buffers)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
 
-(defun my-helm-omni (&rest arg)
+(defun my/helm-omni (&rest arg)
   (interactive)
   (require 'helm-files)
   (require 'helm-ring)
@@ -250,18 +250,18 @@
            evil-paste-before
            evil-visual-paste))
     (apply old-fun args)
-    (call-interactively #'my-helm-omni)))
+    (call-interactively #'my/helm-omni)))
 
 (advice-add 'evil-paste-pop :around #'nadvice/evil-paste-pop)
 
-(define-key evil-insert-state-map (kbd "C-p") #'my-helm-omni)
+(define-key evil-insert-state-map (kbd "C-p") #'my/helm-omni)
 
-(global-set-key (kbd "C-c C-o") #'my-helm-omni)
-(define-key evil-normal-state-map (kbd "C-c C-o") #'my-helm-omni)
-(define-key evil-insert-state-map (kbd "C-c C-o") #'my-helm-omni)
-(define-key evil-emacs-state-map (kbd "C-c C-o") #'my-helm-omni)
-(define-key evil-motion-state-map (kbd "C-c C-o") #'my-helm-omni)
-(define-key evil-replace-state-map (kbd "C-c C-o") #'my-helm-omni)
+(global-set-key (kbd "C-c C-o") #'my/helm-omni)
+(define-key evil-normal-state-map (kbd "C-c C-o") #'my/helm-omni)
+(define-key evil-insert-state-map (kbd "C-c C-o") #'my/helm-omni)
+(define-key evil-emacs-state-map (kbd "C-c C-o") #'my/helm-omni)
+(define-key evil-motion-state-map (kbd "C-c C-o") #'my/helm-omni)
+(define-key evil-replace-state-map (kbd "C-c C-o") #'my/helm-omni)
 
 (global-set-key (kbd "M-=") #'helm-semantic-or-imenu)
 

@@ -12,10 +12,10 @@
     (kill-sexp -1)
     (insert (format "%S" value))))
 
-(defun auto-compile-onetime-setup ()
+(defun my/auto-compile-onetime-setup ()
   (require 'auto-compile)
   (auto-compile-on-save-mode +1)
-  (remove-hook 'before-save-hook #'auto-compile-onetime-setup t))
+  (remove-hook 'before-save-hook #'my/auto-compile-onetime-setup t))
 
 (with-eval-after-load 'eldoc
   (diminish 'eldoc-mode))
@@ -30,7 +30,7 @@
     (eldoc-mode +1)
     (auto-indent-mode -1)
     (aggressive-indent-mode +1)
-    (add-hook 'before-save-hook #'auto-compile-onetime-setup nil t)))
+    (add-hook 'before-save-hook #'my/auto-compile-onetime-setup nil t)))
 
 (with-eval-after-load 'smartparens
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)

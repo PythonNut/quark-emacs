@@ -14,7 +14,7 @@
   sp-cancel-autoskip-on-backward-movement nil)
 
 (smartparens-global-mode +1)
-(raise-minor-mode-map-alist 'smartparens-mode-map)
+;; (raise-minor-mode-map-alist 'my/smartparens-mode-map)
 
 ;; define smartparens motions as evil motions
 (evil-define-motion evil-forward-sexp (count)
@@ -35,7 +35,7 @@
   (sp-previous-sexp count))
 
 ;; textobject for the sexp immediately after point
-(defun evil-next-thing (count &optional beg end type inclusive)
+(defun my/evil-next-thing (count &optional beg end type inclusive)
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-next-thing count)
@@ -55,15 +55,15 @@
 
 (evil-define-text-object evil-a-next-thing (count &optional beg end type)
   "Select the range defined by sp-select-next-thing."
-  (evil-next-thing count beg end type t))
+  (my/evil-next-thing count beg end type t))
 (evil-define-text-object evil-i-next-thing (count &optional beg end type)
   "Select the range defined by sp-select-next-thing."
-  (evil-next-thing count beg end type))
+  (my/evil-next-thing count beg end type))
 
 (define-key evil-outer-text-objects-map "n" #'evil-a-next-thing)
 (define-key evil-inner-text-objects-map "n" #'evil-i-next-thing)
 
-(defun evil-previous-thing (count &optional beg end type inclusive)
+(defun my/evil-previous-thing (count &optional beg end type inclusive)
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-previous-thing count)
@@ -84,11 +84,11 @@
 (evil-define-text-object evil-a-previous-thing (count &optional beg end type)
   "Select the range defined by sp-select-previous-thing."
   (interactive "<c>")
-  (evil-previous-thing count beg end type t))
+  (my/evil-previous-thing count beg end type t))
 (evil-define-text-object evil-i-previous-thing (count &optional beg end type)
   "Select the range defined by sp-select-previous-thing."
   (interactive "<c>")
-  (evil-previous-thing count beg end type))
+  (my/evil-previous-thing count beg end type))
 
 (define-key evil-outer-text-objects-map "N" #'evil-a-previous-thing)
 (define-key evil-inner-text-objects-map "N" #'evil-i-previous-thing)
@@ -107,7 +107,7 @@
         (define-key minibuffer-local-must-match-map ,key ,func))))
 
   (with-no-warnings
-    (generate-calls sp-define-bindings
+    (my/generate-calls sp-define-bindings
       (
         ((kbd "C-M-f") #'sp-forward-sexp)
         ((kbd "C-M-b") #'sp-backward-sexp)
@@ -134,7 +134,7 @@
         (define-key minibuffer-local-must-match-map ,key ,func))))
 
   (with-no-warnings
-    (generate-calls sp-define-bindings
+    (my/generate-calls sp-define-bindings
       (
         ((kbd "C-M-k") #'sp-kill-sexp)
 
@@ -236,7 +236,7 @@
   (evil-sp-barfslurp))
 
 ;; evil normal mode bindings
-(defun smart-smartparens-tools ()
+(defun my/smart-smartparens-tools ()
   (interactive)
   (unless (fboundp 'hydra/smartparens-tools/body)
     (require 'hydra)
@@ -268,24 +268,24 @@
 
   (hydra/smartparens-tools/body))
 
-(define-key evil-normal-state-map "gs" #'smart-smartparens-tools)
-
-(defun my-sp-pair-function (id action context)
-  (if (eq action 'insert)
-    (or (looking-at "[[:space:][:punct:]]")
-      (sp-point-before-eol-p id action context))
-    t))
+(define-key evil-normal-state-map "gs" #'my/smart-smartparens-tools)
 
 (with-eval-after-load 'smartparens
+  (defun my/my-sp-pair-function (id action context)
+    (if (eq action 'insert)
+      (or (looking-at "[[:space:][:punct:]]")
+        (sp-point-before-eol-p id action context))
+      t))
+
   (diminish 'smartparens-mode " σ")
   (set-face-background 'sp-pair-overlay-face "grey20")
   (set-face-foreground 'sp-pair-overlay-face "default")
 
-  (sp-pair "(" ")" :when '(my-sp-pair-function) :wrap "C-)")
-  (sp-pair "{" "}" :when '(my-sp-pair-function) :wrap "C-}")
-  (sp-pair "[" "]" :when '(my-sp-pair-function) :wrap "C-]")
-  (sp-pair "\"" "\"" :when '(my-sp-pair-function) :wrap "C-\"")
-  (sp-pair "'" "'" :when '(my-sp-pair-function))
+  (sp-pair "(" ")" :when '(my/my-sp-pair-function) :wrap "C-)")
+  (sp-pair "{" "}" :when '(my/my-sp-pair-function) :wrap "C-}")
+  (sp-pair "[" "]" :when '(my/my-sp-pair-function) :wrap "C-]")
+  (sp-pair "\"" "\"" :when '(my/my-sp-pair-function) :wrap "C-\"")
+  (sp-pair "'" "'" :when '(my/my-sp-pair-function))
 
   (define-key evil-insert-state-map (kbd "C-]") nil)
   (define-key evil-normal-state-map (kbd "C-]") nil)

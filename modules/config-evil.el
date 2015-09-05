@@ -77,8 +77,8 @@
 (advice-add 'evil-paste-before :around #'nadvice/evil-paste-indent)
 (advice-add 'evil-paste-after :around #'nadvice/evil-paste-indent)
 
-(lexical-let ((evil-mode-line-face-cookies nil))
-  (defun evil-set-mode-line-face ()
+(lexical-let ((my/evil-mode-line-face-cookies nil))
+  (defun my/evil-set-mode-line-face ()
     (let ((color
             (if (< (display-color-cells) 256)
               (pcase evil-state
@@ -96,8 +96,8 @@
                 (`replace '("#dc322f" . "#eee8d5"))
                 (other    '("grey70" . "black"))))))
 
-      (mapc #'face-remap-remove-relative evil-mode-line-face-cookies)
-      (setq evil-mode-line-face-cookies
+      (mapc #'face-remap-remove-relative my/evil-mode-line-face-cookies)
+      (setq my/evil-mode-line-face-cookies
         (list
           (face-remap-add-relative 'mode-line
             `((:foreground ,(cdr color) :background ,(car color)) mode-line))
@@ -106,7 +106,7 @@
             `((:foreground ,(cdr color)) mode-line-buffer-id)))))))
 
 ;; Change modeline color by Evil state
-(add-hook 'post-command-hook #'evil-set-mode-line-face)
+(add-hook 'post-command-hook #'my/evil-set-mode-line-face)
 
 (define-key evil-insert-state-map (kbd "C-s")
   (lambda ()
@@ -134,7 +134,7 @@
 
 (define-key evil-normal-state-map "U" #'undo-tree-visualize)
 
-(defun evil-window-hydra-wrapper ()
+(defun my/evil-window-hydra-wrapper ()
   (unless (fboundp 'evil-window-hydra/body)
     (require 'hydra)
     (with-no-warnings
@@ -152,24 +152,24 @@
   "A `hydra' enabled `evil-window-left'"
   (interactive)
   (with-demoted-errors (call-interactively #'evil-window-left))
-  (evil-window-hydra-wrapper))
+  (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-down-smart ()
   (interactive)
   (with-demoted-errors (call-interactively #'evil-window-down))
-  (evil-window-hydra-wrapper))
+  (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-up-smart ()
   "A `hydra' enabled `evil-window-left'"
   (interactive)
   (with-demoted-errors (call-interactively #'evil-window-up))
-  (evil-window-hydra-wrapper))
+  (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-right-smart ()
   "A `hydra' enabled `evil-window-left'"
   (interactive)
   (with-demoted-errors (call-interactively #'evil-window-right))
-  (evil-window-hydra-wrapper))
+  (my/evil-window-hydra-wrapper))
 
 (define-key evil-normal-state-map (kbd "C-w h") 'evil-window-left-smart)
 (define-key evil-normal-state-map (kbd "C-w j") 'evil-window-down-smart)

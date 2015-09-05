@@ -179,7 +179,7 @@ This requires the external program `diff' to be in your `exec-path'."
                `(define-key ,mode (kbd "K") ,command)))))
 
       (with-no-warnings
-        (generate-calls magit-setup-section-k
+        (my/generate-calls magit-setup-section-k
           (
             (magit-branch-section-map #'magit-branch-delete)
             (magit-commit-section-map)

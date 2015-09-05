@@ -35,14 +35,15 @@
 (add-hook 'text-mode-hook #'global-flycheck-mode +1)
 
 (with-eval-after-load 'flycheck
-  (defun my-display-error-messages-condensed (errors)
+  (defun my/display-error-messages-condensed (errors)
+    (require 'dash)
     (-when-let (messages (-keep #'flycheck-error-message errors))
       (when (flycheck-may-use-echo-area-p)
         (require 's)
         (display-message-or-buffer (s-join "\n" messages)
           flycheck-error-message-buffer))))
 
-  (setq flycheck-display-errors-function #'my-display-error-messages-condensed)
+  (setq flycheck-display-errors-function #'my/display-error-messages-condensed)
 
   (setq flycheck-indication-mode nil)
   (set-face-background 'flycheck-fringe-warning nil)
@@ -65,7 +66,7 @@
   ;; please don't give me emacs-lisp stylistic advice
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
-  (defun flycheck-mode-line-status-text (&optional status)
+  (defun nadvice/flycheck-mode-line-status-text (&optional status)
     (let ((text (pcase (or status flycheck-last-status-change)
                   (`not-checked "")
                   (`no-checker "-")
@@ -81,7 +82,10 @@
                       ""))
                   (`interrupted "-")
                   (`suspicious "?"))))
-      (concat (if (display-graphic-p) " ✓" " Γ") text))))
+      (concat (if (display-graphic-p) " ✓" " Γ") text)))
+
+  (advice-add 'flycheck-mode-line-status-text :override
+    #'nadvice/flycheck-mode-line-status-text))
 
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
@@ -116,13 +120,13 @@
 ;;; yasnippet -- extensible programmable snippets
 ;;; =============================================
 
-(defun yasnippet-onetime-setup ()
+(defun my/yasnippet-onetime-setup ()
   (require 'yasnippet)
-  (remove-hook 'first-change-hook #'yasnippet-onetime-setup))
+  (remove-hook 'first-change-hook #'my/yasnippet-onetime-setup))
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (add-hook 'first-change-hook #'yasnippet-onetime-setup)))
+    (add-hook 'first-change-hook #'my/yasnippet-onetime-setup)))
 
 (setq yas-verbosity 0)
 

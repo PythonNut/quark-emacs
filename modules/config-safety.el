@@ -12,7 +12,7 @@
 (setq auto-save-file-name-transforms
   `((".*" ,autosave-location t)))
 
-(defun save-buffer-maybe ()
+(defun my/save-buffer-maybe ()
   (when (and
           buffer-file-name
           (buffer-modified-p)
@@ -23,7 +23,7 @@
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
 (defun nadvice/save-buffer-maybe (&rest args)
-  (save-buffer-maybe))
+  (my/save-buffer-maybe))
 
 (advice-add 'switch-to-buffer :before #'nadvice/save-buffer-maybe)
 (advice-add 'other-window     :before #'nadvice/save-buffer-maybe)
@@ -48,10 +48,10 @@
 
 (setq-default auto-save-default t)
 
-(defun force-backup-of-buffer ()
+(defun my/force-backup-of-buffer ()
   (setq buffer-backed-up nil))
 
-(add-hook 'before-save-hook #'force-backup-of-buffer)
+(add-hook 'before-save-hook #'my/force-backup-of-buffer)
 
 ;; save buffers on blur
 (add-hook 'focus-out-hook
@@ -60,11 +60,11 @@
       (unless (file-remote-p default-directory)
         (save-some-buffers t)))))
 
-(defun auto-revert-onetime-setup ()
+(defun my/auto-revert-onetime-setup ()
   (global-auto-revert-mode +1)
   (remove-hook 'find-file-hook
     #'auto-revert-onetime-setup))
 
-(add-hook 'find-file-hook #'auto-revert-onetime-setup)
+(add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
 
 (provide 'config-safety)

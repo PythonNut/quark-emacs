@@ -2,9 +2,9 @@
   (with-demoted-errors
     (require 'rainbow-delimiters)))
 
-(defvar rainbow-delimiters-switch nil
+(defvar my/rainbow-delimiters-switch nil
   "t if rainbow-delimiters are currently punched")
-(defvar rainbow-delimiters-face-cookies nil
+(defvar my/rainbow-delimiters-face-cookies nil
   "a list of face-remap-add-relative cookies to reset")
 
 (make-variable-buffer-local 'rainbow-delimiters-switch)
@@ -33,9 +33,9 @@
   (set-face-foreground 'rainbow-delimiters-depth-8-face "#7b88a5")
   (set-face-foreground 'rainbow-delimiters-depth-9-face "#659896")
 
-  (defun rainbow-delimiters-focus-on ()
+  (defun my/rainbow-delimiters-focus-on ()
     "Punch the rainbow-delimiters"
-    (setq rainbow-delimiters-face-cookies
+    (setq my/rainbow-delimiters-face-cookies
       (list
         (face-remap-add-relative 'rainbow-delimiters-depth-1-face
           '((:foreground "#3B9399") rainbow-delimiters-depth-1-face))
@@ -55,32 +55,32 @@
           '((:foreground "#284FA5") rainbow-delimiters-depth-8-face))
         (face-remap-add-relative 'rainbow-delimiters-depth-9-face
           '((:foreground "#199893") rainbow-delimiters-depth-9-face)))
-      rainbow-delimiters-switch t))
+      my/rainbow-delimiters-switch t))
 
-  (defun rainbow-delimiters-focus-off ()
+  (defun my/rainbow-delimiters-focus-off ()
     "Reset the rainbow-delimiters faces"
-    (mapc #'face-remap-remove-relative rainbow-delimiters-face-cookies)
-    (setq rainbow-delimiters-switch nil))
+    (mapc #'face-remap-remove-relative my/rainbow-delimiters-face-cookies)
+    (setq my/rainbow-delimiters-switch nil))
 
-  (defun rainbow-delimiters-focus-on-maybe ()
+  (defun my/rainbow-delimiters-focus-on-maybe ()
     "Punch the rainbow-delimiters if the point is on a paren"
     (when (or (looking-at "[][(){}]")
             (and
               (evil-insert-state-p)
               (looking-back "[][(){}]" (1- (point)))))
-      (unless (or rainbow-delimiters-switch (minibufferp))
-        (rainbow-delimiters-focus-on))))
+      (unless (or my/rainbow-delimiters-switch (minibufferp))
+        (my/rainbow-delimiters-focus-on))))
 
-  (defun rainbow-delimiters-focus-off-maybe ()
+  (defun my/rainbow-delimiters-focus-off-maybe ()
     "Reset the rainbow-delimiters if the point is not on a paren"
     (unless (or (looking-at "[][(){}]")
               (and
                 (evil-insert-state-p)
                 (looking-back "[][(){}]" (1- (point)))))
-      (when rainbow-delimiters-switch
-        (rainbow-delimiters-focus-off))))
+      (when my/rainbow-delimiters-switch
+        (my/rainbow-delimiters-focus-off))))
 
-  (run-with-idle-timer 0.6 t 'rainbow-delimiters-focus-on-maybe)
-  (run-with-idle-timer 0.1 t 'rainbow-delimiters-focus-off-maybe))
+  (run-with-idle-timer 0.6 t 'my/rainbow-delimiters-focus-on-maybe)
+  (run-with-idle-timer 0.1 t 'my/rainbow-delimiters-focus-off-maybe))
 
 (provide 'config-rainbow-delimiters)

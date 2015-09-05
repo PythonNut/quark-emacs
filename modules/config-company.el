@@ -9,14 +9,14 @@
 (defvar company-flx-cache)
 (defvar company-flx-limit 500)
 
-(defun company-onetime-setup ()
+(defun my/company-onetime-setup ()
   (require 'company)
   (run-hooks 'load-theme-hook)
-  (remove-hook 'first-change-hook #'company-onetime-setup))
+  (remove-hook 'first-change-hook #'my/company-onetime-setup))
 
 (add-hook 'emacs-startup-hook
   (lambda ()
-    (add-hook 'first-change-hook #'company-onetime-setup)))
+    (add-hook 'first-change-hook #'my/company-onetime-setup)))
 
 (defun completion-fuzzy-commonality (strs)
   (let ((hash-value (gethash strs commonality-cache nil)))
@@ -212,7 +212,7 @@
                     (cdr old-backends))))))))
 
       (with-no-warnings
-        (generate-calls company-define-specific-modes
+        (my/generate-calls company-define-specific-modes
           (
             ('c++-mode-hook     'company-clang)
             ('objc-mode-hook    'company-clang)
@@ -243,7 +243,7 @@
   (define-key company-active-map (kbd "TAB")
     #'company-complete-common-or-complete-full)
 
-  (defun setup-company-tooltip-faces  ()
+  (defun my/setup-company-tooltip-faces  ()
     (set-face-attribute 'company-tooltip-common-selection nil
       :background "#839496"
       :foreground (if (< (display-color-cells) 256)
@@ -272,17 +272,17 @@
       :foreground nil
       :inherit 'default))
 
-  (add-hook 'load-theme-hook #'setup-company-tooltip-faces)
-  (setup-company-tooltip-faces))
+  (add-hook 'load-theme-hook #'my/setup-company-tooltip-faces)
+  (my/setup-company-tooltip-faces))
 
 (with-eval-after-load 'company-template
-  (defun setup-company-template-faces ()
+  (defun my/setup-company-template-faces ()
     (set-face-attribute 'company-template-field nil
       :foreground nil
       :background nil
       :inherit 'region))
-  (add-hook 'load-theme-hook #'setup-company-template-faces)
-  (setup-company-template-faces))
+  (add-hook 'load-theme-hook #'my/setup-company-template-faces)
+  (my/setup-company-template-faces))
 
 (with-eval-after-load 'company-dabbrev-code
   (setq company-dabbrev-code-everywhere t))

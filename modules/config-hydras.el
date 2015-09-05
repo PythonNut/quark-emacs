@@ -2,7 +2,7 @@
   (with-demoted-errors
     (require 'hydra)))
 
-(defun smart-registers-and-rectangles ()
+(defun my/smart-registers-and-rectangles ()
   (interactive)
   (unless (fboundp 'hydra/registers-and-rectangles/body)
     (require 'hydra)
@@ -44,9 +44,9 @@ _w_ windows →  ^^                │   _y_ yank"
   (hydra/registers-and-rectangles/body))
 
 (global-set-key (kbd "C-x r") nil)
-(global-set-key (kbd "C-x r") #'smart-registers-and-rectangles)
+(global-set-key (kbd "C-x r") #'my/smart-registers-and-rectangles)
 
-(defun smart-icicle-search-map ()
+(defun my/smart-icicle-search-map ()
   (interactive)
   (unless (fboundp 'hydra/icicle-search-map/body)
     (require 'hydra)
@@ -84,7 +84,7 @@ _C-l_ pages    _t_ thing        _T_ text-property"
 
   (hydra/icicle-search-map/body))
 
-(defun smart-isearch-map ()
+(defun my/smart-isearch-map ()
   (interactive)
   (unless (fboundp 'hydra/isearch-map/body)
     (require 'hydra)
@@ -106,13 +106,13 @@ _o_ occur          │   _hr_ regex        _M-s_ Icicle search ..."
       ("hr"  highlight-regexp)
       ("hu"  unhighlight-regexp)
       ("hw"  hi-lock-write-interactive-patterns)
-      ("M-s" smart-icicle-search-map)))
+      ("M-s" my/smart-icicle-search-map)))
 
   (hydra/isearch-map/body))
 
-(global-set-key (kbd "M-s") #'smart-isearch-map)
+(global-set-key (kbd "M-s") #'my/smart-isearch-map)
 
-(defun smart-frame-tools ()
+(defun my/smart-frame-tools ()
   (interactive)
   (unless (fboundp 'hydra/frame-tools/body)
     (require 'hydra)
@@ -138,9 +138,9 @@ _o_  other           │   _C-o_ display buffer"
 
   (hydra/frame-tools/body))
 
-(global-set-key (kbd "C-x 5") #'smart-frame-tools)
+(global-set-key (kbd "C-x 5") #'my/smart-frame-tools)
 
-(defun smart-window-tools ()
+(defun my/smart-window-tools ()
   (interactive)
   (unless (fboundp 'hydra/window-tools/body)
     (require 'hydra)
@@ -166,6 +166,6 @@ _C-o_  display buffer        │   _._ find tag"
 
   (hydra/window-tools/body))
 
-(global-set-key (kbd "C-x 4") #'smart-window-tools)
+(global-set-key (kbd "C-x 4") #'my/smart-window-tools)
 
 (provide 'config-hydras)
