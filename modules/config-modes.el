@@ -1,5 +1,6 @@
 (eval-when-compile
   (with-demoted-errors
+    (require 'cl-lib)
     (require 'key-chord)))
 
 (delete-selection-mode +1)
