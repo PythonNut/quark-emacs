@@ -78,7 +78,7 @@
   (projectile-global-mode +1)
   (require 'magit)
   (setq projectile-mode-line
-    '(:eval (format (if (display-graphic-p) " ↠" " pro"))))
+    '(:eval (format (if (display-graphic-p) " ↠" " /"))))
   (define-key projectile-mode-map (kbd "C-c p") #'my/smart-projectile-tools))
 
 (defun my/smart-projectile-tools ()
