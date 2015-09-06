@@ -21,41 +21,45 @@
             (add-hook 'first-change-hook #'my/company-onetime-setup)))
 
 (defun completion-fuzzy-commonality (strs)
-  (let ((hash-value (gethash strs commonality-cache nil)))
-    (if hash-value
-        (if (eq hash-value 'nothing)
-            nil
-          hash-value)
+  (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
+             ((symbol-function
+               #'fuzzy-commonality)
+              (lambda (strs)
+                (let ((hash-value (gethash strs commonality-cache nil)))
+                  (if hash-value
+                      (if (eq hash-value 'nothing)
+                          nil
+                        hash-value)
 
-      (setq strs (mapcar #'string-to-list strs))
-      (let ((res) (tried) (idx))
-        (dolist (char (car strs))
-          (unless (memq char tried)
-            (catch 'notfound
-              (setq idx (mapcar (lambda (str)
-                                  (or
-                                   (position char str)
-                                   (throw 'notfound nil)))
-                                strs))
-              (push (cons char
-                          (completion-fuzzy-commonality
-                           (cl-mapcar (lambda (str idx)
-                                        (cl-subseq str (1+ idx)))
-                                      strs idx)))
-                    res)
-              (push char tried))))
-        (setq  res (if res
-                       (cl-reduce
-                        (lambda (a b)
-                          (if (> (length a) (length b)) a b))
-                        res)
-                     nil))
-        (puthash strs
-                 (if res
-                     res
-                   'nothing)
-                 commonality-cache)
-        res))))
+                    (setq strs (mapcar #'string-to-list strs))
+                    (let ((res) (tried) (idx))
+                      (dolist (char (car strs))
+                        (unless (memq char tried)
+                          (catch 'notfound
+                            (setq idx (mapcar (lambda (str)
+                                                (or
+                                                 (position char str)
+                                                 (throw 'notfound nil)))
+                                              strs))
+                            (push (cons char
+                                        (completion-fuzzy-commonality
+                                         (cl-mapcar (lambda (str idx)
+                                                      (cl-subseq str (1+ idx)))
+                                                    strs idx)))
+                                  res)
+                            (push char tried))))
+                      (setq res (if res
+                                    (cl-reduce
+                                     (lambda (a b)
+                                       (if (> (length a) (length b)) a b))
+                                     res)
+                                  nil))
+                      (puthash strs
+                               (if res res 'nothing)
+                               commonality-cache)
+                      res))))))
+
+    (concat (fuzzy-commonality strs))))
 
 (defun completion-fuzzy-find-holes (merged str)
   (let ((holes) (idx))
@@ -72,9 +76,8 @@
     holes))
 
 (defun completion-fuzzy-merge (strs)
-  (let* ((commonality-cache (make-hash-table :test 'equal :size 200))
-         (common (concat (completion-fuzzy-commonality strs)))
-         (holes))
+  (let ((common (completion-fuzzy-commonality strs))
+        (holes))
     (setq holes (make-vector (1+ (length common)) 0))
     (dolist (str strs)
       (dolist (hole (completion-fuzzy-find-holes common str))
