@@ -79,8 +79,6 @@
   ;; indentation settings
   indent-tabs-mode nil
   tab-width 4
-  lisp-indent-offset 2
-  lisp-body-indent 2
   use-dialog-box nil
   
   ;; supress useless stuff

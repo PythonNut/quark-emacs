@@ -10,17 +10,17 @@
 
 (defun nadvice/load-quiet (args)
   (cl-destructuring-bind
-    (file &optional noerror nomessage nosuffix must-suffix)
-    args
+      (file &optional noerror nomessage nosuffix must-suffix)
+      args
     (let ((nomessage t))
       (list
-        file noerror nomessage nosuffix must-suffix))))
+       file noerror nomessage nosuffix must-suffix))))
 
 (if (member "-E" command-line-args)
-  (progn
-    ;; skip and load minimal init instead
-    (delete "-E" command-line-args)
-    (load (concat user-emacs-directory "init-minimal")))
+    (progn
+      ;; skip and load minimal init instead
+      (delete "-E" command-line-args)
+      (load (concat user-emacs-directory "init-minimal")))
 
   (defvar my/slow-device nil)
 
@@ -42,7 +42,7 @@
 
   (load (setq custom-file (concat user-emacs-directory "custom.el")))
 
-  (message "[                ]")
+  (message "[                 ]")
   (require 'config-setq)
 
   (defun my/automatic-repair ()
@@ -86,11 +86,11 @@
 
   (defun my/recursively-load-dir (dir)
     (let ((suffixes (get-load-suffixes))
-           (already-loaded))
+          (already-loaded))
       (dolist (f (directory-files dir t
-                   directory-files-no-dot-files-regexp))
+                                  directory-files-no-dot-files-regexp))
         (if (file-directory-p f)
-          (my/recursively-load-dir f)
+            (my/recursively-load-dir f)
           (when (member (file-name-extension f t) suffixes)
             (setq f (file-name-sans-extension f))
             (unless (member f already-loaded)
@@ -98,9 +98,9 @@
               (push f already-loaded)))))))
 
   (my/recursively-load-dir
-    (expand-file-name
-      "modules/modes/"
-      user-emacs-directory))
+   (expand-file-name
+    "modules/modes/"
+    user-emacs-directory))
 
   (message "[================ ]")
   (require 'config-solarized)
