@@ -112,12 +112,17 @@
   (defun nadvice/desktop-owner (pid)
     (when pid
       (let* ((attributes (process-attributes pid))
-              (cmd (cdr (assoc 'comm attributes))))
+             (cmd (cdr (assoc 'comm attributes))))
         (if (and cmd (string-prefix-p "emacs" cmd))
-          pid
+            pid
           nil))))
 
-  (advice-add 'desktop-owner :filter-return #'nadvice/desktop-owner))
+  (defun nadvice/desktop-claim-lock (&optional dirname)
+    (write-region (number-to-string (emacs-pid)) nil
+                  (desktop-full-lock-name dirname) nil 1))
+
+  (advice-add 'desktop-owner :filter-return #'nadvice/desktop-owner)
+  (advice-add #'desktop-claim-lock :override #'nadvice/desktop-claim-lock))
 
 (defun desktop-autosave (&optional arg)
   (interactive "p")
@@ -168,12 +173,5 @@
             (ignore-errors (cancel-timer desktop-auto-save-timer))
             (setq desktop-auto-save-timer
                   (run-with-idle-timer 3 t #'desktop-autosave))))
-
-(with-eval-after-load 'desktop
-  (defun nadvice/desktop-claim-lock (&optional dirname)
-    (write-region (number-to-string (emacs-pid)) nil
-                  (desktop-full-lock-name dirname) nil 1))
-
-  (advice-add #'desktop-claim-lock :override #'nadvice/desktop-claim-lock))
 
 (provide 'config-desktop)
