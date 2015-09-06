@@ -147,16 +147,15 @@
   (interactive)
   (require 'helm-buffers)
   (require 'helm-files)
-  (helm
-   :sources
-   '(helm-source-buffers-list
-     helm-source-recentf
-     helm-source-files-in-current-dir
-     helm-source-files-in-all-dired
-     helm-source-buffer-not-found)
-   :fuzzy-match t
-   :prompt "> "
-   :buffer "*helm-find-buffers"))
+  (helm :sources
+        '(helm-source-buffers-list
+          helm-source-recentf
+          helm-source-files-in-current-dir
+          helm-source-files-in-all-dired
+          helm-source-buffer-not-found)
+        :fuzzy-match t
+        :prompt "> "
+        :buffer "*helm-find-buffers"))
 
 (global-set-key (kbd "C-x C-b") #'my/helm-buffers)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
@@ -178,78 +177,77 @@
     (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
     (helm-set-local-variable 'helm-multi-occur-buffer-tick
                              (cl-loop for b in bufs
-                                      collect (buffer-chars-modified-tick (get-buffer b))))
-    (helm
-     :sources
-     (append
-      ;; projectile explodes when not in project
-      (if projectile-root
-          (progn
-            (require 'helm-projectile)
-            '(helm-source-projectile-buffers-list))
-        '(helm-source-buffers-list))
-
-      (if (and (featurep 'semantic)
-               (semantic-active-p))
-          (progn
-            (require 'helm-semantic)
-            '(helm-source-semantic))
-        (require 'helm-imenu)
-        '(helm-source-imenu))
-
-      (if projectile-root
+                                      collect
+                                      (buffer-chars-modified-tick
+                                       (get-buffer b))))
+    (helm :sources
           (append
-           '(helm-source-projectile-recentf-list
-             helm-source-recentf)
+           ;; projectile explodes when not in project
+           (if projectile-root
+               (progn
+                 (require 'helm-projectile)
+                 '(helm-source-projectile-buffers-list))
+             '(helm-source-buffers-list))
+
+           (if (and (featurep 'semantic)
+                    (semantic-active-p))
+               (progn
+                 (require 'helm-semantic)
+                 '(helm-source-semantic))
+             (require 'helm-imenu)
+             '(helm-source-imenu))
+
+           (if projectile-root
+               (append
+                '(helm-source-projectile-recentf-list
+                  helm-source-recentf)
+                (unless file-remote
+                  '(helm-source-projectile-files-list)))
+             '(helm-source-recentf))
+
+           '(;; files
+             helm-source-files-in-current-dir
+             helm-source-find-files
+             helm-source-occur
+
+             ;; internal sources
+             helm-source-kill-ring
+             helm-source-mark-ring
+             helm-source-global-mark-ring)
+
+           ;; disable expensve helm sources when using TRAMP
            (unless file-remote
-             '(helm-source-projectile-files-list)))
-        '(helm-source-recentf))
+             (append
+              ;; code search
+              (if (and projectile-root
+                       (featurep 'vc-git)
+                       (vc-git-responsible-p projectile-root)
+                       (require 'helm-git-grep nil t))
+                  '(helm-source-git-grep)
+                (unless (featurep 'helm-ag)
+                  (when (or (executable-find "ag")
+                            (executable-find "ack")
+                            (executable-find "ack-grep"))
+                    (require 'helm-ag)))
+                (when (featurep 'helm-ag)
+                  '(helm-source-do-ag)))
 
-      '(;; files
-        helm-source-files-in-current-dir
-        helm-source-find-files
-        helm-source-occur
+              ;; file location, of which projectile can be a superset
+              (unless projectile-root
+                '(helm-source-findutils))
 
-        ;; internal sources
-        helm-source-kill-ring
-        helm-source-mark-ring
-        helm-source-global-mark-ring)
+              '(helm-source-locate))))
 
-      ;; disable expensve helm sources when using TRAMP
-      (unless file-remote
-        (append
-         ;; code search
-         (if (and projectile-root
-                  (featurep 'vc-git)
-                  (vc-git-responsible-p projectile-root)
-                  (require 'helm-git-grep nil t))
-             '(helm-source-git-grep)
-           (unless (featurep 'helm-ag)
-             (when (or
-                    (executable-find "ag")
-                    (executable-find "ack")
-                    (executable-find "ack-grep"))
-               (require 'helm-ag)))
-           (when (featurep 'helm-ag)
-             '(helm-source-do-ag)))
-
-         ;; file location, of which projectile can be a superset
-         (unless projectile-root
-           '(helm-source-findutils))
-
-         '(helm-source-locate))))
-
-     :fuzzy-match t
-     :prompt (if projectile-root
-                 (format "[%s] > " (projectile-project-name))
-               "> ")
-     :buffer "*helm-omni*")))
+          :fuzzy-match t
+          :prompt (if projectile-root
+                      (format "[%s] > " (projectile-project-name))
+                    "> ")
+          :buffer "*helm-omni*")))
 
 (defun nadvice/evil-paste-pop (old-fun &rest args)
-  (if (memq last-command
-            '(evil-paste-after
-              evil-paste-before
-              evil-visual-paste))
+  (if (memq last-command '(evil-paste-after
+                           evil-paste-before
+                           evil-visual-paste))
       (apply old-fun args)
     (call-interactively #'my/helm-omni)))
 
