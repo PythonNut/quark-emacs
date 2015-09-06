@@ -149,16 +149,16 @@
   (run-with-idle-timer 3 nil #'desktop-autosave))
 
 (add-hook 'focus-out-hook
-  (lambda ()
-    (cancel-timer desktop-auto-save-timer)
-    (setq desktop-auto-save-timer
-      (run-with-idle-timer 0.2 nil #'desktop-autosave))))
+          (lambda ()
+            (ignore-errors (cancel-timer desktop-auto-save-timer))
+            (setq desktop-auto-save-timer
+                  (run-with-idle-timer 0.2 nil #'desktop-autosave))))
 
 (add-hook 'focus-in-hook
-  (lambda ()
-    (cancel-timer desktop-auto-save-timer)
-    (setq desktop-auto-save-timer
-      (run-with-idle-timer 3 nil #'desktop-autosave))))
+          (lambda ()
+            (ignore-errors (cancel-timer desktop-auto-save-timer))
+            (setq desktop-auto-save-timer
+                  (run-with-idle-timer 3 t #'desktop-autosave))))
 
 (with-eval-after-load 'desktop
   (defun nadvice/desktop-claim-lock (&optional dirname)
