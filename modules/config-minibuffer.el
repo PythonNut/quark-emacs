@@ -12,7 +12,7 @@
   "switch to minibuffer window (if active)"
   (interactive "p")
   (if (active-minibuffer-window)
-    (select-window (active-minibuffer-window))
+      (select-window (active-minibuffer-window))
     (other-window arg)))
 
 (global-set-key (kbd "C-'") #'switch-to-minibuffer-window)
@@ -22,17 +22,17 @@
     (minibuffer-depth-indicate-mode t))
 
   (setq
-    ;; don't let the cursor go into minibuffer prompt
-    minibuffer-prompt-properties
-    '(read-only t
-       point-entered
-       minibuffer-avoid-prompt
-       face
-       minibuffer-prompt)
+   ;; don't let the cursor go into minibuffer prompt
+   minibuffer-prompt-properties
+   '(read-only t
+               point-entered
+               minibuffer-avoid-prompt
+               face
+               minibuffer-prompt)
 
-    ;; recursive minibuffers
-    enable-recursive-minibuffers t
-    resize-mini-windows t)
+   ;; recursive minibuffers
+   enable-recursive-minibuffers t
+   resize-mini-windows t)
 
   (remove-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup))
 
@@ -42,8 +42,8 @@
 
 ;; hl-line-mode breaks minibuffer in TTY
 (add-hook 'minibuffer-setup-hook
-  (lambda ()
-    (make-variable-buffer-local 'global-hl-line-mode)
-    (setq global-hl-line-mode nil)))
+          (lambda ()
+            (make-variable-buffer-local 'global-hl-line-mode)
+            (setq global-hl-line-mode nil)))
 
 (provide 'config-minibuffer)

@@ -21,12 +21,12 @@
 (setenv "GPG_AGENT_INFO" nil)
 
 (setq-default major-mode
-  (lambda ()
-    nil
-    (if buffer-file-name
-      (fundamental-mode)
-      (let ((buffer-file-name (buffer-name)))
-        (set-auto-mode)))))
+              (lambda ()
+                nil
+                (if buffer-file-name
+                    (fundamental-mode)
+                  (let ((buffer-file-name (buffer-name)))
+                    (set-auto-mode)))))
 
 ;; basically, a mapcar for macros
 (defmacro my/generate-calls (operator arglists)
@@ -58,9 +58,9 @@
 echo area. Has no effect if the character before point is not of
 the syntax class ')'."
   (let* ((cb (char-before (point)))
-          (matching-text (and cb
-                           (char-equal (char-syntax cb) ?\) )
-                           (blink-matching-open))))
+         (matching-text (and cb
+                             (char-equal (char-syntax cb) ?\) )
+                             (blink-matching-open))))
     (when matching-text (message matching-text))))
 
 (advice-add 'show-paren-function :after #'nadvice/show-paren-function)

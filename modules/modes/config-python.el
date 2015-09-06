@@ -11,10 +11,10 @@
 (add-hook 'python-mode-hook 'eldoc-mode)
 
 (add-hook 'python-mode-hook
-  (lambda ()
-    ;; conflicts with `eldoc-mode'
-    (semantic-idle-summary-mode -1)
-    (setq mode-name "Py")))
+          (lambda ()
+            ;; conflicts with `eldoc-mode'
+            (semantic-idle-summary-mode -1)
+            (setq mode-name "Py")))
 
 (with-eval-after-load 'python
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
@@ -33,7 +33,7 @@
 (add-hook 'sage-shell:sage-mode-hook #'eldoc-mode)
 
 (add-hook 'sage-shell-mode-hook
-  (lambda () (semantic-idle-summary-mode -1)))
+          (lambda () (semantic-idle-summary-mode -1)))
 
 (add-hook 'sage-shell:sage-mode-hook
-  (lambda () (semantic-idle-summary-mode -1)))
+          (lambda () (semantic-idle-summary-mode -1)))

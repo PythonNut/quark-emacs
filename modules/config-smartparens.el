@@ -12,8 +12,8 @@
     (require 'config-modes)))
 
 (setq
-  sp-autoinsert-quote-if-followed-by-closing-pair nil
-  sp-cancel-autoskip-on-backward-movement nil)
+ sp-autoinsert-quote-if-followed-by-closing-pair nil
+ sp-cancel-autoskip-on-backward-movement nil)
 
 (smartparens-global-mode +1)
 
@@ -41,17 +41,17 @@
     (save-excursion
       (call-interactively 'sp-select-next-thing count)
       (if (> (point) (mark))
-        (exchange-point-and-mark))
+          (exchange-point-and-mark))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
-            (not (and
-                   (string-match
+              (not (and
+                    (string-match
                      (string (char-after (point)))
                      "[^[:punct:]([{]")
-                   (string-match
+                    (string-match
                      (string (char-before (mark)))
                      "[^[:punct:])\]}]"))))
-        (evil-range (point) (mark))
+          (evil-range (point) (mark))
         (evil-range (1+ (point)) (1- (mark)))))))
 
 (evil-define-text-object evil-a-next-thing (count &optional beg end type)
@@ -69,17 +69,17 @@
     (save-excursion
       (call-interactively 'sp-select-previous-thing count)
       (if (> (point) (mark))
-        (exchange-point-and-mark))
+          (exchange-point-and-mark))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
-            (not (and
-                   (string-match
+              (not (and
+                    (string-match
                      (string (char-after (point)))
                      "[^[:punct:]([{]")
-                   (string-match
+                    (string-match
                      (string (char-before (mark)))
                      "[^[:punct:])\]}]"))))
-        (evil-range (point) (mark))
+          (evil-range (point) (mark))
         (evil-range (1+ (point)) (1- (mark)))))))
 
 (evil-define-text-object evil-a-previous-thing (count &optional beg end type)
@@ -96,67 +96,67 @@
 
 ;; define top level motions bindings
 (cl-macrolet
-  ((sp-define-bindings (key func)
-     `(progn
-        (evil-define-key 'motion sp-keymap ,key ,func)
-        (evil-define-key 'insert sp-keymap ,key ,func)
-        (evil-define-key 'emacs sp-keymap ,key ,func)
+    ((sp-define-bindings (key func)
+                         `(progn
+                            (evil-define-key 'motion sp-keymap ,key ,func)
+                            (evil-define-key 'insert sp-keymap ,key ,func)
+                            (evil-define-key 'emacs sp-keymap ,key ,func)
 
-        (define-key minibuffer-local-map ,key ,func)
-        (define-key minibuffer-local-ns-map ,key ,func)
-        (define-key minibuffer-local-completion-map ,key ,func)
-        (define-key minibuffer-local-must-match-map ,key ,func))))
+                            (define-key minibuffer-local-map ,key ,func)
+                            (define-key minibuffer-local-ns-map ,key ,func)
+                            (define-key minibuffer-local-completion-map ,key ,func)
+                            (define-key minibuffer-local-must-match-map ,key ,func))))
 
   (with-no-warnings
     (my/generate-calls sp-define-bindings
-      (
-        ((kbd "C-M-f") #'sp-forward-sexp)
-        ((kbd "C-M-b") #'sp-backward-sexp)
+                       (
+                        ((kbd "C-M-f") #'sp-forward-sexp)
+                        ((kbd "C-M-b") #'sp-backward-sexp)
 
-        ((kbd "C-M-d") #'sp-down-sexp)
-        ((kbd "C-M-S-d") #'sp-backward-down-sexp)
+                        ((kbd "C-M-d") #'sp-down-sexp)
+                        ((kbd "C-M-S-d") #'sp-backward-down-sexp)
 
-        ((kbd "C-M-u") #'sp-up-sexp)
-        ((kbd "C-M-S-u") #'sp-backward-up-sexp)
+                        ((kbd "C-M-u") #'sp-up-sexp)
+                        ((kbd "C-M-S-u") #'sp-backward-up-sexp)
 
-        ((kbd "C-M-n") #'sp-next-sexp)
-        ((kbd "C-M-p") #'sp-previous-sexp)))))
+                        ((kbd "C-M-n") #'sp-next-sexp)
+                        ((kbd "C-M-p") #'sp-previous-sexp)))))
 
 (cl-macrolet
-  ((sp-define-bindings (key func)
-     `(progn
-        (evil-define-key 'normal sp-keymap ,key ,func)
-        (evil-define-key 'insert sp-keymap ,key ,func)
-        (evil-define-key 'emacs sp-keymap ,key ,func)
+    ((sp-define-bindings (key func)
+                         `(progn
+                            (evil-define-key 'normal sp-keymap ,key ,func)
+                            (evil-define-key 'insert sp-keymap ,key ,func)
+                            (evil-define-key 'emacs sp-keymap ,key ,func)
 
-        (define-key minibuffer-local-map ,key ,func)
-        (define-key minibuffer-local-ns-map ,key ,func)
-        (define-key minibuffer-local-completion-map ,key ,func)
-        (define-key minibuffer-local-must-match-map ,key ,func))))
+                            (define-key minibuffer-local-map ,key ,func)
+                            (define-key minibuffer-local-ns-map ,key ,func)
+                            (define-key minibuffer-local-completion-map ,key ,func)
+                            (define-key minibuffer-local-must-match-map ,key ,func))))
 
   (with-no-warnings
     (my/generate-calls sp-define-bindings
-      (
-        ((kbd "C-M-k") #'sp-kill-sexp)
+                       (
+                        ((kbd "C-M-k") #'sp-kill-sexp)
 
-        ((kbd "C-M-t") #'sp-transpose-sexp)
+                        ((kbd "C-M-t") #'sp-transpose-sexp)
 
-        ((kbd "M-(") #'sp-select-previous-thing)
-        ((kbd "M-)") #'sp-select-next-thing)
+                        ((kbd "M-(") #'sp-select-previous-thing)
+                        ((kbd "M-)") #'sp-select-next-thing)
 
-        ((kbd "C-+") #'sp-rewrap-sexp)
-        ((kbd "M-<delete>") #'sp-kill-sexp)
-        ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
-        ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
+                        ((kbd "C-+") #'sp-rewrap-sexp)
+                        ((kbd "M-<delete>") #'sp-kill-sexp)
+                        ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
+                        ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
 
-        ((kbd "C-M-a") #'sp-absorb-sexp)
-        ((kbd "C-M-e") #'sp-emit-sexp)
+                        ((kbd "C-M-a") #'sp-absorb-sexp)
+                        ((kbd "C-M-e") #'sp-emit-sexp)
 
-        ((kbd "C-M-,") #'sp-forward-slurp-sexp)
-        ((kbd "C-M-.") #'sp-forward-barf-sexp)
+                        ((kbd "C-M-,") #'sp-forward-slurp-sexp)
+                        ((kbd "C-M-.") #'sp-forward-barf-sexp)
 
-        ((kbd "M-<") #'sp-backward-slurp-sexp)
-        ((kbd "M->") #'sp-backward-barf-sexp)))))
+                        ((kbd "M-<") #'sp-backward-slurp-sexp)
+                        ((kbd "M->") #'sp-backward-barf-sexp)))))
 
 ;; allow quick repetition since normal state key chains are awkward
 (defun evil-sp-move ()
@@ -274,8 +274,8 @@
 (with-eval-after-load 'smartparens
   (defun my/my-sp-pair-function (id action context)
     (if (eq action 'insert)
-      (or (looking-at "[[:space:][:punct:]]")
-        (sp-point-before-eol-p id action context))
+        (or (looking-at "[[:space:][:punct:]]")
+            (sp-point-before-eol-p id action context))
       t))
 
   (diminish 'smartparens-mode " σ")
@@ -295,7 +295,7 @@
 
   ;; disable "'" pairing in text mode, as it's often an apostrophe
   (add-hook 'text-mode-hook
-    (lambda ()
-      (sp-local-pair major-mode "'" nil :actions nil))))
+            (lambda ()
+              (sp-local-pair major-mode "'" nil :actions nil))))
 
 (provide 'config-smartparens)

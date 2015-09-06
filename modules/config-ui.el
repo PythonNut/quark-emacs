@@ -25,44 +25,44 @@
   (define-key mc/keymap (kbd "C-c <return>") 'multiple-cursors-mode))
 
 (cl-macrolet
-  ((autoload-multiple-cursors (func)
-     `(autoload ,func "multiple-cursors")))
+    ((autoload-multiple-cursors (func)
+                                `(autoload ,func "multiple-cursors")))
 
   (with-no-warnings
     (my/generate-calls-single autoload-multiple-cursors
-      (
-        #'mc/mark-lines
-        #'mc/mark-next-lines
-        #'mc/mark-previous-lines
-        #'mc/unmark-next-like-this
-        #'mc/unmark-previous-like-this
-        #'mc/skip-to-previous-like-this
-        #'mc/mark-all-like-this
-        #'mc/mark-all-words-like-this
-        #'mc/mark-all-symbols-like-this
-        #'mc/mark-all-in-region
-        #'mc/mark-all-in-region-regexp
-        #'mc/mark-more-like-this-extended
-        #'mc/mmlte--up
-        #'mc/mmlte--down
-        #'mc/mmlte--left
-        #'mc/mmlte--right
-        #'mc/mark-all-like-this-dwim
-        #'mc/mark-all-dwim
-        #'mc/mark-all-like-this-in-defun
-        #'mc/mark-all-words-like-this-in-defun
-        #'mc/mark-all-symbols-like-this-in-defun
-        #'mc/add-cursor-on-click
-        #'mc/mark-sgml-tag-pair
-        #'mc/mark-pop
-        #'set-rectangular-region-anchor
-        #'rrm/switch-to-multiple-cursors
-        #'mc/insert-numbers
-        #'mc/reverse-regions
-        #'mc/sort-regions
-        #'hum/keyboard-quit
-        #'mc-hide-unmatched-lines-mode
-        ))))
+                              (
+                               #'mc/mark-lines
+                               #'mc/mark-next-lines
+                               #'mc/mark-previous-lines
+                               #'mc/unmark-next-like-this
+                               #'mc/unmark-previous-like-this
+                               #'mc/skip-to-previous-like-this
+                               #'mc/mark-all-like-this
+                               #'mc/mark-all-words-like-this
+                               #'mc/mark-all-symbols-like-this
+                               #'mc/mark-all-in-region
+                               #'mc/mark-all-in-region-regexp
+                               #'mc/mark-more-like-this-extended
+                               #'mc/mmlte--up
+                               #'mc/mmlte--down
+                               #'mc/mmlte--left
+                               #'mc/mmlte--right
+                               #'mc/mark-all-like-this-dwim
+                               #'mc/mark-all-dwim
+                               #'mc/mark-all-like-this-in-defun
+                               #'mc/mark-all-words-like-this-in-defun
+                               #'mc/mark-all-symbols-like-this-in-defun
+                               #'mc/add-cursor-on-click
+                               #'mc/mark-sgml-tag-pair
+                               #'mc/mark-pop
+                               #'set-rectangular-region-anchor
+                               #'rrm/switch-to-multiple-cursors
+                               #'mc/insert-numbers
+                               #'mc/reverse-regions
+                               #'mc/sort-regions
+                               #'hum/keyboard-quit
+                               #'mc-hide-unmatched-lines-mode
+                               ))))
 
 (global-set-key (kbd "C-c l") #'mc/edit-lines)
 (global-set-key (kbd "C-c a") #'mc/mark-all-like-this-dwim)
@@ -84,8 +84,8 @@
 
 ;; directional frame movement too
 (add-hook 'emacs-startup-hook
-  (lambda ()
-    (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
+          (lambda ()
+            (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
 (with-eval-after-load 'framemove
   (setq framemove-hook-into-windmove t))
@@ -105,23 +105,23 @@
 (let ((my/iflipb-running-p))
   (with-eval-after-load 'iflipb
     (setq
-      iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
-      iflipb-wrap-around 't)
+     iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
+     iflipb-wrap-around 't)
 
     (defun my/iflipb-smart-buffer ()
       (unless (fboundp 'iflipb-hydra/body)
         (require 'hydra)
         (defhydra iflipb-hydra
           (:pre (setq hydra-is-helpful nil)
-            :post (setq hydra-is-helpful t))
+                :post (setq hydra-is-helpful t))
           ("<C-tab>"
-            (call-interactively #'iflipb-next-buffer))
+           (call-interactively #'iflipb-next-buffer))
           ("TAB"
-            (call-interactively #'iflipb-next-buffer))
+           (call-interactively #'iflipb-next-buffer))
           ("<C-S-iso-lefttab>"
-            (call-interactively #'iflipb-previous-buffer))
+           (call-interactively #'iflipb-previous-buffer))
           ("<backtab>"
-            (call-interactively #'iflipb-previous-buffer))))
+           (call-interactively #'iflipb-previous-buffer))))
 
       (iflipb-hydra/body))
 
@@ -131,7 +131,7 @@
       my/iflipb-running-p)
 
     (advice-add 'iflipb-first-iflipb-buffer-switch-command :override
-      #'nadvice/iflipb-first-iflipb-buffer-switch-command))
+                #'nadvice/iflipb-first-iflipb-buffer-switch-command))
 
   (defun iflipb-next-buffer-smart ()
     "A `hydra' enabled next-buffer"
@@ -161,24 +161,24 @@
   (remove-hook 'first-change-hook #'my/vhl-onetime-setup))
 
 (add-hook 'emacs-startup-hook
-  (lambda ()
-    (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
+          (lambda ()
+            (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
 
 (with-eval-after-load 'volatile-highlights
   (diminish #'volatile-highlights-mode)
   (with-demoted-errors "Load error: %s"
     (vhl/define-extension 'my-evil-highlights
-      'evil-yank
-      'evil-paste-pop-proxy
-      'evil-paste-pop-next
-      'evil-paste-after
-      'evil-paste-before)
+                          'evil-yank
+                          'evil-paste-pop-proxy
+                          'evil-paste-pop-next
+                          'evil-paste-after
+                          'evil-paste-before)
 
     (vhl/install-extension 'my-evil-highlights)
 
     (vhl/define-extension 'my-undo-tree-highlights
-      'undo-tree-undo
-      'undo-tree-redo)
+                          'undo-tree-undo
+                          'undo-tree-redo)
 
     (vhl/install-extension 'my-undo-tree-highlights)
 
@@ -186,44 +186,44 @@
 
 (with-eval-after-load 'auto-highlight-symbol
   (setq
-    ahs-idle-interval 0.3))
+   ahs-idle-interval 0.3))
 
 (add-hook 'auto-highlight-symbol-mode-hook
-  (lambda ()
-    (diminish 'auto-highlight-symbol-mode)
-    (if (display-graphic-p)
-      (progn
-        (set-face-attribute 'ahs-face nil
-          :foreground nil
-          :background "#073642")
-        (set-face-attribute 'ahs-definition-face nil
-          :foreground nil
-          :background "#073642"
-          :underline '(:color "#268bd2")))
+          (lambda ()
+            (diminish 'auto-highlight-symbol-mode)
+            (if (display-graphic-p)
+                (progn
+                  (set-face-attribute 'ahs-face nil
+                                      :foreground nil
+                                      :background "#073642")
+                  (set-face-attribute 'ahs-definition-face nil
+                                      :foreground nil
+                                      :background "#073642"
+                                      :underline '(:color "#268bd2")))
 
-      (set-face-attribute 'ahs-plugin-defalt-face nil
-        :foreground nil
-        :background "grey20")
-      (set-face-attribute 'ahs-face nil
-        :foreground nil
-        :background "grey20")
-      (set-face-attribute 'ahs-definition-face nil
-        :foreground nil
-        :background "grey20"
-        :underline '(:color "#268bd2")))
+              (set-face-attribute 'ahs-plugin-defalt-face nil
+                                  :foreground nil
+                                  :background "grey20")
+              (set-face-attribute 'ahs-face nil
+                                  :foreground nil
+                                  :background "grey20")
+              (set-face-attribute 'ahs-definition-face nil
+                                  :foreground nil
+                                  :background "grey20"
+                                  :underline '(:color "#268bd2")))
 
-    (set-face-attribute 'ahs-warning-face nil
-      :foreground nil
-      :underline '(:color "yellow"))
-    (set-face-attribute 'ahs-plugin-bod-face nil
-      :foreground nil
-      :underline '(:color "purple"))
-    (set-face-attribute 'ahs-plugin-whole-buffer-face nil
-      :foreground nil
-      :underline '(:color "black"))))
+            (set-face-attribute 'ahs-warning-face nil
+                                :foreground nil
+                                :underline '(:color "yellow"))
+            (set-face-attribute 'ahs-plugin-bod-face nil
+                                :foreground nil
+                                :underline '(:color "purple"))
+            (set-face-attribute 'ahs-plugin-whole-buffer-face nil
+                                :foreground nil
+                                :underline '(:color "black"))))
 
 (unless (or (bound-and-true-p my/slow-device)
-          (< (display-color-cells) 256))
+            (< (display-color-cells) 256))
   (require 'auto-highlight-symbol)
   (global-auto-highlight-symbol-mode +1))
 

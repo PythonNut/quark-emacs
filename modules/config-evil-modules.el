@@ -65,12 +65,12 @@
   (diminish 'evil-snipe-mode)
 
   (setq
-    evil-snipe-scope 'visible
-    evil-snipe-repeat-scope 'visible
-    evil-snipe-smart-case t)
+   evil-snipe-scope 'visible
+   evil-snipe-repeat-scope 'visible
+   evil-snipe-smart-case t)
 
   (set-face-attribute 'evil-snipe-matches-face nil
-    :background "#586e75")
+                      :background "#586e75")
 
   (evil-snipe-mode +1)
   (evil-snipe-override-mode +1))
@@ -109,15 +109,15 @@
 
 (with-eval-after-load 'evil-quickscope
   (setq
-    evil-quickscope-word-separator " -./")
+   evil-quickscope-word-separator " -./")
   (set-face-attribute 'evil-quickscope-first-face nil
-    :inherit nil)
+                      :inherit nil)
   (if (display-graphic-p)
+      (set-face-attribute 'evil-quickscope-second-face nil
+                          :underline '(:style wave)
+                          :inherit nil)
     (set-face-attribute 'evil-quickscope-second-face nil
-      :underline '(:style wave)
-      :inherit nil)
-    (set-face-attribute 'evil-quickscope-second-face nil
-      :inherit nil))
+                        :inherit nil))
 
   (defun nadvice/evil-quickscope-update-overlays-bidirectional ()
     "Update overlays in both directions from point."
@@ -127,12 +127,12 @@
       (evil-quickscope-apply-overlays-backward)))
 
   (advice-add
-    'evil-quickscope-update-overlays-bidirectional
-    :override
-    #'nadvice/evil-quickscope-update-overlays-bidirectional))
+   'evil-quickscope-update-overlays-bidirectional
+   :override
+   #'nadvice/evil-quickscope-update-overlays-bidirectional))
 
 (unless (or (bound-and-true-p my/slow-device)
-          (< (display-color-cells) 256))
+            (< (display-color-cells) 256))
   (global-evil-quickscope-always-mode +1))
 
 (provide 'config-evil-modules)

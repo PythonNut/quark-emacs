@@ -7,10 +7,10 @@
 
 (unless (bound-and-true-p my/slow-device)
   (add-hook 'find-file-hook
-    (lambda ()
-      (when (display-graphic-p)
-        (diff-hl-mode +1)
-        (diff-hl-update)))))
+            (lambda ()
+              (when (display-graphic-p)
+                (diff-hl-mode +1)
+                (diff-hl-update)))))
 
 (with-eval-after-load 'diff-hl
   (setq diff-hl-draw-borders nil)
@@ -19,9 +19,9 @@
 (setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
   (setq
-    magit-push-always-verify nil
-    magit-completing-read-function #'magit-ido-completing-read
-    magit-diff-refine-hunk t)
+   magit-push-always-verify nil
+   magit-completing-read-function #'magit-ido-completing-read
+   magit-diff-refine-hunk t)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
@@ -31,60 +31,60 @@
   (define-key magit-status-mode-map (kbd "j") #'next-line)
   (eval-and-compile
     (cl-macrolet
-      ((magit-setup-section-k (mode &optional command)
-         `(with-demoted-errors
-            (define-key ,mode (kbd "<C-tab>") nil)
-            (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
-            (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
-            (define-key ,mode (kbd "k") #'previous-line)
-            ,(when command
-               `(define-key ,mode (kbd "K") ,command)))))
+        ((magit-setup-section-k (mode &optional command)
+                                `(with-demoted-errors
+                                     (define-key ,mode (kbd "<C-tab>") nil)
+                                   (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
+                                   (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
+                                   (define-key ,mode (kbd "k") #'previous-line)
+                                   ,(when command
+                                      `(define-key ,mode (kbd "K") ,command)))))
 
       (with-no-warnings
         (my/generate-calls magit-setup-section-k
-          (
-            (magit-branch-section-map #'magit-branch-delete)
-            (magit-commit-section-map)
-            (magit-file-section-map #'magit-discard)
-            (magit-hunk-section-map #'magit-discard)
-            (magit-log-mode-map)
-            (magit-module-commit-section-map)
-            (magit-remote-section-map)
-            (magit-staged-section-map #'magit-discard)
-            (magit-stash-section-map #'magit-stash-drop)
-            (magit-stashes-section-map)
-            (magit-status-mode-map)
-            (magit-tag-section-map #'magit-tag-delete)
-            (magit-unpulled-section-map)
-            (magit-unpushed-section-map)
-            (magit-unstaged-section-map #'magit-discard)
-            (magit-untracked-section-map #'magit-discard))))))
+                           (
+                            (magit-branch-section-map #'magit-branch-delete)
+                            (magit-commit-section-map)
+                            (magit-file-section-map #'magit-discard)
+                            (magit-hunk-section-map #'magit-discard)
+                            (magit-log-mode-map)
+                            (magit-module-commit-section-map)
+                            (magit-remote-section-map)
+                            (magit-staged-section-map #'magit-discard)
+                            (magit-stash-section-map #'magit-stash-drop)
+                            (magit-stashes-section-map)
+                            (magit-status-mode-map)
+                            (magit-tag-section-map #'magit-tag-delete)
+                            (magit-unpulled-section-map)
+                            (magit-unpushed-section-map)
+                            (magit-unstaged-section-map #'magit-discard)
+                            (magit-untracked-section-map #'magit-discard))))))
 
   (with-eval-after-load 'magit-filenotify
     (diminish 'magit-filenotify-mode))
 
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
-    (lambda ()
-      (magit-filenotify-mode +1)
-      (set-input-method "TeX")))
+            (lambda ()
+              (magit-filenotify-mode +1)
+              (set-input-method "TeX")))
 
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
 
   (add-hook 'magit-log-mode-hook
-    (lambda () (set-input-method "TeX")))
+            (lambda () (set-input-method "TeX")))
 
   (defun nadvice/magit-revert-buffers (&rest args)
     (run-with-timer 1 nil #'message ""))
 
   (advice-add 'magit-revert-buffers :after
-    #'nadvice/magit-revert-buffers))
+              #'nadvice/magit-revert-buffers))
 
 (with-eval-after-load 'projectile
   (projectile-global-mode +1)
   (require 'magit)
   (setq projectile-mode-line
-    '(:eval (format (if (display-graphic-p) " ↠" " /"))))
+        '(:eval (format (if (display-graphic-p) " ↠" " /"))))
   (define-key projectile-mode-map (kbd "C-c p") #'my/smart-projectile-tools))
 
 (defun my/smart-projectile-tools ()

@@ -9,16 +9,15 @@
 
 (with-eval-after-load 'js2-mode
   (set-face-foreground 'js2-external-variable
-    (face-foreground 'default))
+                       (face-foreground 'default))
   (set-face-attribute 'js2-external-variable nil :weight 'extra-bold)
   (set-face-attribute 'js2-external-variable nil :underline t)
   (js2r-add-keybindings-with-prefix "C-c C-r")
 
   (with-eval-after-load 'smartparens
     (sp-local-pair 'js2-mode "{" nil :post-handlers
-      '(:add
-         ("||\n[i]" "RET")
-         ("| " "SPC"))))
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
 
-  (setq
-    js2-basic-offset 2))
+  (setq js2-basic-offset 2))

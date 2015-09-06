@@ -23,16 +23,13 @@
   (diminish 'eldoc-mode))
 
 (add-hook 'emacs-lisp-mode-hook
-  (lambda ()
-    (setq
-      lisp-indent-offset 2
-      lisp-body-indent 2
-      mode-name (if (display-graphic-p) "λ" "EL"))
+          (lambda ()
+            (setq mode-name (if (display-graphic-p) "λ" "EL"))
 
-    (eldoc-mode +1)
-    (auto-indent-mode -1)
-    (aggressive-indent-mode +1)
-    (add-hook 'before-save-hook #'my/auto-compile-onetime-setup nil t)))
+            (eldoc-mode +1)
+            (auto-indent-mode -1)
+            (aggressive-indent-mode +1)
+            (add-hook 'before-save-hook #'my/auto-compile-onetime-setup nil t)))
 
 (with-eval-after-load 'smartparens
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)

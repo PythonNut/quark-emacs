@@ -15,19 +15,19 @@
   (make-variable-buffer-local 'global-hl-line-mode)
   (make-variable-buffer-local 'scroll-margin)
   (make-variable-buffer-local 'smooth-scroll-margin)
-  (setq
-    yas-dont-activate t
-    global-hl-line-mode nil
-    scroll-margin 0
-    smooth-scroll-margin 0))
+
+  (setq yas-dont-activate t
+        global-hl-line-mode nil
+        scroll-margin 0
+        smooth-scroll-margin 0))
 
 (add-hook 'term-mode-hook #'my/generic-term-init)
 (add-hook 'shell-mode-hook #'my/generic-term-init)
 (add-hook 'eshell-mode-hook #'my/generic-term-init)
 
 (add-hook 'eshell-mode-hook
-  (lambda ()
-    (make-variable-buffer-local 'company-idle-delay)))
+          (lambda ()
+            (make-variable-buffer-local 'company-idle-delay)))
 
 (defun eshell-kill-whole-line ()
   (interactive)
@@ -45,24 +45,24 @@
 
 (with-eval-after-load 'eshell
   (add-hook 'eshell-directory-change-hook
-    (lambda ()
-      (setq company-idle-delay
-        (if (file-remote-p default-directory)
-          nil
-          0.1))))
+            (lambda ()
+              (setq company-idle-delay
+                    (if (file-remote-p default-directory)
+                        nil
+                      0.1))))
   (add-hook 'eshell-mode-hook #'my/eshell-onetime-setup)
   (setq
-    eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'"
-    eshell-cmpl-file-ignore "\\(\\.elc\\|\\.zwc\\|\\.pyc\\|~\\|\\.swp\\)\\'"
-    eshell-cmpl-ignore-case t
+   eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'"
+   eshell-cmpl-file-ignore "\\(\\.elc\\|\\.zwc\\|\\.pyc\\|~\\|\\.swp\\)\\'"
+   eshell-cmpl-ignore-case t
 
-    eshell-scroll-to-bottom-on-input t
-    eshell-scroll-show-maximum-output nil
-    eshell-cp-interactive-query t
-    eshell-ln-interactive-query t
-    eshell-mv-interactive-query t
-    eshell-rm-interactive-query t
-    eshell-mv-overwrite-files nil))
+   eshell-scroll-to-bottom-on-input t
+   eshell-scroll-show-maximum-output nil
+   eshell-cp-interactive-query t
+   eshell-ln-interactive-query t
+   eshell-mv-interactive-query t
+   eshell-rm-interactive-query t
+   eshell-mv-overwrite-files nil))
 
 (defun eshell/clear ()
   (interactive)
@@ -73,8 +73,8 @@
 \"emacs +42 foo\" also goes to line 42 in the buffer."
   (while args
     (if (string-match "\\`\\+\\([0-9]+\\)\\'" (car args))
-      (let* ((line (string-to-number (match-string 1 (pop args))))
-              (file (pop args)))
-        (find-file file)
-        (goto-line line))
+        (let* ((line (string-to-number (match-string 1 (pop args))))
+               (file (pop args)))
+          (find-file file)
+          (goto-line line))
       (find-file (pop args)))))

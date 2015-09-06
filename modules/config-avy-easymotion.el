@@ -21,37 +21,37 @@
 (defun nadvice/self-insert-command (old-fun &optional arg)
   (interactive "P")
   (cond
-    ((consp arg)
-      (avy-goto-char last-command-event))
-    ((eq '- arg)
-      (message "Negative argument not implemented"))
-    ((or (numberp arg) (not arg))
-      (funcall old-fun (or arg 1)))))
+   ((consp arg)
+    (avy-goto-char last-command-event))
+   ((eq '- arg)
+    (message "Negative argument not implemented"))
+   ((or (numberp arg) (not arg))
+    (funcall old-fun (or arg 1)))))
 
 (advice-add 'self-insert-command :around #'nadvice/self-insert-command)
 
 (with-eval-after-load 'avy
   (setq
-    avy-background t
-    avy-style 'de-bruijn
-    avy-keys (string-to-list "jfkdls;aurieowncpqmxzb"))
+   avy-background t
+   avy-style 'de-bruijn
+   avy-keys (string-to-list "jfkdls;aurieowncpqmxzb"))
   (set-face-foreground 'avy-background-face "#586e75")
 
   (set-face-attribute 'avy-lead-face nil
-    :weight 'normal
-    :background nil
-    :foreground "#b58900")
+                      :weight 'normal
+                      :background nil
+                      :foreground "#b58900")
   (set-face-attribute 'avy-lead-face-0 nil
-    :weight 'extra-bold
-    :background nil
-    :foreground "#dc322f")
+                      :weight 'extra-bold
+                      :background nil
+                      :foreground "#dc322f")
   (set-face-attribute 'avy-lead-face-1 nil
-    :background nil
-    :foreground "#839493"))
+                      :background nil
+                      :foreground "#839493"))
 
 (with-eval-after-load 'evil-easymotion
   (setq
-    evilem-style 'de-bruijn))
+   evilem-style 'de-bruijn))
 
 (eval-and-compile (require 'evil-easymotion))
 
@@ -72,21 +72,21 @@
 (evilem-define (kbd "SPC g s p") 'evil-previous-sexp)
 
 (evilem-define (kbd "SPC s") 'evil-snipe-repeat
-  (lambda ()
-    (save-excursion
-      (ignore-errors
-        (call-interactively #'evil-snipe-s))))
-  nil
-  ((evil-snipe-enable-highlight)
-    (evil-snipe-enable-incremental-highlight)))
+               (lambda ()
+                 (save-excursion
+                   (ignore-errors
+                     (call-interactively #'evil-snipe-s))))
+               nil
+               ((evil-snipe-enable-highlight)
+                (evil-snipe-enable-incremental-highlight)))
 
 (evilem-define (kbd "SPC S") 'evil-snipe-repeat-reverse
-  (lambda ()
-    (save-excursion
-      (ignore-errors
-        (call-interactively #'evil-snipe-S))))
-  nil
-  ((evil-snipe-enable-highlight)
-    (evil-snipe-enable-incremental-highlight)))
+               (lambda ()
+                 (save-excursion
+                   (ignore-errors
+                     (call-interactively #'evil-snipe-S))))
+               nil
+               ((evil-snipe-enable-highlight)
+                (evil-snipe-enable-incremental-highlight)))
 
 (provide 'config-avy-easymotion)

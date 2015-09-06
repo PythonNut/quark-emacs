@@ -5,7 +5,7 @@
 
 ;; bind zsh files to the zsh submode of sh-mode
 (add-hook 'sh-mode-hook
-  (lambda ()
-    (setq mode-name "sh")
-    (if (string-match "\\.zsh$" buffer-file-name)
-      (sh-set-shell "zsh"))))
+          (lambda ()
+            (setq mode-name "sh")
+            (if (string-match "\\.zsh$" buffer-file-name)
+                (sh-set-shell "zsh"))))

@@ -9,15 +9,14 @@
 (require 'config-indent)
 (require 'adaptive-wrap)
 
-(setq
-  adaptive-wrap-extra-indent 2
-  require-final-newline t
-  line-move-visual t)
+(setq adaptive-wrap-extra-indent 2
+      require-final-newline t
+      line-move-visual t)
 
 (add-hook 'visual-line-mode-hook
-  (lambda ()
-    (adaptive-wrap-prefix-mode +1)
-    (diminish 'visual-line-mode)))
+          (lambda ()
+            (adaptive-wrap-prefix-mode +1)
+            (diminish 'visual-line-mode)))
 
 (global-visual-line-mode +1)
 
@@ -44,7 +43,7 @@
   (diminish 'ws-butler-mode " β"))
 
 (add-hook 'highlight-changes-mode-hook
-  (lambda ()
-    (diminish 'highlight-changes-mode)))
+          (lambda ()
+            (diminish 'highlight-changes-mode)))
 
 (provide 'config-whitespace)

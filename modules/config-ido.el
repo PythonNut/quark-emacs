@@ -9,10 +9,10 @@
     (require 'smex)))
 
 (setq
-  ido-enable-flex-matching t
-  ido-save-directory-list-file
-  (expand-file-name "ido.last" user-emacs-directory)
-  ido-use-faces nil)
+ ido-enable-flex-matching t
+ ido-save-directory-list-file
+ (expand-file-name "ido.last" user-emacs-directory)
+ ido-use-faces nil)
 
 (ido-mode +1)
 
@@ -30,12 +30,12 @@
 
 (defun my/ido-onetime-setup ()
   (unless (and
-            (featurep 'flx-ido)
-            flx-ido-mode)
+           (featurep 'flx-ido)
+           flx-ido-mode)
     (flx-ido-mode +1))
   (unless (and
-            (featurep 'ido-vertical-mode)
-            ido-vertical-mode)
+           (featurep 'ido-vertical-mode)
+           ido-vertical-mode)
     (ido-vertical-mode +1))
 
   (remove-hook 'ido-minibuffer-setup-hook 'my/ido-onetime-setup))
@@ -44,9 +44,9 @@
 
 (with-eval-after-load 'smex
   (setq smex-save-file
-    (expand-file-name
-      "smex-items"
-      user-emacs-directory)))
+        (expand-file-name
+         "smex-items"
+         user-emacs-directory)))
 
 (global-set-key (kbd "M-x") #'smex)
 

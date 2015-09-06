@@ -12,10 +12,10 @@
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
 
 (setq
-  cua-paste-pop-rotate-temporarily t
-  cua-enable-cua-keys nil
-  cua-virtual-rectangle-edges t
-  cua-auto-tabify-rectangles nil)
+ cua-paste-pop-rotate-temporarily t
+ cua-enable-cua-keys nil
+ cua-virtual-rectangle-edges t
+ cua-auto-tabify-rectangles nil)
 
 (when (display-graphic-p)
   (define-key evil-insert-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
@@ -35,12 +35,12 @@
 (defun nadvice/cua-cut-region (old-fun &optional prefix)
   (interactive "*p")
   (whole-line-or-region-call-with-region
-    (lambda (beg end &optional prefix)
-      (interactive "rP")
-      (call-interactively
-        old-fun
-        current-prefix-arg))
-    prefix t t prefix))
+   (lambda (beg end &optional prefix)
+     (interactive "rP")
+     (call-interactively
+      old-fun
+      current-prefix-arg))
+   prefix t t prefix))
 
 (advice-add 'cua-cut-region :around #'nadvice/cua-cut-region)
 
@@ -60,46 +60,46 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
   ;; figure out what yank would do normally
   (let ((string-to-yank
-          (or string-in
-            (current-kill
+         (or string-in
+             (current-kill
               (cond ((listp raw-prefix) 0)
-                ((eq raw-prefix '-) -1)
-                (t (1- raw-prefix))) t)))
-         (saved-column (current-column)))
+                    ((eq raw-prefix '-) -1)
+                    (t (1- raw-prefix))) t)))
+        (saved-column (current-column)))
 
     ;; check for whole-line prop in yanked text
     (if (get-text-property 0 'whole-line-or-region string-to-yank)
-      (let ((beg (line-beginning-position)))
-        ;; goto beg of line and yank
-        (beginning-of-line)
-        (if string-in
-          ;; insert "manually"
-          (insert string-in)
-          ;; just yank as normal
-          (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))
+        (let ((beg (line-beginning-position)))
+          ;; goto beg of line and yank
+          (beginning-of-line)
+          (if string-in
+              ;; insert "manually"
+              (insert string-in)
+            ;; just yank as normal
+            (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))
 
-        ;; a whole-line killed from end of file may not have a
-        ;; trailing newline -- add one, in these cases
-        (when (not (string-match "\n$" string-to-yank))
-          (insert "\n")
-          (forward-line -1))
+          ;; a whole-line killed from end of file may not have a
+          ;; trailing newline -- add one, in these cases
+          (when (not (string-match "\n$" string-to-yank))
+            (insert "\n")
+            (forward-line -1))
 
-        ;; restore state of being....
-        (move-to-column saved-column)
-        (remove-text-properties beg (1+ beg) '(whole-line-or-region nil)))
+          ;; restore state of being....
+          (move-to-column saved-column)
+          (remove-text-properties beg (1+ beg) '(whole-line-or-region nil)))
 
       ;; no whole-line-or-region mark
       (if string-in
-        ;; insert "manually"
-        (progn
-          (when (and delete-selection-mode mark-active)
-            (delete-active-region))
-          (insert string-in))
+          ;; insert "manually"
+          (progn
+            (when (and delete-selection-mode mark-active)
+              (delete-active-region))
+            (insert string-in))
         ;; just yank as normal
         (if (eq (car (get-text-property 0 'yank-handler
-                       string-to-yank))
-              'evil-yank-line-handler)
-          (evil-paste-before raw-prefix)
+                                        string-to-yank))
+                'evil-yank-line-handler)
+            (evil-paste-before raw-prefix)
           (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))))))
 
 (advice-add 'cua-paste :override #'nadvice/cua-paste)
@@ -107,7 +107,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
   (let ((str (thing-at-point 'line))
-         (beg (line-beginning-position)))
+        (beg (line-beginning-position)))
     (save-excursion
       (put-text-property 0 1 'whole-line-or-region t str)
       (easy-kill-adjust-candidate 'my-line str))))
@@ -119,7 +119,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (defun nadvice/evil-paste-line (&rest args)
   (when (get-text-property 0 'whole-line-or-region (car kill-ring))
     (setf (car kill-ring)
-      (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
+          (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
 (advice-add 'evil-paste-before :before #'nadvice/evil-paste-line)
 (advice-add 'evil-paste-after  :before #'nadvice/evil-paste-line)
@@ -128,19 +128,19 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 ;; unify evil-paste with cua rectangles
 (defun nadvice/evil-paste-after (old-fun &rest args)
   (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
-        'rectangle--insert-for-yank)
-    (evil-with-state 'normal
-      (call-interactively #'evil-append)
-      (call-interactively #'cua-paste))
+          'rectangle--insert-for-yank)
+      (evil-with-state 'normal
+        (call-interactively #'evil-append)
+        (call-interactively #'cua-paste))
     (apply old-fun args)))
 
 
 (defun nadvice/evil-paste-before (old-fun &rest args)
   (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
-        'rectangle--insert-for-yank)
-    (evil-with-state 'normal
-      (call-interactively #'evil-insert)
-      (call-interactively #'cua-paste))
+          'rectangle--insert-for-yank)
+      (evil-with-state 'normal
+        (call-interactively #'evil-insert)
+        (call-interactively #'cua-paste))
     (apply old-fun args)))
 
 (advice-add 'evil-paste-after  :around #'nadvice/evil-paste-after)
@@ -165,9 +165,9 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (defun my/setup-paste ()
   (unless (display-graphic-p)
     (when (and (not xclip-mode)
-            (or
-              (executable-find "xclip")
-              (executable-find "pbcopy")))
+               (or
+                (executable-find "xclip")
+                (executable-find "pbcopy")))
       (xclip-mode +1))
     (xterm-mouse-mode +1)
     (require 'bracketed-paste)
@@ -184,16 +184,16 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (run-hooks 'terminal-init-xterm-hook))
 
     (add-hook 'kill-emacs-hook
-      (lambda ()
-        (xterm-mouse-mode -1)))))
+              (lambda ()
+                (xterm-mouse-mode -1)))))
 
 (add-hook 'after-make-frame-hook #'my/setup-paste)
 (add-hook 'emacs-startup-hook #'my/setup-paste)
 
 (with-eval-after-load 'bracketed-paste
   (add-hook 'bracketed-paste--pasting-mode-hook
-    (lambda ()
-      (smartparens-mode -1))))
+            (lambda ()
+              (smartparens-mode -1))))
 
 (with-eval-after-load 'iso-transl
   (define-prefix-command 'arrow-thin-map)
