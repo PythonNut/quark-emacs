@@ -75,7 +75,7 @@
   (let ((result))
     (mapc (lambda (elem)
             (unless (assoc (car elem) result)
-              (setq result (cons elem result))))
+              (push elem result)))
           alist)
     (nreverse result)))
 

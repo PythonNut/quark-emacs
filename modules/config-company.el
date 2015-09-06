@@ -302,7 +302,7 @@
         (progn
           (he-init-string (he-lisp-symbol-beg) (point))
           (if (not (he-string-member he-search-string he-tried-table))
-              (setq he-tried-table (cons he-search-string he-tried-table)))
+              (push he-search-string he-tried-table))
           (setq he-expand-list
                 (and (not (equal he-search-string ""))
                      (try-expand-flx-collect he-search-string)))))
@@ -324,7 +324,7 @@
       (save-excursion
         (goto-char (point-min))
         (while (search-forward-regexp regexp nil t)
-          (setq coll (cons (thing-at-point 'symbol) coll))))
+          (push (thing-at-point 'symbol) coll)))
       (sort coll #'(lambda (a b)
                      (> (first (flx-score a str))
                         (first (flx-score b str)))))))
