@@ -85,13 +85,20 @@
 
 (defun emergency-fix-config ()
   (interactive)
-  (let ((default-directory user-emacs-directory))
+  (let ((default-directory user-emacs-directory)
+        (module-dir (expand-file-name "modules" user-emacs-directory)))
     (shell-command "git stash")
-    (shell-command "git pull --rebase"))
-  (with-demoted-errors
+    (shell-command "git pull --rebase -X histogram")
+    (with-demoted-errors "Emergency fix delete error: %s"
+      (delete-file (expand-file-name "init.el" user-emacs-directory))
+      (mapc (lambda (file) (delete-file file t))
+            (append
+             (file-expand-wildcards (concat module-dir "/*.elc"))
+             (file-expand-wildcards (concat module-dir "/modes/*.elc"))))
       (delete-directory (expand-file-name "elpa" user-emacs-directory) t t))
-  (my/ensure-packages-are-installed my/required-packages)
-  (byte-recompile-config)
-  (restart-emacs))
+    (byte-recompile-config)
+    (package-initialize)
+    (my/ensure-packages-are-installed (bound-and-true-p my/required-packages))
+    (restart-emacs)))
 
 (provide 'config-setq)
