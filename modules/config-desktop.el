@@ -106,7 +106,18 @@
    desktop-dirname (expand-file-name "desktop/" user-emacs-directory)
    desktop-path (list desktop-dirname)
    desktop-base-file-name "emacs-desktop"
-   desktop-base-lock-name "emacs-desktop.lock"))
+   desktop-base-lock-name "emacs-desktop.lock")
+
+  ;; don't let a dead emacs own the lockfile
+  (defun nadvice/desktop-owner (pid)
+    (when pid
+      (let* ((attributes (process-attributes pid))
+              (cmd (cdr (assoc 'comm attributes))))
+        (if (and cmd (string-prefix-p "emacs" cmd))
+          pid
+          nil))))
+
+  (advice-add 'desktop-owner :filter-return #'nadvice/desktop-owner))
 
 (defun desktop-autosave (&optional arg)
   (interactive "p")
