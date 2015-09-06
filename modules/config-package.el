@@ -7,11 +7,10 @@
     (require 'cl-lib)))
 
 ;; Package archives
-(setq
- package-enable-at-startup nil
- package-archives
- '(("gnu" . "http://elpa.gnu.org/packages/")
-   ("melpa" . "http://melpa.org/packages/")))
+(setq package-enable-at-startup nil
+      package-archives
+      '(("gnu" . "http://elpa.gnu.org/packages/")
+        ("melpa" . "http://melpa.org/packages/")))
 
 (package-initialize)
 
@@ -33,8 +32,7 @@
     (package-initialize)))
 
 (defvar my/required-packages
-  '(
-    ;; ido based packages
+  '(;; ido based packages
     flx-ido
     ido-ubiquitous
     ido-vertical-mode
@@ -114,6 +112,7 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'idle-require)))
+
 (add-to-list 'load-path (expand-file-name "personal/" user-emacs-directory))
 
 (with-eval-after-load 'idle-require
@@ -121,18 +120,17 @@
             (lambda ()
               (diminish 'idle-require-mode (if (display-graphic-p) " ⋯" " IR"))))
 
-  (setq
-   idle-require-idle-delay 1
-   idle-require-load-break 0
-   idle-require-symbols
-   '(
-     helm-files
-     helm-ring
-     helm-projectile
-     helm-semantic
-     helm-ag
-     yasnippet
-     company)))
+  (setq idle-require-idle-delay 1
+        idle-require-load-break 0
+        idle-require-symbols
+        '(
+          helm-files
+          helm-ring
+          helm-projectile
+          helm-semantic
+          helm-ag
+          yasnippet
+          company)))
 
 (defun nadvice/idle-require-quiet (old-fun &rest args)
   (advice-add 'load :filter-args #'nadvice/load-quiet)
