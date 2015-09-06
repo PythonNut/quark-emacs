@@ -12,10 +12,7 @@
     (require 'helm-command)
     (require 'helm-imenu)
     (require 'helm-locate)
-    (require 'helm-semantic)
-    (require 'key-chord)
-    (require 'projectile)
-    (require 'semantic)))
+    (require 'helm-semantic)))
 
 (defvar helm-flx-cache)
 
@@ -254,6 +251,7 @@
 (advice-add 'evil-paste-pop :around #'nadvice/evil-paste-pop)
 
 (define-key evil-insert-state-map (kbd "C-p") #'my/helm-omni)
+(define-key evil-motion-state-map (kbd "C-p") #'my/helm-omni)
 
 (global-set-key (kbd "C-c C-o") #'my/helm-omni)
 (define-key evil-normal-state-map (kbd "C-c C-o") #'my/helm-omni)
