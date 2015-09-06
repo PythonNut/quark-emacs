@@ -17,9 +17,11 @@
 
 ;; Guarantee all packages are installed on start
 (defun my/has-package-not-installed (package-list)
-  (cl-loop for p in package-list
-           when (not (package-installed-p p)) do (cl-return t)
-           finally (cl-return nil)))
+  (catch 'package-return
+    (dolist (p package-list)
+      (unless (package-installed-p p)
+        (throw 'package-return t)))
+    (throw 'package-return nil)))
 
 (defun my/ensure-packages-are-installed (package-list)
   (interactive)
