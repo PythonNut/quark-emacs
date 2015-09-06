@@ -73,14 +73,13 @@
      (if (and
           (not (my/root-file-name-p filename))
           (y-or-n-p "File is not readable. Open with root? "))
-         (setq ad-return-value
-               (let ((filename (my/make-root-file-name (file-truename filename))))
-                 (apply #'find-file-noselect-1
-                        (or
-                         (get-file-buffer filename)
-                         (create-file-buffer filename))
-                        filename
-                        args)))
+         (let ((filename (my/make-root-file-name (file-truename filename))))
+           (apply #'find-file-noselect-1
+                  (or
+                   (get-file-buffer filename)
+                   (create-file-buffer filename))
+                  filename
+                  args))
        (signal 'file-error (list "File is not readable" filename))))))
 
 (advice-add #'find-file-noselect-1 :around #'nadvice/find-file-noselect-1)
