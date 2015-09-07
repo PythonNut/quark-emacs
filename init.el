@@ -22,6 +22,8 @@
       (delete "-E" command-line-args)
       (load (concat user-emacs-directory "init-minimal")))
 
+  (message "[                 ]")
+
   (defvar my/slow-device nil)
 
   (when (member "-F" command-line-args)
@@ -29,8 +31,8 @@
     (setq my/slow-device t))
 
   (eval-and-compile
-    (add-to-list 'load-path
-                 (expand-file-name "modules/" user-emacs-directory)))
+    (add-to-list 'load-path (expand-file-name "modules/"
+                                              user-emacs-directory)))
 
   ;; suppress the GNU spam
   (setq inhibit-startup-echo-area-message "pythonnut")
@@ -40,9 +42,8 @@
 
   (advice-add 'load :filter-args #'nadvice/load-quiet)
 
-  (load (setq custom-file (concat user-emacs-directory "custom.el")))
+  (load (setq custom-file (expand-file-name "custom.el" user-emacs-directory)))
 
-  (message "[                 ]")
   (require 'config-setq)
 
   (defun my/automatic-repair ()
@@ -91,15 +92,15 @@
   (defun my/recursively-load-dir (dir)
     (let ((suffixes (get-load-suffixes))
           (already-loaded))
-      (dolist (f (directory-files dir t
-                                  directory-files-no-dot-files-regexp))
-        (if (file-directory-p f)
-            (my/recursively-load-dir f)
-          (when (member (file-name-extension f t) suffixes)
-            (setq f (file-name-sans-extension f))
-            (unless (member f already-loaded)
-              (load f)
-              (push f already-loaded)))))))
+      (dolist (file (directory-files dir t
+                                     directory-files-no-dot-files-regexp))
+        (if (file-directory-p file)
+            (my/recursively-load-dir file)
+          (when (member (file-name-extension file t) suffixes)
+            (setq file (file-name-sans-extension file))
+            (unless (member file already-loaded)
+              (load file)
+              (push file already-loaded)))))))
 
   (my/recursively-load-dir
    (expand-file-name
