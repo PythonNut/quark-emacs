@@ -18,6 +18,9 @@
       auto-window-vscroll nil
       scroll-conservatively 1000)
 
+(global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
+(global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
+
 (require 'config-line-numbers)
 (require 'config-avy-easymotion)
 (require 'config-undo)
