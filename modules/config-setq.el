@@ -90,7 +90,7 @@
                  arg)))
     (when (progn
             (when force
-              (delete-file (expand-file-name "init.el" user-emacs-directory)))
+              (delete-file (expand-file-name "init.elc" user-emacs-directory)))
             (byte-compile-file (expand-file-name
                                 "init.el"
                                 user-emacs-directory)))
@@ -109,7 +109,7 @@
     (shell-command "git stash")
     (shell-command "git pull --rebase -X histogram")
     (with-demoted-errors "Emergency fix delete error: %s"
-      (delete-file (expand-file-name "init.el" user-emacs-directory))
+      (delete-file (expand-file-name "init.elc" user-emacs-directory))
       (mapc (lambda (file) (delete-file file t))
             (append
              (file-expand-wildcards (concat module-dir "/*.elc"))
