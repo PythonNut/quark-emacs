@@ -38,7 +38,7 @@
                           (catch 'notfound
                             (setq idx (mapcar (lambda (str)
                                                 (or
-                                                 (position char str)
+                                                 (cl-position char str)
                                                  (throw 'notfound nil)))
                                               strs))
                             (push (cons char
@@ -65,7 +65,7 @@
   (let ((holes) (idx))
     (dolist (i (number-sequence 0 (1- (length merged))))
       (setq idx
-            (position
+            (cl-position
              (elt merged i)
              str))
       (when (> idx 0)
@@ -140,7 +140,7 @@
             (cons
              (concat prefix merged suffix)
              (+ (length prefix)
-                (position (apply #'max holes) holes)))))))))
+                (cl-position (apply #'max holes) holes)))))))))
 
 (defun completion-fuzzy-try-completion (string table predicate point)
   (completion-fuzzy-completion string table predicate point))
