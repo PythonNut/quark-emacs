@@ -75,14 +75,6 @@
    (t
     (my/restart-emacs-engine))))
 
-(defun restart-emacs (&optional arg)
-  (interactive "p")
-  ;; We need the new emacs to be spawned after all kill-emacs-hooks
-  ;; have been processed and there is nothing interesting left
-  (if (and (integerp arg) (/= arg 4))
-
-      ))
-
 (defun byte-recompile-config (&optional arg)
   (interactive "p")
   (let ((force (if (called-interactively-p 'any)
