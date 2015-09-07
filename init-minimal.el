@@ -2,9 +2,9 @@
 (menu-bar-mode -1)
 
 (if (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
+    (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
+    (scroll-bar-mode -1))
 
 (blink-cursor-mode -1)
 
@@ -58,81 +58,79 @@
 (global-set-key (kbd "C-<up>") #'windmove-up)
 (global-set-key (kbd "C-<down>") #'windmove-down)
 
-(setf
-  delete-by-moving-to-trash t
-  echo-keystrokes 0.4
-  term-default-bg-color "#111"
-  
-  ;; switch windows without clicking
-  focus-follows-mouse 1
-  mouse-autoselect-window 0.3
+(setf delete-by-moving-to-trash t
+      echo-keystrokes 0.4
+      term-default-bg-color "#111"
+      
+      ;; switch windows without clicking
+      focus-follows-mouse 1
+      mouse-autoselect-window 0.3
 
-  ;; make scrolling sane
-  scroll-margin 5
-  scroll-conservatively 1000
-  scroll-step 1
-  redisplay-dont-pause t
-  mouse-wheel-progressive-speed nil
-  mouse-wheel-follow-mouse t
-  mouse-wheel-scroll-amount '(3 ((shift) . 1))
-  
-  ;; indentation settings
-  indent-tabs-mode nil
-  tab-width 4
-  use-dialog-box nil
-  
-  ;; supress useless stuff
-  inhibit-default-init 1
-  inhibit-startup-screen t
+      ;; make scrolling sane
+      scroll-margin 5
+      scroll-conservatively 1000
+      scroll-step 1
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-follow-mouse t
+      mouse-wheel-scroll-amount '(3 ((shift) . 1))
+      
+      ;; indentation settings
+      indent-tabs-mode nil
+      tab-width 4
+      use-dialog-box nil
+      
+      ;; supress useless stuff
+      inhibit-default-init 1
+      inhibit-startup-screen t
 
-  ;; syntax highlighting settings
-  jit-lock-defer-time 0.04
-  jit-lock-stealth-nice 0.1
-  jit-lock-stealth-time 0.2
-  jit-lock-stealth-verbose nil
+      ;; syntax highlighting settings
+      jit-lock-defer-time 0.04
+      jit-lock-stealth-nice 0.1
+      jit-lock-stealth-time 0.2
+      jit-lock-stealth-verbose nil
 
-  ;; cursor and selection settings
-  mouse-drag-copy-region nil
-  select-active-regions t
-  ring-bell-function 'ignore
-  x-stretch-cursor t  
-  cursor-type 'box
-  
-  ;; clipboard stuff
-  x-select-enable-clipboard t
-  x-select-enable-primary t
-  x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
-  
-  ;; backup locations
-  backup-directory-alist
-  `((".*" . ,(expand-file-name "data/backups" user-emacs-directory)))
-  auto-save-file-name-transforms
-  `((".*" ,(expand-file-name "data/autosave" user-emacs-directory) t))
+      ;; cursor and selection settings
+      mouse-drag-copy-region nil
+      select-active-regions t
+      ring-bell-function 'ignore
+      x-stretch-cursor t  
+      cursor-type 'box
+      
+      ;; clipboard stuff
+      x-select-enable-clipboard t
+      x-select-enable-primary t
+      x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
+      
+      ;; backup locations
+      backup-directory-alist
+      `((".*" . ,(expand-file-name "data/backups" user-emacs-directory)))
+      auto-save-file-name-transforms
+      `((".*" ,(expand-file-name "data/autosave" user-emacs-directory) t))
 
-  ;; auto-save parameters
-  version-control t 
-  kept-new-versions 30 
-  kept-old-versions 0
-  delete-old-versions t 
-  backup-by-copying t
-  backup-by-copying-when-linked t
-  auto-save-default t   
-  auto-save-timeout 10  
-  auto-save-interval 200
-  vc-make-backup-files t
+      ;; auto-save parameters
+      version-control t 
+      kept-new-versions 30 
+      kept-old-versions 0
+      delete-old-versions t 
+      backup-by-copying t
+      backup-by-copying-when-linked t
+      auto-save-default t   
+      auto-save-timeout 10  
+      auto-save-interval 200
+      vc-make-backup-files t
 
-  ;; hippie expand settings
-  hippie-expand-try-functions-list
-  '(try-expand-dabbrev
-     try-expand-dabbrev-from-kill
-     try-expand-dabbrev-all-buffers
-     try-complete-file-name-partially
-     try-complete-file-name
-     try-expand-all-abbrevs
-     try-expand-list
-     try-expand-line
-     try-complete-lisp-symbol-partially
-     try-complete-lisp-symbol))
+      ;; hippie expand settings
+      hippie-expand-try-functions-list
+      '(try-expand-dabbrev
+        try-expand-dabbrev-from-kill
+        try-expand-dabbrev-all-buffers
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-expand-all-abbrevs
+        try-expand-list
+        try-expand-line
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol))
 
 (global-set-key (kbd "M-/") 'hippie-expand)
 
