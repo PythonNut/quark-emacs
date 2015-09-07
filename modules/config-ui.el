@@ -191,41 +191,48 @@
     (volatile-highlights-mode +1)))
 
 (with-eval-after-load 'auto-highlight-symbol
-  (setq ahs-idle-interval 0.3))
+  (setq ahs-idle-interval 0.3)
+
+  (defun my/ahs-setup-faces ()
+    (if (display-graphic-p)
+        (progn
+          (set-face-attribute 'ahs-plugin-defalt-face nil
+                              :foreground nil
+                              :background nil)
+          (set-face-attribute 'ahs-face nil
+                              :foreground nil
+                              :background "#073642")
+          (set-face-attribute 'ahs-definition-face nil
+                              :foreground nil
+                              :background "#073642"
+                              :underline '(:color "#268bd2")))
+
+      (set-face-attribute 'ahs-plugin-defalt-face nil
+                          :foreground nil
+                          :background "grey20")
+      (set-face-attribute 'ahs-face nil
+                          :foreground nil
+                          :background "grey20")
+      (set-face-attribute 'ahs-definition-face nil
+                          :foreground nil
+                          :background "grey20"
+                          :underline '(:color "#268bd2")))
+
+    (set-face-attribute 'ahs-warning-face nil
+                        :foreground nil
+                        :underline '(:color "yellow"))
+    (set-face-attribute 'ahs-plugin-bod-face nil
+                        :foreground nil
+                        :underline '(:color "purple"))
+    (set-face-attribute 'ahs-plugin-whole-buffer-face nil
+                        :foreground nil
+                        :underline '(:color "black")))
+
+  (add-hook 'load-theme-hook #'my/ahs-setup-faces))
 
 (add-hook 'auto-highlight-symbol-mode-hook
           (lambda ()
-            (diminish 'auto-highlight-symbol-mode)
-            (if (display-graphic-p)
-                (progn
-                  (set-face-attribute 'ahs-face nil
-                                      :foreground nil
-                                      :background "#073642")
-                  (set-face-attribute 'ahs-definition-face nil
-                                      :foreground nil
-                                      :background "#073642"
-                                      :underline '(:color "#268bd2")))
-
-              (set-face-attribute 'ahs-plugin-defalt-face nil
-                                  :foreground nil
-                                  :background "grey20")
-              (set-face-attribute 'ahs-face nil
-                                  :foreground nil
-                                  :background "grey20")
-              (set-face-attribute 'ahs-definition-face nil
-                                  :foreground nil
-                                  :background "grey20"
-                                  :underline '(:color "#268bd2")))
-
-            (set-face-attribute 'ahs-warning-face nil
-                                :foreground nil
-                                :underline '(:color "yellow"))
-            (set-face-attribute 'ahs-plugin-bod-face nil
-                                :foreground nil
-                                :underline '(:color "purple"))
-            (set-face-attribute 'ahs-plugin-whole-buffer-face nil
-                                :foreground nil
-                                :underline '(:color "black"))))
+            (diminish 'auto-highlight-symbol-mode)))
 
 (unless (or (bound-and-true-p my/slow-device)
             (< (display-color-cells) 256))
