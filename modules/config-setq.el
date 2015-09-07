@@ -83,17 +83,24 @@
 
       ))
 
-(defun byte-recompile-config ()
-  (interactive)
-  (when (byte-compile-file (expand-file-name
-                            "init.el"
-                            user-emacs-directory))
-    (not (string-match-p "failed"
-                         (byte-recompile-directory
-                          (expand-file-name
-                           "modules/"
-                           user-emacs-directory)
-                          0)))))
+(defun byte-recompile-config (&optional arg)
+  (interactive "p")
+  (let ((force (if (called-interactively-p 'any)
+                   (and (integerp arg) (= arg 4))
+                 arg)))
+    (when (progn
+            (when force
+              (delete-file (expand-file-name "init.el" user-emacs-directory)))
+            (byte-compile-file (expand-file-name
+                                "init.el"
+                                user-emacs-directory)))
+      (not (string-match-p "failed"
+                           (byte-recompile-directory
+                            (expand-file-name
+                             "modules/"
+                             user-emacs-directory)
+                            0
+                            force))))))
 
 (defun emergency-fix-config ()
   (interactive)
