@@ -95,7 +95,6 @@
     key-chord
     linum-relative
     ;; magit
-    magit-filenotify
     multiple-cursors
     rainbow-delimiters
     smartparens

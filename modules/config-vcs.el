@@ -60,13 +60,9 @@
                             (magit-unstaged-section-map #'magit-discard)
                             (magit-untracked-section-map #'magit-discard))))))
 
-  (with-eval-after-load 'magit-filenotify
-    (diminish 'magit-filenotify-mode))
-
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
             (lambda ()
-              (magit-filenotify-mode +1)
               (set-input-method "TeX")))
 
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
