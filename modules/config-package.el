@@ -143,21 +143,11 @@
 (with-eval-after-load 'idle-require
   (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
 
-(if (not (daemonp))
-    (add-hook 'emacs-startup-hook
-              (lambda ()
-                (run-with-idle-timer 0.5 nil
-                                     (lambda ()
-                                       (idle-require-mode +1)))))
-
-  (message "loading symbols for server")
-  (idle-require-mode +1)
-  (dolist (sym idle-require-symbols)
-    (let ((name (symbol-name sym)))
-      (unless (string= name "idle-require")
-        (message (format "Loading %s..." name))
-        (with-demoted-errors "Idle load error: %s"
-          (require sym nil t))))))
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (run-with-idle-timer 0.5 nil
+                                 (lambda ()
+                                   (idle-require-mode +1)))))
 
 (defun package-upgrade-all (&optional automatic)
   "Upgrade all packages automatically without showing *Packages* buffer."
