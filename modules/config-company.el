@@ -161,75 +161,78 @@
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
   (require 'flx)
 
-  (setq
-   company-idle-delay 0.1
-   company-echo-delay 0
-   company-auto-complete 'company-explicit-action-p
-   company-minimum-prefix-length 2
-   company-show-numbers nil
-   company-tooltip-flip-when-above t
-   company-tooltip-align-annotations t
+  (setq company-idle-delay 0.1
+        company-echo-delay 0
+        company-auto-complete 'company-explicit-action-p
+        company-minimum-prefix-length 2
+        company-show-numbers nil
+        company-tooltip-flip-when-above t
+        company-tooltip-align-annotations t
 
-   company-backends '((company-capf
-                       company-yasnippet
-                       company-dabbrev-code
-                       company-files
-                       company-keywords)
+        company-backends '((company-capf
+                            company-yasnippet
+                            company-dabbrev-code
+                            company-files
+                            company-keywords)
 
-                      company-dabbrev)
+                           company-dabbrev)
 
-   company-flx-cache (flx-make-string-cache 'flx-get-heatmap-str)
-   company-transformers
-   (list
-    (lambda (cands)
-      (let ((num-cands (length cands)))
-        (mapcar #'car
-                (sort (mapcar
-                       (lambda (cand)
-                         (cons
-                          cand
-                          (or (car (flx-score cand
-                                              company-prefix
-                                              company-flx-cache))
-                              0)))
-                       (if (< num-cands company-flx-limit)
-                           cands
-                         (let ((seq (sort cands
-                                          (lambda (c1 c2)
-                                            (< (length c1) (length c2)))))
-                               (end (min company-flx-limit num-cands))
-                               (result nil))
-                           (while (and (>= (setq end (1- end)) 0) seq)
-                             (push (pop seq) result))
-                           (nreverse result))))
-                      (lambda (c1 c2)
-                        (> (cdr c1) (cdr c2)))))))))
+        company-flx-cache (flx-make-string-cache 'flx-get-heatmap-str)
+        company-transformers
+        (list
+         (lambda (cands)
+           (let ((num-cands (length cands)))
+             (mapcar #'car
+                     (sort (mapcar
+                            (lambda (cand)
+                              (cons cand
+                                    (or (car (flx-score cand
+                                                        company-prefix
+                                                        company-flx-cache))
+                                        0)))
+                            (if (< num-cands company-flx-limit)
+                                cands
+                              (let ((seq (sort cands (lambda (c1 c2)
+                                                       (< (length c1)
+                                                          (length c2)))))
+                                    (end (min company-flx-limit
+                                              num-cands))
+                                    (result nil))
+                                (while (and seq
+                                            (>= (setq end (1- end)) 0))
+                                  (push (pop seq) result))
+                                (nreverse result))))
+                           (lambda (c1 c2)
+                             (> (cdr c1)
+                                (cdr c2)))))))))
   (eval-and-compile
     (cl-macrolet
-        ((company-define-specific-modes (mode backend)
-                                        `(add-hook ,mode
-                                                   (lambda ()
-                                                     (let ((old-backends company-backends))
-                                                       (set (make-local-variable 'company-backends)
-                                                            (cons (cons
-                                                                   ,backend
-                                                                   (cdar old-backends))
-                                                                  (cdr old-backends))))))))
+        ((company-define-specific-modes
+          (mode backend)
+          `(add-hook ,mode
+                     (lambda ()
+                       (let ((old-backends company-backends))
+                         (set (make-local-variable 'company-backends)
+                              (cons (cons
+                                     ,backend
+                                     (cdar old-backends))
+                                    (cdr old-backends))))))))
 
       (with-no-warnings
-        (my/generate-calls company-define-specific-modes
-                           (
-                            ('c++-mode-hook     'company-clang)
-                            ('objc-mode-hook    'company-clang)
-                            ('c-mode-hook       'company-clang)
-                            ('cmake-mode-hook   'company-cmake)
-                            ('css-mode-hook     'company-css)
-                            ('java-mode-hook    'company-eclim)
-                            ('nxml-mode-hook    'company-nxml)
-                            ('html-mode-hook    'company-semantic)
-                            ('scheme-mode-hook  'company-semantic)
-                            ('texinfo-mode-hook 'company-semantic)
-                            ('python-mode-hook  'company-anaconda))))))
+        (my/generate-calls
+         company-define-specific-modes
+         (
+          ('c++-mode-hook     'company-clang)
+          ('objc-mode-hook    'company-clang)
+          ('c-mode-hook       'company-clang)
+          ('cmake-mode-hook   'company-cmake)
+          ('css-mode-hook     'company-css)
+          ('java-mode-hook    'company-eclim)
+          ('nxml-mode-hook    'company-nxml)
+          ('html-mode-hook    'company-semantic)
+          ('scheme-mode-hook  'company-semantic)
+          ('texinfo-mode-hook 'company-semantic)
+          ('python-mode-hook  'company-anaconda))))))
 
   (defun company-complete-common-or-complete-full ()
     (interactive)
@@ -248,7 +251,7 @@
   (define-key company-active-map (kbd "TAB")
     #'company-complete-common-or-complete-full)
 
-  (defun my/setup-company-tooltip-faces  ()
+  (defun my/company-setup-tooltip-faces  ()
     (set-face-attribute 'company-tooltip-common-selection nil
                         :background "#839496"
                         :foreground (if (< (display-color-cells) 256)
@@ -277,17 +280,15 @@
                         :foreground nil
                         :inherit 'default))
 
-  (add-hook 'load-theme-hook #'my/setup-company-tooltip-faces)
-  (my/setup-company-tooltip-faces))
+  (add-hook 'load-theme-hook #'my/company-setup-tooltip-faces))
 
 (with-eval-after-load 'company-template
-  (defun my/setup-company-template-faces ()
+  (defun my/company-setup-template-faces ()
     (set-face-attribute 'company-template-field nil
                         :foreground nil
                         :background nil
                         :inherit 'region))
-  (add-hook 'load-theme-hook #'my/setup-company-template-faces)
-  (my/setup-company-template-faces))
+  (add-hook 'load-theme-hook #'my/company-setup-template-faces))
 
 (with-eval-after-load 'company-dabbrev-code
   (setq company-dabbrev-code-everywhere t))
@@ -298,41 +299,43 @@
 (with-eval-after-load 'hippie-expand
   (defun try-expand-flx (old)
     "Try to complete word using flx matching."
-    (if (not old)
-        (progn
-          (he-init-string (he-lisp-symbol-beg) (point))
-          (if (not (he-string-member he-search-string he-tried-table))
-              (push he-search-string he-tried-table))
-          (setq he-expand-list
-                (and (not (equal he-search-string ""))
-                     (try-expand-flx-collect he-search-string)))))
+    (unless old
+      (he-init-string (he-lisp-symbol-beg) (point))
+      (unless (he-string-member he-search-string he-tried-table)
+        (push he-search-string he-tried-table))
+      (setq he-expand-list
+            (unless (equal he-search-string "")
+              (try-expand-flx-collect he-search-string))))
     (while (and he-expand-list
-                (he-string-member (first he-expand-list) he-tried-table))
-      (setq he-expand-list (rest he-expand-list)))
-    (if (null he-expand-list)
-        (progn
-          (if old (he-reset-string)) ())
-      (progn
-        (he-substitute-string (first he-expand-list))
-        (setq he-expand-list (rest he-expand-list))
-        t)))
+                (he-string-member (car he-expand-list) he-tried-table))
+      (pop he-expand-list))
+    (prog1
+        (null he-expand-list)
+      (if (null he-expand-list)
+          (when old (he-reset-string))
+        (he-substitute-string (pop he-expand-list)))))
 
   (defun try-expand-flx-collect (str)
     "Find and collect all words that flex-match str, and sort by flx score"
-    (let ((coll '())
+    (let ((coll nil)
           (regexp (try-expand-flx-regexp str)))
       (save-excursion
         (goto-char (point-min))
         (while (search-forward-regexp regexp nil t)
           (push (thing-at-point 'symbol) coll)))
       (sort coll #'(lambda (a b)
-                     (> (first (flx-score a str))
-                        (first (flx-score b str)))))))
+                     (> (car (flx-score a str))
+                        (car (flx-score b str)))))))
 
   (defun try-expand-flx-regexp (str)
     "Generate regexp for flexible matching of str."
-    (concat "\\b" (mapconcat (lambda (x) (concat "\\w*-*" (list x))) str "")
-            "\\w*" "\\b"))
+    (concat "\\b"
+            (mapconcat (lambda (x)
+                         (concat "\\w*-*" (list x)))
+                       str
+                       "")
+            "\\w*"
+            "\\b"))
 
   (setq hippie-expand-try-functions-list
         '(yas-hippie-try-expand
