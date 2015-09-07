@@ -23,11 +23,10 @@
       savehist-file (expand-file-name ".savehist" user-emacs-directory)
       savehist-autosave-interval 180
       savehist-save-minibuffer-history t
-      savehist-additional-variables
-      '(kill-ring
-        file-name-mode-alist
-        search-ring
-        regexp-search-ring)
+      savehist-additional-variables '(kill-ring
+                                      file-name-mode-alist
+                                      search-ring
+                                      regexp-search-ring)
 
       ;; remember more recent files
       recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
@@ -85,27 +84,21 @@
                   (-take history-length
                          (my/compress-alist file-name-mode-alist)))))
 
-(add-hook 'after-change-major-mode-hook
-          (lambda ()
-            (when (and
-                   buffer-file-name
-                   (not
-                    (file-name-extension
-                     buffer-file-name)))
-              (setq file-name-mode-alist
-                    (cons
-                     (cons buffer-file-name major-mode)
-                     file-name-mode-alist))
-              (setq auto-mode-alist
-                    (append auto-mode-alist
-                            (list (cons buffer-file-name major-mode)))))))
+(defun my/register-file-name-mode-maybe ()
+  (when (and buffer-file-name
+             (not
+              (file-name-extension
+               buffer-file-name)))
+    (push (cons buffer-file-name major-mode) file-name-mode-alist)
+    (push (cons buffer-file-name major-mode) auto-mode-alist)))
+
+(add-hook 'after-change-major-mode-hook #'my/register-file-name-mode-maybe)
 
 (with-eval-after-load 'desktop
-  (setq
-   desktop-dirname (expand-file-name "desktop/" user-emacs-directory)
-   desktop-path (list desktop-dirname)
-   desktop-base-file-name "emacs-desktop"
-   desktop-base-lock-name "emacs-desktop.lock")
+  (setq desktop-dirname (expand-file-name "desktop/" user-emacs-directory)
+        desktop-path (list desktop-dirname)
+        desktop-base-file-name "emacs-desktop"
+        desktop-base-lock-name "emacs-desktop.lock")
 
   ;; don't let a dead emacs own the lockfile
   (defun nadvice/desktop-owner (pid)
@@ -121,7 +114,7 @@
                   (desktop-full-lock-name dirname) nil 1))
 
   (advice-add 'desktop-owner :filter-return #'nadvice/desktop-owner)
-  (advice-add #'desktop-claim-lock :override #'nadvice/desktop-claim-lock))
+  (advice-add 'desktop-claim-lock :override #'nadvice/desktop-claim-lock))
 
 (defun desktop-autosave (&optional arg)
   (interactive "p")
@@ -151,9 +144,7 @@
                                       files
                                       nil t))
              (desktop-base-lock-name
-              (concat
-               desktop-base-file-name
-               ".lock")))
+              (concat desktop-base-file-name ".lock")))
         (desktop-read)
         (desktop-remove))
     (desktop-read)))
