@@ -10,7 +10,14 @@
     (require 'evil-easymotion)
     (require 'config-modes)))
 
-(require 'config-scroll)
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-follow-mouse t
+      smooth-scroll-margin 5
+      scroll-step 1
+      auto-window-vscroll nil
+      scroll-conservatively 1000)
+
 (require 'config-line-numbers)
 (require 'config-avy-easymotion)
 (require 'config-undo)
@@ -29,40 +36,40 @@
                                 `(autoload ,func "multiple-cursors")))
 
   (with-no-warnings
-    (my/generate-calls-single autoload-multiple-cursors
-                              (
-                               #'mc/mark-lines
-                               #'mc/mark-next-lines
-                               #'mc/mark-previous-lines
-                               #'mc/unmark-next-like-this
-                               #'mc/unmark-previous-like-this
-                               #'mc/skip-to-previous-like-this
-                               #'mc/mark-all-like-this
-                               #'mc/mark-all-words-like-this
-                               #'mc/mark-all-symbols-like-this
-                               #'mc/mark-all-in-region
-                               #'mc/mark-all-in-region-regexp
-                               #'mc/mark-more-like-this-extended
-                               #'mc/mmlte--up
-                               #'mc/mmlte--down
-                               #'mc/mmlte--left
-                               #'mc/mmlte--right
-                               #'mc/mark-all-like-this-dwim
-                               #'mc/mark-all-dwim
-                               #'mc/mark-all-like-this-in-defun
-                               #'mc/mark-all-words-like-this-in-defun
-                               #'mc/mark-all-symbols-like-this-in-defun
-                               #'mc/add-cursor-on-click
-                               #'mc/mark-sgml-tag-pair
-                               #'mc/mark-pop
-                               #'set-rectangular-region-anchor
-                               #'rrm/switch-to-multiple-cursors
-                               #'mc/insert-numbers
-                               #'mc/reverse-regions
-                               #'mc/sort-regions
-                               #'hum/keyboard-quit
-                               #'mc-hide-unmatched-lines-mode
-                               ))))
+    (my/generate-calls-single
+     autoload-multiple-cursors
+     (#'mc/mark-lines
+      #'mc/mark-next-lines
+      #'mc/mark-previous-lines
+      #'mc/unmark-next-like-this
+      #'mc/unmark-previous-like-this
+      #'mc/skip-to-previous-like-this
+      #'mc/mark-all-like-this
+      #'mc/mark-all-words-like-this
+      #'mc/mark-all-symbols-like-this
+      #'mc/mark-all-in-region
+      #'mc/mark-all-in-region-regexp
+      #'mc/mark-more-like-this-extended
+      #'mc/mmlte--up
+      #'mc/mmlte--down
+      #'mc/mmlte--left
+      #'mc/mmlte--right
+      #'mc/mark-all-like-this-dwim
+      #'mc/mark-all-dwim
+      #'mc/mark-all-like-this-in-defun
+      #'mc/mark-all-words-like-this-in-defun
+      #'mc/mark-all-symbols-like-this-in-defun
+      #'mc/add-cursor-on-click
+      #'mc/mark-sgml-tag-pair
+      #'mc/mark-pop
+      #'set-rectangular-region-anchor
+      #'rrm/switch-to-multiple-cursors
+      #'mc/insert-numbers
+      #'mc/reverse-regions
+      #'mc/sort-regions
+      #'hum/keyboard-quit
+      #'mc-hide-unmatched-lines-mode
+      ))))
 
 (global-set-key (kbd "C-c l") #'mc/edit-lines)
 (global-set-key (kbd "C-c a") #'mc/mark-all-like-this-dwim)
@@ -104,9 +111,8 @@
 ;;; ====================================
 (let ((my/iflipb-running-p))
   (with-eval-after-load 'iflipb
-    (setq
-     iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
-     iflipb-wrap-around 't)
+    (setq iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
+          iflipb-wrap-around 't)
 
     (defun my/iflipb-smart-buffer ()
       (unless (fboundp 'iflipb-hydra/body)
@@ -185,8 +191,7 @@
     (volatile-highlights-mode +1)))
 
 (with-eval-after-load 'auto-highlight-symbol
-  (setq
-   ahs-idle-interval 0.3))
+  (setq ahs-idle-interval 0.3))
 
 (add-hook 'auto-highlight-symbol-mode-hook
           (lambda ()
