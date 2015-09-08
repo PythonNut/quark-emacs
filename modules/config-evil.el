@@ -152,24 +152,28 @@
 (evil-define-command evil-window-left-smart ()
   "A `hydra' enabled `evil-window-left'"
   (interactive)
-  (with-demoted-errors (call-interactively #'evil-window-left))
+  (with-demoted-errors "%s"
+    (call-interactively #'evil-window-left))
   (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-down-smart ()
   (interactive)
-  (with-demoted-errors (call-interactively #'evil-window-down))
+  (with-demoted-errors "%s"
+    (call-interactively #'evil-window-down))
   (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-up-smart ()
   "A `hydra' enabled `evil-window-left'"
   (interactive)
-  (with-demoted-errors (call-interactively #'evil-window-up))
+  (with-demoted-errors "%s"
+    (call-interactively #'evil-window-up))
   (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-right-smart ()
   "A `hydra' enabled `evil-window-left'"
   (interactive)
-  (with-demoted-errors (call-interactively #'evil-window-right))
+  (with-demoted-errors "%s"
+    (call-interactively #'evil-window-right))
   (my/evil-window-hydra-wrapper))
 
 (define-key evil-normal-state-map (kbd "C-w h") 'evil-window-left-smart)
