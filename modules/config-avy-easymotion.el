@@ -31,10 +31,10 @@
 (advice-add 'self-insert-command :around #'nadvice/self-insert-command)
 
 (with-eval-after-load 'avy
-  (setq
-   avy-background t
-   avy-style 'de-bruijn
-   avy-keys (string-to-list "jfkdls;aurieowncpqmxzb"))
+  (setq avy-background t
+        avy-style 'de-bruijn
+        avy-keys (string-to-list "jfkdls;aurieowncpqmxzb"))
+
   (set-face-foreground 'avy-background-face "#586e75")
 
   (set-face-attribute 'avy-lead-face nil
@@ -49,12 +49,7 @@
                       :background nil
                       :foreground "#839493"))
 
-(with-eval-after-load 'evil-easymotion
-  (setq
-   evilem-style 'de-bruijn))
-
-(eval-and-compile (require 'evil-easymotion))
-
+(require 'evil-easymotion)
 (evilem-default-keybindings "SPC")
 
 (define-key evil-normal-state-map (kbd "SPC l") #'avy-goto-line)
