@@ -18,6 +18,9 @@
 /smex-save-file
 
 
+# places file
+/places
+
 
 # save last place in files
 /saveplace
