@@ -46,16 +46,17 @@
 
   (require 'config-setq)
 
-  (defun my/automatic-repair ()
-    (message "Init did not complete! Attempting automatic repairs.")
-    (sit-for 1)
-    (unless (progn
-              (when (fboundp 'package-upgrade-all)
-                (package-upgrade-all t)
-                (package-initialize))
-              (byte-recompile-config t))
-      (when (y-or-n-p "Automatic repair failed. Try emergency rebuild? ")
-        (emergency-fix-config))))
+  (unless debug-on-error
+    (defun my/automatic-repair ()
+      (message "Init did not complete! Attempting automatic repairs.")
+      (sit-for 1)
+      (unless (save-window-excursion
+                (when (fboundp 'package-upgrade-all)
+                  (package-upgrade-all t)
+                  (package-initialize))
+                (byte-recompile-config t))
+        (when (y-or-n-p "Automatic repair failed. Try emergency rebuild? ")
+          (emergency-fix-config)))))
 
   (add-hook 'emacs-startup-hook #'my/automatic-repair)
 
