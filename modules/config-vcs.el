@@ -18,47 +18,48 @@
 
 (setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
-  (setq
-   magit-push-always-verify nil
-   magit-completing-read-function #'magit-ido-completing-read
-   magit-diff-refine-hunk t)
+  (setq magit-push-always-verify nil
+        magit-completing-read-function #'magit-ido-completing-read
+        magit-diff-refine-hunk t)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
   (evil-set-initial-state 'magit-popup-mode 'insert)
+  (evil-set-initial-state 'magit-revision-mode 'motion)
 
   (define-key magit-log-mode-map (kbd "j") #'next-line)
   (define-key magit-status-mode-map (kbd "j") #'next-line)
   (eval-and-compile
     (cl-macrolet
-        ((magit-setup-section-k (mode &optional command)
-                                `(with-demoted-errors
-                                     (define-key ,mode (kbd "<C-tab>") nil)
-                                   (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
-                                   (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
-                                   (define-key ,mode (kbd "k") #'previous-line)
-                                   ,(when command
-                                      `(define-key ,mode (kbd "K") ,command)))))
+        ((magit-setup-section-k
+          (mode &optional command)
+          `(with-demoted-errors
+               (define-key ,mode (kbd "<C-tab>") nil)
+             (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
+             (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
+             (define-key ,mode (kbd "k") #'previous-line)
+             ,(when command
+                `(define-key ,mode (kbd "K") ,command)))))
 
       (with-no-warnings
-        (my/generate-calls magit-setup-section-k
-                           (
-                            (magit-branch-section-map #'magit-branch-delete)
-                            (magit-commit-section-map)
-                            (magit-file-section-map #'magit-discard)
-                            (magit-hunk-section-map #'magit-discard)
-                            (magit-log-mode-map)
-                            (magit-module-commit-section-map)
-                            (magit-remote-section-map)
-                            (magit-staged-section-map #'magit-discard)
-                            (magit-stash-section-map #'magit-stash-drop)
-                            (magit-stashes-section-map)
-                            (magit-status-mode-map)
-                            (magit-tag-section-map #'magit-tag-delete)
-                            (magit-unpulled-section-map)
-                            (magit-unpushed-section-map)
-                            (magit-unstaged-section-map #'magit-discard)
-                            (magit-untracked-section-map #'magit-discard))))))
+        (my/generate-calls
+         magit-setup-section-k
+         ((magit-branch-section-map #'magit-branch-delete)
+          (magit-commit-section-map)
+          (magit-file-section-map #'magit-discard)
+          (magit-hunk-section-map #'magit-discard)
+          (magit-log-mode-map)
+          (magit-module-commit-section-map)
+          (magit-remote-section-map)
+          (magit-staged-section-map #'magit-discard)
+          (magit-stash-section-map #'magit-stash-drop)
+          (magit-stashes-section-map)
+          (magit-status-mode-map)
+          (magit-tag-section-map #'magit-tag-delete)
+          (magit-unpulled-section-map)
+          (magit-unpushed-section-map)
+          (magit-unstaged-section-map #'magit-discard)
+          (magit-untracked-section-map #'magit-discard))))))
 
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
