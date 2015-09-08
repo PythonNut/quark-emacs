@@ -144,11 +144,10 @@
           (lambda ()
             (run-with-idle-timer 0.1 nil
                                  (lambda ()
-                                   (mapc #'require
-                                         '(helm-files
-                                           helm-ring
-                                           helm-projectile
-                                           helm-semantic))
+                                   (require 'helm-files)
+                                   (require 'helm-ring)
+                                   (require 'helm-projectile)
+                                   (require 'helm-semantic)
                                    (idle-require-mode +1)))))
 
 (defun package-upgrade-all (&optional automatic)
