@@ -24,12 +24,13 @@
 
 (defun my/ensure-packages-are-installed (package-list)
   (interactive)
-  (when (my/has-package-not-installed package-list)
-    (package-refresh-contents)
-    (dolist (p package-list)
-      (when (not (package-installed-p p))
-        (package-install p)))
-    (package-initialize)))
+  (save-window-excursion
+    (when (my/has-package-not-installed package-list)
+      (package-refresh-contents)
+      (dolist (p package-list)
+        (when (not (package-installed-p p))
+          (package-install p)))
+      (package-initialize))))
 
 (defvar my/required-packages
   '(;; ido based packages
