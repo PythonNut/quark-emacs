@@ -115,10 +115,10 @@
                (evil-window-top)
                (line-number-at-pos))))
     (prog1
-      (progn
-        (deactivate-mark)
-        (avy-goto-line)
-        (point))
+        (progn
+          (deactivate-mark)
+          (avy-goto-line)
+          (point))
       (scroll-up-line (- top (save-excursion
                                (evil-window-top)
                                (line-number-at-pos)))))))
@@ -128,9 +128,9 @@
   :type line
   (save-excursion
     (let ((beg (evil-avy-jump-line-and-revert))
-           (end (evil-avy-jump-line-and-revert)))
+          (end (evil-avy-jump-line-and-revert)))
       (if (> beg end)
-        (evil-range beg end #'line)
+          (evil-range beg end #'line)
         (evil-range end beg #'line)))))
 
 (define-key evil-inner-text-objects-map "r" #'evil-i-line-range)
@@ -167,15 +167,14 @@
 (define-key evil-normal-state-map "gc" #'evilnc-comment-operator)
 
 (evil-define-operator evil-macro-on-all-lines (beg end &optional arg)
-  (evil-with-state
-    (evil-normal-state)
+  (evil-with-state 'normal
     (goto-char end)
     (evil-visual-state)
     (goto-char beg)
     (evil-ex-normal (region-beginning) (region-end)
-      (concat "@"
-        (single-key-description
-          (read-char "What macro?"))))))
+                    (concat "@"
+                            (single-key-description
+                             (read-char "What macro?"))))))
 
 (define-key evil-operator-state-map "g@" #'evil-macro-on-all-lines)
 (define-key evil-normal-state-map "g@" #'evil-macro-on-all-lines)
@@ -194,14 +193,14 @@
 (evil-define-operator evil-narrow-indirect (beg end type)
   "Indirectly narrow the region from BEG to END."
   (interactive "<R>")
-  (evil-normal-state)
-  (narrow-to-region-indirect beg end))
+  (evil-with-state 'normal
+    (narrow-to-region-indirect beg end)))
 
 (evil-define-operator evil-narrow-region (beg end type)
   "Indirectly narrow the region from BEG to END."
   (interactive "<R>")
-  (evil-normal-state)
-  (narrow-to-region beg end))
+  (evil-with-state 'normal
+    (narrow-to-region beg end)))
 
 (define-key evil-operator-state-map "gn" #'evil-narrow-region)
 (define-key evil-normal-state-map "gn" #'evil-narrow-region)
@@ -210,8 +209,7 @@
 
 (evil-define-operator evil-eval-region (beg end type)
   (save-excursion
-    (evil-with-state
-      (evil-normal-state)
+    (evil-with-state 'normal
       (goto-char beg)
       (evil-visual-state)
       (goto-char end)
@@ -222,8 +220,7 @@
 
 (evil-define-operator evil-align-regexp (beg end type)
   (save-excursion
-    (evil-with-state
-      (evil-normal-state)
+    (evil-with-state 'normal
       (goto-char beg)
       (evil-visual-state)
       (goto-char end)

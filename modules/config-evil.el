@@ -120,15 +120,15 @@
 ;; open line and stay in normal mode
 (defun evil-open-below-normal (arg)
   (interactive "p")
-  (evil-open-below arg)
-  (evil-normal-state)
-  (message ""))
+  (let ((evil-echo-state nil))
+    (evil-with-state 'normal
+      (evil-open-below arg))))
 
 (defun evil-open-above-normal (arg)
   (interactive "p")
-  (evil-open-above arg)
-  (evil-normal-state)
-  (message ""))
+  (let ((evil-echo-state nil))
+    (evil-with-state 'normal
+      (evil-open-above arg))))
 
 (define-key evil-normal-state-map (kbd "[ <SPC>") #'evil-open-above-normal)
 (define-key evil-normal-state-map (kbd "] <SPC>") #'evil-open-below-normal)
