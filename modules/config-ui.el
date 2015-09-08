@@ -8,6 +8,7 @@
     (require 'evil)
     (require 'diminish)
     (require 'evil-easymotion)
+    (require 'volatile-highlights)
     (require 'config-modes)))
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
@@ -175,23 +176,22 @@
 
 (with-eval-after-load 'volatile-highlights
   (diminish #'volatile-highlights-mode)
-  (with-demoted-errors "Load error: %s"
-    (vhl/define-extension 'my-evil-highlights
-                          'evil-yank
-                          'evil-paste-pop-proxy
-                          'evil-paste-pop-next
-                          'evil-paste-after
-                          'evil-paste-before)
+  (vhl/define-extension 'my-evil-highlights
+                        'evil-yank
+                        'evil-paste-pop-proxy
+                        'evil-paste-pop-next
+                        'evil-paste-after
+                        'evil-paste-before)
 
-    (vhl/install-extension 'my-evil-highlights)
+  (vhl/install-extension 'my-evil-highlights)
 
-    (vhl/define-extension 'my-undo-tree-highlights
-                          'undo-tree-undo
-                          'undo-tree-redo)
+  (vhl/define-extension 'my-undo-tree-highlights
+                        'undo-tree-undo
+                        'undo-tree-redo)
 
-    (vhl/install-extension 'my-undo-tree-highlights)
+  (vhl/install-extension 'my-undo-tree-highlights)
 
-    (volatile-highlights-mode +1)))
+  (volatile-highlights-mode +1))
 
 (with-eval-after-load 'auto-highlight-symbol
   (setq ahs-idle-interval 0.3)
