@@ -117,36 +117,35 @@
 (with-eval-after-load 'idle-require
   (add-hook 'idle-require-mode-hook
             (lambda ()
-              (diminish 'idle-require-mode (if (display-graphic-p) " ⋯" " IR"))))
+              (diminish 'idle-require-mode)))
 
-  (setq idle-require-idle-delay 1
-        idle-require-load-break 0
+  (setq idle-require-idle-delay 3
+        idle-require-load-break 1
         idle-require-symbols
-        '(
-          helm-files
-          helm-ring
-          helm-projectile
-          helm-semantic
-          helm-ag
-          yasnippet
-          company)))
-
-(defun nadvice/idle-require-quiet (old-fun &rest args)
-  (advice-add 'load :filter-args #'nadvice/load-quiet)
-  (with-demoted-errors
-      (cl-letf (((symbol-function 'message) #'format))
-        (apply old-fun args)))
-  (advice-remove #'load #'nadvice/load-quiet)
-  (when (null idle-require-symbols)
-    (message "")))
+        '(magit
+          hydra
+          evil-snipe
+          multiple-cursors)))
 
 (with-eval-after-load 'idle-require
+  (defun nadvice/idle-require-quiet (old-fun &rest args)
+    (advice-add 'load :filter-args #'nadvice/load-quiet)
+    (with-demoted-errors "Idle require error: %s"
+      (cl-letf (((symbol-function 'message) #'format))
+        (apply old-fun args)))
+    (advice-remove #'load #'nadvice/load-quiet))
+
   (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (run-with-idle-timer 0.5 nil
+            (run-with-idle-timer 0.1 nil
                                  (lambda ()
+                                   (mapc #'require
+                                         '(helm-files
+                                           helm-ring
+                                           helm-projectile
+                                           helm-semantic))
                                    (idle-require-mode +1)))))
 
 (defun package-upgrade-all (&optional automatic)
@@ -181,3 +180,4 @@
       (message "All packages are up to date"))))
 
 (provide 'config-package)
+
