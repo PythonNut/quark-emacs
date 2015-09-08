@@ -7,16 +7,15 @@
     (require 'evil)
     (require 'evil-surround)))
 
-(setq
- evil-auto-indent t
- evil-ex-complete-emacs-commands t
- evil-magic 'very-magic
- evil-search-module 'evil-search
- evil-shift-width 2
- evil-toggle-key "C-M-z"
- evil-want-C-w-delete nil
- evil-want-C-w-in-emacs-state nil
- evil-want-fine-undo t)
+(setq evil-auto-indent t
+      evil-ex-complete-emacs-commands t
+      evil-magic 'very-magic
+      evil-search-module 'evil-search
+      evil-shift-width 2
+      evil-toggle-key "C-M-z"
+      evil-want-C-w-delete nil
+      evil-want-C-w-in-emacs-state nil
+      evil-want-fine-undo t)
 
 (fset 'evil-visual-update-x-selection 'ignore)
 
@@ -118,13 +117,13 @@
 (setq evil-replace-state-cursor '("#884444" box))
 
 ;; open line and stay in normal mode
-(defun evil-open-below-normal (arg)
+(evil-define-command evil-open-below-normal (arg)
   (interactive "p")
   (let ((evil-echo-state nil))
     (evil-with-state 'normal
       (evil-open-below arg))))
 
-(defun evil-open-above-normal (arg)
+(evil-define-command evil-open-above-normal (arg)
   (interactive "p")
   (let ((evil-echo-state nil))
     (evil-with-state 'normal
@@ -151,27 +150,23 @@
 
 (evil-define-command evil-window-left-smart ()
   "A `hydra' enabled `evil-window-left'"
-  (interactive)
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-left))
   (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-down-smart ()
-  (interactive)
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-down))
   (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-up-smart ()
   "A `hydra' enabled `evil-window-left'"
-  (interactive)
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-up))
   (my/evil-window-hydra-wrapper))
 
 (evil-define-command evil-window-right-smart ()
   "A `hydra' enabled `evil-window-left'"
-  (interactive)
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-right))
   (my/evil-window-hydra-wrapper))

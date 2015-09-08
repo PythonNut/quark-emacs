@@ -11,9 +11,8 @@
     (require 'diminish)
     (require 'config-modes)))
 
-(setq
- sp-autoinsert-quote-if-followed-by-closing-pair nil
- sp-cancel-autoskip-on-backward-movement nil)
+(setq sp-autoinsert-quote-if-followed-by-closing-pair nil
+      sp-cancel-autoskip-on-backward-movement nil)
 
 (smartparens-global-mode +1)
 
@@ -96,70 +95,72 @@
 
 ;; define top level motions bindings
 (cl-macrolet
-    ((sp-define-bindings (key func)
-                         `(progn
-                            (evil-define-key 'motion sp-keymap ,key ,func)
-                            (evil-define-key 'insert sp-keymap ,key ,func)
-                            (evil-define-key 'emacs sp-keymap ,key ,func)
+    ((sp-define-bindings
+      (key func)
+      `(progn
+         (evil-define-key 'motion sp-keymap ,key ,func)
+         (evil-define-key 'insert sp-keymap ,key ,func)
+         (evil-define-key 'emacs sp-keymap ,key ,func)
 
-                            (define-key minibuffer-local-map ,key ,func)
-                            (define-key minibuffer-local-ns-map ,key ,func)
-                            (define-key minibuffer-local-completion-map ,key ,func)
-                            (define-key minibuffer-local-must-match-map ,key ,func))))
+         (define-key minibuffer-local-map ,key ,func)
+         (define-key minibuffer-local-ns-map ,key ,func)
+         (define-key minibuffer-local-completion-map ,key ,func)
+         (define-key minibuffer-local-must-match-map ,key ,func))))
 
   (with-no-warnings
-    (my/generate-calls sp-define-bindings
-                       (
-                        ((kbd "C-M-f") #'sp-forward-sexp)
-                        ((kbd "C-M-b") #'sp-backward-sexp)
+    (my/generate-calls
+     sp-define-bindings
+     (((kbd "C-M-f") #'sp-forward-sexp)
+      ((kbd "C-M-b") #'sp-backward-sexp)
 
-                        ((kbd "C-M-d") #'sp-down-sexp)
-                        ((kbd "C-M-S-d") #'sp-backward-down-sexp)
+      ((kbd "C-M-d") #'sp-down-sexp)
+      ((kbd "C-M-S-d") #'sp-backward-down-sexp)
 
-                        ((kbd "C-M-u") #'sp-up-sexp)
-                        ((kbd "C-M-S-u") #'sp-backward-up-sexp)
+      ((kbd "C-M-u") #'sp-up-sexp)
+      ((kbd "C-M-S-u") #'sp-backward-up-sexp)
 
-                        ((kbd "C-M-n") #'sp-next-sexp)
-                        ((kbd "C-M-p") #'sp-previous-sexp)))))
+      ((kbd "C-M-n") #'sp-next-sexp)
+      ((kbd "C-M-p") #'sp-previous-sexp)))))
 
 (cl-macrolet
-    ((sp-define-bindings (key func)
-                         `(progn
-                            (evil-define-key 'normal sp-keymap ,key ,func)
-                            (evil-define-key 'insert sp-keymap ,key ,func)
-                            (evil-define-key 'emacs sp-keymap ,key ,func)
+    ((sp-define-bindings
+      (key func)
+      `(progn
+         (evil-define-key 'normal sp-keymap ,key ,func)
+         (evil-define-key 'insert sp-keymap ,key ,func)
+         (evil-define-key 'emacs sp-keymap ,key ,func)
 
-                            (define-key minibuffer-local-map ,key ,func)
-                            (define-key minibuffer-local-ns-map ,key ,func)
-                            (define-key minibuffer-local-completion-map ,key ,func)
-                            (define-key minibuffer-local-must-match-map ,key ,func))))
+         (define-key minibuffer-local-map ,key ,func)
+         (define-key minibuffer-local-ns-map ,key ,func)
+         (define-key minibuffer-local-completion-map ,key ,func)
+         (define-key minibuffer-local-must-match-map ,key ,func))))
 
   (with-no-warnings
-    (my/generate-calls sp-define-bindings
-                       (
-                        ((kbd "C-M-k") #'sp-kill-sexp)
+    (my/generate-calls
+     sp-define-bindings
+     (((kbd "C-M-k") #'sp-kill-sexp)
 
-                        ((kbd "C-M-t") #'sp-transpose-sexp)
+      ((kbd "C-M-t") #'sp-transpose-sexp)
 
-                        ((kbd "M-(") #'sp-select-previous-thing)
-                        ((kbd "M-)") #'sp-select-next-thing)
+      ((kbd "M-(") #'sp-select-previous-thing)
+      ((kbd "M-)") #'sp-select-next-thing)
 
-                        ((kbd "C-+") #'sp-rewrap-sexp)
-                        ((kbd "M-<delete>") #'sp-kill-sexp)
-                        ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
-                        ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
+      ((kbd "C-+") #'sp-rewrap-sexp)
+      ((kbd "M-<delete>") #'sp-kill-sexp)
+      ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
+      ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
 
-                        ((kbd "C-M-a") #'sp-absorb-sexp)
-                        ((kbd "C-M-e") #'sp-emit-sexp)
+      ((kbd "C-M-a") #'sp-absorb-sexp)
+      ((kbd "C-M-e") #'sp-emit-sexp)
 
-                        ((kbd "C-M-,") #'sp-forward-slurp-sexp)
-                        ((kbd "C-M-.") #'sp-forward-barf-sexp)
+      ((kbd "C-M-,") #'sp-forward-slurp-sexp)
+      ((kbd "C-M-.") #'sp-forward-barf-sexp)
 
-                        ((kbd "M-<") #'sp-backward-slurp-sexp)
-                        ((kbd "M->") #'sp-backward-barf-sexp)))))
+      ((kbd "M-<") #'sp-backward-slurp-sexp)
+      ((kbd "M->") #'sp-backward-barf-sexp)))))
 
 ;; allow quick repetition since normal state key chains are awkward
-(defun evil-sp-move ()
+(evil-define-motion evil-sp-move ()
   (unless (fboundp 'evil-sp-move-hydra/body)
     (require 'hydra)
     (defhydra evil-sp-move-hydra (:hint nil :idle 0.3)
@@ -174,7 +175,7 @@
       ("p" evil-previous-sexp)))
   (evil-sp-move-hydra/body))
 
-(defun evil-sp-barfslurp ()
+(evil-define-command evil-sp-barfslurp ()
   (unless (fboundp 'evil-sp-barfslurp-hydra/body)
     (require 'hydra)
     (defhydra evil-sp-barfslurp-hydra (:hint nil :idle 0.3)
@@ -187,35 +188,35 @@
       ("e" sp-emit-sexp)))
   (evil-sp-barfslurp-hydra/body))
 
-(evil-define-command evil-sp-forward-sexp (&rest args)
+(evil-define-motion evil-sp-forward-sexp (&rest args)
   (call-interactively #'evil-forward-sexp args)
   (evil-sp-move))
 
-(evil-define-command evil-sp-backward-sexp (&rest args)
+(evil-define-motion evil-sp-backward-sexp (&rest args)
   (call-interactively #'evil-backward-sexp args)
   (evil-sp-move))
 
-(evil-define-command evil-sp-down-sexp (&rest args)
+(evil-define-motion evil-sp-down-sexp (&rest args)
   (call-interactively #'evil-down-sexp args)
   (evil-sp-move))
 
-(evil-define-command evil-sp-backward-down-sexp (&rest args)
+(evil-define-motion evil-sp-backward-down-sexp (&rest args)
   (call-interactively #'evil-backward-down-sexp args)
   (evil-sp-move))
 
-(evil-define-command evil-sp-up-sexp (&rest args)
+(evil-define-motion evil-sp-up-sexp (&rest args)
   (call-interactively #'evil-up-sexp args)
   (evil-sp-move))
 
-(evil-define-command evil-sp-backward-up-sexp (&rest args)
+(evil-define-motion evil-sp-backward-up-sexp (&rest args)
   (call-interactively #'evil-backward-up-sexp args)
   (evil-sp-move))
 
-(evil-define-command evil-sp-next-sexp (&rest args)
+(evil-define-motion evil-sp-next-sexp (&rest args)
   (call-interactively #'evil-next-sexp args)
   (evil-sp-move))
 
-(evil-define-command evil-sp-previous-sexp (&rest args)
+(evil-define-motion evil-sp-previous-sexp (&rest args)
   (call-interactively #'evil-previous-sexp args)
   (evil-sp-move))
 
@@ -237,7 +238,7 @@
   (evil-sp-barfslurp))
 
 ;; evil normal mode bindings
-(defun my/smart-smartparens-tools ()
+(evil-define-motion my/smart-smartparens-tools ()
   (interactive)
   (unless (fboundp 'hydra/smartparens-tools/body)
     (require 'hydra)

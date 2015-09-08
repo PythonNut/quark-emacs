@@ -33,8 +33,7 @@
 
 (add-hook 'after-change-major-mode-hook #'my/smie-auto-guess)
 
-(defun back-to-indentation-or-beginning ()
-  (interactive)
+(evil-define-command back-to-indentation-or-beginning ()
   (if (= (point)
          (save-excursion (back-to-indentation) (point)))
       (beginning-of-line)
