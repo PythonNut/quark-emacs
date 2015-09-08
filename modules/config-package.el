@@ -127,7 +127,8 @@
         '(magit
           hydra
           evil-snipe
-          multiple-cursors)))
+          multiple-cursors
+          avy)))
 
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
