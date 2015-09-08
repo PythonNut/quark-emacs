@@ -11,16 +11,14 @@
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
 
-(setq
- cua-paste-pop-rotate-temporarily t
- cua-enable-cua-keys nil
- cua-virtual-rectangle-edges t
- cua-auto-tabify-rectangles nil)
+(setq cua-paste-pop-rotate-temporarily t
+      cua-enable-cua-keys nil
+      cua-virtual-rectangle-edges t
+      cua-auto-tabify-rectangles nil
+      cua-rectangle-mark-key (kbd "C-x SPC"))
 
-(when (display-graphic-p)
-  (define-key evil-insert-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
-  (define-key evil-emacs-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
-  (setq cua-rectangle-mark-key (kbd "C-x SPC")))
+(define-key evil-insert-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
+(define-key evil-emacs-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
 
 (cua-mode +1)
 
