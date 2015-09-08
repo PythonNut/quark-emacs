@@ -30,6 +30,7 @@
       (dolist (p package-list)
         (when (not (package-installed-p p))
           (package-install p)))
+      (byte-recompile-config)
       (package-initialize))))
 
 (defvar my/required-packages
