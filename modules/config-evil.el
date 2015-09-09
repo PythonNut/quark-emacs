@@ -107,6 +107,9 @@
 
 ;; Change modeline color by Evil state
 (add-hook 'post-command-hook #'my/evil-set-mode-line-face)
+(add-hook 'after-make-frame-hook #'my/evil-set-mode-line-face)
+(add-hook 'server-visit-hook #'my/evil-set-mode-line-face)
+(add-hook 'server-switch-hook #'my/evil-set-mode-line-face)
 
 (define-key evil-insert-state-map (kbd "C-s")
   (lambda ()
