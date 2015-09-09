@@ -12,7 +12,41 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 
-(package-initialize)
+(defvar package-autoload-file (expand-file-name "elpa/master-autoloads.el"
+                                                user-emacs-directory))
+
+(defun my/concat-files (files result)
+  (with-temp-buffer
+    (dolist (file files)
+      (insert-file-contents file))
+    (write-file result)))
+
+(defun my/package-rebuild-autoloads (&rest args)
+  (interactive)
+  (my/concat-files (file-expand-wildcards
+                    (expand-file-name "elpa/*/*-autoloads.el"
+                                      user-emacs-directory))
+                   package-autoload-file))
+(unwind-protect
+    (condition-case nil
+        (load package-autoload-file)
+      (error (progn
+               (my/package-rebuild-autoloads)
+               (load package-autoload-file))))
+
+  (setq load-path (delete (expand-file-name user-emacs-directory)
+                          load-path))
+
+  (dolist (dir (file-expand-wildcards (expand-file-name "elpa/*"
+                                                        user-emacs-directory)))
+    (when (file-directory-p dir)
+      (add-to-list 'load-path dir)))
+
+  (advice-add 'package-install :after #'my/package-rebuild-autoloads)
+  (advice-add 'package-delete  :after #'my/package-rebuild-autoloads)
+
+  (package-initialize t)
+  (package-activate 'solarized-theme))
 
 ;; Guarantee all packages are installed on start
 (defun my/has-package-not-installed (package-list)
@@ -180,6 +214,8 @@
                 (package-install package-desc)
                 (package-delete  old-package)))))
       (message "All packages are up to date"))))
+
+
 
 (provide 'config-package)
 
