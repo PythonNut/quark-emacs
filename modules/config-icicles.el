@@ -47,16 +47,16 @@
     `(autoload ,func "icicles" nil t))
 
   (cl-macrolet
-      ((setup-icicles (commands)
-                      `(with-no-warnings
-                         (my/generate-calls-single autoload-icicle ,commands)
-                         (with-eval-after-load 'icicles
-                           (run-hooks 'icicle-init-hook)
-                           (my/generate-calls-single auto-icicle-macro ,commands)))))
+      ((setup-icicles
+        (commands)
+        `(with-no-warnings
+           (my/generate-calls-single autoload-icicle ,commands)
+           (with-eval-after-load 'icicles
+             (run-hooks 'icicle-init-hook)
+             (my/generate-calls-single auto-icicle-macro ,commands)))))
 
     (setup-icicles
-     (
-      #'icicle-add-buffer-candidate
+     (#'icicle-add-buffer-candidate
       #'icicle-add-buffer-config
       #'icicle-add-entry-to-saved-completion-set
       #'icicle-apropos
