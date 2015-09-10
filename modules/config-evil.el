@@ -15,12 +15,12 @@
       evil-toggle-key "C-M-z"
       evil-want-C-w-delete nil
       evil-want-C-w-in-emacs-state nil
-      evil-want-fine-undo t)
+      evil-want-fine-undo t
+      evil-replace-state-cursor '("#884444" box))
 
 (fset 'evil-visual-update-x-selection 'ignore)
 
-(setq-default
- evil-symbol-word-search t)
+(setq-default evil-symbol-word-search t)
 
 (evil-mode +1)
 
@@ -78,46 +78,44 @@
 (advice-add 'evil-paste-after :around #'nadvice/evil-paste-indent)
 
 (let ((my/evil-mode-line-face-cookies nil))
-  (defun my/evil-set-mode-line-face ()
-    (let ((color
-           (if (< (display-color-cells) 256)
-               (pcase evil-state
-                 (`normal  '("white" . "blue"))
-                 (`emacs   '("white" . "green"))
-                 (`insert  '("black" . "grey"))
-                 (`visual  '("white" . "cyan"))
-                 (`replace '("white" . "red"))
-                 (other    '("grey" . "black")))
-             (pcase evil-state
-               (`normal  '("#586e75" . "#eee8d5"))
-               (`emacs   '("#859900" . "#eee8d5"))
-               (`insert  '("#93a1a1" . "#073642"))
-               (`visual  '("#268bd2" . "#eee8d5"))
-               (`replace '("#dc322f" . "#eee8d5"))
-               (other    '("grey70" . "black"))))))
-
+  (defun my/evil-set-mode-line-face (&rest args)
+    (cl-destructuring-bind (bg-color fg-color)
+        (if (< (display-color-cells) 256)
+            (pcase evil-state
+              (`normal  '("white" "blue"))
+              (`emacs   '("white" "green"))
+              (`insert  '("black" "grey"))
+              (`visual  '("white" "cyan"))
+              (`replace '("white" "red"))
+              (other    '("grey"  "black")))
+          (pcase evil-state
+            (`normal  '("#586e75" "#eee8d5"))
+            (`emacs   '("#859900" "#eee8d5"))
+            (`insert  '("#93a1a1" "#073642"))
+            (`visual  '("#268bd2" "#eee8d5"))
+            (`replace '("#dc322f" "#eee8d5"))
+            (other    '("grey70"  "black"))))
       (mapc #'face-remap-remove-relative my/evil-mode-line-face-cookies)
       (setq my/evil-mode-line-face-cookies
-            (list
-             (face-remap-add-relative 'mode-line
-                                      `((:foreground ,(cdr color) :background ,(car color)) mode-line))
+            (list (face-remap-add-relative
+                   'mode-line `((:foreground ,fg-color :background ,bg-color)
+                                mode-line))
 
-             (face-remap-add-relative 'mode-line-buffer-id
-                                      `((:foreground ,(cdr color)) mode-line-buffer-id)))))))
+                  (face-remap-add-relative
+                   'mode-line-buffer-id `((:foreground ,fg-color)
+                                          mode-line-buffer-id)))))))
 
 ;; Change modeline color by Evil state
 (add-hook 'post-command-hook #'my/evil-set-mode-line-face)
-(add-hook 'after-make-frame-hook #'my/evil-set-mode-line-face)
-(add-hook 'server-visit-hook #'my/evil-set-mode-line-face)
-(add-hook 'server-switch-hook #'my/evil-set-mode-line-face)
+
+;; also hack changing the mode line for daemon mode
+(advice-add 'server-execute :after #'my/evil-set-mode-line-face)
 
 (define-key evil-insert-state-map (kbd "C-s")
   (lambda ()
     (interactive)
     (evil-normal-state)
     (call-interactively 'evil-search-forward)))
-
-(setq evil-replace-state-cursor '("#884444" box))
 
 ;; open line and stay in normal mode
 (evil-define-command evil-open-below-normal (arg)
