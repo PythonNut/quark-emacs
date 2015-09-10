@@ -199,15 +199,13 @@
 
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
-    (advice-add 'load :filter-args #'nadvice/load-quiet)
     (with-demoted-errors "Idle require error: %s"
       (cl-letf* ((old-load (symbol-function 'load))
                  ((symbol-function 'message) #'format)
                  ((symbol-function 'load)
                   (lambda (file &optional noerror nomessage &rest args)
                     (apply old-load file noerror t args))))
-        (apply old-fun args)))
-    (advice-remove #'load #'nadvice/load-quiet))
+        (apply old-fun args))))
 
   (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
 
