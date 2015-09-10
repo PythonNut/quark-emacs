@@ -88,7 +88,6 @@
       helm-completion-in-region-fuzzy-match t
       helm-imenu-fuzzy-match t
       helm-locate-fuzzy-match nil
-      helm-mode-fuzzy-match t
       helm-semantic-fuzzy-match t
 
       helm-case-fold-search 'smart
