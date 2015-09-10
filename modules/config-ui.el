@@ -137,6 +137,7 @@
 (defun iflipb-next-buffer-smart ()
   "A `hydra' enabled next-buffer"
   (interactive)
+  (require 'iflipb)
   (cl-letf (((symbol-function 'iflipb-first-iflipb-buffer-switch-command)
              (lambda () t)))
     (call-interactively #'iflipb-next-buffer))
@@ -145,6 +146,7 @@
 (defun iflipb-previous-buffer-smart ()
   "A `hydra' enabled previous-buffer"
   (interactive)
+  (require 'iflipb)
   (cl-letf (((symbol-function 'iflipb-first-iflipb-buffer-switch-command)
              (lambda () t)))
     (call-interactively #'iflipb-previous-buffer))
