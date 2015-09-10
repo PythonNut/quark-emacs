@@ -246,6 +246,9 @@
   (define-key company-active-map (kbd "TAB")
     #'company-complete-common-or-complete-full)
 
+  (define-key company-active-map (kbd "<return>") nil)
+  (define-key company-active-map (kbd "RET") nil)
+
   (defun my/company-setup-tooltip-faces  ()
     (set-face-attribute 'company-tooltip-common-selection nil
                         :background "#839496"
