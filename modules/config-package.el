@@ -13,7 +13,9 @@
         ("melpa" . "http://melpa.org/packages/")))
 
 (defvar my/package-cached-autoloads nil)
-(defvar package-autoload-file (expand-file-name "elpa/master-autoloads.el"
+(defvar my/package-cache-last-build-time nil)
+
+(defvar package-autoload-file (expand-file-name "data/autoload-cache.el"
                                                 user-emacs-directory))
 
 (defun my/package-rebuild-autoloads (&rest args)
@@ -39,8 +41,13 @@
                               (file-expand-wildcards
                                (expand-file-name "elpa/*/*-autoloads.el"
                                                  user-emacs-directory)))))
+
+      (let ((mtime (nth 6 (file-attributes
+                           (expand-file-name "elpa"
+                                             user-emacs-directory)))))
+        (insert (format "(setq my/package-cache-last-build-time '%S)" mtime)))
       (write-file package-autoload-file nil)
-      (load (file-name-sans-extension package-autoload-file)))))
+      (load package-autoload-file))))
 
 (defun nadvice/load-autoload-cache (old-fun &rest args)
   (cl-destructuring-bind
@@ -51,23 +58,21 @@
       (my/package-rebuild-autoloads)
       (apply old-fun args))))
 
-(unwind-protect
-    (condition-case nil
-        (load (file-name-sans-extension package-autoload-file))
-      (error (progn
-               (my/package-rebuild-autoloads)
-               (load (file-name-sans-extension package-autoload-file)))))
+(unwind-protect (progn
+                  (unless (file-exists-p package-autoload-file)
+                    (my/package-rebuild-autoloads))
+                  (load package-autoload-file)
+                  (unless (equal (nth 6 (file-attributes
+                                         (expand-file-name
+                                          "elpa" user-emacs-directory)))
+                                 my/package-cache-last-build-time)
+                    (my/package-rebuild-autoloads)))
 
-  (setq load-path (delete (expand-file-name user-emacs-directory)
-                          load-path))
-
-  (dolist (dir (file-expand-wildcards (expand-file-name "elpa/*"
-                                                        user-emacs-directory)))
+  (setq load-path (delete (expand-file-name user-emacs-directory) load-path))
+  (dolist (dir (file-expand-wildcards
+                (expand-file-name "elpa/*" user-emacs-directory)))
     (when (file-directory-p dir)
       (add-to-list 'load-path dir))))
-
-(advice-add 'package-install :after #'my/package-rebuild-autoloads)
-(advice-add 'package-delete  :after #'my/package-rebuild-autoloads)
 
 (advice-add 'load :around #'nadvice/load-autoload-cache)
 (package-initialize)
@@ -240,7 +245,4 @@
                 (package-delete  old-package)))))
       (message "All packages are up to date"))))
 
-
-
 (provide 'config-package)
-
