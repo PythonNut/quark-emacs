@@ -123,16 +123,14 @@
 (evil-define-command evil-open-below-normal (arg)
   (interactive "p")
   (let ((evil-echo-state nil))
-    (save-excursion
-      (evil-with-state 'normal
-        (evil-open-below arg)))))
+    (evil-with-state 'normal
+      (evil-open-below arg))))
 
 (evil-define-command evil-open-above-normal (arg)
   (interactive "p")
   (let ((evil-echo-state nil))
-    (save-excursion
-      (evil-with-state 'normal
-        (evil-open-above arg)))))
+    (evil-with-state 'normal
+      (evil-open-above arg))))
 
 (define-key evil-normal-state-map (kbd "[ <SPC>") #'evil-open-above-normal)
 (define-key evil-normal-state-map (kbd "] <SPC>") #'evil-open-below-normal)
