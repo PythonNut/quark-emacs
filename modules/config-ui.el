@@ -132,7 +132,14 @@
         ("<backtab>"
          (call-interactively #'iflipb-previous-buffer))))
 
-    (iflipb-hydra/body)))
+    (iflipb-hydra/body)
+
+    (defun nadvice/iflipb-first-iflipb-buffer-switch-command ()
+      nil)
+
+    (advice-add #'iflipb-first-iflipb-buffer-switch-command
+                :override
+                #'nadvice/iflipb-first-iflipb-buffer-switch-command)))
 
 (defun iflipb-next-buffer-smart ()
   "A `hydra' enabled next-buffer"
