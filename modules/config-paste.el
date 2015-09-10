@@ -160,30 +160,31 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
 
-(defun my/setup-paste (&rest args)
-  (unless (display-graphic-p)
-    (when (and (not xclip-mode)
-               (or
-                (executable-find "xclip")
-                (executable-find "pbcopy")))
-      (xclip-mode +1))
-    (xterm-mouse-mode +1)
-    (require 'bracketed-paste)
-    (bracketed-paste-enable)
-    (bracketed-paste-setup)
+(defun my/setup-paste (&optional frame)
+  (with-selected-frame (or frame (selected-frame))
+    (unless (display-graphic-p)
+      (when (and (not xclip-mode)
+                 (or
+                  (executable-find "xclip")
+                  (executable-find "pbcopy")))
+        (xclip-mode +1))
+      (xterm-mouse-mode +1)
+      (require 'bracketed-paste)
+      (bracketed-paste-enable)
+      (bracketed-paste-setup)
 
-    ;; fix display corruption in certain terminals when using isearch
-    (defun nadvice/isearch-printing-char (&rest args)
-      (redraw-display))
+      ;; fix display corruption in certain terminals when using isearch
+      (defun nadvice/isearch-printing-char (&rest args)
+        (redraw-display))
 
-    (advice-add 'isearch-printing-char :after #'nadvice/isearch-printing-char)
+      (advice-add 'isearch-printing-char :after #'nadvice/isearch-printing-char)
 
-    (when (getenv "TMUX")
-      (run-hooks 'terminal-init-xterm-hook))
+      (when (getenv "TMUX")
+        (run-hooks 'terminal-init-xterm-hook))
 
-    (add-hook 'kill-emacs-hook
-              (lambda ()
-                (xterm-mouse-mode -1)))))
+      (add-hook 'kill-emacs-hook
+                (lambda ()
+                  (xterm-mouse-mode -1))))))
 
 (my/setup-paste)
 (add-hook 'after-make-frame-functions #'my/setup-paste)

@@ -88,10 +88,11 @@
 (global-set-key (kbd "<M-up>")    #'windmove-up)
 (global-set-key (kbd "<M-down>")  #'windmove-down)
 
-(defun my/framemove-onetime-setup ()
-  (windmove-default-keybindings 'meta)
-  (require 'framemove)
-  (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup))
+(defun my/framemove-onetime-setup (&optional frame)
+  (with-selected-frame (or frame (selected-frame))
+    (windmove-default-keybindings 'meta)
+    (require 'framemove)
+    (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
 ;; directional frame movement too
 (add-hook 'emacs-startup-hook
