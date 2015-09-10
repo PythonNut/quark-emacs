@@ -19,7 +19,7 @@
   (with-temp-buffer
     (dolist (file files)
       (insert-file-contents file))
-    (write-file result)))
+    (write-file result nil)))
 
 (defun my/package-rebuild-autoloads (&rest args)
   (interactive)
