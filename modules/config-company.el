@@ -62,7 +62,7 @@
     (concat (fuzzy-commonality strs))))
 
 (defun completion-fuzzy-find-holes (merged str)
-  (let ((holes) (matches (cdr (flx-score str merged))))
+  (let ((holes) (matches (cdr (flx-score str merged company-flx-cache))))
     (dolist (i (number-sequence 0 (- (length matches) 2)))
       (when (>
              (elt matches (1+ i))
@@ -105,10 +105,8 @@
                             (concat "[^" x "]*" (regexp-quote x)))
                           infix
                           "")))
-         (candidates
-          (let ((completion-regexp-list
-                 (cons regexp completion-regexp-list)))
-            (all-completions prefix table predicate))))
+         (completion-regexp-list (cons regexp completion-regexp-list))
+         (candidates (all-completions prefix table predicate)))
 
     (if all-p
         ;; Implement completion-all-completions interface
@@ -158,6 +156,32 @@
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
   (require 'flx)
 
+  (defun my/company-flx-transformer (cands)
+    (let ((num-cands (length cands)))
+      (mapcar #'car
+              (sort (mapcar
+                     (lambda (cand)
+                       (cons cand
+                             (or (car (flx-score cand
+                                                 company-prefix
+                                                 company-flx-cache))
+                                 0)))
+                     (if (< num-cands company-flx-limit)
+                         cands
+                       (let ((seq (sort cands (lambda (c1 c2)
+                                                (< (length c1)
+                                                   (length c2)))))
+                             (end (min company-flx-limit
+                                       num-cands))
+                             (result nil))
+                         (while (and seq
+                                     (>= (setq end (1- end)) 0))
+                           (push (pop seq) result))
+                         (nreverse result))))
+                    (lambda (c1 c2)
+                      (> (cdr c1)
+                         (cdr c2)))))))
+
   (setq company-idle-delay 0.1
         company-echo-delay 0
         company-auto-complete 'company-explicit-action-p
@@ -175,33 +199,8 @@
                            company-dabbrev)
 
         company-flx-cache (flx-make-string-cache 'flx-get-heatmap-str)
-        company-transformers
-        (list
-         (lambda (cands)
-           (let ((num-cands (length cands)))
-             (mapcar #'car
-                     (sort (mapcar
-                            (lambda (cand)
-                              (cons cand
-                                    (or (car (flx-score cand
-                                                        company-prefix
-                                                        company-flx-cache))
-                                        0)))
-                            (if (< num-cands company-flx-limit)
-                                cands
-                              (let ((seq (sort cands (lambda (c1 c2)
-                                                       (< (length c1)
-                                                          (length c2)))))
-                                    (end (min company-flx-limit
-                                              num-cands))
-                                    (result nil))
-                                (while (and seq
-                                            (>= (setq end (1- end)) 0))
-                                  (push (pop seq) result))
-                                (nreverse result))))
-                           (lambda (c1 c2)
-                             (> (cdr c1)
-                                (cdr c2)))))))))
+        company-transformers (list #'my/company-flx-transformer))
+
   (eval-and-compile
     (cl-macrolet
         ((company-define-specific-modes
@@ -218,8 +217,7 @@
       (with-no-warnings
         (my/generate-calls
          company-define-specific-modes
-         (
-          ('c++-mode-hook     'company-clang)
+         (('c++-mode-hook     'company-clang)
           ('objc-mode-hook    'company-clang)
           ('c-mode-hook       'company-clang)
           ('cmake-mode-hook   'company-cmake)
