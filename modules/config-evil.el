@@ -78,38 +78,37 @@
 (advice-add 'evil-paste-after :around #'nadvice/evil-paste-indent)
 
 (let ((my/evil-mode-line-face-cookies nil))
-  (defun my/evil-set-mode-line-face (&rest args)
-    (cl-destructuring-bind (bg-color fg-color)
-        (if (< (display-color-cells) 256)
+  (defun my/evil-set-mode-line-face (&optional frame)
+    (with-selected-frame (or frame (selected-frame))
+      (cl-destructuring-bind (bg-color fg-color)
+          (if (< (display-color-cells) 256)
+              (pcase evil-state
+                (`normal  '("white" "blue"))
+                (`emacs   '("white" "green"))
+                (`insert  '("black" "grey"))
+                (`visual  '("white" "cyan"))
+                (`replace '("white" "red"))
+                (other    '("grey"  "black")))
             (pcase evil-state
-              (`normal  '("white" "blue"))
-              (`emacs   '("white" "green"))
-              (`insert  '("black" "grey"))
-              (`visual  '("white" "cyan"))
-              (`replace '("white" "red"))
-              (other    '("grey"  "black")))
-          (pcase evil-state
-            (`normal  '("#586e75" "#eee8d5"))
-            (`emacs   '("#859900" "#eee8d5"))
-            (`insert  '("#93a1a1" "#073642"))
-            (`visual  '("#268bd2" "#eee8d5"))
-            (`replace '("#dc322f" "#eee8d5"))
-            (other    '("grey70"  "black"))))
-      (mapc #'face-remap-remove-relative my/evil-mode-line-face-cookies)
-      (setq my/evil-mode-line-face-cookies
-            (list (face-remap-add-relative
-                   'mode-line `((:foreground ,fg-color :background ,bg-color)
-                                mode-line))
+              (`normal  '("#586e75" "#eee8d5"))
+              (`emacs   '("#859900" "#eee8d5"))
+              (`insert  '("#93a1a1" "#073642"))
+              (`visual  '("#268bd2" "#eee8d5"))
+              (`replace '("#dc322f" "#eee8d5"))
+              (other    '("grey70"  "black"))))
+        (mapc #'face-remap-remove-relative my/evil-mode-line-face-cookies)
+        (setq my/evil-mode-line-face-cookies
+              (list (face-remap-add-relative
+                     'mode-line `((:foreground ,fg-color :background ,bg-color)
+                                  mode-line))
 
-                  (face-remap-add-relative
-                   'mode-line-buffer-id `((:foreground ,fg-color)
-                                          mode-line-buffer-id)))))))
+                    (face-remap-add-relative
+                     'mode-line-buffer-id `((:foreground ,fg-color)
+                                            mode-line-buffer-id))))))))
 
 ;; Change modeline color by Evil state
 (add-hook 'post-command-hook #'my/evil-set-mode-line-face)
-
-;; also hack changing the mode line for daemon mode
-(advice-add 'server-execute :after #'my/evil-set-mode-line-face)
+(add-hook 'after-make-frame-functions #'my/evil-set-mode-line-face)
 
 (define-key evil-insert-state-map (kbd "C-s")
   (lambda ()
