@@ -77,6 +77,8 @@
 
 (defun byte-recompile-config (&optional arg)
   (interactive "p")
+  (when (fboundp 'my/concat-autoloads)
+    (my/concat-autoloads))
   (let ((force (if (called-interactively-p 'any)
                    (and (integerp arg) (= arg 4))
                  arg)))
@@ -96,6 +98,8 @@
 
 (defun emergency-fix-config ()
   (interactive)
+  (when (fboundp 'my/package-rebuild-autoloads)
+    (my/package-rebuild-autoloads))
   (let ((default-directory user-emacs-directory)
         (module-dir (expand-file-name "modules" user-emacs-directory)))
     (shell-command "git stash")

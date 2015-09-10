@@ -12,24 +12,91 @@
       '(("gnu" . "http://elpa.gnu.org/packages/")
         ("melpa" . "http://melpa.org/packages/")))
 
+(defvar my/package-cached-autoloads nil)
+(defvar my/package-cache-last-build-time nil)
+
+(defvar package-autoload-file (expand-file-name "data/autoload-cache.el"
+                                                user-emacs-directory))
+
+(defun my/package-rebuild-autoloads (&rest args)
+  (interactive)
+  (let ((autoloads (file-expand-wildcards
+                    (expand-file-name "elpa/*/*-autoloads.el"
+                                      user-emacs-directory))))
+    (with-temp-buffer
+      (dolist (file autoloads)
+        (insert-file-contents file)
+
+        ;; detect custom themes
+        (when (with-temp-buffer
+                (insert-file-contents file)
+                (search-forward "'custom-theme-load-path" nil t))
+          (when (boundp 'custom-theme-load-path)
+            (insert (format "(add-to-list 'custom-theme-load-path \"%s\")"
+                            (file-name-as-directory
+                             (file-name-directory file)))))))
+
+      (insert (format "(setq my/package-cached-autoloads '%S)"
+                      (mapcar #'file-name-sans-extension
+                              (file-expand-wildcards
+                               (expand-file-name "elpa/*/*-autoloads.el"
+                                                 user-emacs-directory)))))
+
+      (let ((mtime (nth 6 (file-attributes
+                           (expand-file-name "elpa"
+                                             user-emacs-directory)))))
+        (insert (format "(setq my/package-cache-last-build-time '%S)" mtime)))
+      (write-file package-autoload-file nil)
+      (load package-autoload-file))))
+
+(unwind-protect (progn
+                  (unless (file-exists-p package-autoload-file)
+                    (my/package-rebuild-autoloads))
+                  (load package-autoload-file)
+                  (unless (equal (nth 6 (file-attributes
+                                         (expand-file-name
+                                          "elpa" user-emacs-directory)))
+                                 my/package-cache-last-build-time)
+                    (my/package-rebuild-autoloads)))
+
+  (setq load-path (delete (expand-file-name user-emacs-directory) load-path))
+  (dolist (dir (file-expand-wildcards
+                (expand-file-name "elpa/*" user-emacs-directory)))
+    (when (file-directory-p dir)
+      (add-to-list 'load-path dir))))
+
+(defun nadvice/package-initialize (old-fun &rest args)
+  (cl-letf* ((orig-load (symbol-function 'load))
+             ((symbol-function 'load)
+              (lambda (&rest args)
+                (cl-destructuring-bind
+                    (file &optional noerror nomessage nosuffix must-suffix)
+                    args
+                  (unless (member file my/package-cached-autoloads)
+                    (message "Package cache miss: %s" file)
+                    (my/package-rebuild-autoloads)
+                    (apply orig-load args))))))
+    (apply old-fun args)))
+
+(advice-add 'package-initialize :around #'nadvice/package-initialize)
 (package-initialize)
 
 ;; Guarantee all packages are installed on start
-(defun my/has-package-not-installed (package-list)
+(defun my/has-package-not-installed (packages)
   (catch 'package-return
-    (dolist (p package-list)
-      (unless (package-installed-p p)
+    (dolist (package packages)
+      (unless (package-installed-p package)
         (throw 'package-return t)))
     (throw 'package-return nil)))
 
-(defun my/ensure-packages-are-installed (package-list)
+(defun my/ensure-packages-are-installed (packages)
   (interactive)
   (save-window-excursion
-    (when (my/has-package-not-installed package-list)
+    (when (my/has-package-not-installed packages)
       (package-refresh-contents)
-      (dolist (p package-list)
-        (when (not (package-installed-p p))
-          (package-install p)))
+      (dolist (package packages)
+        (unless (package-installed-p package)
+          (package-install package)))
       (byte-recompile-config)
       (package-initialize))))
 
@@ -182,8 +249,8 @@
               (let ((old-package (cadr (assq (package-desc-name package-desc)
                                              package-alist))))
                 (package-install package-desc)
-                (package-delete  old-package)))))
+                (package-delete  old-package)))
+            (message "All package upgrades completed.")))
       (message "All packages are up to date"))))
 
 (provide 'config-package)
-
