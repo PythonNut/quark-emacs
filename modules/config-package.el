@@ -49,15 +49,6 @@
       (write-file package-autoload-file nil)
       (load package-autoload-file))))
 
-(defun nadvice/load-autoload-cache (old-fun &rest args)
-  (cl-destructuring-bind
-      (file &optional noerror nomessage nosuffix must-suffix)
-      args
-    (unless (member file my/package-cached-autoloads)
-      (message "Package cache miss: %s" file)
-      (my/package-rebuild-autoloads)
-      (apply old-fun args))))
-
 (unwind-protect (progn
                   (unless (file-exists-p package-autoload-file)
                     (my/package-rebuild-autoloads))
@@ -74,9 +65,21 @@
     (when (file-directory-p dir)
       (add-to-list 'load-path dir))))
 
-(advice-add 'load :around #'nadvice/load-autoload-cache)
+(defun nadvice/package-initialize (old-fun &rest args)
+  (cl-letf* ((orig-load (symbol-function 'load))
+             ((symbol-function 'load)
+              (lambda (&rest args)
+                (cl-destructuring-bind
+                    (file &optional noerror nomessage nosuffix must-suffix)
+                    args
+                  (unless (member file my/package-cached-autoloads)
+                    (message "Package cache miss: %s" file)
+                    (my/package-rebuild-autoloads)
+                    (apply orig-load args))))))
+    (apply old-fun args)))
+
+(advice-add 'package-initialize :around #'nadvice/package-initialize)
 (package-initialize)
-(advice-remove 'load #'nadvice/load-autoload-cache)
 
 ;; Guarantee all packages are installed on start
 (defun my/has-package-not-installed (packages)
@@ -242,7 +245,8 @@
               (let ((old-package (cadr (assq (package-desc-name package-desc)
                                              package-alist))))
                 (package-install package-desc)
-                (package-delete  old-package)))))
+                (package-delete  old-package)))
+            (message "All package upgrades completed.")))
       (message "All packages are up to date"))))
 
 (provide 'config-package)
