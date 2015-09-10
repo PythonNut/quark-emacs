@@ -42,7 +42,7 @@
                                                  (throw 'notfound nil)))
                                               strs))
                             (push (cons char
-                                        (completion-fuzzy-commonality
+                                        (fuzzy-commonality
                                          (cl-mapcar (lambda (str idx)
                                                       (cl-subseq str (1+ idx)))
                                                     strs idx)))
