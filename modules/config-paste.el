@@ -160,7 +160,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
 
-(defun my/setup-paste ()
+(defun my/setup-paste (&rest args)
   (unless (display-graphic-p)
     (when (and (not xclip-mode)
                (or
@@ -185,15 +185,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
               (lambda ()
                 (xterm-mouse-mode -1)))))
 
-(defun my/xterm-mouse-reinit ()
-  (when xterm-mouse-mode
-    (xterm-mouse-mode -1))
-  (xterm-mouse-mode +1))
-
-(add-hook 'after-make-frame-hook #'my/setup-paste)
-(add-hook 'emacs-startup-hook #'my/setup-paste)
-(add-hook 'server-visit-hook #'my/xterm-mouse-reinit)
-(add-hook 'server-switch-hook #'my/xterm-mouse-reinit)
+(my/setup-paste)
+(add-hook 'after-make-frame-functions #'my/setup-paste)
 
 (with-eval-after-load 'bracketed-paste
   (add-hook 'bracketed-paste--pasting-mode-hook
