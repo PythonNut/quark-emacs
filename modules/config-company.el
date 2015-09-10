@@ -62,16 +62,13 @@
     (concat (fuzzy-commonality strs))))
 
 (defun completion-fuzzy-find-holes (merged str)
-  (let ((holes) (idx))
-    (dolist (i (number-sequence 0 (1- (length merged))))
-      (setq idx
-            (cl-position
-             (elt merged i)
-             str))
-      (when (> idx 0)
-        (push i holes))
-      (setq str (cl-subseq str (1+ idx))))
-    (when (/= 0 (length str))
+  (let ((holes) (matches (cdr (flx-score str merged))))
+    (dolist (i (number-sequence 0 (- (length matches) 2)))
+      (when (>
+             (elt matches (1+ i))
+             (1+ (elt matches i)))
+        (push (1+ i) holes)))
+    (unless (<= (length str) (car (last matches)))
       (push (length merged) holes))
     holes))
 
