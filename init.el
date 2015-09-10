@@ -8,13 +8,12 @@
 (eval-when-compile
   (require 'cl-lib))
 
+;; supress loading messages
 (defun nadvice/load-quiet (args)
   (cl-destructuring-bind
       (file &optional noerror nomessage nosuffix must-suffix)
       args
-    (let ((nomessage t))
-      (list
-       file noerror nomessage nosuffix must-suffix))))
+    (list file noerror t nosuffix must-suffix)))
 
 (if (member "-E" command-line-args)
     (progn
