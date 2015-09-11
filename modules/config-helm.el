@@ -46,16 +46,15 @@
                    (puthash cand
                             (or
                              (car (flx-score
-                                   (substring-no-properties cand)
-                                   (substring-no-properties helm-pattern)
+                                   cand
+                                   helm-pattern
                                    helm-flx-cache))
                              0)
                             table-scr)))))
       (sort candidates
             (lambda (s1 s2)
-              (>
-               (score-cand s1)
-               (score-cand s2)))))))
+              (> (score-cand s1)
+                 (score-cand s2)))))))
 
 (defun my/helm-fuzzy-highlight-match (candidate)
   (let* ((pair (and (consp candidate) candidate))
@@ -65,17 +64,16 @@
       (insert display)
       (goto-char (point-min))
       (if (string-match-p " " helm-pattern)
-          (cl-loop with pattern = (split-string helm-pattern)
-                   for p in pattern
-                   do (when (search-forward (substring-no-properties p) nil t)
-                        (add-text-properties
-                         (match-beginning 0) (match-end 0) '(face helm-match))))
-        (cl-loop with pattern = (cdr (flx-score
-                                      (substring-no-properties display)
-                                      helm-pattern helm-flx-cache))
-                 for index in pattern
-                 do (add-text-properties
-                     (1+ index) (+ 2 index) '(face helm-match))))
+          (dolist (p (split-string helm-pattern))
+            (when (search-forward p nil t)
+              (add-text-properties
+               (match-beginning 0) (match-end 0) '(face helm-match))))
+        (dolist (index (cdr (flx-score
+                             (substring-no-properties display)
+                             helm-pattern helm-flx-cache)))
+          (with-demoted-errors
+              (add-text-properties
+               (1+ index) (+ 2 index) '(face helm-match)))))
       (setq display (buffer-string)))
     (if real (cons display real) display)))
 
