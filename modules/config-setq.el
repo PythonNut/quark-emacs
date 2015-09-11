@@ -135,13 +135,12 @@
 (epa-file-name-regexp-update)
 (setenv "GPG_AGENT_INFO" nil)
 
-(setq-default major-mode
-              (lambda ()
-                nil
-                (if buffer-file-name
-                    (fundamental-mode)
-                  (let ((buffer-file-name (buffer-name)))
-                    (set-auto-mode)))))
+;; set major mode for new buffers based on file rules
+(setq-default major-mode (lambda ()
+                           (if buffer-file-name
+                               (fundamental-mode)
+                             (let ((buffer-file-name (buffer-name)))
+                               (set-auto-mode)))))
 
 ;; basically, a mapcar for macros
 (defmacro my/generate-calls (operator arglists)
