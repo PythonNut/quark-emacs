@@ -7,8 +7,8 @@
     (require 'anaconda-mode)
     (require 'company-anaconda)))
 
-(add-hook 'python-mode-hook 'anaconda-mode)
-(add-hook 'python-mode-hook 'eldoc-mode)
+(add-hook 'python-mode-hook #'anaconda-mode)
+(add-hook 'python-mode-hook #'eldoc-mode)
 
 (add-hook 'python-mode-hook
           (lambda ()
@@ -27,13 +27,19 @@
 (add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
 (add-to-list 'auto-mode-alist '("\\.pxi\\'" . python-mode))
 
-(evil-set-initial-state 'sage-shell-mode 'insert)
+(autoload 'run-sage "sage-shell-mode" nil t)
+(autoload 'run-new-sage "sage-shell-mode" nil t)
+(autoload 'sage-mode "sage-shell-mode" nil t)
 
-(add-hook 'sage-shell-mode-hook #'eldoc-mode)
-(add-hook 'sage-shell:sage-mode-hook #'eldoc-mode)
+(with-eval-after-load 'sage-shell-mode
+  (sage-shell:define-alias)
+  (evil-set-initial-state 'sage-shell-mode 'insert)
 
-(add-hook 'sage-shell-mode-hook
-          (lambda () (semantic-idle-summary-mode -1)))
+  (add-hook 'sage-shell-mode-hook #'eldoc-mode)
+  (add-hook 'sage-mode-hook #'eldoc-mode)
 
-(add-hook 'sage-shell:sage-mode-hook
-          (lambda () (semantic-idle-summary-mode -1)))
+  (add-hook 'sage-shell-mode-hook
+            (lambda () (semantic-idle-summary-mode -1)))
+
+  (add-hook 'sage-mode-hook
+            (lambda () (semantic-idle-summary-mode -1))))
