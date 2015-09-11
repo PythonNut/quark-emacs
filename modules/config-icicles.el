@@ -11,18 +11,15 @@
 ;; custom hook run when icicles in initialized
 (add-hook 'icicle-init-hook
           (lambda ()
-            (setq
-             icicle-max-candidates 1000
-             icicle-sorting-max-candidates 1000
+            (setq icicle-max-candidates 1000
+                  icicle-sorting-max-candidates 1000
 
-             icicle-sort-comparer #'icicle-file-type-less-p
-             icicle-Completions-text-scale-decrease 0
-             icicle-expand-input-to-common-match 1
-             icicle-highlight-lighter-flag nil
-             ;; icicle-incremental-completion nil
-             icicle-prefix-complete-keys (list (kbd "<backtab>"))
-             icicle-show-Completions-help-flag nil
-             icicle-yank-function #'cua-paste)))
+                  ;; icicle-sort-comparer #'icicle-flx-score-greater-p
+                  icicle-Completions-text-scale-decrease 0
+                  icicle-expand-input-to-common-match 1
+                  icicle-highlight-lighter-flag nil
+                  icicle-show-Completions-help-flag nil
+                  icicle-yank-function #'cua-paste)))
 
 (defun nadvice/auto-icicle (old-func &rest args)
   (interactive)
