@@ -22,6 +22,9 @@
 
 (setq-default evil-symbol-word-search t)
 
+(cl-letf (((symbol-function 'message) #'format))
+  (key-chord-mode +1))
+
 (evil-mode +1)
 
 (define-key evil-visual-state-map "v" #'er/expand-region)

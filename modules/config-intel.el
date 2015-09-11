@@ -9,6 +9,8 @@
     (require 'flycheck)
     (require 'flyspell)))
 
+(require 'config-tramp)
+
 ;; enable semantic code LALR(1) parser
 (add-hook 'prog-mode-hook #'semantic-mode)
 (with-eval-after-load 'semantic

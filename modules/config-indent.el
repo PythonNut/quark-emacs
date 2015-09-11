@@ -15,6 +15,9 @@
           (lambda ()
             (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →"))))
 
+(with-eval-after-load 'aggressive-indent
+  (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
+
 (defun my/auto-indent-onetime-setup ()
   (auto-indent-global-mode +1)
   (remove-hook 'first-change-hook

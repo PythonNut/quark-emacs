@@ -1,5 +1,10 @@
 ;; -*- lexical-binding: t -*-
 
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'cl-lib)
+    (require 'key-chord)))
+
 (setq ad-redefinition-action 'accept
       cursor-type 'box
       delete-by-moving-to-trash t
@@ -105,15 +110,73 @@
     (shell-command "git stash")
     (shell-command "git pull --rebase -X histogram")
     (with-demoted-errors "Emergency fix delete error: %s"
-      (delete-file (expand-file-name "init.elc" user-emacs-directory))
       (mapc (lambda (file) (delete-file file t))
             (append
-             (file-expand-wildcards (concat module-dir "/*.elc"))
-             (file-expand-wildcards (concat module-dir "/modes/*.elc"))))
+             (list (expand-file-name "init.elc" user-emacs-directory))
+             (file-expand-wildcards (concat module-dir "/*.elc"))))
       (delete-directory (expand-file-name "elpa" user-emacs-directory) t t))
     (byte-recompile-config)
     (package-initialize)
     (my/ensure-packages-are-installed (bound-and-true-p my/required-packages))
     (restart-emacs)))
+
+(delete-selection-mode +1)
+(global-hl-line-mode +1)
+(subword-mode +1)
+
+(defun my/auto-compression-onetime-setup ()
+  (auto-compression-mode +1)
+  (remove-hook 'find-file-hook #'my/auto-compression-onetime-setup))
+
+(add-hook 'find-file-hook #'my/auto-compression-onetime-setup)
+
+;; encryption mode
+(setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
+(epa-file-name-regexp-update)
+(setenv "GPG_AGENT_INFO" nil)
+
+(setq-default major-mode
+              (lambda ()
+                nil
+                (if buffer-file-name
+                    (fundamental-mode)
+                  (let ((buffer-file-name (buffer-name)))
+                    (set-auto-mode)))))
+
+;; basically, a mapcar for macros
+(defmacro my/generate-calls (operator arglists)
+  `(progn
+     ,@(mapcar (lambda (arglist) `(,operator ,@arglist)) arglists)))
+
+(defmacro my/generate-calls-single (operator arglists)
+  `(progn
+     ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
+
+
+
+(defun really-kill-emacs ()
+  "Like `kill-emacs', but ignores `kill-emacs-hook'."
+  (interactive)
+  (let (kill-emacs-hook)
+    (kill-emacs)))
+
+(defun brutally-kill-emacs ()
+  "Use `call-process' to send ourselves a KILL signal."
+  (interactive)
+  (call-process "kill" nil nil nil "-9" (number-to-string (emacs-pid))))
+
+(show-paren-mode +1)
+
+(defun nadvice/show-paren-function ()
+  "If the matching paren is offscreen, show the matching line in the
+echo area. Has no effect if the character before point is not of
+the syntax class ')'."
+  (let* ((cb (char-before (point)))
+         (matching-text (and cb
+                             (char-equal (char-syntax cb) ?\) )
+                             (blink-matching-open))))
+    (when matching-text (message matching-text))))
+
+(advice-add 'show-paren-function :after #'nadvice/show-paren-function)
 
 (provide 'config-setq)
