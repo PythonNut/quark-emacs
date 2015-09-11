@@ -38,7 +38,7 @@
 (with-eval-after-load 'aggressive-indent
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
 
-(with-eval-after-load 'elisp-mode
+(with-eval-after-load 'lisp-mode
   (define-key emacs-lisp-mode-map (kbd "C-c e") #'replace-last-sexp)
   (define-key emacs-lisp-mode-map (kbd "M-.") #'emacs-lisp-goto-definition)
   (define-key emacs-lisp-mode-map (kbd "M-,") #'evil-jump-backward)
