@@ -177,10 +177,16 @@
             (lambda () (semantic-idle-summary-mode -1))))
 
 ;; =============================================================================
-;; Octave ======================================================================
+;; Octave/MATLAB ===============================================================
 ;; =============================================================================
 
-(with-eval-after-load 'octave-mode
+(with-eval-after-load 'octave
+  (evil-set-initial-state 'inferior-octave-mode 'insert)
+  (define-key inferior-octave-mode-map (kbd "<up>")
+    #'comint-previous-matching-input-from-input)
+  (define-key inferior-octave-mode-map (kbd "<down>")
+    #'comint-next-matching-input-from-input)
+
   (with-eval-after-load 'smartparens
     (sp-local-pair 'octave-mode "'" nil :actions nil)))
 
