@@ -21,7 +21,7 @@
                        (not (eq debug-on-error 'startup))
                        args))))
 
-    (message "[                 ]")
+    (message "[                ]")
 
     (defvar my/slow-device nil)
 
@@ -65,9 +65,9 @@
 
     (add-hook 'emacs-startup-hook #'my/automatic-repair)
 
-    (message "[=                ]")
+    (message "[=               ]")
     (require 'config-package)
-    (message "[==               ]")
+    (message "[==              ]")
     (require 'config-desktop)
     (message "[===             ]")
     (require 'config-safety)
