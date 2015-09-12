@@ -13,7 +13,9 @@
   (interactive "p")
   (if (active-minibuffer-window)
       (select-window (active-minibuffer-window))
-    (other-window arg)))
+    (if (one-window-p)
+        (other-frame arg)
+      (other-window arg))))
 
 (global-set-key (kbd "C-'") #'switch-to-minibuffer-window)
 
