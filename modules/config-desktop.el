@@ -88,7 +88,8 @@
   (when (and buffer-file-name
              (not
               (file-name-extension
-               buffer-file-name)))
+               buffer-file-name))
+             (not (eq major-mode 'fundamental-mode)))
     (push (cons buffer-file-name major-mode) file-name-mode-alist)
     (push (cons buffer-file-name major-mode) auto-mode-alist)))
 
