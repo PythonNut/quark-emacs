@@ -7,15 +7,16 @@
     (require 'diminish)))
 
 (require 'config-indent)
-(require 'adaptive-wrap)
 
-(setq adaptive-wrap-extra-indent 2
-      require-final-newline t
+(setq require-final-newline t
       line-move-visual t)
 
+(with-eval-after-load 'adaptive-wrap
+  (setq-default adaptive-wrap-extra-indent 2))
+
+(add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
 (add-hook 'visual-line-mode-hook
           (lambda ()
-            (adaptive-wrap-prefix-mode +1)
             (diminish 'visual-line-mode)))
 
 (global-visual-line-mode +1)
@@ -23,7 +24,6 @@
 ;; always ensure UTF-8
 (defun cleanup-buffer-safe ()
   (interactive)
-  ;; (untabify (point-min) (point-max))
   (set-buffer-file-coding-system 'utf-8))
 
 (defun cleanup-buffer-unsafe ()
@@ -34,14 +34,17 @@
 
 (add-hook 'before-save-hook #'cleanup-buffer-safe)
 
-;; autoload ws-butler on file open
-(add-hook 'find-file-hook #'ws-butler-global-mode)
-
-;; ws-butler also load highlight-changes-mode
 (with-eval-after-load 'ws-butler
-  ;; (diminish 'ws-butler-global-mode)
   (diminish 'ws-butler-mode " β"))
 
+;; autoload ws-butler on file open
+(defun my/ws-butler-onetime-setup ()
+  (ws-butler-global-mode +1)
+  (remove-hook 'find-file-hook #'my/ws-butler-onetime-setup))
+
+(add-hook 'find-file-hook #'my/ws-butler-onetime-setup)
+
+;; ws-butler also loads highlight-changes-mode
 (add-hook 'highlight-changes-mode-hook
           (lambda ()
             (diminish 'highlight-changes-mode)))
