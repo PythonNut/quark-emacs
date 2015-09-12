@@ -121,23 +121,8 @@
     evil-visualstar
     evil-quickscope
 
-    ;; major modes
-    coffee-mode
-    cython-mode
-    gitattributes-mode
-    gitconfig-mode
-    gitignore-mode
-    ;; js2-mode
-    js2-refactor
-    json-mode
-    markdown-mode
-    php-mode
-    web-mode
-    yaml-mode
-
     adaptive-wrap
     aggressive-indent
-    anaconda-mode
     auto-compile
     auto-highlight-symbol
     auto-indent-mode
@@ -145,7 +130,6 @@
     backup-walker
     bracketed-paste
     company
-    company-anaconda
     diff-hl
     diminish
     dtrt-indent
@@ -170,7 +154,6 @@
     smartparens
     smooth-scrolling
     solarized-theme
-    traad
     volatile-highlights
     whole-line-or-region
     ws-butler

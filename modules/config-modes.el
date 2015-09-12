@@ -5,6 +5,43 @@
     (require 'evil)
     (require 'flycheck)))
 
+(eval-and-compile
+  (defun my/remove-keyword-params (seq)
+    (and seq
+         (cl-destructuring-bind (head . tail) seq
+           (if (keywordp head) (my/remove-keyword-params (cdr tail))
+             (cons head (my/remove-keyword-params tail)))))))
+
+(cl-defmacro package-deferred-install (package-name
+                                       &rest forms
+                                       &key feature-name
+                                       mode-entries
+                                       autoload-names
+                                       manual-setup
+                                       &allow-other-keys)
+  (declare (indent 4))
+  `(with-no-warnings
+     (unless (package-installed-p ,package-name)
+       ,@(when manual-setup
+           (list manual-setup))
+       ,@(mapcar (lambda (item)
+                   `(add-to-list 'auto-mode-alist ,item))
+                 (cadr mode-entries))
+       ,@(mapcar (lambda (name)
+                   `(defun ,(cadr name) (&rest args)
+                      (interactive)
+                      (save-window-excursion
+                        (package-install ,package-name))
+                      (require ,(or feature-name package-name))
+                      (if (called-interactively-p)
+                          (call-interactively ,name)
+                        (apply ,name args))))
+                 (cadr autoload-names)))
+     ,@(let ((forms (my/remove-keyword-params forms)))
+         (when forms
+           (list `(with-eval-after-load ,(or feature-name package-name)
+                    ,@forms))))))
+
 ;; =============================================================================
 ;; Emacs Lisp ==================================================================
 ;; =============================================================================
@@ -87,36 +124,64 @@
                          ("||\n[i]" "RET")
                          ("| " "SPC")))))))
 
+(package-deferred-install 'arduino-mode
+    :mode-entries '('("\\.pde\\'" . arduino-mode)
+                    '("\\.ino\\'" . arduino-mode))
+    :autoload-names '('arduino-mode))
+
+(package-deferred-install 'cuda-mode
+    :mode-entries '('("\\.cu\\'" . cuda-mode)
+                    '("\\.cuh\\'" . cuda-mode))
+    :autoload-names '('cuda-mode))
+
+(package-deferred-install 'glsl-mode
+    :mode-entries '('("\\.vert\\'" . glsl-mode)
+                    '("\\.frag\\'" . glsl-mode)
+                    '("\\.geom\\'" . glsl-mode)
+                    '("\\.glsl\\'" . glsl-mode))
+    :autoload-names '('glsl-mode))
+
 ;; =============================================================================
 ;; Javascript ==================================================================
 ;; =============================================================================
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'js2-mode)
-    (require 'js2-refactor)))
+(package-deferred-install 'js2-mode
+    :mode-entries '('("\\.js\\'" . js2-mode))
+    :autoload-names '('js2-minor-mode
+                      'js2-mode
+                      'js2-highlight-unused-variables-mode
+                      'js2-imenu-extras-mode
+                      'js2-imenu-extras-setup)
 
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+    (set-face-foreground 'js2-external-variable
+                         (face-foreground 'default))
 
-(with-eval-after-load 'js2-mode
-  (set-face-foreground 'js2-external-variable
-                       (face-foreground 'default))
+    (set-face-attribute 'js2-external-variable nil :weight 'extra-bold)
+    (set-face-attribute 'js2-external-variable nil :underline t)
+    (js2r-add-keybindings-with-prefix "C-c C-r")
 
-  (set-face-attribute 'js2-external-variable nil :weight 'extra-bold)
-  (set-face-attribute 'js2-external-variable nil :underline t)
-  (js2r-add-keybindings-with-prefix "C-c C-r")
+    (with-eval-after-load 'smartparens
+      (sp-local-pair 'js2-mode "{" nil :post-handlers
+                     '(:add
+                       ("||\n[i]" "RET")
+                       ("| " "SPC"))))
 
-  (with-eval-after-load 'smartparens
-    (sp-local-pair 'js2-mode "{" nil :post-handlers
-                   '(:add
-                     ("||\n[i]" "RET")
-                     ("| " "SPC"))))
+    (setq js2-basic-offset 2))
 
-  (setq js2-basic-offset 2))
+(package-deferred-install 'json-mode
+    :mode-entries '('("\\.json$"   . json-mode)
+                    '("\\.jsonld$" . json-mode))
+    :autoload-names '('json-mode
+                      'json-mode-show-path
+                      'json-mode-beautify))
 
 ;; =============================================================================
 ;; Shell Scripts ===============================================================
 ;; =============================================================================
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'sh-script)))
 
 ;; bind zsh files to sh-mode
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
@@ -129,15 +194,65 @@
               (if (string-match "\\.zsh$" buffer-file-name)
                   (sh-set-shell "zsh")))))
 
+(package-deferred-install 'fish-mode
+    :mode-entries '('("\\.fish\\'"           . fish-mode)
+                    '("/fish_funced\\..*\\'" . fish-mode))
+    :autoload-names '('fish_indent-before-save
+                      'fish-mode)
+    :manual-init
+    (add-to-list 'interpreter-mode-alist '("fish" . fish-mode)))
+
 ;; =============================================================================
 ;; Python ======================================================================
 ;; =============================================================================
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'python)
-    (require 'anaconda-mode)
-    (require 'company-anaconda)))
+    (require 'python)))
+
+(package-deferred-install 'company-anaconda
+    :autoload-names '('company-anaconda))
+
+(package-deferred-install 'anaconda-mode
+    :autoload-names '('anaconda-mode))
+
+(package-deferred-install 'traad
+    :autoload-names '('traad-open
+                      'traad-close
+                      'traad-running?
+                      'traad-display-task-status
+                      'traad-display-full-task-status
+                      'traad-undo
+                      'traad-redo
+                      'traad-display-history
+                      'traad-undo-info
+                      'traad-redo-info
+                      'traad-rename-current-file
+                      'traad-rename
+                      'traad-normalize-arguments
+                      'traad-remove-argument
+                      'traad-extract-method
+                      'traad-extract-variable
+                      'traad-organize-imports
+                      'traad-expand-star-imports
+                      'traad-froms-to-imports
+                      'traad-relatives-to-absolutes
+                      'traad-handle-long-imports
+                      'traad-imports-super-smackdown
+                      'traad-display-occurrences
+                      'traad-display-implementations
+                      'traad-goto-definition
+                      'traad-findit
+                      'traad-code-assist
+                      'traad-display-calltip
+                      'traad-popup-calltip
+                      'traad-display-doc
+                      'traad-popup-doc))
+
+(package-deferred-install 'django-mode
+    :feature-name 'django-html-mode
+    :mode-entries '('("\\.djhtml$" . django-html-mode))
+    :autoload-names '('django-html-mode))
 
 (add-hook 'python-mode-hook #'anaconda-mode)
 (add-hook 'python-mode-hook #'eldoc-mode)
@@ -155,26 +270,36 @@
 (with-eval-after-load 'anaconda-mode
   (diminish 'anaconda-mode " ✶"))
 
-(add-to-list 'auto-mode-alist '("\\.pyx\\'" . cython-mode))
-(add-to-list 'auto-mode-alist '("\\.pxd\\'" . cython-mode))
-(add-to-list 'auto-mode-alist '("\\.pxi\\'" . python-mode))
+(package-deferred-install 'cython-mode
+    :mode-entries '('("\\.pyx\\'" . cython-mode)
+                    '("\\.pyd\\'" . cython-mode)
+                    '("\\.pyi\\'" . cython-mode))
+    :autoload-names '('cython-mode))
 
-(autoload 'run-sage "sage-shell-mode" nil t)
-(autoload 'run-new-sage "sage-shell-mode" nil t)
-(autoload 'sage-mode "sage-shell-mode" nil t)
+(package-deferred-install 'sage-shell-mode
+    :mode-entries '('("\\.sage$" . sage-mode))
+    :autoload-names '('run-sage
+                      'run-new-sage
+                      'sage-mode
+                      'sage-shell:run-sage
+                      'sage-shell:run-new-sage
+                      'sage-shell:sage-mode)
+    (sage-shell:define-alias)
+    (evil-set-initial-state 'sage-shell-mode 'insert)
 
-(with-eval-after-load 'sage-shell-mode
-  (sage-shell:define-alias)
-  (evil-set-initial-state 'sage-shell-mode 'insert)
+    (add-hook 'sage-shell-mode-hook #'eldoc-mode)
+    (add-hook 'sage-mode-hook #'eldoc-mode)
 
-  (add-hook 'sage-shell-mode-hook #'eldoc-mode)
-  (add-hook 'sage-mode-hook #'eldoc-mode)
+    (add-hook 'sage-shell-mode-hook
+              (lambda () (semantic-idle-summary-mode -1)))
 
-  (add-hook 'sage-shell-mode-hook
-            (lambda () (semantic-idle-summary-mode -1)))
+    (add-hook 'sage-mode-hook
+              (lambda () (semantic-idle-summary-mode -1))))
 
-  (add-hook 'sage-mode-hook
-            (lambda () (semantic-idle-summary-mode -1))))
+(when (package-installed-p 'sage-shell-mode)
+  (autoload 'run-sage "sage-shell-mode" nil t)
+  (autoload 'run-new-sage "sage-shell-mode" nil t)
+  (autoload 'sage-mode "sage-shell-mode" nil t))
 
 ;; =============================================================================
 ;; Octave/MATLAB ===============================================================
@@ -191,6 +316,130 @@
     (sp-local-pair 'octave-mode "'" nil :actions nil)))
 
 ;; =============================================================================
+;; Julia =======================================================================
+;; =============================================================================
+
+(package-deferred-install 'julia-mode
+    :mode-entries '('("\\.jl\\'" . julia-mode))
+    :autoload-names '('julia-mode
+                      'inferior-julia
+                      'run-julia))
+
+;; =============================================================================
+;; Haskell =====================================================================
+;; =============================================================================
+
+(package-deferred-install 'haskell-mode
+    :feature-name 'haskell
+    :mode-entries '('("\\.hcr\\'" . ghc-core-mode)
+                    '("\\.dump-simpl\\'" . ghc-core-mode)
+                    '("\\.ghci\\'" . ghci-script-mode)
+                    '("\\.cabal\\'" . haskell-cabal-mode)
+                    '("\\.[gh]s\\'" . haskell-mode)
+                    '("\\.l[gh]s\\'" . literate-haskell-mode)
+                    '("\\.hsc\\'" . haskell-mode))
+    :autoload-names '('ghc-core-create-core
+                      'ghc-core-mode
+                      'ghci-script-mode
+                      'interactive-haskell-mode
+                      'haskell-interactive-mode-return
+                      'haskell-session-kill
+                      'haskell-interactive-kill
+                      'haskell-session
+                      'haskell-interactive-switch
+                      'haskell-session-change
+                      'haskell-kill-session-process
+                      'haskell-interactive-mode-visit-error
+                      'haskell-mode-contextual-space
+                      'haskell-mode-jump-to-tag
+                      'haskell-mode-after-save-handler
+                      'haskell-interactive-bring
+                      'haskell-process-load-file
+                      'haskell-process-reload-file
+                      'haskell-process-load-or-reload
+                      'haskell-process-cabal-build
+                      'haskell-process-cabal
+                      'haskell-process-minimal-imports
+                      'haskell-align-imports
+                      'haskell-cabal-mode
+                      'haskell-cabal-guess-setting
+                      'haskell-cabal-get-dir
+                      'haskell-cabal-visit-file
+                      'haskell-process-restart
+                      'haskell-process-clear
+                      'haskell-process-interrupt
+                      'haskell-process-touch-buffer
+                      'haskell-describe
+                      'haskell-rgrep
+                      'haskell-process-do-info
+                      'haskell-process-do-type
+                      'haskell-mode-jump-to-def-or-tag
+                      'haskell-mode-goto-loc
+                      'haskell-mode-jump-to-def
+                      'haskell-process-cd
+                      'haskell-process-cabal-macros
+                      'haskell-mode-show-type-at
+                      'haskell-process-generate-tags
+                      'haskell-process-unignore
+                      'haskell-session-change-target
+                      'haskell-mode-stylish-buffer
+                      'haskell-mode-find-uses
+                      'haskell-compile
+                      'haskell-ds-create-imenu-index
+                      'turn-on-haskell-decl-scan
+                      'haskell-decl-scan-mode
+                      'haskell-doc-mode
+                      'haskell-doc-current-info
+                      'haskell-doc-show-type
+                      'turn-on-haskell-indent
+                      'haskell-indent-mode
+                      'haskell-indentation-mode
+                      'turn-on-haskell-indentation
+                      'haskell-interactive-mode-reset-error
+                      'haskell-interactive-mode-echo
+                      'haskell-process-show-repl-response
+                      'haskell-process-reload-devel-main
+                      'haskell-menu
+                      'haskell-version
+                      'haskell-mode-view-news
+                      'haskell-mode
+                      'haskell-forward-sexp
+                      'literate-haskell-mode
+                      'haskell-hoogle
+                      'hoogle-lookup-from-local
+                      'haskell-hayoo-url
+                      'haskell-session-installed-modules
+                      'haskell-session-all-modules
+                      'haskell-session-project-modules
+                      'haskell-move-nested
+                      'haskell-move-nested-right
+                      'haskell-move-nested-left
+                      'haskell-navigate-imports
+                      'haskell-navigate-imports-go
+                      'haskell-navigate-imports-return
+                      'haskell-session-maybe
+                      'haskell-session-process
+                      'haskell-simple-indent-mode
+                      'turn-on-haskell-simple-indent
+                      'haskell-sort-imports
+                      'turn-on-haskell-unicode-input-method
+                      'highlight-uses-mode
+                      'inferior-haskell-load-file
+                      'inferior-haskell-load-and-run
+                      'inferior-haskell-send-decl
+                      'inferior-haskell-type
+                      'inferior-haskell-kind
+                      'inferior-haskell-info
+                      'inferior-haskell-find-definition
+                      'inferior-haskell-find-haddock
+                      'inf-haskell-mode)
+    :manual-init
+    (progn
+      (add-to-list 'interpreter-mode-alist '("runghc" . haskell-mode))
+      (add-to-list 'interpreter-mode-alist '("runhaskell" . haskell-mode))
+      (add-to-list 'completion-ignored-extensions ".hi")))
+
+;; =============================================================================
 ;; Web Development =============================================================
 ;; =============================================================================
 
@@ -200,17 +449,79 @@
                    ("||\n[i]" "RET")
                    ("| " "SPC"))))
 
-(with-eval-after-load 'scss-mode
-  (sp-local-pair 'scss-mode "{" nil :post-handlers
-                 '(:add
-                   ("||\n[i]" "RET")
-                   ("| " "SPC"))))
+(package-deferred-install 'web-mode
+    :autoload-names '('web-mode)
+    (sp-local-pair 'web-mode "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
 
-(with-eval-after-load 'web-mode
-  (sp-local-pair 'web-mode "{" nil :post-handlers
-                 '(:add
-                   ("||\n[i]" "RET")
-                   ("| " "SPC"))))
+(package-deferred-install 'less-css-mode
+    :mode-entries '('("\\.less\\'" . less-css-mode))
+    :autoload-names '('less-css-mode 'less-css-compile)
+    (sp-local-pair 'less-css-mode "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
+
+(package-deferred-install 'scss-mode
+    :mode-entries '('("\\.scss\\'" . scss-mode))
+    :autoload-names '('scss-mode)
+    (sp-local-pair 'scss-mode "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
+
+(package-deferred-install 'sass-mode
+    :mode-entries '('("\\.sass\\'" . sass-mode))
+    :autoload-names '('sass-mode))
+
+(package-deferred-install 'coffee-mode
+    :mode-entries '('("\\.coffee\\'" . coffee-mode)
+                    '("\\.iced\\'"   . coffee-mode)
+                    '("Cakefile\\'"  . coffee-mode)
+                    '("\\.cson\\'"   . coffee-mode))
+    :autoload-names '('coffee-mode)
+    :manual-init
+    (add-to-list 'interpreter-mode-alist '("coffee" . coffee-mode)))
+
+(package-deferred-install 'literate-coffee-mode
+    :mode-entries '('("\\.litcoffee\\'" . litcoffee-mode)
+                    '("\\.coffee.md\\'" . litcoffee-mode))
+    :autoload-names '('litcoffee-mode))
+
+(package-deferred-install 'livescript-mode
+    :mode-entries '('("\\.ls\\'"     . livescript-mode)
+                    '("Slakefile\\'" . livescript-mode))
+    :autoload-names '('livescript-mode))
+
+(package-deferred-install 'php-mode
+    :mode-entries '('("\\.php[s345t]?\\'" . php-mode)
+                    '("\\.phtml\\'"       . php-mode)
+                    '("Amkfile"           . php-mode)
+                    '("\\.amk$"           . php-mode))
+    :autoload-names '('php-mode)
+    :manual-init
+    (add-to-list 'interpreter-mode-alist (cons "php" 'php-mode)))
+
+(package-deferred-install 'dart-mode
+    :autoload-names '('dart-mode))
+
+(add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
+
+(package-deferred-install 'typescript
+    :autoload-names '('typescript-mode)
+    :manual-init
+  (eval-after-load 'folding
+    '(when (fboundp 'folding-add-to-marks-list)
+       (folding-add-to-marks-list 'typescript-mode "// {{{" "// }}}" ))))
+
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
+
+(package-deferred-install 'handlebars-mode
+    :mode-entries '('("\\.handlebars$" . handlebars-mode)
+                    '("\\.hbs$"        . handlebars-mode))
+    :autoload-names '('handlebars-mode))
 
 ;; =============================================================================
 ;; Dired =======================================================================
@@ -267,6 +578,31 @@
 ;; =============================================================================
 ;; Scheme ======================================================================
 ;; =============================================================================
+(package-deferred-install 'geiser
+    :autoload-names '('geiser-version
+                      'geiser-unload
+                      'geiser-reload
+                      'geiser
+                      'run-geiser
+                      'geiser-connect
+                      'geiser-connect-local
+                      'switch-to-geiser
+                      'run-guile
+                      'switch-to-guile
+                      'connect-to-guile
+                      'run-racket
+                      'switch-to-racket
+                      'connect-to-racket
+                      'run-chicken
+                      'switch-to-chicken
+                      'connect-to-chicken
+                      'geiser-mode
+                      'turn-on-geiser-mode
+                      'turn-off-geiser-mode
+                      'geiser-mode--maybe-activate)
+    :manual-init
+  (progn (add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
+         (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))))
 
 (with-eval-after-load 'geiser-repl
   (define-key geiser-repl-mode-map (kbd "<up>")
@@ -357,7 +693,254 @@
         (let* ((line (string-to-number (match-string 1 (pop args))))
                (file (pop args)))
           (find-file file)
-          (goto-line line))
+          (forward-line line))
       (find-file (pop args)))))
+
+;; =============================================================================
+;; Config file modes ===========================================================
+;; =============================================================================
+
+(package-deferred-install 'gitattributes-mode
+    :mode-entries '('("/\\.gitattributes\\'"       . gitattributes-mode)
+                    '("/\\.git/info/attributes\\'" . gitattributes-mode)
+                    '("/git/attributes\\'"         . gitattributes-mode))
+    :autoload-names '('gitattributes-mode))
+
+(package-deferred-install 'gitconfig-mode
+    :mode-entries '('("/\\.gitconfig\\'"  . gitconfig-mode)
+                    '("/\\.git/config\\'" . gitconfig-mode)
+                    '("/git/config\\'"    . gitconfig-mode)
+                    '("/\\.gitmodules\\'" . gitconfig-mode))
+    :autoload-names '('gitconfig-mode))
+
+(package-deferred-install 'gitignore-mode
+    :mode-entries '('("/\\.gitignore\\'"        . gitignore-mode)
+                    '("/\\.git/info/exclude\\'" . gitignore-mode)
+                    '("/git/ignore\\'"          . gitignore-mode))
+    :autoload-names '('gitignore-mode))
+
+(package-deferred-install 'ssh-config-mode
+    :mode-entries '('(".ssh/config\\'"       . ssh-config-mode)
+                    '("sshd?_config\\'"      . ssh-config-mode)
+                    '("known_hosts\\'"       . ssh-known-hosts-mode)
+                    '("authorized_keys2?\\'" . ssh-authorized-keys-mode))
+    :autoload-names '('ssh-config-mode 'ssh-authorized-keys-mode))
+
+(package-deferred-install 'pkgbuild-mode
+    :mode-entries '('("/PKGBUILD\\'" . pkgbuild-mode))
+    :autoload-names '('pkgbuild-mode))
+
+(package-deferred-install 'chrontab-mode
+    :mode-entries '('("\\.cron\\(tab\\)?\\'" . crontab-mode))
+    :autoload-names '('chrontab-mode))
+
+(package-deferred-install 'dockerfile-mode
+    :mode-entries '('("Dockerfile.*\\'" . dockerfile-mode))
+    :autoload-names '('dockerfile-build-buffer
+                      'dockerfile-build-no-cache-buffer
+                      'dockerfile-mode))
+
+(package-deferred-install 'cmake-mode
+    :mode-entries '('("CMakeLists\\.txt\\'" . cmake-mode)
+                    '("\\.cmake\\'"         . cmake-mode))
+    :autoload-names '('cmake-mode
+                      'cmake-command-run
+                      'cmake-help-list-commands
+                      'cmake-help-command
+                      'cmake-help-module
+                      'cmake-help-variable
+                      'cmake-help-property
+                      'cmake-help))
+
+(package-deferred-install 'hgignore-mode
+    :mode-entries '('("\\.hgignore\\'" . hgignore-mode))
+    :autoload-names '('hgignore-mode))
+
+(package-deferred-install 'nginx-mode
+    :mode-entries '('("nginx\\.conf\\'"     . nginx-mode)
+                    '("/nginx/.+\\.conf\\'" . nginx-mode))
+    :autoload-names '('nginx-mode))
+
+;; =============================================================================
+;; Markup modes ================================================================
+;; =============================================================================
+
+(package-deferred-install 'yaml-mode
+    :mode-entries '('("\\.e?ya?ml$" . yaml-mode))
+    :autoload-names '('yaml-mode))
+
+(package-deferred-install 'haml-mode
+    :mode-entries '('("\\.haml\\'" . haml-mode))
+    :autoload-names '('haml-mode))
+
+(package-deferred-install 'markdown-mode
+    :mode-entries '('("\\.text\\'" . markdown-mode)
+                    '("\\.md\\'"   . markdown-mode))
+    :autoload-names '('markdown-mode 'gfm-mode))
+
+(package-deferred-install 'bbcode-mode
+    :mode-entries '('("\\.bbcode$" . bbcode-mode))
+    :autoload-names '('bbcode-mode))
+
+;; =============================================================================
+;; Speculative languages =======================================================
+;; =============================================================================
+
+(package-deferred-install 'csharp-mode
+    :mode-entries '('("\\.cs\\'" . csharp-mode))
+    :autoload-names '('csharp-mode))
+
+(package-deferred-install 'clojure-mode
+    :mode-entries '('("\\.clj\\|dtm\\|edn\\'" . clojure-mode)
+                    '("\\.cljc\\'" . clojurec-mode)
+                    '("\\.cljx\\'" . clojurex-mode)
+                    '("\\.cljs\\'" . clojurescript-mode)
+                    '("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode))
+    :autoload-names '('clojure-mode
+                      'clojurescript-mode
+                      'clojurec-mode
+                      'clojurex-mode))
+
+(package-deferred-install 'd-mode
+    :autoload-names '('d-mode))
+
+(add-to-list 'auto-mode-alist '("\\.d[i]?\\'" . d-mode))
+
+(package-deferred-install 'go-mode
+    :mode-entries '('("\\.go\\'" . go-mode))
+    :autoload-names '('go-mode
+                      'gofmt-before-save
+                      'godoc
+                      'go-download-play))
+
+(package-deferred-install 'swift-mode
+    :mode-entries '('("\\.swift\\'" . swift-mode))
+    :autoload-names '('swift-mode
+                      'swift-mode-run-repl))
+
+(package-deferred-install 'rust-mode
+    :mode-entries '('("\\.rs\\'" . rust-mode))
+    :autoload-names '('rust-mode))
+
+(package-deferred-install 'lua-mode
+    :mode-entries '('("\\.lua$" . lua-mode))
+    :autoload-names '('lua-mode
+                      'run-lua
+                      'lua-start-process)
+    :manual-init
+    (add-to-list 'interpreter-mode-alist '("lua" . lua-mode)))
+
+(package-deferred-install 'vimrc-mode
+    :mode-entries '('("\\.vim\\'" . vimrc-mode)
+                    '("[._]?g?vimrc\\'" . vimrc-mode)
+                    '("\\.exrc\\'" . vimrc-mode))
+    :autoload-names '('vimrc-mode))
+
+(package-deferred-install 'csv-mode
+    :mode-entries '('("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+    :autoload-names '('csv-mode))
+
+(package-deferred-install 'batch-mode
+    :autoload-names '('batch-mode))
+
+(add-to-list 'auto-mode-alist '("\\.bat\\'" . batch-mode))
+(add-to-list 'auto-mode-alist '("\\.cmd\\'" . batch-mode))
+
+(package-deferred-install 'j-mode
+    :mode-entries '('("\\.ij[rstp]$" . j-mode))
+    :autoload-names '('j-mode))
+
+(package-deferred-install 'jinja2-mode
+    :mode-entries '('("\\.jinja2\\'" . jinja2-mode))
+    :autoload-names '('jinja2-mode))
+
+(package-deferred-install 'scala-mode2
+    :mode-entries '('("\\.\\(scala\\|sbt\\)\\'" . scala-mode))
+    :autoload-names '('scala-mode:set-scala-syntax-mode
+                      'scala-mode:goto-start-of-code
+                      'scala-mode))
+
+(package-deferred-install 'vala-mode
+    :mode-entries '('("\\.vala$" . vala-mode))
+    :autoload-names '('vala-mode))
+
+(package-deferred-install 'fsharp-mode
+    :mode-entries '('("\\.fs[iylx]?$" . fsharp-mode))
+    :autoload-names '('fsharp-mode))
+
+(package-deferred-install 'elixir-mode
+    :mode-entries '('("\\.elixir\\'" . elixir-mode)
+                    '("\\.ex\\'"     . elixir-mode)
+                    '("\\.exs\\'"    . elixir-mode))
+    :autoload-names '('elixir-mode-open-modegithub
+                      'elixir-mode-open-elixir-home
+                      'elixir-mode-open-docs-master
+                      'elixir-mode-open-docs-stable
+                      'elixir-mode-version))
+
+(package-deferred-install 'gnuplot
+    :autoload-names '('gnuplot-mode
+                      'gnuplot-make-buffer
+                      'run-gnuplot) )
+
+(add-to-list 'auto-mode-alist '("\\.gp$" . gnuplot-mode))
+
+(package-deferred-install 'dylan-mode
+    :mode-entries '('("\\.dylan\\'" . dylan-mode))
+    :autoload-names '('dylan-mode))
+
+(package-deferred-install 'dylan-mode
+    :mode-entries '('("\\.lid\\'" . dylanlid-mode))
+    :feature-name 'dylanlid-mode
+    :autoload-names '('dylanlid-mode))
+
+(package-deferred-install 'processing-mode
+    :autoload-names '('processing-find-sketch
+                      'processing-mode))
+
+(package-deferred-install 'actionscript-mode
+    :mode-entries '('("\\.as\\'" . actionscript-mode))
+    :autoload-names '('actionscript-mode))
+
+(package-deferred-install 'puppet-mode
+    :mode-entries '('("\\.pp\\'" . puppet-mode))
+    :autoload-names '('puppet-mode))
+
+(package-deferred-install 'puppetfile-mode
+    :mode-entries '('("Puppetfile\\'" . puppetfile-mode))
+    :autoload-names '('puppetfile-mode))
+
+(package-deferred-install 'gap-mode
+    :mode-entries '('("\\.\\(g\\(?:ap\\|[di]\\)?\\)\\'" . gap-mode))
+    :autoload-names '('gap-mode))
+
+(package-deferred-install 'perl6-mode
+    :mode-entries '('("\\.p[lm]?6\\'" . perl6-mode))
+    :autoload-names '('perl6-mode)
+    :manual-init
+    (add-to-list 'interpreter-mode-alist '("perl6" . perl6-mode)))
+
+(package-deferred-install 'fstar-mode
+    :mode-entries '('("\\.fsti?\\'" . fstar-mode))
+    :autoload-names '('fstar-mode))
+
+(package-deferred-install 'sml-mode
+    :mode-entries '('("\\.s\\(ml\\|ig\\)\\'" . sml-mode)
+                    '("\\.cm\\'" . sml-cm-mode)
+                    '("\\.grm\\'" . sml-yacc-mode))
+    :autoload-names '('run-sml
+                      'sml-run
+                      'sml-mode
+                      'sml-cm-mode
+                      'sml-lex-mode
+                      'sml-yacc-mode)
+    :manual-init
+    (progn
+      (add-to-list 'completion-ignored-extensions ".cm/")
+      (add-to-list 'completion-ignored-extensions "CM/")))
+
+(package-deferred-install 'salt-mode
+    :mode-entries '('("\\.sls\\'" . salt-mode))
+    :autoload-names '('salt-mode))
 
 (provide 'config-modes)
