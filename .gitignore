@@ -103,7 +103,7 @@ flycheck_*
 /history
 
 /.python-environments
-/company-statistics-cache.el
+/anaconda-mode
 /dunnet
 
 
