@@ -265,6 +265,20 @@
   (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer))
 
 ;; =============================================================================
+;; Scheme ======================================================================
+;; =============================================================================
+
+(with-eval-after-load 'geiser-repl
+  (define-key geiser-repl-mode-map (kbd "<up>")
+    #'comint-previous-matching-input-from-input)
+  (define-key geiser-repl-mode-map (kbd "<down>")
+    #'comint-next-matching-input-from-input)
+
+  (evil-set-initial-state 'geiser-repl-mode 'emacs)
+  (add-hook 'geiser-repl-mode-hook (lambda ()
+                                     (auto-indent-mode -1))))
+
+;; =============================================================================
 ;; Shell modes =================================================================
 ;; =============================================================================
 
