@@ -5,7 +5,6 @@
     (require 'auto-indent-mode)
     (require 'adaptive-wrap)
     (require 'diminish)
-    (require 'smie)
     (require 'evil)))
 
 (setq require-final-newline t
@@ -72,9 +71,8 @@
             (add-hook 'first-change-hook #'my/auto-indent-onetime-setup)))
 
 (defun my/smie-auto-guess ()
-  (when (featurep 'smie)
-    (unless (eq smie-grammar 'unset)
-      (smie-config-guess))))
+  (unless (eq (bound-and-true-p smie-grammar) 'unset)
+    (smie-config-guess)))
 
 (add-hook 'after-change-major-mode-hook #'my/smie-auto-guess)
 

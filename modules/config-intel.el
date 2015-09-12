@@ -20,8 +20,7 @@
 
 (defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
   (if (and
-       (featurep 'flycheck)
-       flycheck-mode
+       (bound-and-true-p flycheck-mode)
        (progn (require 's)
               (flycheck-overlay-errors-at (point))))
       (flycheck-display-error-at-point)

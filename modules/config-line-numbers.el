@@ -39,7 +39,7 @@
 
 (defun linum-cycle ()
   (interactive)
-  (if (and (featurep 'linum) linum-mode)
+  (if (bound-and-true-p linum-mode)
       (if (eq linum-format 'dynamic)
           (linum-mode -1)
         (setq linum-format 'dynamic))

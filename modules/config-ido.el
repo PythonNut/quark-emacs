@@ -29,13 +29,9 @@
 (global-set-key (kbd "C-x f") #'ido-find-file)
 
 (defun my/ido-onetime-setup ()
-  (unless (and
-           (featurep 'flx-ido)
-           flx-ido-mode)
+  (unless (bound-and-true-p flx-ido-mode)
     (flx-ido-mode +1))
-  (unless (and
-           (featurep 'ido-vertical-mode)
-           ido-vertical-mode)
+  (unless (bound-and-true-p ido-vertical-mode)
     (ido-vertical-mode +1))
 
   (remove-hook 'ido-minibuffer-setup-hook 'my/ido-onetime-setup))
