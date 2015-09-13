@@ -246,5 +246,6 @@
   (global-auto-highlight-symbol-mode +1))
 
 (global-set-key (kbd "<remap> <just-one-space>") #'cycle-spacing)
+(global-set-key (kbd "<remap> <delete-horizontal-space>") #'cycle-spacing)
 
 (provide 'config-ui)
