@@ -3,44 +3,8 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'evil)
-    (require 'flycheck)))
-
-(eval-and-compile
-  (defun my/remove-keyword-params (seq)
-    (and seq
-         (cl-destructuring-bind (head . tail) seq
-           (if (keywordp head) (my/remove-keyword-params (cdr tail))
-             (cons head (my/remove-keyword-params tail)))))))
-
-(cl-defmacro package-deferred-install (package-name
-                                       &rest forms
-                                       &key feature-name
-                                       mode-entries
-                                       autoload-names
-                                       manual-setup
-                                       &allow-other-keys)
-  (declare (indent 4))
-  `(with-no-warnings
-     (unless (package-installed-p ,package-name)
-       ,@(when manual-setup
-           (list manual-setup))
-       ,@(mapcar (lambda (item)
-                   `(add-to-list 'auto-mode-alist ,item))
-                 (cadr mode-entries))
-       ,@(mapcar (lambda (name)
-                   `(defun ,(cadr name) (&rest args)
-                      (interactive)
-                      (save-window-excursion
-                        (package-install ,package-name))
-                      (require ,(or feature-name package-name))
-                      (if (called-interactively-p)
-                          (call-interactively ,name)
-                        (apply ,name args))))
-                 (cadr autoload-names)))
-     ,@(let ((forms (my/remove-keyword-params forms)))
-         (when forms
-           (list `(with-eval-after-load ,(or feature-name package-name)
-                    ,@forms))))))
+    (require 'flycheck)
+    (require 'config-package)))
 
 ;; =============================================================================
 ;; Emacs Lisp ==================================================================
