@@ -126,7 +126,7 @@
     auto-compile
     auto-highlight-symbol
     auto-indent-mode
-    avy
+    ;; avy
     bracketed-paste
     company
     diff-hl
