@@ -5,7 +5,6 @@
     (require 'cl-lib)
     (require 'evil)
     (require 'key-chord)
-    (require 'icicles)
     (require 'config-modes)))
 
 ;; custom hook run when icicles in initialized
@@ -24,7 +23,7 @@
 (defun nadvice/auto-icicle (old-func &rest args)
   (interactive)
   (if (and
-       (not icicle-mode)
+       (not (bound-and-true-p icicle-mode))
        (called-interactively-p 'any))
       (unwind-protect
           (progn
@@ -36,12 +35,22 @@
           (icicle-mode -1)))
     (call-interactively old-func)))
 
-(defmacro auto-icicle-macro (func)
+(defmacro my/auto-icicle-macro (func)
   `(advice-add ,func :around #'nadvice/auto-icicle))
 
+(defun my/autoload-icicle-helper (func args)
+  (cl-letf (((symbol-function 'eval-after-load) (lambda (&rest args)))
+            ((symbol-function 'message) #'format))
+    (require 'icicles))
+  (if (called-interactively-p 'any)
+      (call-interactively func)
+    (apply func args)))
+
 (eval-and-compile
-  (defmacro autoload-icicle (func)
-    `(autoload ,func "icicles" nil t))
+  (defmacro my/autoload-icicle (func)
+    `(defun ,(cadr func) (&rest args)
+       (interactive)
+       (my/autoload-icicle-helper ,func args)))
 
   (cl-macrolet
       ((setup-icicles
