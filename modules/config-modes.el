@@ -287,7 +287,10 @@
     :mode-entries '('("\\.jl\\'" . julia-mode))
     :autoload-names '('julia-mode
                       'inferior-julia
-                      'run-julia))
+                      'run-julia)
+    (evil-set-initial-state 'inferior-julia-mode 'insert)
+    (add-hook 'inferior-julia-mode-hook (lambda ()
+                                          (auto-indent-mode -1))))
 
 ;; =============================================================================
 ;; Haskell =====================================================================
