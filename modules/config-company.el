@@ -216,18 +216,18 @@
 
       (with-no-warnings
         (my/generate-calls
-         company-define-specific-modes
-         (('c++-mode-hook     'company-clang)
-          ('objc-mode-hook    'company-clang)
-          ('c-mode-hook       'company-clang)
-          ('cmake-mode-hook   'company-cmake)
-          ('css-mode-hook     'company-css)
-          ('java-mode-hook    'company-eclim)
-          ('nxml-mode-hook    'company-nxml)
-          ('html-mode-hook    'company-semantic)
-          ('scheme-mode-hook  'company-semantic)
-          ('texinfo-mode-hook 'company-semantic)
-          ('python-mode-hook  'company-anaconda))))))
+         'company-define-specific-modes
+         '(('c++-mode-hook     'company-clang)
+           ('objc-mode-hook    'company-clang)
+           ('c-mode-hook       'company-clang)
+           ('cmake-mode-hook   'company-cmake)
+           ('css-mode-hook     'company-css)
+           ('java-mode-hook    'company-eclim)
+           ('nxml-mode-hook    'company-nxml)
+           ('html-mode-hook    'company-semantic)
+           ('scheme-mode-hook  'company-semantic)
+           ('texinfo-mode-hook 'company-semantic)
+           ('python-mode-hook  'company-anaconda))))))
 
   (defun company-complete-common-or-complete-full ()
     (interactive)

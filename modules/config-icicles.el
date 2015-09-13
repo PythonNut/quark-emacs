@@ -47,10 +47,10 @@
       ((setup-icicles
         (commands)
         `(with-no-warnings
-           (my/generate-calls-single autoload-icicle ,commands)
+           (my/generate-calls-single 'my/autoload-icicle ,commands)
            (with-eval-after-load 'icicles
              (run-hooks 'icicle-init-hook)
-             (my/generate-calls-single auto-icicle-macro ,commands)))))
+             (my/generate-calls-single 'my/auto-icicle-macro ,commands)))))
 
     (setup-icicles
      (#'icicle-add-buffer-candidate

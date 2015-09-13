@@ -43,23 +43,23 @@
 
       (with-no-warnings
         (my/generate-calls
-         magit-setup-section-k
-         ((magit-branch-section-map #'magit-branch-delete)
-          (magit-commit-section-map)
-          (magit-file-section-map #'magit-discard)
-          (magit-hunk-section-map #'magit-discard)
-          (magit-log-mode-map)
-          (magit-module-commit-section-map)
-          (magit-remote-section-map)
-          (magit-staged-section-map #'magit-discard)
-          (magit-stash-section-map #'magit-stash-drop)
-          (magit-stashes-section-map)
-          (magit-status-mode-map)
-          (magit-tag-section-map #'magit-tag-delete)
-          (magit-unpulled-section-map)
-          (magit-unpushed-section-map)
-          (magit-unstaged-section-map #'magit-discard)
-          (magit-untracked-section-map #'magit-discard))))))
+         'magit-setup-section-k
+         '((magit-branch-section-map #'magit-branch-delete)
+           (magit-commit-section-map)
+           (magit-file-section-map #'magit-discard)
+           (magit-hunk-section-map #'magit-discard)
+           (magit-log-mode-map)
+           (magit-module-commit-section-map)
+           (magit-remote-section-map)
+           (magit-staged-section-map #'magit-discard)
+           (magit-stash-section-map #'magit-stash-drop)
+           (magit-stashes-section-map)
+           (magit-status-mode-map)
+           (magit-tag-section-map #'magit-tag-delete)
+           (magit-unpulled-section-map)
+           (magit-unpushed-section-map)
+           (magit-unstaged-section-map #'magit-discard)
+           (magit-untracked-section-map #'magit-discard))))))
 
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook

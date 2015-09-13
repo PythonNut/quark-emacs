@@ -145,13 +145,11 @@
 ;; basically, a mapcar for macros
 (defmacro my/generate-calls (operator arglists)
   `(progn
-     ,@(mapcar (lambda (arglist) `(,operator ,@arglist)) arglists)))
+     ,@(mapcar (lambda (arglist) `(,(cadr operator) ,@arglist)) (cadr arglists))))
 
-(defmacro my/generate-calls-single (operator arglists)
+(defmacro my/generate-calls-single (operator arglist)
   `(progn
-     ,@(mapcar (lambda (arglist) `(,operator (,@arglist))) arglists)))
-
-
+     ,@(mapcar (lambda (arg) `(,(cadr operator) (,@arg))) arglist)))
 
 (defun really-kill-emacs ()
   "Like `kill-emacs', but ignores `kill-emacs-hook'."

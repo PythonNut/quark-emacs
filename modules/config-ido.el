@@ -8,11 +8,10 @@
     (require 'ido-ubiquitous)
     (require 'smex)))
 
-(setq
- ido-enable-flex-matching t
- ido-save-directory-list-file
- (expand-file-name "ido.last" user-emacs-directory)
- ido-use-faces nil)
+(setq ido-enable-flex-matching t
+      ido-save-directory-list-file
+      (expand-file-name "ido.last" user-emacs-directory)
+      ido-use-faces nil)
 
 (ido-mode +1)
 

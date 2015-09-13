@@ -109,18 +109,18 @@
 
   (with-no-warnings
     (my/generate-calls
-     sp-define-bindings
-     (((kbd "C-M-f") #'sp-forward-sexp)
-      ((kbd "C-M-b") #'sp-backward-sexp)
+     'sp-define-bindings
+     '(((kbd "C-M-f") #'sp-forward-sexp)
+       ((kbd "C-M-b") #'sp-backward-sexp)
 
-      ((kbd "C-M-d") #'sp-down-sexp)
-      ((kbd "C-M-S-d") #'sp-backward-down-sexp)
+       ((kbd "C-M-d") #'sp-down-sexp)
+       ((kbd "C-M-S-d") #'sp-backward-down-sexp)
 
-      ((kbd "C-M-u") #'sp-up-sexp)
-      ((kbd "C-M-S-u") #'sp-backward-up-sexp)
+       ((kbd "C-M-u") #'sp-up-sexp)
+       ((kbd "C-M-S-u") #'sp-backward-up-sexp)
 
-      ((kbd "C-M-n") #'sp-next-sexp)
-      ((kbd "C-M-p") #'sp-previous-sexp)))))
+       ((kbd "C-M-n") #'sp-next-sexp)
+       ((kbd "C-M-p") #'sp-previous-sexp)))))
 
 (cl-macrolet
     ((sp-define-bindings
@@ -137,27 +137,27 @@
 
   (with-no-warnings
     (my/generate-calls
-     sp-define-bindings
-     (((kbd "C-M-k") #'sp-kill-sexp)
+     'sp-define-bindings
+     '(((kbd "C-M-k") #'sp-kill-sexp)
 
-      ((kbd "C-M-t") #'sp-transpose-sexp)
+       ((kbd "C-M-t") #'sp-transpose-sexp)
 
-      ((kbd "M-(") #'sp-select-previous-thing)
-      ((kbd "M-)") #'sp-select-next-thing)
+       ((kbd "M-(") #'sp-select-previous-thing)
+       ((kbd "M-)") #'sp-select-next-thing)
 
-      ((kbd "C-+") #'sp-rewrap-sexp)
-      ((kbd "M-<delete>") #'sp-kill-sexp)
-      ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
-      ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
+       ((kbd "C-+") #'sp-rewrap-sexp)
+       ((kbd "M-<delete>") #'sp-kill-sexp)
+       ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
+       ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
 
-      ((kbd "C-M-a") #'sp-absorb-sexp)
-      ((kbd "C-M-e") #'sp-emit-sexp)
+       ((kbd "C-M-a") #'sp-absorb-sexp)
+       ((kbd "C-M-e") #'sp-emit-sexp)
 
-      ((kbd "C-M-,") #'sp-forward-slurp-sexp)
-      ((kbd "C-M-.") #'sp-forward-barf-sexp)
+       ((kbd "C-M-,") #'sp-forward-slurp-sexp)
+       ((kbd "C-M-.") #'sp-forward-barf-sexp)
 
-      ((kbd "M-<") #'sp-backward-slurp-sexp)
-      ((kbd "M->") #'sp-backward-barf-sexp)))))
+       ((kbd "M-<") #'sp-backward-slurp-sexp)
+       ((kbd "M->") #'sp-backward-barf-sexp)))))
 
 ;; allow quick repetition since normal state key chains are awkward
 (evil-define-motion evil-sp-move ()

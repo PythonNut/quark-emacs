@@ -41,7 +41,7 @@
 
   (with-no-warnings
     (my/generate-calls-single
-     autoload-multiple-cursors
+     'autoload-multiple-cursors
      (#'mc/mark-lines
       #'mc/mark-next-lines
       #'mc/mark-previous-lines
