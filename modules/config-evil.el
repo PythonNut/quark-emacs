@@ -179,6 +179,31 @@
 (define-key evil-normal-state-map (kbd "C-w k") 'evil-window-up-smart)
 (define-key evil-normal-state-map (kbd "C-w l") 'evil-window-right-smart)
 
+(evil-define-command evil-delete-backward-word-smart ()
+  "Delete previous word."
+  (if (and (bolp) (not (bobp)))
+      (progn
+        (unless evil-backspace-join-lines (user-error "Beginning of line"))
+        (delete-char -1))
+    (evil-delete (max
+                  (let ((word-point (save-excursion
+                                      (evil-backward-word-begin)
+                                      (point))))
+                    (if (= word-point (save-excursion
+                                        (evil-backward-char)
+                                        (point)))
+                        (save-excursion
+                          (evil-backward-char)
+                          (evil-backward-word-begin)
+                          (point))
+                      word-point))
+                  (line-beginning-position))
+                 (point)
+                 'exclusive
+                 nil)))
+
+(global-set-key (kbd "<C-backspace>") #'evil-delete-backward-word-smart)
+
 (require 'config-evil-modules)
 (require 'config-evil-textobjects)
 
