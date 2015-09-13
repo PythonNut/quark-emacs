@@ -15,9 +15,6 @@
 (evil-set-initial-state #'profiler-report-mode 'motion)
 
 ;; Evil exchange, easily swap two things
-(autoload #'evil-exchange        "evil-exchange")
-(autoload #'evil-exchange-cancel "evil-exchange")
-
 (define-key evil-normal-state-map "gx" #'evil-exchange)
 (define-key evil-visual-state-map "gx" #'evil-exchange)
 (define-key evil-normal-state-map "gX" #'evil-exchange-cancel)
@@ -32,8 +29,8 @@
 (define-key evil-operator-state-map "s" 'evil-surround-edit)
 (define-key evil-operator-state-map "S" 'evil-Surround-edit)
 
-(define-key evil-visual-state-map (kbd "C-s") 'evil-surround-region)
-(define-key evil-visual-state-map (kbd "C-S-s") 'evil-Surround-region)
+(define-key evil-visual-state-map (kbd "gw") 'evil-surround-region)
+(define-key evil-visual-state-map (kbd "gW") 'evil-Surround-region)
 
 ;; evil NERD commenter, commenting awesomeness!
 (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines)
@@ -64,10 +61,9 @@
 (with-eval-after-load 'evil-snipe
   (diminish 'evil-snipe-mode)
 
-  (setq
-   evil-snipe-scope 'visible
-   evil-snipe-repeat-scope 'visible
-   evil-snipe-smart-case t)
+  (setq evil-snipe-scope 'visible
+        evil-snipe-repeat-scope 'visible
+        evil-snipe-smart-case t)
 
   (set-face-attribute 'evil-snipe-matches-face nil
                       :background "#586e75")
@@ -108,10 +104,10 @@
 (define-key evil-visual-state-map "S" #'evil-snipe-S)
 
 (with-eval-after-load 'evil-quickscope
-  (setq
-   evil-quickscope-word-separator " -./")
+  (setq evil-quickscope-word-separator " -./")
   (set-face-attribute 'evil-quickscope-first-face nil
                       :inherit nil)
+
   (if (display-graphic-p)
       (set-face-attribute 'evil-quickscope-second-face nil
                           :underline '(:style wave)
@@ -126,10 +122,9 @@
       (evil-quickscope-apply-overlays-forward)
       (evil-quickscope-apply-overlays-backward)))
 
-  (advice-add
-   'evil-quickscope-update-overlays-bidirectional
-   :override
-   #'nadvice/evil-quickscope-update-overlays-bidirectional))
+  (advice-add 'evil-quickscope-update-overlays-bidirectional
+              :override
+              #'nadvice/evil-quickscope-update-overlays-bidirectional))
 
 (unless (or (bound-and-true-p my/slow-device)
             (< (display-color-cells) 256))
