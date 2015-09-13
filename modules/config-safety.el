@@ -72,4 +72,7 @@
 
 (add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
 
+(package-deferred-install 'backup-walker
+    :autoload-names '('backup-walker-start))
+
 (provide 'config-safety)

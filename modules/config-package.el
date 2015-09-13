@@ -127,7 +127,6 @@
     auto-highlight-symbol
     auto-indent-mode
     avy
-    backup-walker
     bracketed-paste
     company
     diff-hl
