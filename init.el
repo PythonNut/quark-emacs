@@ -54,9 +54,6 @@
                      (define-key query-replace-map [t] 'skip)
                      (y-or-n-p prompt))))
           (if (save-window-excursion
-                (when (fboundp 'package-upgrade-all)
-                  (package-upgrade-all t)
-                  (package-initialize))
                 (byte-recompile-config t))
               (when (my/y-or-n-p "Automatic repair succeed. Press \"y\" to restart.")
                 (restart-emacs))
