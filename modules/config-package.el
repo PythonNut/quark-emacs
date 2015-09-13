@@ -147,7 +147,7 @@
     idle-require
     key-chord
     linum-relative
-    ;; magit
+    magit
     multiple-cursors
     rainbow-delimiters
     smartparens
