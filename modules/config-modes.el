@@ -251,6 +251,11 @@
     (sage-shell:define-alias)
     (evil-set-initial-state 'sage-shell-mode 'insert)
 
+    (define-key sage-shell-mode-map (kbd "<up>")
+      #'comint-previous-matching-input-from-input)
+    (define-key sage-shell-mode-map (kbd "<down>")
+      #'comint-next-matching-input-from-input)
+
     (add-hook 'sage-shell-mode-hook #'eldoc-mode)
     (add-hook 'sage-mode-hook #'eldoc-mode)
 
