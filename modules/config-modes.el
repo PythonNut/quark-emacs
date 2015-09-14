@@ -129,7 +129,13 @@
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)
                     '("\\.ino\\'" . arduino-mode))
-    :autoload-names '('arduino-mode))
+    :autoload-names '('arduino-mode)
+    (package-deferred-install 'company-arduino
+        :autoload-names '('company-arduino-append-include-dirs
+                          'company-arduino-sketch-directory-p
+                          'company-arduino-turn-on
+                          'company-arduino-turn-off))
+    (add-hook 'irony-mode-hook 'company-arduino-turn-on))
 
 (package-deferred-install 'cuda-mode
     :mode-entries '('("\\.cu\\'" . cuda-mode)

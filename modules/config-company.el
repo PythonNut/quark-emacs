@@ -220,6 +220,7 @@
          '(('c++-mode-hook     'company-irony)
            ('objc-mode-hook    'company-irony)
            ('c-mode-hook       'company-irony)
+           ('arduino-mode-hook 'company-irony)
            ('cmake-mode-hook   'company-cmake)
            ('css-mode-hook     'company-css)
            ('java-mode-hook    'company-eclim)
