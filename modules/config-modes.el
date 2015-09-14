@@ -72,7 +72,9 @@
                         'irony-cdb-json-add-compile-commands-path
                         'irony-cdb-libclang
                         'irony-completion-at-point
-                        'irony-completion-at-point-async))
+                        'irony-completion-at-point-async)
+      (setq irony-user-dir (expand-file-name "data/irony"
+                                             user-emacs-directory)))
 
   (package-deferred-install 'irony-eldoc
       :autoload-names '('irony-eldoc))
