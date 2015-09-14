@@ -77,7 +77,7 @@
          (not (eq smie-grammar 'unset)))
     (smie-config-guess)))
 
-;;(add-hook 'after-change-major-mode-hook #'my/smie-auto-guess)
+(add-hook 'after-change-major-mode-hook #'my/smie-auto-guess)
 
 (evil-define-command back-to-indentation-or-beginning ()
   (if (= (point)
