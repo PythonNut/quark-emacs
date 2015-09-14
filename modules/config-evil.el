@@ -27,8 +27,6 @@
 
 (evil-mode +1)
 
-(define-key evil-visual-state-map "v" #'er/expand-region)
-
 ;; define C-<arrow> for terminals
 (global-set-key (kbd "M-[ d") #'left-word)
 (global-set-key (kbd "M-[ c") #'right-word)
@@ -203,6 +201,8 @@
                  nil)))
 
 (global-set-key (kbd "<C-backspace>") #'evil-delete-backward-word-smart)
+(define-key evil-insert-state-map (kbd "C-t") #'transpose-chars)
+(define-key evil-insert-state-map (kbd "C-d") 'evil-delete)
 
 (require 'config-evil-modules)
 (require 'config-evil-textobjects)
