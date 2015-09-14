@@ -61,6 +61,26 @@
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 (with-eval-after-load 'cc-mode
+  (package-deferred-install 'irony
+      :autoload-names '('irony-mode
+                        'irony-version
+                        'irony-server-kill
+                        'irony-cdb-autosetup-compile-options
+                        'irony-cdb-menu
+                        'irony-cdb-clang-complete
+                        'irony-cdb-json
+                        'irony-cdb-json-add-compile-commands-path
+                        'irony-cdb-libclang
+                        'irony-completion-at-point
+                        'irony-completion-at-point-async))
+
+  (package-deferred-install 'irony-eldoc
+      :autoload-names '('irony-eldoc))
+
+  (package-deferred-install 'company-irony
+      :autoload-names '('company-irony
+                        'company-irony-setup-begin-commands))
+
   (setq c-default-style "k&r")
 
   ;; prefer C++1y
@@ -73,25 +93,38 @@
             (lambda ()
               (setq flycheck-clang-language-standard "c11")))
 
+  (cl-macrolet
+      ((my/setup-cc-mode
+        (hook)
+        `(add-hook ,hook (lambda ()
+                           (irony-mode +1)
+                           (semantic-idle-summary-mode -1)
+                           (eldoc-mode +1)
+                           (irony-eldoc +1)))))
+
+    (with-no-warnings
+      (my/generate-calls
+       'my/setup-cc-mode
+       '(('c++-mode-hook)
+         ('objc-mode-hook)
+         ('c-mode-hook)))))
+
   (with-eval-after-load 'smartparens
     (cl-macrolet
         ((my/setup-cc-mode
-          (mode)
-          `(progn
-             (sp-local-pair ,mode "/*" "*/" :post-handlers
-                            '(:add
-                              ("* ||\n[i]" "RET")))
-             (sp-local-pair ,mode "{" nil :post-handlers
-                            '(:add
-                              ("||\n[i]" "RET")
-                              ("| " "SPC"))))))
+          (hook)
+          `(add-hook ,hook (lambda ()
+                             (irony-mode +1)
+                             (semantic-idle-summary-mode -1)
+                             (eldoc-mode +1)
+                             (irony-eldoc +1)))))
 
       (with-no-warnings
-        (my/generate-calls-single
+        (my/generate-calls
          'my/setup-cc-mode
-         ('c++-mode
-          'java-mode
-          'c-mode))))))
+         '(('c++-mode-hook)
+           ('objc-mode-hook)
+           ('c-mode-hook)))))))
 
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)
