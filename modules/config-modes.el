@@ -469,6 +469,9 @@
                    ("||\n[i]" "RET")
                    ("| " "SPC"))))
 
+(package-deferred-install 'company-web
+    :autoload-names '('company-web-html))
+
 (package-deferred-install 'web-mode
     :autoload-names '('web-mode)
     (sp-local-pair 'web-mode "{" nil :post-handlers
