@@ -9,6 +9,7 @@
     (require 'diminish)
     (require 'evil-easymotion)
     (require 'volatile-highlights)
+    (require 'linum-relative)
     (require 'config-modes)))
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
@@ -247,5 +248,53 @@
 
 (global-set-key (kbd "<remap> <just-one-space>") #'cycle-spacing)
 (global-set-key (kbd "<remap> <delete-horizontal-space>") #'cycle-spacing)
+
+;; ============
+;; Line numbers
+;; ============
+
+(with-eval-after-load 'linum
+  (require 'linum-relative)
+
+  (setq linum-relative-current-symbol ""
+        linum-relative-format "%3s "
+        linum-delay t)
+
+  (set-face-background 'linum nil)
+  (set-face-attribute 'linum-relative-current-face nil
+                      :weight 'extra-bold
+                      :foreground nil
+                      :background nil
+                      :inherit '(hl-line default))
+
+  ;; truncate current line to three digits
+  (defun nadvice/linum-relative (line-number)
+    (let* ((diff1 (abs (- line-number linum-relative-last-pos)))
+           (diff (if (minusp diff1)
+                     diff1
+                   (+ diff1 linum-relative-plusp-offset)))
+           (current-p (= diff linum-relative-plusp-offset))
+           (current-symbol (if (and linum-relative-current-symbol current-p)
+                               (if (string= "" linum-relative-current-symbol)
+                                   (number-to-string (% line-number 1000))
+                                 linum-relative-current-symbol)
+                             (number-to-string diff)))
+           (face (if current-p 'linum-relative-current-face 'linum)))
+      (propertize (format linum-relative-format current-symbol) 'face face)))
+
+  (advice-add 'linum-relative :override #'nadvice/linum-relative))
+
+(defun linum-cycle ()
+  (interactive)
+  (if (bound-and-true-p linum-mode)
+      (if (eq linum-format 'dynamic)
+          (linum-mode -1)
+        (setq linum-format 'dynamic))
+    (progn
+      (linum-mode +1)
+      (setq linum-format 'linum-relative))))
+
+(global-set-key (kbd "C-c L") #'linum-cycle)
+(global-set-key (kbd "C-c C-l") #'linum-cycle)
 
 (provide 'config-ui)
