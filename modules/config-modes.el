@@ -109,6 +109,12 @@
 ;; Javascript ==================================================================
 ;; =============================================================================
 
+(package-deferred-install 'js2-refactor
+    :autoload-names '('js2r-add-keybindings-with-prefix
+                      'js2r-add-keybindings-with-modifier
+                      'js2r-extract-var
+                      'js2-refactor-mode))
+
 (package-deferred-install 'js2-mode
     :mode-entries '('("\\.js\\'" . js2-mode))
     :autoload-names '('js2-minor-mode
@@ -130,7 +136,9 @@
                        ("||\n[i]" "RET")
                        ("| " "SPC"))))
 
-    (setq js2-basic-offset 2))
+    (setq js2-basic-offset 2)
+
+    (add-hook 'js2-mode-hook #'js2-refactor-mode))
 
 (package-deferred-install 'json-mode
     :mode-entries '('("\\.json$"   . json-mode)
