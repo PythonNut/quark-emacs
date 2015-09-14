@@ -225,7 +225,7 @@
            ('java-mode-hook    'company-eclim)
            ('nxml-mode-hook    'company-nxml)
            ('html-mode-hook    'company-semantic)
-           ('scheme-mode-hook  'company-semantic)
+           ('scheme-mode-hook  'geiser-company-backend)
            ('texinfo-mode-hook 'company-semantic)
            ('python-mode-hook  'company-anaconda))))))
 
