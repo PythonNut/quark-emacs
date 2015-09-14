@@ -19,7 +19,7 @@ My personal emacs config.
    * Icicles (minibuffer completion)
    * Ido (minibuffer completion)
    * Isearch
- * Extremely agressive file autoloading, and fast startup times
+ * Extremely agressive file autoloading, and fast startup times (~0.4s)
  * An emphasis on correct code and robustness
 
 Supported Languages
