@@ -21,8 +21,7 @@
         helm-recentf-fuzzy-match t
         helm-boring-file-regexp-list
         (append helm-boring-file-regexp-list
-                '(
-                  "/\\.$"
+                '("/\\.$"
                   "/\\.\\.$"
                   "\\.undo\\.xz$"
                   "\\.elc$"
@@ -34,27 +33,23 @@
 (defun my/helm-fuzzy-matching-sort-fn (candidates _source &optional use-real)
   (if (string= helm-pattern "")
       candidates
-    (cl-letf* ((table-scr (make-hash-table :test 'equal))
-               ((symbol-function 'score-cand)
-                (lambda  (cand)
-                  (setq cand
-                        (if (consp cand)
-                            (if use-real (cdr cand) (car cand))
-                          cand))
-                  (or
-                   (gethash cand table-scr)
-                   (puthash cand
-                            (or
-                             (car (flx-score
-                                   cand
-                                   helm-pattern
-                                   helm-flx-cache))
-                             0)
-                            table-scr)))))
-      (sort candidates
-            (lambda (s1 s2)
-              (> (score-cand s1)
-                 (score-cand s2)))))))
+    (mapcar #'car
+            (sort (mapcar
+                   (lambda (cand)
+                     (cons cand (or
+                                 (car (flx-score
+                                       (if (consp cand)
+                                           (if use-real
+                                               (cdr cand)
+                                             (car cand))
+                                         cand)
+                                       helm-pattern
+                                       helm-flx-cache))
+                                 0)))
+                   candidates)
+                  (lambda (s1 s2)
+                    (> (cdr s1)
+                       (cdr s2)))))))
 
 (defun my/helm-fuzzy-highlight-match (candidate)
   (let* ((pair (and (consp candidate) candidate))
