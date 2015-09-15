@@ -2,10 +2,8 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'ido)
-    (require 'ido-vertical-mode)
+    (require 'ivy)
     (require 'flx-isearch)
-    (require 'ido-ubiquitous)
     (require 'smex)))
 
 (defun minibuffer-onetime-setup ()
@@ -40,29 +38,14 @@
       (expand-file-name "ido.last" user-emacs-directory)
       ido-use-faces nil)
 
-(ido-mode +1)
+(defun nadvice/completing-read-ivy (old-fun &rest args)
+  (ivy-mode +1)
+  (advice-remove #'completing-read #'nadvice/completing-read-ivy))
 
-(with-eval-after-load 'ido-ubiquitous
-  (ido-ubiquitous-mode +1))
+(advice-add 'completing-read :before #'nadvice/completing-read-ivy)
 
-(defun nadvice/completing-read-ido (&rest _args)
-  (require 'ido-ubiquitous)
-  (advice-remove #'completing-read #'nadvice/completing-read-ido))
-
-(advice-add 'completing-read :before #'nadvice/completing-read-ido)
-
-(global-set-key (kbd "C-x b") #'ido-switch-buffer)
-(global-set-key (kbd "C-x f") #'ido-find-file)
-
-(defun my/ido-onetime-setup ()
-  (unless (bound-and-true-p flx-ido-mode)
-    (flx-ido-mode +1))
-  (unless (bound-and-true-p ido-vertical-mode)
-    (ido-vertical-mode +1))
-
-  (remove-hook 'ido-minibuffer-setup-hook 'my/ido-onetime-setup))
-
-(add-hook 'ido-minibuffer-setup-hook 'my/ido-onetime-setup)
+(global-set-key (kbd "C-x b") #'ivy-switch-buffer)
+(global-set-key (kbd "C-x f") #'find-file)
 
 (with-eval-after-load 'smex
   (setq smex-save-file
@@ -74,5 +57,79 @@
 
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
+
+(with-eval-after-load 'ivy
+  (require 'flx)
+  (setq ivy-display-style t
+        ivy-extra-directories nil
+        ivy-wrap t
+        ivy-use-virtual-buffers t
+        ivy-sort-functions-alist '((t . nil)))
+
+  (defvar my/ivy-cache (flx-make-string-cache))
+  (defvar my/ivy-flx-limit 500)
+
+  (defun nadvice/ivy--filter (name candidates)
+    (if (= (length name) 0)
+        candidates
+      (let* (;; an optimized regex for fuzzy matching
+             ;; "abc" → "\\`[^a]*a[^b]*b[^c]*c"
+             (fuzzy-regex (concat "\\`"
+                                  (mapconcat
+                                   (lambda (x)
+                                     (setq x (string x))
+                                     (concat "[^" x "]*" (regexp-quote x)))
+                                   name
+                                   "")))
+
+             ;; filter out non-fuzzy-matching candidates
+             (cands (let ((res))
+                      ;; this also lets us avoid a copy-seq
+                      (dolist (cand candidates)
+                        (when (string-match-p fuzzy-regex cand)
+                          (push cand res)))
+                      res))
+
+             ;; partition the candidates into sorted and unsorted groups
+             (cands-left)
+             (cands-to-sort (if (< (length cands) my/ivy-flx-limit)
+                                (progn
+                                  (setq cands-left nil)
+                                  cands)
+                              (setq cands-left (sort (let ((res))
+                                                       (dolist (cand cands)
+                                                         (push cand res))
+                                                       res)
+                                                     (lambda (c1 c2)
+                                                       (< (length c1)
+                                                          (length c2)))))
+                              (let ((num (min my/ivy-flx-limit
+                                              (length cands)))
+                                    (result nil))
+                                ;; take the first num elements from cands-left
+                                ;; and add them to result (cands-to-sort)
+                                (while (and cands-left
+                                            (>= (setq num (1- num)) 0))
+                                  (push (pop cands-left) result))
+                                result))))
+        (append
+         ;; compute all of the flx scores in one pass and sort
+         (mapcar #'car
+                 (sort (mapcar
+                        (lambda (cand)
+                          (cons cand
+                                (or (car (flx-score cand
+                                                    name
+                                                    my/ivy-cache))
+                                    0)))
+                        cands-to-sort)
+                       (lambda (c1 c2)
+                         (> (cdr c1)
+                            (cdr c2)))))
+
+         ;; add the unsorted candidates
+         cands-left))))
+
+  (advice-add 'ivy--filter :override #'nadvice/ivy--filter))
 
 (provide 'config-ido)

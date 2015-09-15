@@ -154,6 +154,7 @@
     smartparens
     smooth-scrolling
     solarized-theme
+    swiper
     volatile-highlights
     which-key
     whole-line-or-region
