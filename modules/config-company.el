@@ -177,7 +177,7 @@
                          (while (and seq
                                      (>= (setq end (1- end)) 0))
                            (push (pop seq) result))
-                         (nreverse result))))
+                         result)))
                     (lambda (c1 c2)
                       (> (cdr c1)
                          (cdr c2)))))))
