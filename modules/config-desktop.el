@@ -1,5 +1,4 @@
 ;; -*- lexical-binding: t -*-
-;; Automatically save and restore sessions
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
@@ -16,32 +15,31 @@
 (defvar file-name-mode-alist nil)
 
 (setq history-length 100
-      history-delete-duplicates t
-
-      save-place-file (expand-file-name ".saveplace" user-emacs-directory)
-
-      savehist-file (expand-file-name ".savehist" user-emacs-directory)
-      savehist-autosave-interval 180
-      savehist-save-minibuffer-history t
-      savehist-additional-variables '(kill-ring
-                                      file-name-mode-alist
-                                      search-ring
-                                      regexp-search-ring)
-
-      ;; remember more recent files
-      recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
-      recentf-max-saved-items 200
-      recentf-max-menu-items 30
-      recentf-auto-cleanup 3)
+      history-delete-duplicates t)
 
 (with-eval-after-load 'saveplace
-  (if (fboundp 'save-place-mode)
-      (save-place-mode +1)
-    (setq-default save-place t)))
+  (setq save-place-file (expand-file-name ".saveplace"
+                                          user-emacs-directory))
+  (setq-default save-place t))
 
-(add-hook 'find-file-hook (lambda () (require 'saveplace)))
+(defun my/saveplace-onetime-setup ()
+  (require 'saveplace)
+  (when (fboundp 'save-place-mode)
+    (save-place-mode +1))
+  (remove-hook 'find-file-hook #'my/saveplace-onetime-setup))
 
-(require 'savehist)
+(add-hook 'find-file-hook #'my/saveplace-onetime-setup)
+
+(with-eval-after-load 'savehist
+  (setq savehist-file (expand-file-name ".savehist"
+                                        user-emacs-directory)
+        savehist-autosave-interval 120
+        savehist-save-minibuffer-history t
+        savehist-additional-variables '(kill-ring
+                                        file-name-mode-alist
+                                        search-ring
+                                        regexp-search-ring)))
+
 (savehist-mode +1)
 
 ;; text properties severely bloat the history so delete them
@@ -67,6 +65,12 @@
     (apply old-fun args)))
 
 (advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
+
+(with-eval-after-load 'recentf
+  (setq recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
+        recentf-max-saved-items 200
+        recentf-max-menu-items 30
+        recentf-auto-cleanup 3))
 
 (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 
