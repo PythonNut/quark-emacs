@@ -31,7 +31,8 @@
       ;; remember more recent files
       recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
       recentf-max-saved-items 200
-      recentf-max-menu-items 30)
+      recentf-max-menu-items 30
+      recentf-auto-cleanup 3)
 
 (with-eval-after-load 'saveplace
   (if (fboundp 'save-place-mode)
