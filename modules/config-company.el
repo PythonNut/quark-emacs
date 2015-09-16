@@ -4,6 +4,7 @@
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
     (require 'flx)
+    (require 'hippie-exp)
     (require 'company)
     (require 'company-dabbrev-code)
     (require 'config-modes)))
@@ -20,46 +21,46 @@
           (lambda ()
             (add-hook 'first-change-hook #'my/company-onetime-setup)))
 
-(defun completion-fuzzy-commonality (strs)
-  (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
-             ((symbol-function
-               #'fuzzy-commonality)
-              (lambda (strs)
-                (let ((hash-value (gethash strs commonality-cache nil)))
-                  (if hash-value
-                      (if (eq hash-value 'nothing)
-                          nil
-                        hash-value)
+(with-no-warnings
+  (defun completion-fuzzy-commonality (strs)
+    (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
+               ((symbol-function
+                 #'fuzzy-commonality)
+                (lambda (strs)
+                  (let ((hash-value (gethash strs commonality-cache nil)))
+                    (if hash-value
+                        (if (eq hash-value 'nothing)
+                            nil
+                          hash-value)
 
-                    (setq strs (mapcar #'string-to-list strs))
-                    (let ((res) (tried) (idx))
-                      (dolist (char (car strs))
-                        (unless (memq char tried)
-                          (catch 'notfound
-                            (setq idx (mapcar (lambda (str)
-                                                (or
-                                                 (cl-position char str)
-                                                 (throw 'notfound nil)))
-                                              strs))
-                            (push (cons char
-                                        (fuzzy-commonality
-                                         (cl-mapcar (lambda (str idx)
-                                                      (cl-subseq str (1+ idx)))
-                                                    strs idx)))
-                                  res)
-                            (push char tried))))
-                      (setq res (if res
-                                    (cl-reduce
-                                     (lambda (a b)
-                                       (if (> (length a) (length b)) a b))
-                                     res)
-                                  nil))
-                      (puthash strs
-                               (if res res 'nothing)
-                               commonality-cache)
-                      res))))))
-
-    (concat (fuzzy-commonality strs))))
+                      (setq strs (mapcar #'string-to-list strs))
+                      (let ((res) (tried) (idx))
+                        (dolist (char (car strs))
+                          (unless (memq char tried)
+                            (catch 'notfound
+                              (setq idx (mapcar (lambda (str)
+                                                  (or
+                                                   (cl-position char str)
+                                                   (throw 'notfound nil)))
+                                                strs))
+                              (push (cons char
+                                          (fuzzy-commonality
+                                           (cl-mapcar (lambda (str idx)
+                                                        (cl-subseq str (1+ idx)))
+                                                      strs idx)))
+                                    res)
+                              (push char tried))))
+                        (setq res (if res
+                                      (cl-reduce
+                                       (lambda (a b)
+                                         (if (> (length a) (length b)) a b))
+                                       res)
+                                    nil))
+                        (puthash strs
+                                 (if res res 'nothing)
+                                 commonality-cache)
+                        res))))))
+      (concat (fuzzy-commonality strs)))))
 
 (defun completion-fuzzy-find-holes (merged str)
   (let ((holes) (matches (cdr (flx-score str merged company-flx-cache))))
@@ -296,47 +297,48 @@
 ;;; ==================================================
 ;;; Hippie expand - secondary autocompletion framework
 ;;; ==================================================
+(defun try-expand-flx-regexp (str)
+  "Generate regexp for flexible matching of str."
+  (concat "\\b"
+          (mapconcat (lambda (x)
+                       (concat "\\w*-*" (list x)))
+                     str
+                     "")
+          "\\w*"
+
+          "\\b"))
+
+(defun try-expand-flx-collect (str)
+  "Find and collect all words that flex-match str, and sort by flx score"
+  (let ((coll nil)
+        (regexp (try-expand-flx-regexp str)))
+    (save-excursion
+      (goto-char (point-min))
+      (while (search-forward-regexp regexp nil t)
+        (push (thing-at-point 'symbol) coll)))
+    (sort coll #'(lambda (a b)
+                   (> (car (flx-score a str))
+                      (car (flx-score b str)))))))
+
+(defun try-expand-flx (old)
+  "Try to complete word using flx matching."
+  (unless old
+    (he-init-string (he-lisp-symbol-beg) (point))
+    (unless (he-string-member he-search-string he-tried-table)
+      (push he-search-string he-tried-table))
+    (setq he-expand-list
+          (unless (equal he-search-string "")
+            (try-expand-flx-collect he-search-string))))
+  (while (and he-expand-list
+              (he-string-member (car he-expand-list) he-tried-table))
+    (pop he-expand-list))
+  (prog1
+      (null he-expand-list)
+    (if (null he-expand-list)
+        (when old (he-reset-string))
+      (he-substitute-string (pop he-expand-list)))))
+
 (with-eval-after-load 'hippie-expand
-  (defun try-expand-flx (old)
-    "Try to complete word using flx matching."
-    (unless old
-      (he-init-string (he-lisp-symbol-beg) (point))
-      (unless (he-string-member he-search-string he-tried-table)
-        (push he-search-string he-tried-table))
-      (setq he-expand-list
-            (unless (equal he-search-string "")
-              (try-expand-flx-collect he-search-string))))
-    (while (and he-expand-list
-                (he-string-member (car he-expand-list) he-tried-table))
-      (pop he-expand-list))
-    (prog1
-        (null he-expand-list)
-      (if (null he-expand-list)
-          (when old (he-reset-string))
-        (he-substitute-string (pop he-expand-list)))))
-
-  (defun try-expand-flx-collect (str)
-    "Find and collect all words that flex-match str, and sort by flx score"
-    (let ((coll nil)
-          (regexp (try-expand-flx-regexp str)))
-      (save-excursion
-        (goto-char (point-min))
-        (while (search-forward-regexp regexp nil t)
-          (push (thing-at-point 'symbol) coll)))
-      (sort coll #'(lambda (a b)
-                     (> (car (flx-score a str))
-                        (car (flx-score b str)))))))
-
-  (defun try-expand-flx-regexp (str)
-    "Generate regexp for flexible matching of str."
-    (concat "\\b"
-            (mapconcat (lambda (x)
-                         (concat "\\w*-*" (list x)))
-                       str
-                       "")
-            "\\w*"
-            "\\b"))
-
   (setq hippie-expand-try-functions-list
         '(yas-hippie-try-expand
           try-expand-dabbrev

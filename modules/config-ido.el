@@ -18,7 +18,7 @@
 (with-eval-after-load 'ido-ubiquitous
   (ido-ubiquitous-mode +1))
 
-(defun nadvice/completing-read-ido (old-fun &rest args)
+(defun nadvice/completing-read-ido (&rest _args)
   (require 'ido-ubiquitous)
   (advice-remove #'completing-read #'nadvice/completing-read-ido))
 

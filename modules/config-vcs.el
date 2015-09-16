@@ -71,7 +71,7 @@
   (add-hook 'magit-log-mode-hook
             (lambda () (set-input-method "TeX")))
 
-  (defun nadvice/magit-revert-buffers (&rest args)
+  (defun nadvice/magit-revert-buffers (&rest _args)
     (run-with-timer 1 nil #'message ""))
 
   (advice-add 'magit-revert-buffers :after

@@ -27,7 +27,7 @@
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
-(defun nadvice/save-buffer-maybe (&rest args)
+(defun nadvice/save-buffer-maybe (&rest _args)
   (my/save-buffer-maybe))
 
 (advice-add 'switch-to-buffer :before #'nadvice/save-buffer-maybe)
@@ -68,7 +68,7 @@
 (defun my/auto-revert-onetime-setup ()
   (global-auto-revert-mode +1)
   (remove-hook 'find-file-hook
-               #'auto-revert-onetime-setup))
+               #'my/auto-revert-onetime-setup))
 
 (add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
 

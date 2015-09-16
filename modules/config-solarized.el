@@ -1,6 +1,6 @@
 ;; -*- lexical-binding: t -*-
 
-(defun nadvice/load-theme (old-fun &rest args)
+(defun nadvice/load-theme (&rest _args)
   (run-hooks 'load-theme-hook))
 
 (advice-add 'load-theme :after #'nadvice/load-theme)

@@ -2,6 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
+    (require 'evil)
     (require 'ido-ubiquitous)))
 
 (unless (bound-and-true-p my/slow-device)

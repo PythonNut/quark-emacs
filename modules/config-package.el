@@ -18,7 +18,7 @@
 (defvar package-autoload-file (expand-file-name "data/autoload-cache.el"
                                                 user-emacs-directory))
 
-(defun my/package-rebuild-autoloads (&rest args)
+(defun my/package-rebuild-autoloads (&rest _args)
   (interactive)
   (let ((autoloads (file-expand-wildcards
                     (expand-file-name "elpa/*/*-autoloads.el"
@@ -70,7 +70,7 @@
              ((symbol-function 'load)
               (lambda (&rest args)
                 (cl-destructuring-bind
-                    (file &optional noerror nomessage nosuffix must-suffix)
+                    (file &optional _noerror _nomessage _nosuffix _must-suffix)
                     args
                   (unless (member file my/package-cached-autoloads)
                     (message "Package cache miss: %s" file)
@@ -186,7 +186,7 @@
       (cl-letf* ((old-load (symbol-function 'load))
                  ((symbol-function 'message) #'format)
                  ((symbol-function 'load)
-                  (lambda (file &optional noerror nomessage &rest args)
+                  (lambda (file &optional noerror _nomessage &rest args)
                     (apply old-load file noerror t args))))
         (apply old-fun args))))
 

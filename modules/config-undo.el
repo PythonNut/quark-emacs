@@ -50,7 +50,7 @@
 
   ;; compress undo with xz
   (when (executable-find "xz")
-    (defun nadvice/undo-tree-make-history-save-file-name (ret)
+    (defun nadvice/undo-tree-make-history-save-file-name (_ret)
       (concat (make-auto-save-file-name) ".undo.xz"))
 
     (defun nadvice/undo-tree-load-history (old-fun &rest args)

@@ -132,7 +132,7 @@
 
 (global-set-key (kbd "M-:") #'helm-eval-expression)
 
-(defun my/helm-buffers (&rest arg)
+(defun my/helm-buffers (&rest _args)
   (interactive)
   (require 'helm-buffers)
   (require 'helm-files)
@@ -149,7 +149,7 @@
 (global-set-key (kbd "C-x C-b") #'my/helm-buffers)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 
-(defun my/helm-omni (&rest arg)
+(defun my/helm-omni (&rest _args)
   (interactive)
   (require 'helm-files)
   (require 'helm-ring)

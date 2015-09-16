@@ -15,7 +15,7 @@
       (require 'hydra)
       (defhydra evil-visual-line-hydra
         (:pre (setq hydra-is-helpful nil)
-          :post (setq hydra-is-helpful t))
+              :post (setq hydra-is-helpful t))
         ("j" evil-next-visual-line)
         ("k" evil-previous-visual-line)))
     (evil-visual-line-hydra/body))
@@ -44,21 +44,21 @@
   ;; there are faster ways to mark the entire file
   ;; so assume the user wants a block and skip to there
   (while (and (string-empty-p
-                (evil-indent--current-indentation))
-           (not (eobp)))
+               (evil-indent--current-indentation))
+              (not (eobp)))
     (forward-line))
   (cl-flet* ((empty-line-p ()
-               (string-match "^[[:space:]]*$"
-                 (buffer-substring-no-properties
-                   (line-beginning-position)
-                   (line-end-position))))
-              (line-indent-ok (indent)
-                (or (<= (length indent)
-                      (length (evil-indent--current-indentation)))
-                  (empty-line-p))))
+                           (string-match "^[[:space:]]*$"
+                                         (buffer-substring-no-properties
+                                          (line-beginning-position)
+                                          (line-end-position))))
+             (line-indent-ok (indent)
+                             (or (<= (length indent)
+                                     (length (evil-indent--current-indentation)))
+                                 (empty-line-p))))
     (let ((indent (evil-indent--current-indentation)) start begin end)
       ;; now skip ahead to the Nth block with this indentation
-      (dotimes (index (or last-prefix-arg 0))
+      (dotimes (_ (or last-prefix-arg 0))
         (while (and (line-indent-ok) (not (eobp))) (forward-line))
         (while (or (line-indent-ok indent) (eobp)) (forward-line)))
       (save-excursion
@@ -76,12 +76,12 @@
           (setq end (point)))
         (list begin end)))))
 
-(evil-define-text-object evil-indent-i-block (&optional count beg end type)
+(evil-define-text-object evil-indent-i-block (&optional count _beg _end _type)
   "Text object describing the block with the same indentation as the current line."
   (let ((range (evil-indent--block-range)))
     (evil-range (first range) (second range) 'line)))
 
-(evil-define-text-object evil-indent-a-block (&optional count beg end type)
+(evil-define-text-object evil-indent-a-block (&optional count _beg _end _type)
   "Text object describing the block with the same indentation as the current line and the line above."
   :type line
   (let ((range (evil-indent--block-range)))
@@ -89,9 +89,9 @@
                   (goto-char (first (evil-indent--block-range)))
                   (forward-line -1)
                   (point-at-bol))
-      (second range) 'line)))
+                (second range) 'line)))
 
-(evil-define-text-object evil-indent-a-block-end (count &optional beg end type)
+(evil-define-text-object evil-indent-a-block-end (count &optional _beg _end _type)
   "Text object describing the block with the same indentation as the current line and the lines above and below."
   :type line
   (let ((range (evil-indent--block-range)))
@@ -99,11 +99,11 @@
                   (goto-char (first range))
                   (forward-line -1)
                   (point-at-bol))
-      (save-excursion
-        (goto-char (second range))
-        (forward-line 1)
-        (point-at-eol))
-      'line)))
+                (save-excursion
+                  (goto-char (second range))
+                  (forward-line 1)
+                  (point-at-eol))
+                'line)))
 
 (define-key evil-inner-text-objects-map "c" #'evil-indent-i-block)
 (define-key evil-outer-text-objects-map "c" #'evil-indent-a-block)
@@ -123,7 +123,7 @@
                                (evil-window-top)
                                (line-number-at-pos)))))))
 
-(evil-define-text-object evil-i-line-range (count &optional beg end type)
+(evil-define-text-object evil-i-line-range (count &optional _beg _end _type)
   "Text object describing the block with the same indentation as the current line."
   :type line
   (save-excursion
@@ -138,7 +138,7 @@
 (define-key evil-inner-text-objects-map "." #'evil-inner-sentence)
 (define-key evil-outer-text-objects-map "." #'evil-a-sentence)
 
-(evil-define-text-object evil-i-entire-buffer (count &optional ben end type)
+(evil-define-text-object evil-i-entire-buffer (count &optional _beg _end _type)
   "Text object describing the entire buffer excluding empty lines at the end"
   :type line
   (evil-range (point-min) (save-excursion
@@ -146,7 +146,7 @@
                             (skip-chars-backward " \n\t")
                             (point)) 'line))
 
-(evil-define-text-object evil-an-entire-buffer (count &optional beg end type)
+(evil-define-text-object evil-an-entire-buffer (count &optional _beg _end _type)
   "Text object describing the entire buffer"
   :type line
   (evil-range (point-min) (point-max) 'line))
@@ -154,7 +154,7 @@
 (define-key evil-inner-text-objects-map "e" #'evil-i-entire-buffer)
 (define-key evil-outer-text-objects-map "e" #'evil-an-entire-buffer)
 
-(evil-define-text-object evil-inner-last-paste (count &optional beg end type)
+(evil-define-text-object evil-inner-last-paste (count &optional _beg _end _type)
   :type char
   (evil-range (evil-get-marker ?\[) (evil-get-marker ?\]) 'char))
 
@@ -166,7 +166,7 @@
 (define-key evil-operator-state-map "gc" #'evilnc-comment-operator)
 (define-key evil-normal-state-map "gc" #'evilnc-comment-operator)
 
-(evil-define-operator evil-macro-on-all-lines (beg end &optional arg)
+(evil-define-operator evil-macro-on-all-lines (beg end &optional _arg)
   (evil-with-state 'normal
     (goto-char end)
     (evil-visual-state)
@@ -190,13 +190,13 @@
 
 (global-set-key (kbd "C-x n i") #'narrow-to-region-indirect)
 
-(evil-define-operator evil-narrow-indirect (beg end type)
+(evil-define-operator evil-narrow-indirect (beg end _type)
   "Indirectly narrow the region from BEG to END."
   (interactive "<R>")
   (evil-with-state 'normal
     (narrow-to-region-indirect beg end)))
 
-(evil-define-operator evil-narrow-region (beg end type)
+(evil-define-operator evil-narrow-region (beg end _type)
   "Indirectly narrow the region from BEG to END."
   (interactive "<R>")
   (evil-with-state 'normal
@@ -207,7 +207,7 @@
 (define-key evil-operator-state-map "gN" #'evil-narrow-indirect)
 (define-key evil-normal-state-map "gN" #'evil-narrow-indirect)
 
-(evil-define-operator evil-eval-region (beg end type)
+(evil-define-operator evil-eval-region (beg end _type)
   (save-excursion
     (evil-with-state 'normal
       (goto-char beg)
@@ -218,7 +218,7 @@
 (define-key evil-operator-state-map "gV" #'evil-eval-region)
 (define-key evil-normal-state-map "gV" #'evil-eval-region)
 
-(evil-define-operator evil-align-regexp (beg end type)
+(evil-define-operator evil-align-regexp (beg end _type)
   (save-excursion
     (evil-with-state 'normal
       (goto-char beg)

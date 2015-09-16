@@ -20,7 +20,7 @@
                   icicle-show-Completions-help-flag nil
                   icicle-yank-function #'cua-paste)))
 
-(defun nadvice/auto-icicle (old-func &rest args)
+(defun nadvice/auto-icicle (old-func &rest _args)
   (interactive)
   (if (and
        (not (bound-and-true-p icicle-mode))
@@ -39,7 +39,7 @@
   `(advice-add ,func :around #'nadvice/auto-icicle))
 
 (defun my/autoload-icicle-helper (func args)
-  (cl-letf (((symbol-function 'eval-after-load) (lambda (&rest args)))
+  (cl-letf (((symbol-function 'eval-after-load) (lambda (&rest _args)))
             ((symbol-function 'message) #'format))
     (require 'icicles))
   (if (called-interactively-p 'any)

@@ -35,7 +35,7 @@
   (sp-previous-sexp count))
 
 ;; textobject for the sexp immediately after point
-(defun my/evil-next-thing (count &optional beg end type inclusive)
+(defun my/evil-next-thing (count &optional _beg _end _type inclusive)
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-next-thing count)
@@ -53,17 +53,17 @@
           (evil-range (point) (mark))
         (evil-range (1+ (point)) (1- (mark)))))))
 
-(evil-define-text-object evil-a-next-thing (count &optional beg end type)
+(evil-define-text-object evil-a-next-thing (count &optional beg end _type)
   "Select the range defined by sp-select-next-thing."
   (my/evil-next-thing count beg end type t))
-(evil-define-text-object evil-i-next-thing (count &optional beg end type)
+(evil-define-text-object evil-i-next-thing (count &optional beg end _type)
   "Select the range defined by sp-select-next-thing."
   (my/evil-next-thing count beg end type))
 
 (define-key evil-outer-text-objects-map "n" #'evil-a-next-thing)
 (define-key evil-inner-text-objects-map "n" #'evil-i-next-thing)
 
-(defun my/evil-previous-thing (count &optional beg end type inclusive)
+(defun my/evil-previous-thing (count &optional _beg _end _type inclusive)
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-previous-thing count)
@@ -81,11 +81,11 @@
           (evil-range (point) (mark))
         (evil-range (1+ (point)) (1- (mark)))))))
 
-(evil-define-text-object evil-a-previous-thing (count &optional beg end type)
+(evil-define-text-object evil-a-previous-thing (count &optional beg end _type)
   "Select the range defined by sp-select-previous-thing."
   (interactive "<c>")
   (my/evil-previous-thing count beg end type t))
-(evil-define-text-object evil-i-previous-thing (count &optional beg end type)
+(evil-define-text-object evil-i-previous-thing (count &optional beg end _type)
   "Select the range defined by sp-select-previous-thing."
   (interactive "<c>")
   (my/evil-previous-thing count beg end type))
@@ -160,33 +160,34 @@
        ((kbd "M->") #'sp-backward-barf-sexp)))))
 
 ;; allow quick repetition since normal state key chains are awkward
-(evil-define-motion evil-sp-move ()
-  (unless (fboundp 'evil-sp-move-hydra/body)
-    (require 'hydra)
-    (defhydra evil-sp-move-hydra (:hint nil :idle 0.3)
-      "[_U_] ↰↱ [_u_]  [_b_] ←→ [_f_]  [_D_] ↲↳ [_d_]  [_p_] ←  next  → [_n_]"
-      ("f" evil-forward-sexp)
-      ("b" evil-backward-sexp)
-      ("d" evil-down-sexp)
-      ("D" evil-backward-down-sexp)
-      ("u" evil-up-sexp)
-      ("U" evil-backward-up-sexp)
-      ("n" evil-next-sexp)
-      ("p" evil-previous-sexp)))
-  (evil-sp-move-hydra/body))
+(with-no-warnings
+  (evil-define-motion evil-sp-move ()
+    (unless (fboundp 'evil-sp-move-hydra/body)
+      (require 'hydra)
+      (defhydra evil-sp-move-hydra (:hint nil :idle 0.3)
+        "[_U_] ↰↱ [_u_]  [_b_] ←→ [_f_]  [_D_] ↲↳ [_d_]  [_p_] ←  next  → [_n_]"
+        ("f" evil-forward-sexp)
+        ("b" evil-backward-sexp)
+        ("d" evil-down-sexp)
+        ("D" evil-backward-down-sexp)
+        ("u" evil-up-sexp)
+        ("U" evil-backward-up-sexp)
+        ("n" evil-next-sexp)
+        ("p" evil-previous-sexp)))
+    (evil-sp-move-hydra/body))
 
-(evil-define-command evil-sp-barfslurp ()
-  (unless (fboundp 'evil-sp-barfslurp-hydra/body)
-    (require 'hydra)
-    (defhydra evil-sp-barfslurp-hydra (:hint nil :idle 0.3)
-      "[_<_] ← barf  → [_._]  [_>_] ← slurp → [_,_]  [_a_] ← emit  → [_e_]"
-      ("," sp-forward-slurp-sexp)
-      ("." sp-forward-barf-sexp)
-      ("<" sp-backward-slurp-sexp)
-      (">" sp-backward-barf-sexp)
-      ("a" sp-absorb-sexp)
-      ("e" sp-emit-sexp)))
-  (evil-sp-barfslurp-hydra/body))
+  (evil-define-command evil-sp-barfslurp ()
+    (unless (fboundp 'evil-sp-barfslurp-hydra/body)
+      (require 'hydra)
+      (defhydra evil-sp-barfslurp-hydra (:hint nil :idle 0.3)
+        "[_<_] ← barf  → [_._]  [_>_] ← slurp → [_,_]  [_a_] ← emit  → [_e_]"
+        ("," sp-forward-slurp-sexp)
+        ("." sp-forward-barf-sexp)
+        ("<" sp-backward-slurp-sexp)
+        (">" sp-backward-barf-sexp)
+        ("a" sp-absorb-sexp)
+        ("e" sp-emit-sexp)))
+    (evil-sp-barfslurp-hydra/body)))
 
 (evil-define-motion evil-sp-forward-sexp (&rest args)
   (call-interactively #'evil-forward-sexp args)
@@ -238,12 +239,13 @@
   (evil-sp-barfslurp))
 
 ;; evil normal mode bindings
-(evil-define-motion my/smart-smartparens-tools ()
-  (interactive)
-  (unless (fboundp 'hydra/smartparens-tools/body)
-    (require 'hydra)
-    (defhydra hydra/smartparens-tools (:color blue :hint nil :idle 0.3)
-      "
+(with-no-warnings
+  (evil-define-motion my/smart-smartparens-tools ()
+    (interactive)
+    (unless (fboundp 'hydra/smartparens-tools/body)
+      (require 'hydra)
+      (defhydra hydra/smartparens-tools (:color blue :hint nil :idle 0.3)
+        "
 [_U_] ↰↱ [_u_]  [_K_] ←  kill  → [_k_]  [_<_] ← barf  → [_._]   [_s_] split
 [_b_] ←→ [_f_]  [_p_] ←  next  → [_n_]  [_>_] ← slurp → [_,_]   [_j_] join
 [_D_] ↲↳ [_d_]  [_W_] ← unwrap → [_w_]  [_a_] ← emit  → [_e_]"
@@ -254,7 +256,7 @@
        ("u" evil-sp-up-sexp)
        ("U" evil-sp-backward-up-sexp)
        ("n" evil-sp-next-sexp)
-       ("p" evil-sp-previous-exp)
+       ("p" evil-sp-previous-sexp)
        ("k" sp-kill-sexp)
        ("K" sp-backward-kill-sexp)
        ("w" sp-unwrap-sexp)
@@ -268,7 +270,7 @@
        ("<" evil-sp-backward-barf-sexp)
        (">" evil-sp-backward-slurp-sexp)))
 
-  (hydra/smartparens-tools/body))
+  (hydra/smartparens-tools/body)))
 
 (define-key evil-normal-state-map "gs" #'my/smart-smartparens-tools)
 

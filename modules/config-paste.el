@@ -33,7 +33,7 @@
 (defun nadvice/cua-cut-region (old-fun &optional prefix)
   (interactive "*p")
   (whole-line-or-region-call-with-region
-   (lambda (beg end &optional prefix)
+   (lambda (_beg _end &optional _prefix)
      (interactive "rP")
      (call-interactively
       old-fun
@@ -114,7 +114,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (setq easy-kill-try-things '(url email my-line)))
 
 ;; make evil respect whole-line-or-region
-(defun nadvice/evil-paste-line (&rest args)
+(defun nadvice/evil-paste-line (&rest _args)
   (when (get-text-property 0 'whole-line-or-region (car kill-ring))
     (setf (car kill-ring)
           (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
@@ -132,7 +132,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
         (call-interactively #'cua-paste))
     (apply old-fun args)))
 
-
 (defun nadvice/evil-paste-before (old-fun &rest args)
   (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
           'rectangle--insert-for-yank)
@@ -143,6 +142,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 (advice-add 'evil-paste-after  :around #'nadvice/evil-paste-after)
 (advice-add 'evil-paste-before :around #'nadvice/evil-paste-before)
+
 
 (define-key evil-insert-state-map (kbd "C-w") nil)
 
@@ -174,7 +174,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (bracketed-paste-setup)
 
       ;; fix display corruption in certain terminals when using isearch
-      (defun nadvice/isearch-printing-char (&rest args)
+      (defun nadvice/isearch-printing-char (&rest _args)
         (redraw-display))
 
       (advice-add 'isearch-printing-char :after #'nadvice/isearch-printing-char)

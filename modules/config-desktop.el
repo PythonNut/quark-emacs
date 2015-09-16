@@ -135,7 +135,7 @@
             (desktop-save-in-desktop-dir))
         (desktop-save-in-desktop-dir)))
   (cl-letf (((symbol-function 'message) #'format)
-            ((symbol-function 'y-or-n-p) (lambda (prompt) t)))
+            ((symbol-function 'y-or-n-p) (lambda (_prompt) t)))
     (desktop-save-in-desktop-dir)))
 
 (defun desktop-load (&optional arg)
