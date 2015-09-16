@@ -77,6 +77,44 @@
   (advice-add 'magit-revert-buffers :after
               #'nadvice/magit-revert-buffers))
 
+(with-eval-after-load 'smerge-mode
+  (diminish 'smerge-mode)
+
+  (defun my/smart-smerge-tools ()
+    (interactive)
+    (unless (fboundp 'hydra/smerge-tools/body)
+      (require 'hydra)
+      (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
+        "
+_n_ ← → _p_ Keep _a_ll _b_ase _m_ine _o_ther | _C_ombine _E_diff _R_efine _r_esolve
+Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
+"
+        ("C" smerge-combine-with-next)
+        ("E" smerge-ediff)
+        ("R" smerge-refine)
+        ("r" smerge-resolve)
+
+        ("RET" smerge-keep-current)
+        ("a" smerge-keep-all)
+        ("b" smerge-keep-base)
+        ("m" smerge-keep-mine)
+        ("o" smerge-keep-other)
+
+        ("n" smerge-next :color red)
+        ("p" smerge-prev :color red)
+
+        ("=<" smerge-diff-base-mine)
+        ("==" smerge-diff-mine-other)
+        ("=>" smerge-diff-base-other)))
+
+    (hydra/smerge-tools/body))
+
+  (define-key smerge-mode-map smerge-command-prefix #'my/smart-smerge-tools))
+
+(add-hook 'find-file-hook (lambda ()
+                            (when (vc-backend buffer-file-name)
+                              (smerge-mode +1))))
+
 (with-eval-after-load 'projectile
   (projectile-global-mode +1)
   (require 'magit)
