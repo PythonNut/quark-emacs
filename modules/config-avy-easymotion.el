@@ -3,28 +3,31 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'avy)
-    (require 'evil-states)
     (require 'key-chord)
+    (require 'evil)
     (require 'evil-easymotion)))
 
-(key-chord-define evil-insert-state-map "jk" #'avy-goto-word-1)
-(key-chord-define evil-insert-state-map "jc" #'avy-goto-char)
-(key-chord-define evil-insert-state-map "jl" #'avy-goto-line)
+(key-chord-define evil-insert-state-map "jk" #'evil-avy-goto-word-1)
+(key-chord-define evil-insert-state-map "jc" #'evil-avy-goto-char)
+(key-chord-define evil-insert-state-map "jl" #'evil-avy-goto-line)
 
-(key-chord-define evil-emacs-state-map "jk" #'avy-goto-word-1)
-(key-chord-define evil-emacs-state-map "jc" #'avy-goto-char)
-(key-chord-define evil-emacs-state-map "jl" #'avy-goto-line)
+(key-chord-define evil-emacs-state-map "jk" #'evil-avy-goto-word-1)
+(key-chord-define evil-emacs-state-map "jc" #'evil-avy-goto-char)
+(key-chord-define evil-emacs-state-map "jl" #'evil-avy-goto-line)
 
-(global-set-key (kbd "<remap> <goto-line>") #'avy-goto-line)
+(global-set-key (kbd "<remap> <goto-line>") #'evil-avy-goto-line)
 
-;; `C-u a` jumps to `a`.
 (defun nadvice/self-insert-command (old-fun &optional arg)
   (interactive "P")
   (cond
+   ;; `C-u a` jumps to `a`.
    ((consp arg)
-    (avy-goto-char last-command-event))
+    (evil-avy-goto-char last-command-event))
+
+   ;; `C-- a` jumps to `a` at the beginning of a (sub)word
    ((eq '- arg)
-    (message "Negative argument not implemented"))
+    (evil-avy-goto-subword-1 last-command-event))
+
    ((or (numberp arg) (not arg))
     (funcall old-fun (or arg 1)))))
 
@@ -52,10 +55,10 @@
 (require 'evil-easymotion)
 (evilem-default-keybindings "SPC")
 
-(define-key evil-normal-state-map (kbd "SPC l") #'avy-goto-line)
-(define-key evil-motion-state-map (kbd "SPC l") #'avy-goto-line)
-(define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char)
-(define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char)
+(define-key evil-normal-state-map (kbd "SPC l") #'evil-avy-goto-line)
+(define-key evil-motion-state-map (kbd "SPC l") #'evil-avy-goto-line)
+(define-key evil-normal-state-map (kbd "SPC c") #'evil-avy-goto-char)
+(define-key evil-motion-state-map (kbd "SPC c") #'evil-avy-goto-char)
 
 (evilem-define (kbd "SPC g s f") 'evil-forward-sexp)
 (evilem-define (kbd "SPC g s b") 'evil-backward-sexp)
