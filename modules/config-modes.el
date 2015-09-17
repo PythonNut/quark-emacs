@@ -317,7 +317,18 @@
               (lambda () (semantic-idle-summary-mode -1)))
 
     (add-hook 'sage-mode-hook
-              (lambda () (semantic-idle-summary-mode -1))))
+              (lambda () (semantic-idle-summary-mode -1)))
+
+    (defun nadvice/run-sage (old-fun &optional arg)
+      (interactive "P")
+      (if (called-interactively-p 'any)
+          (cond
+           ((consp arg)
+            (call-interactively old-fun))
+           (t
+            (funcall old-fun "sage"))))
+      (funcall old-fun arg))
+    (advice-add 'run-sage :around #'nadvice/run-sage))
 
 (when (package-installed-p 'sage-shell-mode)
   (autoload 'run-sage "sage-shell-mode" nil t)
