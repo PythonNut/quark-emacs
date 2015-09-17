@@ -47,19 +47,20 @@
                                              user-emacs-directory)))))
         (insert (format "(setq my/package-cache-last-build-time '%S)" mtime)))
       (write-file package-autoload-file nil)
-      (load package-autoload-file))))
+      (cl-letf ((load-path))
+        (load package-autoload-file)))))
 
 (unwind-protect (progn
                   (unless (file-exists-p package-autoload-file)
                     (my/package-rebuild-autoloads))
-                  (load package-autoload-file)
+                  (cl-letf ((load-path))
+                    (load package-autoload-file))
                   (unless (equal (nth 6 (file-attributes
                                          (expand-file-name
                                           "elpa" user-emacs-directory)))
                                  my/package-cache-last-build-time)
                     (my/package-rebuild-autoloads)))
 
-  (setq load-path (delete (expand-file-name user-emacs-directory) load-path))
   (dolist (dir (file-expand-wildcards
                 (expand-file-name "elpa/*" user-emacs-directory)))
     (when (file-directory-p dir)
