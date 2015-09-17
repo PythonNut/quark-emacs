@@ -10,7 +10,7 @@
     (require 'savehist)
     (require 'helm-grep)
     (require 'evil-ex)
-    (require 'config-modes)))
+    (require 'config-setq)))
 
 (defvar file-name-mode-alist nil)
 

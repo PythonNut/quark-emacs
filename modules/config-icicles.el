@@ -5,7 +5,7 @@
     (require 'cl-lib)
     (require 'evil)
     (require 'key-chord)
-    (require 'config-modes)))
+    (require 'config-setq)))
 
 ;; custom hook run when icicles in initialized
 (add-hook 'icicle-init-hook

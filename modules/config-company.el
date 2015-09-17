@@ -7,7 +7,7 @@
     (require 'hippie-exp)
     (require 'company)
     (require 'company-dabbrev-code)
-    (require 'config-modes)))
+    (require 'config-setq)))
 
 (defvar company-flx-cache)
 (defvar company-flx-limit 500)

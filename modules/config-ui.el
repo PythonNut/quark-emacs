@@ -10,7 +10,7 @@
     (require 'evil-easymotion)
     (require 'volatile-highlights)
     (require 'linum-relative)
-    (require 'config-modes)))
+    (require 'config-setq)))
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil

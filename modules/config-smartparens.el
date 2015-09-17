@@ -9,7 +9,7 @@
     (require 'hydra)
     (require 'smartparens)
     (require 'diminish)
-    (require 'config-modes)))
+    (require 'config-setq)))
 
 (setq sp-autoinsert-quote-if-followed-by-closing-pair nil
       sp-cancel-autoskip-on-backward-movement nil)

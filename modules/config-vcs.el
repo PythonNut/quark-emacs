@@ -3,7 +3,8 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'magit)
-    (require 'diff-hl)))
+    (require 'diff-hl)
+    (require 'config-setq)))
 
 (unless (bound-and-true-p my/slow-device)
   (add-hook 'find-file-hook
