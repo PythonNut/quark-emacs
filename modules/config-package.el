@@ -155,6 +155,7 @@
     smooth-scrolling
     solarized-theme
     volatile-highlights
+    which-key
     whole-line-or-region
     ws-butler
     xclip))
@@ -176,6 +177,7 @@
         idle-require-load-break 1
         idle-require-symbols
         '(magit
+          which-key
           hydra
           evil-snipe
           multiple-cursors

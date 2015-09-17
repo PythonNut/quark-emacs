@@ -11,10 +11,10 @@
     (defhydra hydra/registers-and-rectangles (:color blue :hint nil :idle 0.3)
       "
 REGISTER^^^^                     │   RECTANGLE
-_SPC_ point →    _i_ insert ←    │   _c_ clear    _r_ copy-to-register
-_f_ frameset →   _U_ undo ←      │   _d_ delete   _M-w_ copy-as-kill
+_SPC_ point →    _i_ insert ←    │   _c_ clear    _r_ copy to reg
+_f_ frameset →   _U_ undo ←      │   _d_ delete   _M-w_ copy
 _n_ number →     _u_ undo →      │   _k_ kill     _t_ string
-_x_ copy →       _+_ increment   │   _o_ open     _N_ number-lines
+_x_ copy →       _+_ increment   │   _o_ open     _N_ number lines
 _w_ windows →  ^^                │   _y_ yank"
       ("U"     undo-tree-restore-state-from-register)
       ("u"     undo-tree-save-state-to-register)
@@ -56,10 +56,10 @@ _w_ windows →  ^^                │   _y_ yank"
       "
 _f_   file     _D_ defs-full    _,_  tags                _g_ grep-saved-file-cands
 _b_   buffer   _j_ bookmark     _x_ xml-element          _X_ xml-element-text-node
-_l_   lines    _k_ keywords     _J_ bookmarks-together   _o_ occur
-_w_   word     _p_ paragraphs   _c_ char-property        _i_ imenu
-_d_   defs     _s_ sentences    _O_ overlay-property     _I_ imenu-full
-_C-l_ pages    _t_ thing        _T_ text-property"
+_l_   lines    _k_ keywords     _J_ bookmarks together   _o_ occur
+_w_   word     _p_ paragraphs   _c_ char property        _i_ imenu
+_d_   defs     _s_ sentences    _O_ overlay property     _I_ full imenu
+_C-l_ pages    _t_ thing        _T_ text property"
       ("C-l" icicle-search-pages)
       (","   icicle-tags-search)
       ("D"   icicle-search-defs-full)
