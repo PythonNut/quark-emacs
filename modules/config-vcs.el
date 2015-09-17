@@ -20,6 +20,7 @@
 (with-eval-after-load 'magit
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
+        magit-log-format-graph-function #'magit-log-format-unicode-graph
         magit-diff-refine-hunk t)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
