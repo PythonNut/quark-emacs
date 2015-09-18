@@ -28,6 +28,7 @@
   (evil-set-initial-state 'magit-log-mode 'insert)
   (evil-set-initial-state 'magit-popup-mode 'insert)
   (evil-set-initial-state 'magit-revision-mode 'motion)
+  (evil-set-initial-state 'git-rebase-mode 'emacs)
 
   (define-key magit-log-mode-map (kbd "j") #'next-line)
   (define-key magit-status-mode-map (kbd "j") #'next-line)
