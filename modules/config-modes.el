@@ -2,6 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
+    (require 'cl-lib)
     (require 'evil)
     (require 'flycheck)
     (require 'config-package)))
@@ -616,6 +617,28 @@
   (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
   (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
   (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer))
+
+;; =============================================================================
+;; Comint ======================================================================
+;; =============================================================================
+
+(with-eval-after-load 'comint
+  (defun nadvice/comint-previous-matching-input-from-input (old-fun &rest args)
+    (condition-case err
+        (apply old-fun args)
+      (user-error
+       (if (string= (cadr err) "Not at command line")
+           (cl-destructuring-bind (n &rest _args) args
+             (with-no-warnings
+               (if (< n 0)
+                   (next-line (- n))
+                 (previous-line n))))
+         (signal (car err) (cdr err))))))
+
+  (advice-add 'comint-previous-matching-input-from-input
+              :around
+              #'nadvice/comint-previous-matching-input-from-input))
+
 
 ;; =============================================================================
 ;; Scheme ======================================================================
