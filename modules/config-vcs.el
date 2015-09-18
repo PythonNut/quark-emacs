@@ -21,6 +21,7 @@
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
         magit-log-format-graph-function #'magit-log-format-unicode-graph
+        magit-completing-read-function 'ivy-completing-read
         magit-diff-refine-hunk t)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
@@ -80,6 +81,7 @@
     (run-with-timer 1 nil #'message ""))
 
   (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers))
+<<<<<<< dev
 
 (with-eval-after-load 'smerge-mode
   (diminish 'smerge-mode)
@@ -118,6 +120,8 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 (add-hook 'find-file-hook (lambda ()
                             (when (vc-backend buffer-file-name)
                               (smerge-mode +1))))
+=======
+>>>>>>> HEAD~15
 
 (with-eval-after-load 'projectile
   (projectile-global-mode +1)
