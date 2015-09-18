@@ -38,7 +38,7 @@
       (expand-file-name "ido.last" user-emacs-directory)
       ido-use-faces nil)
 
-(defun nadvice/completing-read-ivy (old-fun &rest args)
+(defun nadvice/completing-read-ivy (&rest _args)
   (ivy-mode +1)
   (advice-remove #'completing-read #'nadvice/completing-read-ivy))
 
@@ -81,46 +81,35 @@
                                    name
                                    "")))
 
-             ;; filter out non-fuzzy-matching candidates
-             (cands (let ((res))
-                      ;; this also lets us avoid a copy-seq
-                      (dolist (cand candidates)
-                        (when (string-match-p fuzzy-regex cand)
-                          (push cand res)))
-                      res))
-
-             ;; partition the candidates into sorted and unsorted groups
+             ;; disable side-effects of string-match
+             (inhibit-changing-match-data t)
              (cands-left)
-             (cands-to-sort (if (< (length cands) my/ivy-flx-limit)
-                                (progn
-                                  (setq cands-left nil)
-                                  cands)
-                              (setq cands-left (sort (let ((res))
-                                                       (dolist (cand cands)
-                                                         (push cand res))
-                                                       res)
-                                                     (lambda (c1 c2)
-                                                       (< (length c1)
-                                                          (length c2)))))
-                              (let ((num (min my/ivy-flx-limit
-                                              (length cands)))
-                                    (result nil))
-                                ;; take the first num elements from cands-left
-                                ;; and add them to result (cands-to-sort)
-                                (while (and cands-left
-                                            (>= (setq num (1- num)) 0))
-                                  (push (pop cands-left) result))
-                                result))))
+             (cands-to-sort))
+
+        ;; filter out non-matching candidates
+        (dolist (cand candidates)
+          (when (string-match fuzzy-regex cand)
+            (push cand cands-left)))
+
+        ;; pre-sort the candidates by length before partitioning
+        (setq cands-left (sort cands-left
+                               (lambda (c1 c2)
+                                 (< (length c1)
+                                    (length c2)))))
+
+        ;; partition the candidates into sorted and unsorted groups
+        (dotimes (_n (min (length cands-left) my/ivy-flx-limit))
+          (push (pop cands-left) cands-to-sort))
+
         (append
          ;; compute all of the flx scores in one pass and sort
          (mapcar #'car
                  (sort (mapcar
                         (lambda (cand)
                           (cons cand
-                                (or (car (flx-score cand
-                                                    name
-                                                    my/ivy-cache))
-                                    0)))
+                                (car (flx-score cand
+                                                name
+                                                my/ivy-cache))))
                         cands-to-sort)
                        (lambda (c1 c2)
                          (> (cdr c1)
