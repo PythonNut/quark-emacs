@@ -2,6 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
+    (require 'evil)
     (require 'ivy)
     (require 'flx-isearch)
     (require 'smex)))
@@ -120,4 +121,7 @@
 
   (advice-add 'ivy--filter :override #'nadvice/ivy--filter))
 
-(provide 'config-ido)
+(define-key evil-normal-state-map (kbd "C-s") #'swiper)
+(define-key evil-insert-state-map (kbd "C-s") #'swiper)
+
+(provide 'config-ivy)

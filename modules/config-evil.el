@@ -116,12 +116,6 @@
 (add-hook 'post-command-hook #'my/evil-set-mode-line-face)
 (add-hook 'after-make-frame-functions #'my/evil-set-mode-line-face)
 
-(define-key evil-insert-state-map (kbd "C-s")
-  (lambda ()
-    (interactive)
-    (evil-normal-state)
-    (call-interactively 'evil-search-forward)))
-
 ;; open line and stay in normal mode
 (evil-define-command evil-open-below-normal (arg)
   (interactive "p")
