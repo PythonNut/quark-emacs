@@ -308,4 +308,11 @@
   (add-to-list 'which-key-description-replacement-alist
                '("evil-\\(a\\|an\\|inner\\)-\\(.*\\)" . "\\2")))
 
+(global-set-key (kbd "C-0") #'delete-window)
+(global-set-key (kbd "C-1") #'delete-other-windows)
+(global-set-key (kbd "C-2") #'split-window-below)
+(global-set-key (kbd "C-3") #'split-window-right)
+(global-set-key (kbd "C-4") #'find-file-other-window)
+(global-set-key (kbd "C-5") #'make-frame-command)
+
 (provide 'config-ui)
