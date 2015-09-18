@@ -102,13 +102,7 @@
       (package-initialize))))
 
 (defvar my/required-packages
-  '(;; ido based packages
-    flx-ido
-    ido-ubiquitous
-    ido-vertical-mode
-    smex
-
-    ;; evil based modes
+  '(;; evil based modes
     ;; evil
     evil-args
     evil-easymotion
@@ -152,6 +146,7 @@
     multiple-cursors
     rainbow-delimiters
     smartparens
+    smex
     smooth-scrolling
     solarized-theme
     swiper
