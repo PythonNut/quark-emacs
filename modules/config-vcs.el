@@ -67,7 +67,9 @@
   ;; disable regular key chords by switching input methods
   (add-hook 'magit-status-mode-hook
             (lambda ()
-              (set-input-method "TeX")))
+              (set-input-method "TeX")
+              (make-variable-buffer-local 'global-hl-line-mode)
+              (setq global-hl-line-mode nil)))
 
   (add-hook 'with-editor-mode-hook 'evil-insert-state)
 
