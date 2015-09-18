@@ -252,6 +252,23 @@
   (define-key company-active-map (kbd "<return>") nil)
   (define-key company-active-map (kbd "RET") nil)
 
+  (defun company-select-above (&optional arg)
+    (interactive "p")
+    (if (let ((ov company-pseudo-tooltip-overlay))
+          (and ov (< (overlay-get ov 'company-height) 0)))
+        (company-select-next-or-abort arg)
+      (company-select-previous-or-abort arg)))
+
+  (defun company-select-below (&optional arg)
+    (interactive "p")
+    (if (let ((ov company-pseudo-tooltip-overlay))
+          (and ov (< (overlay-get ov 'company-height) 0)))
+        (company-select-previous-or-abort arg)
+      (company-select-next-or-abort arg)))
+
+  (define-key company-active-map (kbd "<up>") #'company-select-above)
+  (define-key company-active-map (kbd "<down>") #'company-select-below)
+
   (defun my/company-setup-tooltip-faces  ()
     (set-face-attribute 'company-tooltip-common-selection nil
                         :background "#839496"
