@@ -17,7 +17,6 @@
   (setq diff-hl-draw-borders nil)
   (diff-hl-flydiff-mode +1))
 
-(setq magit-last-seen-setup-instructions "1.4.0")
 (with-eval-after-load 'magit
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
