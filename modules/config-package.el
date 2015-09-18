@@ -119,7 +119,6 @@
     evil-org
     evil-snipe
     evil-surround
-    evil-visualstar
     evil-quickscope
 
     ace-window
