@@ -2,8 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)
-    (require 'key-chord)))
+    (require 'cl-lib)))
 
 (setq ad-redefinition-action 'accept
       cursor-type 'box

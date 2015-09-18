@@ -25,6 +25,11 @@
 (cl-letf (((symbol-function 'message) #'format))
   (key-chord-mode +1))
 
+(defun fix-key-chords ()
+  (interactive)
+  (key-chord-mode -1)
+  (key-chord-mode +1))
+
 (evil-mode +1)
 
 ;; define C-<arrow> for terminals
@@ -172,10 +177,10 @@
     (call-interactively #'evil-window-right))
   (my/evil-window-hydra-wrapper))
 
-(define-key evil-normal-state-map (kbd "C-w h") 'evil-window-left-smart)
-(define-key evil-normal-state-map (kbd "C-w j") 'evil-window-down-smart)
-(define-key evil-normal-state-map (kbd "C-w k") 'evil-window-up-smart)
-(define-key evil-normal-state-map (kbd "C-w l") 'evil-window-right-smart)
+(define-key evil-normal-state-map (kbd "C-w h") #'evil-window-left-smart)
+(define-key evil-normal-state-map (kbd "C-w j") #'evil-window-down-smart)
+(define-key evil-normal-state-map (kbd "C-w k") #'evil-window-up-smart)
+(define-key evil-normal-state-map (kbd "C-w l") #'evil-window-right-smart)
 
 (evil-define-command evil-delete-backward-word-smart ()
   "Delete previous word."
@@ -202,7 +207,7 @@
 
 (global-set-key (kbd "<C-backspace>") #'evil-delete-backward-word-smart)
 (define-key evil-insert-state-map (kbd "C-t") #'transpose-chars)
-(define-key evil-insert-state-map (kbd "C-d") 'evil-delete)
+(define-key evil-insert-state-map (kbd "C-d") #'evil-delete)
 (define-key evil-normal-state-map (kbd "SPC SPC") #'smex)
 
 (require 'config-evil-modules)
