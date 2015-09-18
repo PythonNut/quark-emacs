@@ -122,6 +122,7 @@
     evil-visualstar
     evil-quickscope
 
+    ace-window
     adaptive-wrap
     aggressive-indent
     auto-compile

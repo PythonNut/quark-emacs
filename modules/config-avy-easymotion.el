@@ -3,6 +3,7 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'avy)
+    (require 'ace-window)
     (require 'key-chord)
     (require 'evil)
     (require 'evil-easymotion)))
@@ -51,6 +52,26 @@
   (set-face-attribute 'avy-lead-face-1 nil
                       :background nil
                       :foreground "#839493"))
+
+(with-eval-after-load 'ace-window
+  (setq aw-keys (string-to-list "jfkdlsautnvmircieowpq")
+        aw-ignore-current t
+        aw-swap-invert t))
+
+;; bind command to switch to minibuffer
+(defun switch-window-dwim (arg)
+  "switch to minibuffer window (if active)"
+  (interactive "p")
+  (if (active-minibuffer-window)
+      (select-window (active-minibuffer-window))
+    (if (or (> (length (visible-frame-list)) 1)
+            (numberp arg))
+        (ace-window arg)
+      (if (> (length (mapcar #'window-buffer (window-list))) 3)
+          (ace-window arg)
+        (other-window arg)))))
+
+(global-set-key (kbd "C-'") #'switch-window-dwim)
 
 (require 'evil-easymotion)
 (evilem-default-keybindings "SPC")
