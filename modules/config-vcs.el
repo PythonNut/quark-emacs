@@ -81,7 +81,6 @@
     (run-with-timer 1 nil #'message ""))
 
   (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers))
-<<<<<<< dev
 
 (with-eval-after-load 'smerge-mode
   (diminish 'smerge-mode)
@@ -120,13 +119,13 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 (add-hook 'find-file-hook (lambda ()
                             (when (vc-backend buffer-file-name)
                               (smerge-mode +1))))
-=======
->>>>>>> HEAD~15
 
 (with-eval-after-load 'projectile
   (projectile-global-mode +1)
   (require 'magit)
-  (setq projectile-mode-line
+
+  (setq projectile-completion-system 'ivy
+        projectile-mode-line
         '(:eval (format (if (display-graphic-p) " ↠" " /"))))
   (define-key projectile-mode-map (kbd "C-c p") #'my/smart-projectile-tools))
 
