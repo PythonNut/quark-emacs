@@ -98,7 +98,7 @@ ___ → symbol       │   _hl_ lines        _hf_ HL find patterns
 _w_ → word         │   _hp_ phrase       _hw_ HL write patterns
 _o_ occur          │   _hr_ regex        _M-s_ Icicle search ..."
       ("."   isearch-forward-symbol-at-point)
-      ("-"   isearch-forward-symbol)
+      ("_"   isearch-forward-symbol)
       ("o"   helm-occur)
       ("w"   isearch-forward-word)
       ("h."  highlight-symbol-at-point)
