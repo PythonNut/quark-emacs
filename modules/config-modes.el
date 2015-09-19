@@ -98,36 +98,40 @@
 
   (cl-macrolet
       ((my/setup-cc-mode
-        (hook)
+        (mode hook)
         `(add-hook ,hook (lambda ()
-                           (irony-mode +1)
-                           (semantic-idle-summary-mode -1)
-                           (eldoc-mode +1)
-                           (irony-eldoc +1)))))
+                           (when (eq major-mode ,mode)
+                             (irony-mode +1)
+                             (eldoc-mode +1)
+                             (irony-eldoc +1))
+                           (semantic-idle-summary-mode -1)))))
 
     (with-no-warnings
       (my/generate-calls
        'my/setup-cc-mode
-       '(('c++-mode-hook)
-         ('objc-mode-hook)
-         ('c-mode-hook)))))
+       '(('c++-mode  'c++-mode-hook)
+         ('objc-mode 'objc-mode-hook)
+         ('c-mode    'c-mode-hook)))))
 
   (with-eval-after-load 'smartparens
     (cl-macrolet
         ((my/setup-cc-mode
-          (hook)
-          `(add-hook ,hook (lambda ()
-                             (irony-mode +1)
-                             (semantic-idle-summary-mode -1)
-                             (eldoc-mode +1)
-                             (irony-eldoc +1)))))
+          (mode)
+          `(progn
+             (sp-local-pair ,mode "/*" "*/" :post-handlers
+                            '(:add
+                              ("* ||\n[i]" "RET")))
+             (sp-local-pair ,mode "{" nil :post-handlers
+                            '(:add
+                              ("||\n[i]" "RET")
+                              ("| " "SPC"))))))
 
       (with-no-warnings
         (my/generate-calls
          'my/setup-cc-mode
-         '(('c++-mode-hook)
-           ('objc-mode-hook)
-           ('c-mode-hook)))))))
+         '(('c++-mode)
+           ('objc-mode)
+           ('c-mode)))))))
 
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)
