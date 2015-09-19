@@ -174,8 +174,6 @@
   (diminish #'volatile-highlights-mode)
   (vhl/define-extension 'my-evil-highlights
                         'evil-yank
-                        'evil-paste-pop-proxy
-                        'evil-paste-pop-next
                         'evil-paste-after
                         'evil-paste-before)
 
