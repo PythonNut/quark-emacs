@@ -146,7 +146,6 @@
     multiple-cursors
     rainbow-delimiters
     smartparens
-    smex
     smooth-scrolling
     solarized-theme
     swiper

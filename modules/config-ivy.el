@@ -5,7 +5,8 @@
     (require 'evil)
     (require 'ivy)
     (require 'flx-isearch)
-    (require 'smex)))
+    ;; (require 'smex)
+    ))
 
 (defun minibuffer-onetime-setup ()
   (unless (featurep 'mb-depth)
@@ -47,14 +48,6 @@
 
 (global-set-key (kbd "C-x b") #'ivy-switch-buffer)
 (global-set-key (kbd "C-x f") #'find-file)
-
-(with-eval-after-load 'smex
-  (setq smex-save-file
-        (expand-file-name
-         "smex-items"
-         user-emacs-directory)))
-
-(global-set-key (kbd "M-x") #'smex)
 
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)

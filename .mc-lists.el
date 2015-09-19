@@ -123,7 +123,6 @@
 (setq mc/cmds-to-run-once
       '(
         auto-semantic-jump-to-definition
-        auto-smex
         describe-key
         evil-exit-emacs-state
         evil-scroll-line-down
