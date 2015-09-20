@@ -5,7 +5,25 @@
     (require 'cl-lib)
     (require 'evil)
     (require 'key-chord)
-    (require 'config-setq)))
+    (require 'config-setq)
+
+    (require 'icicles-mac)))
+
+(defun icicle-flx-score-greater-p (s1 s2)
+  "Return non-nil if S1 scores higher than S2 using `flx-score`."
+  ;; (message "Testing testing!")
+  (let* ((input   (if (icicle-file-name-input-p)
+                      (file-name-nondirectory icicle-current-input)
+                    icicle-current-input))
+         (score1  (flx-score s1 input))
+         (score2  (flx-score s2 input)))
+    (and score1  score2  (> (car score1) (car score2)))))
+
+(with-eval-after-load 'icicles
+ (icicle-define-sort-command "by flx score"
+                             ;; icicle-dirs-last-p
+                             icicle-flx-score-greater-p
+                             "Sort completions by flx score."))
 
 ;; custom hook run when icicles in initialized
 (add-hook 'icicle-init-hook
@@ -13,7 +31,7 @@
             (setq icicle-max-candidates 1000
                   icicle-sorting-max-candidates 1000
 
-                  ;; icicle-sort-comparer #'icicle-flx-score-greater-p
+                  icicle-sort-comparer #'icicle-flx-score-greater-p
                   icicle-Completions-text-scale-decrease 0
                   icicle-expand-input-to-common-match 1
                   icicle-highlight-lighter-flag nil
@@ -22,9 +40,8 @@
 
 (defun nadvice/auto-icicle (old-func &rest _args)
   (interactive)
-  (if (and
-       (not (bound-and-true-p icicle-mode))
-       (called-interactively-p 'any))
+  (if (and (not (bound-and-true-p icicle-mode))
+           (called-interactively-p 'any))
       (unwind-protect
           (progn
             (cl-letf (((symbol-function 'message) #'format))
