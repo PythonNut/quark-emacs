@@ -33,6 +33,7 @@
       split-width-threshold 0
       tab-width 4
       use-dialog-box nil
+      visible-cursor nil
       x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
       x-stretch-cursor t)
 
