@@ -53,19 +53,12 @@
 (with-eval-after-load 'aggressive-indent
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
 
-(with-eval-after-load 'auto-indent
-  (add-hook 'auto-indent-global-mode-hook
-            (lambda ()
-              (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →"))))
-
-  (add-hook 'auto-indent-mode-hook
-            (lambda ()
-              (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →")))))
+(with-eval-after-load 'auto-indent-mode
+  (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →")))
 
 (defun my/auto-indent-onetime-setup ()
   (auto-indent-global-mode +1)
-  (remove-hook 'first-change-hook
-               #'my/auto-indent-onetime-setup))
+  (remove-hook 'first-change-hook #'my/auto-indent-onetime-setup))
 
 (add-hook 'emacs-startup-hook
           (lambda ()
