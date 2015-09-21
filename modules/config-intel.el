@@ -101,9 +101,8 @@
   (advice-add 'ispell-init-process :around #'nadvice/ispell-init-process))
 
 (with-eval-after-load 'flyspell
-  (setq
-   flyspell-issue-message-flag nil
-   flyspell-issue-welcome-flag nil)
+  (setq flyspell-issue-message-flag nil
+        flyspell-issue-welcome-flag nil)
 
   (add-hook 'flyspell-mode-hook
             (lambda ()
@@ -116,8 +115,11 @@
     (when (executable-find "aspell")
       (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
 
-(add-hook 'text-mode-hook #'flyspell-mode)
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+(when (or (executable-find "ispell")
+          (executable-find "aspell")
+          (executable-find "hunspell"))
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
 ;;; =============================================
 ;;; yasnippet -- extensible programmable snippets
