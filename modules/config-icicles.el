@@ -7,7 +7,8 @@
     (require 'key-chord)
     (require 'config-setq)
 
-    (require 'icicles-mac)))
+    (require 'icicles-mac)
+    (require 'icicles)))
 
 (defun icicle-flx-score-greater-p (s1 s2)
   "Return non-nil if S1 scores higher than S2 using `flx-score`."
@@ -20,10 +21,10 @@
     (and score1  score2  (> (car score1) (car score2)))))
 
 (with-eval-after-load 'icicles
- (icicle-define-sort-command "by flx score"
-                             ;; icicle-dirs-last-p
-                             icicle-flx-score-greater-p
-                             "Sort completions by flx score."))
+  (icicle-define-sort-command "by flx score"
+                              ;; icicle-dirs-last-p
+                              icicle-flx-score-greater-p
+                              "Sort completions by flx score."))
 
 ;; custom hook run when icicles in initialized
 (add-hook 'icicle-init-hook
