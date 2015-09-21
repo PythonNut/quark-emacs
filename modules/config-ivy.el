@@ -4,9 +4,7 @@
   (with-demoted-errors "Load error: %s"
     (require 'evil)
     (require 'ivy)
-    (require 'flx-isearch)
-    ;; (require 'smex)
-    ))
+    (require 'flx-isearch)))
 
 (defun minibuffer-onetime-setup ()
   (unless (featurep 'mb-depth)
@@ -112,13 +110,7 @@
          ;; add the unsorted candidates
          cands-left))))
 
-  (advice-add 'ivy--filter :override #'nadvice/ivy--filter)
-
-  (defun nadvice/ivy-read (old-fun &rest args)
-    (let ((resize-mini-windows nil))
-      (apply old-fun args)))
-
-  (advice-add 'ivy-read :around #'nadvice/ivy-read))
+  (advice-add 'ivy--filter :override #'nadvice/ivy--filter))
 
 (define-key evil-normal-state-map (kbd "C-s") #'swiper)
 (define-key evil-insert-state-map (kbd "C-s") #'swiper)
