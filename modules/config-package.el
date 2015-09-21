@@ -158,7 +158,8 @@
     which-key
     whole-line-or-region
     ws-butler
-    xclip))
+    xclip
+    yasnippet))
 
 (my/ensure-packages-are-installed my/required-packages)
 
