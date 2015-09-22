@@ -237,7 +237,11 @@
     :autoload-names '('company-anaconda))
 
 (package-deferred-install 'anaconda-mode
-    :autoload-names '('anaconda-mode))
+    :autoload-names '('anaconda-mode)
+    (diminish 'anaconda-mode " ✶")
+  (setq anaconda-mode-installation-directory (expand-file-name
+                                              "data/anaconda-mode"
+                                              user-emacs-directory)))
 
 (package-deferred-install 'traad
     :autoload-names '('traad-open
@@ -289,9 +293,6 @@
 (with-eval-after-load 'python
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
   (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto))
-
-(with-eval-after-load 'anaconda-mode
-  (diminish 'anaconda-mode " ✶"))
 
 (package-deferred-install 'cython-mode
     :mode-entries '('("\\.pyx\\'" . cython-mode)
