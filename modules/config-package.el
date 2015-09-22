@@ -125,6 +125,7 @@
     ;; avy
     bracketed-paste
     company
+    counsel
     diff-hl
     diminish
     dtrt-indent

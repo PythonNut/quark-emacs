@@ -129,4 +129,6 @@
 (define-key evil-normal-state-map (kbd "C-s") #'swiper)
 (define-key evil-insert-state-map (kbd "C-s") #'swiper)
 
+(global-set-key (kbd "M-x") #'counsel-M-x)
+
 (provide 'config-ivy)
