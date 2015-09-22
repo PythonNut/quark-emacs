@@ -721,7 +721,22 @@
             (apply old-fun args)
             (kill-buffer buffer))
         (apply old-fun args))))
-  (advice-add 'term-sentinel :around #'nadvice/term-sentinel))
+  (advice-add 'term-sentinel :around #'nadvice/term-sentinel)
+
+  (defun nadvice/ansi-term (args)
+    (interactive "P")
+    (cl-destructuring-bind (&optional program new-buffer-name) args
+      (let ((default-shell (or (bound-and-true-p explicit-shell-file-name)
+                               (getenv "ESHELL")
+                               (getenv "SHELL")
+                               "/bin/sh")))
+        (if (consp program)
+            (list (read-from-minibuffer "Run program: "
+                                        default-shell)
+                  new-buffer-name)
+          (list default-shell new-buffer-name)))))
+
+  (advice-add 'ansi-term :filter-args #'nadvice/ansi-term))
 
 (add-hook 'eshell-mode-hook
           (lambda ()
