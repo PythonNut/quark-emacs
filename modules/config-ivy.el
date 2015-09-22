@@ -61,17 +61,31 @@
   (defvar my/ivy-flx-limit 500)
 
   (defun nadvice/ivy--filter (name candidates)
-    (if (= (length name) 0)
+    (if (or (= (length name) 0)
+            (string= name "^"))
         candidates
       (let* (;; an optimized regex for fuzzy matching
              ;; "abc" → "\\`[^a]*a[^b]*b[^c]*c"
-             (fuzzy-regex (concat "\\`"
-                                  (mapconcat
-                                   (lambda (x)
-                                     (setq x (string x))
-                                     (concat "[^" x "]*" (regexp-quote x)))
-                                   name
-                                   "")))
+             (fuzzy-regex (if (= (elt name 0) ?^)
+                              (concat "^"
+                                      (regexp-quote (substring name 1 2))
+                                      (mapconcat
+                                       (lambda (x)
+                                         (setq x (string x))
+                                         (concat "[^" x "]*" (regexp-quote x)))
+                                       (substring name 2)
+                                       ""))
+                            (concat "^"
+                                    (mapconcat
+                                     (lambda (x)
+                                       (setq x (string x))
+                                       (concat "[^" x "]*" (regexp-quote x)))
+                                     name
+                                     ""))))
+
+             (flx-name (if (= (elt name 0) ?^)
+                           (substring name 1)
+                         name))
 
              ;; disable side-effects of string-match
              (inhibit-changing-match-data t)
@@ -100,7 +114,7 @@
                         (lambda (cand)
                           (cons cand
                                 (car (flx-score cand
-                                                name
+                                                flx-name
                                                 my/ivy-cache))))
                         cands-to-sort)
                        (lambda (c1 c2)
