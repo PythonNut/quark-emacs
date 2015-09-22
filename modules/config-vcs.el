@@ -26,10 +26,12 @@
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
   (evil-set-initial-state 'magit-popup-mode 'insert)
+  (evil-set-initial-state 'magit-refs-mode 'insert)
   (evil-set-initial-state 'magit-revision-mode 'motion)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
   (define-key magit-log-mode-map (kbd "j") #'next-line)
+  (define-key magit-refs-mode-map (kbd "j") #'next-line)
   (define-key magit-status-mode-map (kbd "j") #'next-line)
   (eval-and-compile
     (cl-macrolet
@@ -42,7 +44,6 @@
              (define-key ,mode (kbd "k") #'previous-line)
              ,(when command
                 `(define-key ,mode (kbd "K") ,command)))))
-
       (with-no-warnings
         (my/generate-calls
          'magit-setup-section-k
@@ -64,22 +65,21 @@
            (magit-untracked-section-map #'magit-discard))))))
 
   ;; disable regular key chords by switching input methods
-  (add-hook 'magit-status-mode-hook
-            (lambda ()
-              (set-input-method "TeX")
-              (make-variable-buffer-local 'global-hl-line-mode)
-              (setq global-hl-line-mode nil)))
+  (defun my/setup-magit-mode ()
+    (set-input-method "TeX")
+    (make-variable-buffer-local 'global-hl-line-mode)
+    (setq global-hl-line-mode nil))
 
-  (add-hook 'with-editor-mode-hook 'evil-insert-state)
+  (add-hook 'magit-log-mode-hook #'my/setup-magit-mode)
+  (add-hook 'magit-refs-mode-hook #'my/setup-magit-mode)
+  (add-hook 'magit-status-mode-hook #'my/setup-magit-mode)
 
-  (add-hook 'magit-log-mode-hook
-            (lambda () (set-input-method "TeX")))
+  (add-hook 'with-editor-mode-hook #'evil-insert-state)
 
   (defun nadvice/magit-revert-buffers (&rest _args)
     (run-with-timer 1 nil #'message ""))
 
-  (advice-add 'magit-revert-buffers :after
-              #'nadvice/magit-revert-buffers))
+  (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers))
 
 (with-eval-after-load 'smerge-mode
   (diminish 'smerge-mode)
