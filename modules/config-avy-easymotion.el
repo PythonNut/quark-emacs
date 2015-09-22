@@ -37,7 +37,7 @@
 (with-eval-after-load 'avy
   (setq avy-background t
         avy-style 'de-bruijn
-        avy-keys (string-to-list "jfkdls;aurieowncpqmxzb"))
+        avy-keys (string-to-list "jfkdlsaurieowncpqmxzb"))
 
   (set-face-foreground 'avy-background-face "#586e75")
 
