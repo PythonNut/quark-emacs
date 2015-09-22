@@ -23,11 +23,11 @@
   (cond
    ;; `C-u a` jumps to `a`.
    ((consp arg)
-    (evil-avy-goto-char last-command-event))
+    (avy-goto-char last-command-event))
 
    ;; `C-- a` jumps to `a` at the beginning of a (sub)word
    ((eq '- arg)
-    (evil-avy-goto-subword-1 last-command-event))
+    (avy-goto-subword-1 last-command-event))
 
    ((or (numberp arg) (not arg))
     (funcall old-fun (or arg 1)))))
