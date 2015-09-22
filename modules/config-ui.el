@@ -196,6 +196,9 @@
 
 (with-eval-after-load 'auto-highlight-symbol
   (setq ahs-idle-interval 0.3)
+  (add-to-list 'ahs-inhibit-face-list 'font-lock-keyword-face)
+  (add-to-list 'ahs-inhibit-face-list 'region)
+  (add-to-list 'ahs-inhibit-face-list 'isearch)
 
   (defun my/ahs-setup-faces ()
     (if (display-graphic-p)
