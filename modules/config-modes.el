@@ -713,6 +713,16 @@
 (add-hook 'shell-mode-hook #'my/generic-term-init)
 (add-hook 'eshell-mode-hook #'my/generic-term-init)
 
+(with-eval-after-load 'term
+  (defun nadvice/term-sentinel (old-fun &rest args)
+    (cl-destructuring-bind (proc msg) args
+      (if (memq (process-status proc) '(signal exit))
+          (let ((buffer (process-buffer proc)))
+            (apply old-fun args)
+            (kill-buffer buffer))
+        (apply old-fun args))))
+  (advice-add 'term-sentinel :around #'nadvice/term-sentinel))
+
 (add-hook 'eshell-mode-hook
           (lambda ()
             (make-variable-buffer-local 'company-idle-delay)))
