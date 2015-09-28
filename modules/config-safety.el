@@ -2,7 +2,8 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'autorevert)))
+    (require 'autorevert)
+    (require 'config-package)))
 
 (defvar backup-location
   (expand-file-name "data/backups" user-emacs-directory))

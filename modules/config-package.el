@@ -138,6 +138,7 @@
     flx-isearch
     flycheck
     framemove
+    ;; helm
     helm-ag
     helm-git-grep
     helm-projectile
