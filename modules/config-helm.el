@@ -76,11 +76,12 @@
       helm-fuzzy-matching-highlight-fn #'my/helm-fuzzy-highlight-match
 
       helm-M-x-fuzzy-match t
-      helm-recentf-fuzzy-match t
       helm-buffers-fuzzy-matching t
       helm-completion-in-region-fuzzy-match t
       helm-imenu-fuzzy-match t
       helm-locate-fuzzy-match nil
+      helm-mode-fuzzy-match t
+      helm-recentf-fuzzy-match t
       helm-semantic-fuzzy-match t
 
       helm-case-fold-search 'smart
