@@ -54,7 +54,6 @@
   (require 'flx)
   (setq ivy-display-style t
         ivy-extra-directories nil
-        ivy-wrap t
         ivy-count-format nil
         ivy-sort-functions-alist '((t . nil)))
 
