@@ -144,7 +144,6 @@
     hydra
     icicles
     iflipb
-    impatient-mode
     idle-require
     key-chord
     magit
