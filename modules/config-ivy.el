@@ -55,6 +55,7 @@
   (setq ivy-display-style t
         ivy-extra-directories nil
         ivy-wrap t
+        ivy-count-format nil
         ivy-sort-functions-alist '((t . nil)))
 
   (defvar my/ivy-cache (flx-make-string-cache))
