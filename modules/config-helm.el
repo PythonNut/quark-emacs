@@ -14,23 +14,23 @@
     (require 'helm-locate)
     (require 'helm-semantic)))
 
-(defvar helm-flx-cache)
+(defvar helm-flx-cache nil)
 
 (with-eval-after-load 'helm-files
   (setq helm-ff-skip-boring-files t
         helm-recentf-fuzzy-match t
         helm-boring-file-regexp-list
-        (append helm-boring-file-regexp-list
-                '("/\\.$"
-                  "/\\.\\.$"
-                  "\\.undo\\.xz$"
-                  "\\.elc$"
-                  "\\#$"
-                  "\\~$"
-                  "\\.zwc\\.old$"
-                  "\\.zwc$"))))
+        (append helm-boring-file-regexp-list '("/\\.$"
+                                               "/\\.\\.$"
+                                               "\\.undo\\.xz$"
+                                               "\\.elc$"
+                                               "\\#$"
+                                               "\\~$"
+                                               "\\.zwc\\.old$"
+                                               "\\.zwc$"))))
 
 (defun my/helm-fuzzy-matching-sort-fn (candidates _source &optional use-real)
+  (require 'flx)
   (if (string= helm-pattern "")
       candidates
     (mapcar #'car
@@ -43,8 +43,7 @@
                                                (cdr cand)
                                              (car cand))
                                          cand)
-                                       helm-pattern
-                                       helm-flx-cache))
+                                       helm-pattern helm-flx-cache))
                                  0)))
                    candidates)
                   (lambda (s1 s2)
@@ -52,6 +51,7 @@
                        (cdr s2)))))))
 
 (defun my/helm-fuzzy-highlight-match (candidate)
+  (require 'flx)
   (let* ((pair (and (consp candidate) candidate))
          (display (if pair (car pair) candidate))
          (real (cdr pair)))
@@ -89,14 +89,15 @@
       helm-ff-newfile-prompt-p nil)
 
 (with-eval-after-load 'helm
+  (with-eval-after-load 'flx
+    (setq helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file)))
+
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-i")   #'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-z")   #'helm-select-action)
   (define-key helm-map (kbd "C-r" )  #'isearch-backward-regexp)
-  (require 'flx)
 
-  (setq helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file))
   (set-face-attribute 'helm-selection nil :underline nil))
 
 (with-eval-after-load 'helm-buffers
@@ -104,11 +105,10 @@
     (setq helm-source-buffers-list
           (helm-make-source "Buffers" 'helm-source-buffers)))
 
-  (setq helm-boring-buffer-regexp-list
-        '("\\ "
-          "\\*helm"
-          "\\*Compile"
-          "\\*Quail")))
+  (setq helm-boring-buffer-regexp-list '("\\ "
+                                         "\\*helm"
+                                         "\\*Compile"
+                                         "\\*Quail")))
 
 (with-eval-after-load 'helm-locate
   (setq helm-source-locate
