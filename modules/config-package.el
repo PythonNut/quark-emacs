@@ -147,7 +147,6 @@
     impatient-mode
     idle-require
     key-chord
-    linum-relative
     magit
     multiple-cursors
     rainbow-delimiters
