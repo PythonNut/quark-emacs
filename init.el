@@ -58,9 +58,8 @@
               (when (my/y-or-n-p "Automatic repair succeed. Press \"y\" to restart.")
                 (restart-emacs))
             (when (my/y-or-n-p "Automatic repair failed. Press \"y\" to try emergency rebuild.")
-              (emergency-fix-config))))))
-
-    (add-hook 'emacs-startup-hook #'my/automatic-repair)
+              (emergency-fix-config)))))
+      (add-hook 'emacs-startup-hook #'my/automatic-repair))
 
     (message "[=               ]")
     (require 'config-package)
