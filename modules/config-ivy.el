@@ -51,6 +51,7 @@
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
 (with-eval-after-load 'ivy
+  (diminish 'ivy-mode)
   (require 'flx)
   (setq ivy-display-style t
         ivy-extra-directories nil
