@@ -246,8 +246,11 @@
   (require 'auto-highlight-symbol)
   (global-auto-highlight-symbol-mode +1))
 
-(global-set-key (kbd "<remap> <just-one-space>") #'cycle-spacing)
-(global-set-key (kbd "<remap> <delete-horizontal-space>") #'cycle-spacing)
+(evil-define-command evil-cycle-spacing (&optional count)
+  (cycle-spacing (or count 1)))
+
+(global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
+(global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing)
 
 ;; ============
 ;; Line numbers
