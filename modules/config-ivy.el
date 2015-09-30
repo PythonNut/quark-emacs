@@ -52,80 +52,10 @@
 
 (with-eval-after-load 'ivy
   (diminish 'ivy-mode)
-  (require 'flx)
   (setq ivy-display-style t
+        ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
-        ivy-count-format nil
-        ivy-sort-functions-alist '((t . nil)))
-
-  (defvar my/ivy-cache (flx-make-string-cache))
-  (defvar my/ivy-flx-limit 500)
-
-  (defun nadvice/ivy--filter (name candidates)
-    (if (or (= (length name) 0)
-            (string= name "^"))
-        candidates
-      (let* (;; an optimized regex for fuzzy matching
-             ;; "abc" → "\\`[^a]*a[^b]*b[^c]*c"
-             (fuzzy-regex (if (= (elt name 0) ?^)
-                              (concat "^"
-                                      (regexp-quote (substring name 1 2))
-                                      (mapconcat
-                                       (lambda (x)
-                                         (setq x (string x))
-                                         (concat "[^" x "]*" (regexp-quote x)))
-                                       (substring name 2)
-                                       ""))
-                            (concat "^"
-                                    (mapconcat
-                                     (lambda (x)
-                                       (setq x (string x))
-                                       (concat "[^" x "]*" (regexp-quote x)))
-                                     name
-                                     ""))))
-
-             (flx-name (if (= (elt name 0) ?^)
-                           (substring name 1)
-                         name))
-
-             ;; disable side-effects of string-match
-             (inhibit-changing-match-data t)
-             (cands-left)
-             (cands-to-sort))
-
-        ;; filter out non-matching candidates
-        (dolist (cand candidates)
-          (when (string-match fuzzy-regex cand)
-            (push cand cands-left)))
-
-        ;; pre-sort the candidates by length before partitioning
-        (setq cands-left (sort cands-left
-                               (lambda (c1 c2)
-                                 (< (length c1)
-                                    (length c2)))))
-
-        ;; partition the candidates into sorted and unsorted groups
-        (dotimes (_n (min (length cands-left) my/ivy-flx-limit))
-          (push (pop cands-left) cands-to-sort))
-
-        (append
-         ;; compute all of the flx scores in one pass and sort
-         (mapcar #'car
-                 (sort (mapcar
-                        (lambda (cand)
-                          (cons cand
-                                (car (flx-score cand
-                                                flx-name
-                                                my/ivy-cache))))
-                        cands-to-sort)
-                       (lambda (c1 c2)
-                         (> (cdr c1)
-                            (cdr c2)))))
-
-         ;; add the unsorted candidates
-         cands-left))))
-
-  (advice-add 'ivy--filter :override #'nadvice/ivy--filter))
+        ivy-count-format nil))
 
 (define-key evil-normal-state-map (kbd "C-s") #'swiper)
 (define-key evil-insert-state-map (kbd "C-s") #'swiper)
