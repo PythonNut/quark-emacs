@@ -274,4 +274,7 @@
            (list `(with-eval-after-load ,(or feature-name package-name)
                     ,@forms))))))
 
+(package-deferred-install 'bug-hunter
+    :autoload-names '('bug-hunter-file 'bug-hunter-init-file))
+
 (provide 'config-package)
