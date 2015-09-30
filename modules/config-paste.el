@@ -104,8 +104,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
-  (let ((str (thing-at-point 'line))
-        (beg (line-beginning-position)))
+  (let ((str (thing-at-point 'line)))
     (save-excursion
       (put-text-property 0 1 'whole-line-or-region t str)
       (easy-kill-adjust-candidate 'my-line str))))
@@ -172,12 +171,6 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (require 'bracketed-paste)
       (bracketed-paste-enable)
       (bracketed-paste-setup)
-
-      ;; fix display corruption in certain terminals when using isearch
-      (defun nadvice/isearch-printing-char (&rest _args)
-        (redraw-display))
-
-      (advice-add 'isearch-printing-char :after #'nadvice/isearch-printing-char)
 
       (when (getenv "TMUX")
         (run-hooks 'terminal-init-xterm-hook))
