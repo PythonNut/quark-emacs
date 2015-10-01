@@ -202,7 +202,6 @@
 (global-set-key (kbd "<C-backspace>") #'evil-delete-backward-word-smart)
 (define-key evil-insert-state-map (kbd "C-t") #'transpose-chars)
 (define-key evil-insert-state-map (kbd "C-d") #'evil-delete)
-(define-key evil-normal-state-map (kbd "SPC SPC") #'smex)
 (global-set-key (kbd "<remap> <kill-whole-line>") #'evil-delete-whole-line)
 
 (require 'config-evil-modules)
