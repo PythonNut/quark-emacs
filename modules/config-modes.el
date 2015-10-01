@@ -601,6 +601,16 @@
   (require 'ls-lisp)
   (require 'dired-x)
 
+  (defun dired-first-file ()
+    (interactive)
+    (goto-char (point-min))
+    (dired-next-line 4))
+
+  (defun dired-last-file ()
+    (interactive)
+    (goto-char (point-max))
+    (dired-next-line -1))
+
   (defun dired-up-directory ()
     "Take dired up one directory, but behave like dired-find-alternate-file"
     (interactive)
@@ -631,7 +641,12 @@
 
   (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
   (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
-  (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer))
+  (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer)
+
+  (define-key dired-mode-map (kbd "<remap> <beginning-of-buffer>")
+    #'dired-first-file)
+  (define-key dired-mode-map (kbd "<remap> <end-of-buffer>")
+    #'dired-last-file))
 
 ;; =============================================================================
 ;; Comint ======================================================================
