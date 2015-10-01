@@ -488,6 +488,13 @@
 ;; Web Development =============================================================
 ;; =============================================================================
 
+(with-eval-after-load 'sgml-mode
+  ;; after deleting a tag, indent properly
+  (defun nadvice/sgml-delete-tag (&rest args)
+    (indent-region (point-min) (point-max)))
+
+  (advice-add 'sgml-delete-tag :after #'nadvice/sgml-delete-tag))
+
 (with-eval-after-load 'css-mode
   (sp-local-pair 'css-mode "{" nil :post-handlers
                  '(:add
