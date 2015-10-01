@@ -192,4 +192,13 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
 
 (global-set-key (kbd "C-c p") #'my/smart-projectile-tools)
 
+(with-eval-after-load 'ediff
+  (setq ;; don't start another frame
+   ediff-window-setup-function #'ediff-setup-windows-plain
+   ;; put windows side by side
+   ediff-split-window-function #'split-window-horizontally)
+
+  ;;revert windows on exit - needs winner mode
+  (add-hook 'ediff-after-quit-hook-internal 'winner-undo))
+
 (provide 'config-vcs)
