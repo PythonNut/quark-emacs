@@ -11,7 +11,9 @@
     (require 'volatile-highlights)
     (require 'linum-relative)
     (require 'config-setq)
-    (require 'config-package)))
+    (require 'config-package)
+    (require 'which-key)
+    (require 'framemove)))
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil
@@ -20,9 +22,6 @@
       scroll-step 1
       auto-window-vscroll nil
       scroll-conservatively 1000)
-
-(global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
-(global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
 
 (require 'config-avy-easymotion)
 (require 'config-undo)
@@ -102,8 +101,6 @@
 
 (with-eval-after-load 'framemove
   (setq framemove-hook-into-windmove t))
-
-(global-set-key (kbd "C-.") #'er/expand-region)
 
 (defun pop-window-into-frame ()
   (interactive)
@@ -321,6 +318,10 @@
 (global-set-key (kbd "C-3") #'split-window-right)
 (global-set-key (kbd "C-4") #'find-file-other-window)
 (global-set-key (kbd "C-5") #'make-frame-command)
+(global-set-key (kbd "M-j") #'evil-join)
+(global-set-key (kbd "C-.") #'er/expand-region)
+(global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
+(global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
 
 (defun isearch-delete-something ()
   "Delete non-matching text or the last character."
