@@ -6,22 +6,22 @@
     (require 'ivy)
     (require 'flx-isearch)))
 
+(setq resize-mini-windows t
+
+      ;; don't let the cursor go into minibuffer prompt
+      minibuffer-prompt-properties
+      '(read-only t
+                  point-entered
+                  minibuffer-avoid-prompt
+                  face
+                  minibuffer-prompt)
+
+      ;; recursive minibuffers
+      enable-recursive-minibuffers t)
+
 (defun minibuffer-onetime-setup ()
   (unless (featurep 'mb-depth)
     (minibuffer-depth-indicate-mode t))
-
-  (setq resize-mini-windows t
-
-        ;; don't let the cursor go into minibuffer prompt
-        minibuffer-prompt-properties
-        '(read-only t
-                    point-entered
-                    minibuffer-avoid-prompt
-                    face
-                    minibuffer-prompt)
-
-        ;; recursive minibuffers
-        enable-recursive-minibuffers t)
 
   (remove-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup))
 
