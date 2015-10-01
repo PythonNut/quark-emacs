@@ -66,6 +66,10 @@
               (unless (file-remote-p default-directory)
                 (save-some-buffers t)))))
 
+(with-eval-after-load 'autorevert
+  (setq global-auto-revert-non-file-buffers t
+        auto-revert-verbose nil))
+
 (defun my/auto-revert-onetime-setup ()
   (global-auto-revert-mode +1)
   (remove-hook 'find-file-hook
