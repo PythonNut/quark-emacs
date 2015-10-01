@@ -27,6 +27,7 @@
   (evil-set-initial-state 'magit-log-mode 'insert)
   (evil-set-initial-state 'magit-popup-mode 'insert)
   (evil-set-initial-state 'magit-refs-mode 'insert)
+  (evil-set-initial-state 'magit-stash-mode 'insert)
   (evil-set-initial-state 'magit-revision-mode 'motion)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
@@ -46,23 +47,23 @@
                 `(define-key ,mode (kbd "K") ,command)))))
       (with-no-warnings
         (my/generate-calls
-         'magit-setup-section-k
-         '((magit-branch-section-map #'magit-branch-delete)
-           (magit-commit-section-map)
-           (magit-file-section-map #'magit-discard)
-           (magit-hunk-section-map #'magit-discard)
-           (magit-log-mode-map)
-           (magit-module-commit-section-map)
-           (magit-remote-section-map)
-           (magit-staged-section-map #'magit-discard)
-           (magit-stash-section-map #'magit-stash-drop)
-           (magit-stashes-section-map)
-           (magit-status-mode-map)
-           (magit-tag-section-map #'magit-tag-delete)
-           (magit-unpulled-section-map)
-           (magit-unpushed-section-map)
-           (magit-unstaged-section-map #'magit-discard)
-           (magit-untracked-section-map #'magit-discard))))))
+            'magit-setup-section-k
+          '((magit-branch-section-map #'magit-branch-delete)
+            (magit-commit-section-map)
+            (magit-file-section-map #'magit-discard)
+            (magit-hunk-section-map #'magit-discard)
+            (magit-log-mode-map)
+            (magit-module-commit-section-map)
+            (magit-remote-section-map)
+            (magit-staged-section-map #'magit-discard)
+            (magit-stash-section-map #'magit-stash-drop)
+            (magit-stashes-section-map)
+            (magit-status-mode-map)
+            (magit-tag-section-map #'magit-tag-delete)
+            (magit-unpulled-section-map)
+            (magit-unpushed-section-map)
+            (magit-unstaged-section-map #'magit-discard)
+            (magit-untracked-section-map #'magit-discard))))))
 
   ;; disable regular key chords by switching input methods
   (defun my/setup-magit-mode ()
@@ -73,6 +74,7 @@
   (add-hook 'magit-log-mode-hook #'my/setup-magit-mode)
   (add-hook 'magit-refs-mode-hook #'my/setup-magit-mode)
   (add-hook 'magit-status-mode-hook #'my/setup-magit-mode)
+  (add-hook 'magit-stash-mode-hook #'my/setup-magit-mode)
 
   (add-hook 'with-editor-mode-hook #'evil-insert-state)
 
