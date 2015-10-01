@@ -201,4 +201,11 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
   ;;revert windows on exit - needs winner mode
   (add-hook 'ediff-after-quit-hook-internal 'winner-undo))
 
+(defun my/command-line-ediff (switch)
+  (let ((file1 (pop command-line-args-left))
+        (file2 (pop command-line-args-left)))
+    (ediff file1 file2)))
+
+(add-to-list 'command-switch-alist '("diff" . my/command-line-ediff))
+
 (provide 'config-vcs)
