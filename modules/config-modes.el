@@ -601,6 +601,8 @@
   (require 'ls-lisp)
   (require 'dired-x)
 
+  (setq dired-listing-switches "-alh")
+
   (defun dired-first-file ()
     (interactive)
     (goto-char (point-min))
