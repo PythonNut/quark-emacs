@@ -193,13 +193,20 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
 (global-set-key (kbd "C-c p") #'my/smart-projectile-tools)
 
 (with-eval-after-load 'ediff
+  (add-hook 'ediff-before-setup-hook
+            (lambda ()
+              (setq ediff-saved-window-configuration (current-window-configuration))))
+
+  (let ((restore-window-configuration
+         (lambda ()
+           (set-window-configuration ediff-saved-window-configuration))))
+    (add-hook 'ediff-quit-hook restore-window-configuration 'append)
+    (add-hook 'ediff-suspend-hook restore-window-configuration 'append))
+
   (setq ;; don't start another frame
    ediff-window-setup-function #'ediff-setup-windows-plain
    ;; put windows side by side
-   ediff-split-window-function #'split-window-horizontally)
-
-  ;;revert windows on exit - needs winner mode
-  (add-hook 'ediff-after-quit-hook-internal 'winner-undo))
+   ediff-split-window-function #'split-window-horizontally))
 
 (defun my/command-line-ediff (switch)
   (let ((file1 (pop command-line-args-left))
