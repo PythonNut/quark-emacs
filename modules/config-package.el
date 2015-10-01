@@ -122,6 +122,7 @@
     evil-quickscope
 
     ace-window
+    ace-jump-helm-line
     adaptive-wrap
     aggressive-indent
     auto-compile

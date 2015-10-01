@@ -97,6 +97,7 @@
   (define-key helm-map (kbd "C-i")   #'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-z")   #'helm-select-action)
   (define-key helm-map (kbd "C-r" )  #'isearch-backward-regexp)
+  (define-key helm-map (kbd "C-'")   #'ace-jump-helm-line-execute-action)
 
   (set-face-attribute 'helm-selection nil :underline nil))
 
