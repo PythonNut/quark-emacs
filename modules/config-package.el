@@ -182,7 +182,8 @@
           hydra
           evil-snipe
           multiple-cursors
-          avy)))
+          avy
+          ace-window)))
 
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
