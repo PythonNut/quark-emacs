@@ -52,7 +52,7 @@
 
 (with-eval-after-load 'ivy
   (diminish 'ivy-mode)
-  (setq ivy-display-style t
+  (setq ivy-display-style 'fancy
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
         ivy-count-format nil))
