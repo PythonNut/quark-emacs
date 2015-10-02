@@ -20,23 +20,16 @@
       enable-recursive-minibuffers t)
 
 (defun minibuffer-onetime-setup ()
-  (unless (featurep 'mb-depth)
-    (minibuffer-depth-indicate-mode t))
+  (minibuffer-depth-indicate-mode t)
+  (remove-hook 'minibuffer-setup-hook #'minibuffer-onetime-setup))
 
-  (remove-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup))
-
-(add-hook 'minibuffer-setup-hook 'minibuffer-onetime-setup)
+(add-hook 'minibuffer-setup-hook #'minibuffer-onetime-setup)
 
 ;; hl-line-mode breaks minibuffer in TTY
 (add-hook 'minibuffer-setup-hook
           (lambda ()
             (make-variable-buffer-local 'global-hl-line-mode)
             (setq global-hl-line-mode nil)))
-
-(setq ido-enable-flex-matching t
-      ido-save-directory-list-file
-      (expand-file-name "ido.last" user-emacs-directory)
-      ido-use-faces nil)
 
 (defun nadvice/completing-read-ivy (&rest _args)
   (ivy-mode +1)
