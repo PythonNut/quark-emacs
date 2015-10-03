@@ -58,7 +58,7 @@
 (message "[==========      ]")
 (require 'config-vcs)
 (message "[===========     ]")
-(require 'config-ido)
+(require 'config-ivy)
 (message "[============    ]")
 (require 'config-helm)
 (message "[=============   ]")

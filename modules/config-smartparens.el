@@ -43,13 +43,10 @@
           (exchange-point-and-mark))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
-              (not (and
-                    (string-match
-                     (string (char-after (point)))
-                     "[^[:punct:]([{]")
-                    (string-match
-                     (string (char-before (mark)))
-                     "[^[:punct:])\]}]"))))
+              (not (and (string-match
+                         (string (char-after (point))) "[^[:punct:]([{]")
+                        (string-match
+                         (string (char-before (mark))) "[^[:punct:])\]}]"))))
           (evil-range (point) (mark))
         (evil-range (1+ (point)) (1- (mark)))))))
 

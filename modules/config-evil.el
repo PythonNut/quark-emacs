@@ -116,12 +116,6 @@
 (add-hook 'post-command-hook #'my/evil-set-mode-line-face)
 (add-hook 'after-make-frame-functions #'my/evil-set-mode-line-face)
 
-(define-key evil-insert-state-map (kbd "C-s")
-  (lambda ()
-    (interactive)
-    (evil-normal-state)
-    (call-interactively 'evil-search-forward)))
-
 ;; open line and stay in normal mode
 (evil-define-command evil-open-below-normal (arg)
   (interactive "p")
@@ -208,7 +202,6 @@
 (global-set-key (kbd "<C-backspace>") #'evil-delete-backward-word-smart)
 (define-key evil-insert-state-map (kbd "C-t") #'transpose-chars)
 (define-key evil-insert-state-map (kbd "C-d") #'evil-delete)
-(define-key evil-normal-state-map (kbd "SPC SPC") #'smex)
 (global-set-key (kbd "<remap> <kill-whole-line>") #'evil-delete-whole-line)
 
 (require 'config-evil-modules)

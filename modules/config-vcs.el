@@ -21,6 +21,7 @@
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
         magit-log-format-graph-function #'magit-log-format-unicode-graph
+        magit-completing-read-function 'ivy-completing-read
         magit-diff-refine-hunk t)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
@@ -124,7 +125,9 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 (with-eval-after-load 'projectile
   (projectile-global-mode +1)
   (require 'magit)
-  (setq projectile-mode-line
+
+  (setq projectile-completion-system 'ivy
+        projectile-mode-line
         '(:eval (format (if (display-graphic-p) " ↠" " /"))))
   (define-key projectile-mode-map (kbd "C-c p") #'my/smart-projectile-tools))
 

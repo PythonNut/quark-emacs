@@ -50,16 +50,14 @@
       (cl-letf ((load-path))
         (load package-autoload-file)))))
 
-(unwind-protect (progn
-                  (unless (file-exists-p package-autoload-file)
-                    (my/package-rebuild-autoloads))
-                  (cl-letf ((load-path))
-                    (load package-autoload-file))
-                  (unless (equal (nth 6 (file-attributes
-                                         (expand-file-name
-                                          "elpa" user-emacs-directory)))
-                                 my/package-cache-last-build-time)
-                    (my/package-rebuild-autoloads)))
+(unwind-protect (progn (unless (file-exists-p package-autoload-file)
+                         (my/package-rebuild-autoloads))
+                       (load package-autoload-file)
+                       (unless (equal (nth 6 (file-attributes
+                                              (expand-file-name
+                                               "elpa" user-emacs-directory)))
+                                      my/package-cache-last-build-time)
+                         (my/package-rebuild-autoloads)))
 
   (dolist (dir (file-expand-wildcards
                 (expand-file-name "elpa/*" user-emacs-directory)))
@@ -102,13 +100,7 @@
       (package-initialize))))
 
 (defvar my/required-packages
-  '(;; ido based packages
-    flx-ido
-    ido-ubiquitous
-    ido-vertical-mode
-    smex
-
-    ;; evil based modes
+  '(;; evil based modes
     ;; evil
     evil-args
     evil-easymotion
@@ -131,6 +123,7 @@
     ;; avy
     bracketed-paste
     company
+    counsel
     diff-hl
     diminish
     dtrt-indent
@@ -152,8 +145,10 @@
     multiple-cursors
     rainbow-delimiters
     smartparens
+    smex
     smooth-scrolling
     solarized-theme
+    swiper
     volatile-highlights
     which-key
     whole-line-or-region
@@ -176,14 +171,12 @@
 
   (setq idle-require-idle-delay 3
         idle-require-load-break 1
-        idle-require-symbols
-        '(magit
-          which-key
-          hydra
-          evil-snipe
-          multiple-cursors
-          avy
-          ace-window)))
+        idle-require-symbols '(magit
+                               hydra
+                               which-key
+                               evil-snipe
+                               multiple-cursors
+                               avy)))
 
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
