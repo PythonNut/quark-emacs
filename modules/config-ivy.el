@@ -43,6 +43,15 @@
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
+(with-eval-after-load 'swiper
+  (set-face-attribute 'swiper-minibuffer-match-face-1 nil
+                      :background nil)
+  (set-face-attribute 'swiper-minibuffer-match-face-2 nil
+                      :background nil
+                      :foreground "#268bd2")
+  (setq swiper-minibuffer-faces (list 'swiper-minibuffer-match-face-1
+                                      'swiper-minibuffer-match-face-2)))
+
 (with-eval-after-load 'ivy
   (diminish 'ivy-mode)
   (setq ivy-display-style 'fancy
