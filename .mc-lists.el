@@ -34,6 +34,7 @@
         evil-delete
         evil-delete-backward-char-and-join
         evil-delete-backward-word
+        evil-delete-backward-word-smart
         evil-delete-char
         evil-delete-line
         evil-digit-argument-or-evil-beginning-of-line

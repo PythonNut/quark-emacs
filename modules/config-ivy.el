@@ -4,6 +4,7 @@
   (with-demoted-errors "Load error: %s"
     (require 'evil)
     (require 'ivy)
+    (require 'avy)
     (require 'flx-isearch)))
 
 (setq resize-mini-windows t
@@ -54,6 +55,8 @@
 
 (with-eval-after-load 'ivy
   (diminish 'ivy-mode)
+  (with-eval-after-load 'avy
+    (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
   (setq ivy-display-style 'fancy
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
