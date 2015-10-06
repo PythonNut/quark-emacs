@@ -22,6 +22,9 @@
 /places
 
 
+# evil jump markers
+/jumps
+
 # save last place in files
 /saveplace
 /.saveplace

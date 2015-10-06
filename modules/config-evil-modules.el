@@ -5,7 +5,8 @@
     (require 'evil)
     (require 'evil-snipe)
     (require 'evil-nerd-commenter)
-    (require 'evil-quickscope)))
+    (require 'evil-quickscope)
+    (require 'evil-jumper)))
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
@@ -129,5 +130,27 @@
 (unless (or (bound-and-true-p my/slow-device)
             (< (display-color-cells) 256))
   (global-evil-quickscope-always-mode +1))
+
+(with-eval-after-load 'evil-jumper
+  (setq evil-jumper-file (expand-file-name "jumps" user-emacs-directory))
+  (evil-jumper--init-file))
+
+(define-key evil-normal-state-map (kbd "C-o") #'evil-jumper/backward)
+(define-key evil-normal-state-map (kbd "C-i") #'evil-jumper/forward)
+
+(autoload #'evil-jumper--set-jump "evil-jumper")
+(autoload #'evil-jumper--window-configuration-hook "evil-jumper")
+
+(defun nadvice/autoload-evil-jumper (&rest args)
+  (require 'evil-jumper)
+  (evil-jumper--set-jump))
+
+(add-hook 'next-error-hook #'evil-jumper--set-jump)
+(add-hook 'window-configuration-change-hook
+          #'evil-jumper--window-configuration-hook)
+
+(advice-add 'evil-set-jump :after #'nadvice/autoload-evil-jumper)
+(advice-add 'switch-to-buffer :before #'nadvice/autoload-evil-jumper)
+(advice-add 'find-tag-noselect :after #'nadvice/autoload-evil-jumper)
 
 (provide 'config-evil-modules)

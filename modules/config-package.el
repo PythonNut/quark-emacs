@@ -106,6 +106,7 @@
     evil-easymotion
     evil-exchange
     evil-indent-textobject
+    evil-jumper
     evil-matchit
     evil-nerd-commenter
     evil-org
