@@ -19,10 +19,9 @@
   (global-semantic-idle-summary-mode +1))
 
 (defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
-  (if (and
-       (bound-and-true-p flycheck-mode)
-       (progn (require 's)
-              (flycheck-overlay-errors-at (point))))
+  (if (and (bound-and-true-p flycheck-mode)
+           (progn (require 's)
+                  (flycheck-overlay-errors-at (point))))
       (flycheck-display-error-at-point)
     (apply old-fun args)))
 
@@ -143,12 +142,47 @@
   (add-hook 'yas-global-mode-hook
             (lambda ()
               (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
-  (setq
-   yas-snippet-dirs (list
-                     (expand-file-name
-                      "data/snippets"
-                      user-emacs-directory)))
+  (setq yas-snippet-dirs (list
+                          (expand-file-name
+                           "data/snippets"
+                           user-emacs-directory)))
   (yas-global-mode +1)
   (yas-reload-all))
+
+;;; ==================================
+;;; VLF intelligently edit large files
+;;; ==================================
+
+(package-deferred-install 'vlf
+    :autoload-names '('vlf))
+
+(defun nadvice/abort-if-file-too-large (_old-fun &rest args)
+  (cl-destructuring-bind (size _op-type _filename) args
+    (when (and size
+               (not (zerop size))
+               large-file-warning-threshold
+               (< large-file-warning-threshold size))
+      (unless (package-installed-p 'vlf)
+             (save-window-excursion
+               (package-install 'vlf)))
+      (advice-remove 'abort-if-file-too-large
+                     #'nadvice/abort-if-file-too-large)
+           (require 'vlf-setup)
+           (apply #'abort-if-file-too-large args))))
+
+(advice-add 'abort-if-file-too-large :around #'nadvice/abort-if-file-too-large)
+
+(defun my/vlf-hook ()
+  (setq bidi-display-reordering nil)
+  (flyspell-mode -1)
+  (flycheck-mode -1)
+  (ws-butler-mode -1)
+  (visual-line-mode -1)
+  (adaptive-wrap-prefix-mode -1)
+  (set (make-variable-buffer-local 'global-hl-line-mode) nil)
+  (set (make-variable-buffer-local 'column-number-mode) nil)
+  (message "Use C-c C-v → VLF"))
+
+(add-hook 'vlf-mode-hook #'my/vlf-hook)
 
 (provide 'config-intel)
