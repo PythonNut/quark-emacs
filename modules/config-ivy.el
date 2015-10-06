@@ -38,9 +38,6 @@
 
 (advice-add 'completing-read :before #'nadvice/completing-read-ivy)
 
-(global-set-key (kbd "C-x b") #'ivy-switch-buffer)
-(global-set-key (kbd "C-x f") #'find-file)
-
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
@@ -66,6 +63,11 @@
 (define-key evil-insert-state-map (kbd "C-s") #'swiper)
 
 (global-set-key (kbd "M-x") #'counsel-M-x)
+(global-set-key (kbd "C-x b") #'ivy-switch-buffer)
+(global-set-key (kbd "C-h f") #'counsel-describe-function)
+(global-set-key (kbd "C-h v") #'counsel-describe-variable)
+(global-set-key (kbd "C-x f") #'counsel-find-file)
+
 (define-key evil-normal-state-map (kbd "SPC SPC") #'counsel-M-x)
 
 (provide 'config-ivy)
