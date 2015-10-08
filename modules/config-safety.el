@@ -6,17 +6,15 @@
     (require 'config-package)))
 
 (defvar backup-location
-  (expand-file-name "data/backups" user-emacs-directory))
+  (expand-file-name "data/backups/" user-emacs-directory))
 (defvar autosave-location
-  (expand-file-name "data/autosave" user-emacs-directory))
+  (expand-file-name "data/autosave/" user-emacs-directory))
 (defvar tramp-backup-directory
-  (expand-file-name "data/tramp-backups" user-emacs-directory))
+  (expand-file-name "data/tramp-backups/" user-emacs-directory))
 
-(setq backup-directory-alist
-      `((".*" . ,backup-location)))
-
-(setq auto-save-file-name-transforms
-      `((".*" ,autosave-location t)))
+(setq backup-directory-alist `((".*" . ,backup-location))
+      auto-save-file-name-transforms `((".*" ,autosave-location t))
+      tramp-backup-directory `((".*" . ,tramp-backup-directory)))
 
 (defun my/save-buffer-maybe ()
   (with-current-buffer (current-buffer)
