@@ -199,6 +199,37 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (define-key iso-transl-ctl-x-8-map "=>" "⇒")
   (define-key iso-transl-ctl-x-8-map "==>" "⇒")
   (define-key iso-transl-ctl-x-8-map "=<" "⇐")
-  (define-key iso-transl-ctl-x-8-map "==<" "⇐"))
+  (define-key iso-transl-ctl-x-8-map "==<" "⇐")
+
+  (let* ((unmod-keys "',-./0123456789;=[\\]`abcdefghijklmnopqrstuvwxyz")
+         (keys (append (mapcar #'string (string-to-list unmod-keys))
+                       '("<left>" "<right>" "<up>" "<down>"
+                         "<return>" "<tab>" "RET" "TAB"))))
+
+    (define-prefix-command 'iso-cm-map)
+    (define-prefix-command 'iso-cs-map)
+    (define-prefix-command 'iso-ms-map)
+    (define-prefix-command 'iso-cms-map)
+    (define-key iso-transl-ctl-x-8-map (kbd ";") 'iso-cm-map)
+    (define-key iso-transl-ctl-x-8-map (kbd ":") 'iso-cs-map)
+    (define-key iso-transl-ctl-x-8-map (kbd "M-;") 'iso-ms-map)
+    (define-key iso-transl-ctl-x-8-map (kbd "M-:") 'iso-cms-map)
+
+    (dolist (key keys)
+      (define-key iso-transl-ctl-x-8-map
+        (kbd (concat "; " key))
+        (kbd (concat "C-M-" key)))
+
+      (define-key iso-transl-ctl-x-8-map
+        (kbd (concat ": " key))
+        (kbd (concat "C-S-" key)))
+
+      (define-key iso-transl-ctl-x-8-map
+        (kbd (concat "M-; " key))
+        (kbd (concat "M-S-" key)))
+
+      (define-key iso-transl-ctl-x-8-map
+        (kbd (concat "M-: " key))
+        (kbd (concat "C-M-S-" key))))))
 
 (provide 'config-paste)
