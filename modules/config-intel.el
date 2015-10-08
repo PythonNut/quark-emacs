@@ -149,6 +149,44 @@
   (yas-global-mode +1)
   (yas-reload-all))
 
+;; also use yasnippets for new file templates
+(defvar my/yas-template-dir (expand-file-name
+                                     "data/templates"
+                                     user-emacs-directory))
+
+(defun my/yatemplate-expand-yas-buffer ()
+  "Expand the whole buffer with `yas-expand-snippet'."
+  (require 'yasnippet)
+  (yas-expand-snippet (buffer-string) (point-min) (point-max))
+  (evil-insert-state))
+
+(defun my/yatemplate-fill-alist ()
+  "Fill `auto-insert-alist'."
+  (dolist (filename (sort (file-expand-wildcards
+                            (concat my/yas-template-dir
+                                    "**/*"))
+                           #'string>))
+    (let* ((split-name (split-string filename ":"))
+           (file-regex (if (eq (length split-name) 2)
+                           (nth 1 split-name)
+                         (lwarn "yatemplate" 'error
+                                "%s filename does not contain exactly one colon"
+                                filename)
+                         nil)))
+      (when file-regex
+        (push (cons (intern file-regex)
+                    (vector filename #'my/yatemplate-expand-yas-buffer))
+              auto-insert-alist)))))
+
+(with-eval-after-load 'autoinsert
+  (setq auto-insert-alist nil)
+  (my/yatemplate-fill-alist))
+
+(add-hook 'after-change-major-mode-hook
+          (lambda ()
+            (when (= (point-min) (point-max))
+              (auto-insert))))
+
 ;;; ==================================
 ;;; VLF intelligently edit large files
 ;;; ==================================

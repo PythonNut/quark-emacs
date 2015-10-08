@@ -1,0 +1,13 @@
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <stdlib.h>
+
+using namespace std;
+
+int main(${1:int argc, char *argv[]})
+{
+  $0
+    return 0;
+}
