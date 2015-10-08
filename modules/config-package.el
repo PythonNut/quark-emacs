@@ -176,7 +176,8 @@
                                which-key
                                evil-snipe
                                multiple-cursors
-                               avy)))
+                               avy
+                               ace-jump-helm-line)))
 
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
