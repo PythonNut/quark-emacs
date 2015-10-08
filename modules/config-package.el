@@ -8,9 +8,8 @@
 
 ;; Package archives
 (setq package-enable-at-startup nil
-      package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")))
+      package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("melpa" . "http://melpa.org/packages/")))
 
 (defvar my/package-cached-autoloads nil)
 (defvar my/package-cache-last-build-time nil)

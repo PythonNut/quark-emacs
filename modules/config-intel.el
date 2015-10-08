@@ -37,6 +37,9 @@
 (add-hook 'text-mode-hook #'global-flycheck-mode +1)
 
 (with-eval-after-load 'flycheck
+  (setq flycheck-display-errors-function #'my/display-error-messages-condensed
+        flycheck-indication-mode nil)
+
   (defun my/display-error-messages-condensed (errors)
     (require 'dash)
     (-when-let (messages (-keep #'flycheck-error-message errors))
@@ -45,9 +48,6 @@
         (display-message-or-buffer (s-join "\n" messages)
                                    flycheck-error-message-buffer))))
 
-  (setq flycheck-display-errors-function #'my/display-error-messages-condensed)
-
-  (setq flycheck-indication-mode nil)
   (set-face-background 'flycheck-fringe-warning nil)
 
   (set-face-attribute 'flycheck-error nil

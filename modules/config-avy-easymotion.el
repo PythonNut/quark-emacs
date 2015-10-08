@@ -37,7 +37,7 @@
 (with-eval-after-load 'avy
   (setq avy-background t
         avy-style 'de-bruijn
-        avy-keys (string-to-list "jfkdlsaurieowncpqmxzb"))
+        avy-keys (eval-when-compile (string-to-list "jfkdlsaurieowncpqmxzb")))
 
   (set-face-foreground 'avy-background-face "#586e75")
 
@@ -54,7 +54,7 @@
                       :foreground "#839493"))
 
 (with-eval-after-load 'ace-window
-  (setq aw-keys (string-to-list "jfkdlsautnvmircieowpq")
+  (setq aw-keys (eval-when-compile (string-to-list "jfkdlsautnvmircieowpq"))
         aw-ignore-current t
         aw-swap-invert t))
 
@@ -63,16 +63,18 @@
   "switch to minibuffer window (if active)"
   (interactive "p")
   (let ((num-windows (length (mapcar #'window-buffer (window-list)))))
-    (if (= num-windows 1)
-        (call-interactively #'split-window-right)
-      (if (active-minibuffer-window)
-          (select-window (active-minibuffer-window))
-        (if (or (> (length (visible-frame-list)) 1)
-                (numberp arg))
-            (ace-window arg)
-          (if (> num-windows 3)
-              (ace-window arg)
-            (other-window arg)))))))
+    (cond ((= num-windows 1)
+           (call-interactively #'split-window-right))
+          ((minibufferp)
+           (other-window arg))
+          ((active-minibuffer-window)
+           (select-window (active-minibuffer-window)))
+          ((or (> (length (visible-frame-list)) 1)
+               (> num-windows 3)
+               (numberp arg))
+           (ace-window arg))
+          (t
+           (other-window arg)))))
 
 (global-set-key (kbd "C-'") #'switch-window-dwim)
 

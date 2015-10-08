@@ -163,9 +163,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (with-selected-frame (or frame (selected-frame))
     (unless (display-graphic-p)
       (when (and (not xclip-mode)
-                 (or
-                  (executable-find "xclip")
-                  (executable-find "pbcopy")))
+                 (or (executable-find "xclip")
+                     (executable-find "pbcopy")))
         (xclip-mode +1))
       (xterm-mouse-mode +1)
       (require 'bracketed-paste)
