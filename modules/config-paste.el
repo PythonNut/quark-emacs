@@ -6,7 +6,8 @@
     (require 'cua-base)
     (require 'easy-kill)
     (require 'iso-transl)
-    (require 'whole-line-or-region)))
+    (require 'whole-line-or-region)
+    (require 'config-package)))
 
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
@@ -231,5 +232,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (define-key iso-transl-ctl-x-8-map
         (kbd (concat "M-: " key))
         (kbd (concat "C-M-S-" key))))))
+
+(package-deferred-install 'legalese
+    :autoload-names '('legalese))
 
 (provide 'config-paste)

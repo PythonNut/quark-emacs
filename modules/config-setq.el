@@ -138,7 +138,7 @@
 ;; set major mode for new buffers based on file rules
 (setq-default major-mode (lambda ()
                            (if buffer-file-name
-                               (fundamental-mode)
+                              (fundamental-mode)
                              (let ((buffer-file-name (buffer-name)))
                                (set-auto-mode)))))
 
