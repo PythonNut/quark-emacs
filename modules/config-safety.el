@@ -19,12 +19,15 @@
       `((".*" ,autosave-location t)))
 
 (defun my/save-buffer-maybe ()
-  (when (and
-         buffer-file-name
-         (buffer-modified-p)
-         (file-writable-p buffer-file-name)
-         (not (file-remote-p default-directory)))
-    (save-buffer)))
+  (with-current-buffer (current-buffer)
+    (let ((buffer-file-name (buffer-file-name (current-buffer))))
+      (when (and buffer-file-name
+                 (buffer-modified-p (current-buffer))
+                 (with-demoted-errors "%s"
+                   (file-writable-p buffer-file-name))
+                 (not (file-remote-p buffer-file-name)))
+        (with-demoted-errors "%s"
+          (save-buffer))))))
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
