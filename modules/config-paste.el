@@ -44,7 +44,7 @@
 (advice-add 'cua-cut-region :around #'nadvice/cua-cut-region)
 
 ;; cua-yank a line if cut as a line
-(defun nadvice/cua-paste (raw-prefix &optional string-in)
+(defun nadvice/cua-paste (old-fun raw-prefix &optional string-in)
   "Yank (paste) previously killed text.
 
 If the text to be yanked was killed with a whole-line-or-region
@@ -75,7 +75,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
               ;; insert "manually"
               (insert string-in)
             ;; just yank as normal
-            (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))
+            (call-interactively old-fun raw-prefix))
 
           ;; a whole-line killed from end of file may not have a
           ;; trailing newline -- add one, in these cases
@@ -99,9 +99,9 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
                                         string-to-yank))
                 'evil-yank-line-handler)
             (evil-paste-before raw-prefix)
-          (call-interactively (ad-get-orig-definition 'cua-paste) raw-prefix))))))
+          (call-interactively old-fun raw-prefix))))))
 
-(advice-add 'cua-paste :override #'nadvice/cua-paste)
+(advice-add 'cua-paste :around #'nadvice/cua-paste)
 
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
