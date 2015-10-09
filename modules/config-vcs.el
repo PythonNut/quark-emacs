@@ -35,9 +35,9 @@
   (evil-set-initial-state 'magit-revision-mode 'motion)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
-  (define-key magit-log-mode-map (kbd "j") #'next-line)
-  (define-key magit-refs-mode-map (kbd "j") #'next-line)
-  (define-key magit-status-mode-map (kbd "j") #'next-line)
+  (define-key magit-log-mode-map "j" #'next-line)
+  (define-key magit-refs-mode-map "j" #'next-line)
+  (define-key magit-status-mode-map "j" #'next-line)
   (eval-and-compile
     (cl-macrolet
         ((magit-setup-section-k
@@ -85,6 +85,11 @@
     (run-with-timer 1 nil #'message ""))
 
   (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers))
+
+(with-eval-after-load 'git-rebase
+  (define-key git-rebase-mode-map "j" #'next-line)
+  (define-key git-rebase-mode-map "k" #'previous-line)
+  (define-key git-rebase-mode-map "K" #'git-rebase-kill-line))
 
 (with-eval-after-load 'smerge-mode
   (diminish 'smerge-mode)
