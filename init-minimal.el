@@ -45,10 +45,10 @@
 (global-hl-line-mode +1)
 
 ;; interpreted as C-<Arrow> in a terminal
-(global-set-key (kbd "M-[ d") #'windmove-left)
-(global-set-key (kbd "M-[ c") #'windmove-right)
-(global-set-key (kbd "M-[ a") #'windmove-up)
-(global-set-key (kbd "M-[ b") #'windmove-down)
+(global-set-key (kbd "M-[ d") (kbd "<C-left>"))
+(global-set-key (kbd "M-[ c") (kbd "<C-right>"))
+(global-set-key (kbd "M-[ a") (kbd "<C-up>"))
+(global-set-key (kbd "M-[ b") (kbd "<C-down"))
 
 ;; and parsed normally in GUI
 (global-set-key (kbd "C-<left>") #'windmove-left)

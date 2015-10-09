@@ -82,15 +82,20 @@
 (global-set-key (kbd "C->") #'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this)
 
+;; interpreted as C-<Arrow> in a terminal
+(global-set-key (kbd "M-[ d") (kbd "<C-left>"))
+(global-set-key (kbd "M-[ c") (kbd "<C-right>"))
+(global-set-key (kbd "M-[ a") (kbd "<C-up>"))
+(global-set-key (kbd "M-[ b") (kbd "<C-down"))
+
 ;; directional window movement
-(global-set-key (kbd "<M-left>")  #'windmove-left)
-(global-set-key (kbd "<M-right>") #'windmove-right)
-(global-set-key (kbd "<M-up>")    #'windmove-up)
-(global-set-key (kbd "<M-down>")  #'windmove-down)
+(global-set-key (kbd "<C-left>")  #'windmove-left)
+(global-set-key (kbd "<C-right>") #'windmove-right)
+(global-set-key (kbd "<C-up>")    #'windmove-up)
+(global-set-key (kbd "<C-down>")  #'windmove-down)
 
 (defun my/framemove-onetime-setup (&optional frame)
   (with-selected-frame (or frame (selected-frame))
-    (windmove-default-keybindings 'meta)
     (require 'framemove)
     (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
