@@ -310,7 +310,13 @@
         which-key-side-window-max-height 0.33)
 
   (add-to-list 'which-key-description-replacement-alist
-               '("evil-\\(a\\|an\\|inner\\)-\\(.*\\)" . "\\2")))
+               `(,(eval-when-compile
+                    (concat
+                     "evil-"
+                     (regexp-opt (list "a"
+                                       "an"
+                                       "inner"))
+                     "-\\(.*\\)")) . "\\1")))
 
 (global-set-key (kbd "C-0") #'delete-window)
 (global-set-key (kbd "C-1") #'delete-other-windows)

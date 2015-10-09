@@ -131,7 +131,10 @@
 (add-hook 'find-file-hook #'my/auto-compression-onetime-setup)
 
 ;; encryption mode
-(setq epa-file-name-regexp "\\.\\(gpg\\|asc\\)$")
+(setq epa-file-name-regexp (eval-when-compile
+                             (concat (regexp-opt (list ".gpg"
+                                                       ".asc"))
+                                     "$")))
 (epa-file-name-regexp-update)
 (setenv "GPG_AGENT_INFO" nil)
 

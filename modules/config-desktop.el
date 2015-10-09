@@ -146,7 +146,7 @@
                        (string-match-p "^\\(\\..*\\|.*\.lock\\)$" item))
                      (directory-files desktop-dirname)))
              (desktop-base-file-name (completing-read
-                                      "Complete a foo: "
+                                      "Enter a desktop name: "
                                       files
                                       nil t))
              (desktop-base-lock-name

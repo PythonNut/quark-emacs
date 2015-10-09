@@ -791,8 +791,24 @@
                         nil
                       0.1))))
   (add-hook 'eshell-mode-hook #'my/eshell-onetime-setup)
-  (setq eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'"
-        eshell-cmpl-file-ignore "\\(\\.elc\\|\\.zwc\\|\\.pyc\\|~\\|\\.swp\\)\\'"
+  (setq eshell-cmpl-dir-ignore (eval-when-compile
+                                 (concat "^"
+                                         (regexp-opt
+                                          (list "."
+                                                ".."
+                                                "CVS"
+                                                ".svn"
+                                                ".git"))
+                                         "$"))
+
+        eshell-cmpl-file-ignore (eval-when-compile
+                                  (concat (regexp-opt
+                                           (list ".elc"
+                                                 ".zwc"
+                                                 ".pyc"
+                                                 "~"
+                                                 ".swp"))
+                                          "$"))
         eshell-cmpl-ignore-case t
 
         eshell-scroll-to-bottom-on-input t
