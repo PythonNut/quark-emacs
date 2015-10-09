@@ -30,8 +30,7 @@
 ;; hl-line-mode breaks minibuffer in TTY
 (add-hook 'minibuffer-setup-hook
           (lambda ()
-            (make-variable-buffer-local 'global-hl-line-mode)
-            (setq global-hl-line-mode nil)))
+            (set (make-variable-buffer-local 'global-hl-line-mode) nil)))
 
 (defun nadvice/completing-read-ivy (&rest _args)
   (ivy-mode +1)

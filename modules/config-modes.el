@@ -727,14 +727,11 @@
   (adaptive-wrap-prefix-mode -1)
   (visual-line-mode -1)
   (yas-minor-mode -1)
-  (make-variable-buffer-local 'global-hl-line-mode)
-  (make-variable-buffer-local 'scroll-margin)
-  (make-variable-buffer-local 'smooth-scroll-margin)
+  (setq yas-dont-activate t)
 
-  (setq yas-dont-activate t
-        global-hl-line-mode nil
-        scroll-margin 0
-        smooth-scroll-margin 0))
+  (set (make-variable-buffer-local 'global-hl-line-mode) nil)
+  (set (make-variable-buffer-local 'scroll-margin) 0)
+  (set (make-variable-buffer-local 'smooth-scroll-margin) 0))
 
 (add-hook 'term-mode-hook #'my/generic-term-init)
 (add-hook 'shell-mode-hook #'my/generic-term-init)

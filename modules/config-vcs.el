@@ -69,8 +69,7 @@
   ;; disable regular key chords by switching input methods
   (defun my/setup-magit-mode ()
     (set (make-local-variable 'input-method-function) nil)
-    (make-variable-buffer-local 'global-hl-line-mode)
-    (setq global-hl-line-mode nil))
+    (set (make-variable-buffer-local 'global-hl-line-mode) nil))
 
   (add-hook 'magit-log-mode-hook #'my/setup-magit-mode)
   (add-hook 'magit-refs-mode-hook #'my/setup-magit-mode)

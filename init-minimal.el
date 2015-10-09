@@ -35,11 +35,8 @@
 (defun generic-term-init ()
   (face-remap-add-relative 'default :background "#111")
   (visual-line-mode -1)
-  (make-variable-buffer-local 'global-hl-line-mode)
-  (make-variable-buffer-local 'scroll-margin)
-  (make-local-variable 'global-hl-line-mode)
-  (setq global-hl-line-mode nil
-        scroll-margin 0))
+  (set (make-variable-buffer-local 'global-hl-line-mode) nil)
+  (set (make-variable-buffer-local 'scroll-margin) 0))
 
 (add-hook 'term-mode-hook #'generic-term-init)
 (add-hook 'shell-mode-hook #'generic-term-init)
