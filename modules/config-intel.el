@@ -142,6 +142,17 @@
 
 (setq yas-verbosity 0)
 
+(defun my/ivy-yasnippet (prompt choices &optional display-fn)
+  "Use ivy to select a snippet. Put this into `yas-prompt-functions.'"
+  (if (require 'ivy nil t)
+      (let* ((disp-fn (or display-fn 'identity))
+             (cands (mapcar (lambda (x) (cons (funcall disp-fn x) x)) choices))
+             (result (ivy-read "Snippet: " (mapcar #'car cands))))
+        (if (null result)
+            (signal 'quit "user quit!")
+          (cdr (assoc result cands))))
+    nil))
+
 (with-eval-after-load 'yasnippet
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -159,7 +170,9 @@
                            "data/snippets"
                            user-emacs-directory)))
   (yas-global-mode +1)
-  (yas-reload-all))
+  (yas-reload-all)
+
+  (add-to-list 'yas-prompt-functions #'my/ivy-yasnippet))
 
 ;; also use yasnippets for new file templates
 (defvar my/yas-template-dir (expand-file-name
