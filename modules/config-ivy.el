@@ -5,6 +5,7 @@
     (require 'evil)
     (require 'ivy)
     (require 'avy)
+    (require 'counsel)
     (require 'flx-isearch)))
 
 (setq resize-mini-windows t
@@ -54,10 +55,24 @@
   (diminish 'ivy-mode)
   (with-eval-after-load 'avy
     (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
+
   (setq ivy-display-style 'fancy
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
         ivy-count-format nil))
+
+(with-eval-after-load 'counsel
+  (setq counsel-find-file-ignore-regexp
+        (eval-when-compile
+          (concat "^.*"
+           (regexp-opt
+                   (list "~"
+                         ".elc"
+                         ".pyc"
+                         ".swp"
+                         ".zwc"
+                         ".zwc.old"))
+           "$"))))
 
 (define-key evil-normal-state-map (kbd "C-s") #'swiper)
 (define-key evil-insert-state-map (kbd "C-s") #'swiper)
