@@ -41,12 +41,13 @@
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
-(with-eval-after-load 'swiper
+(defun my/ivy-setup-faces ()
   (set-face-attribute 'swiper-minibuffer-match-face-1 nil
                       :background nil)
   (set-face-attribute 'swiper-minibuffer-match-face-2 nil
                       :background nil
                       :foreground "#268bd2")
+
   (setq swiper-minibuffer-faces (list 'swiper-minibuffer-match-face-1
                                       'swiper-minibuffer-match-face-2)))
 
@@ -58,7 +59,9 @@
   (setq ivy-display-style 'fancy
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
-        ivy-count-format nil))
+        ivy-count-format nil)
+
+  (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
 (with-eval-after-load 'counsel
   (setq counsel-find-file-ignore-regexp
