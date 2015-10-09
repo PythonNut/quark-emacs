@@ -1,18 +1,20 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)
-    (require 'undo-tree)))
-
 (with-eval-after-load 'evil
-  (eval-and-compile (require 'evil))
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil)))
+
   (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
     #'undo-tree-visualizer-toggle-timestamps)
   (evil-define-key 'motion  undo-tree-visualizer-mode-map (kbd "d")
     #'undo-tree-visualizer-toggle-diff))
 
 (with-eval-after-load 'undo-tree
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'undo-tree)))
+
   (diminish 'undo-tree-mode " μ")
   (defalias 'redo #'undo-tree-redo)
   (defalias 'undo #'undo-tree-undo)

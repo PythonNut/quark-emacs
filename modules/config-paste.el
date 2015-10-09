@@ -3,11 +3,7 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'evil)
-    (require 'cua-base)
-    (require 'easy-kill)
-    (require 'iso-transl)
-    (require 'whole-line-or-region)
-    (require 'config-package)))
+    (require 'cua-base)))
 
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
@@ -111,6 +107,10 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (easy-kill-adjust-candidate 'my-line str))))
 
 (with-eval-after-load 'easy-kill
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'easy-kill)))
+
   (setq easy-kill-try-things '(url email my-line)))
 
 ;; make evil respect whole-line-or-region
@@ -188,6 +188,10 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
               (smartparens-mode -1))))
 
 (with-eval-after-load 'iso-transl
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'iso-transl)))
+
   (define-prefix-command 'arrow-thin-map)
   (define-key iso-transl-ctl-x-8-map "-" 'arrow-thin-map)
   (define-key iso-transl-ctl-x-8-map "->" "→")
@@ -232,6 +236,10 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (define-key iso-transl-ctl-x-8-map
         (kbd (concat "M-: " key))
         (kbd (concat "C-M-S-" key))))))
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'config-package)))
 
 (package-deferred-install 'legalese
     :autoload-names '('legalese))

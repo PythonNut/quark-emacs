@@ -5,9 +5,6 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'evil)
-    (require 'key-chord)
-    (require 'hydra)
-    (require 'smartparens)
     (require 'diminish)
     (require 'config-setq)))
 
@@ -245,7 +242,7 @@
         "
 [_U_] ↰↱ [_u_]  [_K_] ←  kill  → [_k_]  [_<_] ← barf  → [_._]   [_s_] split
 [_b_] ←→ [_f_]  [_p_] ←  next  → [_n_]  [_>_] ← slurp → [_,_]   [_j_] join
-[_D_] ↲↳ [_d_]  [_W_] ← unwrap → [_w_]  [_a_] ← emit  → [_e_]"
+[_D_] ↲↳ [_d_]  [_W_] ← unwrap → [_w_]  [_a_] ← emit  → [_e_]   [_t_] trans"
        ("f" evil-sp-forward-sexp)
        ("b" evil-sp-backward-sexp)
        ("d" evil-sp-down-sexp)
@@ -262,6 +259,7 @@
        ("j" sp-join-sexp)
        ("a" sp-absorb-sexp)
        ("e" sp-emit-sexp)
+       ("t" sp-transpose-sexp)
        ("," evil-sp-forward-slurp-sexp)
        ("." evil-sp-forward-barf-sexp)
        ("<" evil-sp-backward-barf-sexp)

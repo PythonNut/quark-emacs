@@ -2,15 +2,8 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'dash)
     (require 'desktop)
-    (require 'cl-lib)
-    (require 'recentf)
-    (require 'saveplace)
-    (require 'savehist)
-    (require 'helm-grep)
-    (require 'evil-ex)
-    (require 'config-setq)))
+    (require 'cl-lib)))
 
 (defvar file-name-mode-alist nil)
 
@@ -18,9 +11,13 @@
       history-delete-duplicates t)
 
 (with-eval-after-load 'saveplace
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'saveplace)))
+
+  (setq-default save-place t)
   (setq save-place-file (expand-file-name ".saveplace"
-                                          user-emacs-directory))
-  (setq-default save-place t))
+                                          user-emacs-directory)))
 
 (defun my/saveplace-onetime-setup ()
   (require 'saveplace)
@@ -31,6 +28,10 @@
 (add-hook 'find-file-hook #'my/saveplace-onetime-setup)
 
 (with-eval-after-load 'savehist
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'savehist)))
+
   (setq savehist-file (expand-file-name ".savehist"
                                         user-emacs-directory)
         savehist-autosave-interval 120
@@ -67,6 +68,10 @@
 (advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
 
 (with-eval-after-load 'recentf
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'recentf)))
+
   (setq recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
         recentf-max-saved-items 200
         recentf-max-menu-items 30
@@ -84,10 +89,12 @@
 
 (add-hook 'savehist-save-hook
           (lambda ()
-            (require 'dash)
             (setq file-name-mode-alist
-                  (-take history-length
-                         (my/compress-alist file-name-mode-alist)))))
+                  (nreverse
+                   (let ((res)
+                         (orig (my/compress-alist file-name-mode-alist)))
+                     (dotimes (_ (min history-length (length orig)) res)
+                       (push (pop orig) res)))))))
 
 (defun my/register-file-name-mode-maybe ()
   (when (and buffer-file-name

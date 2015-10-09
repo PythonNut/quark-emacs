@@ -2,18 +2,17 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 's)
-    (require 'cl-lib)
-    (require 'yasnippet)
-    (require 'semantic)
-    (require 'flycheck)
-    (require 'flyspell)))
+    (require 'cl-lib)))
 
 (require 'config-tramp)
 
 ;; enable semantic code LALR(1) parser
 (add-hook 'prog-mode-hook #'semantic-mode)
 (with-eval-after-load 'semantic
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'semantic)))
+
   (global-semanticdb-minor-mode +1)
   (global-semantic-idle-scheduler-mode +1)
   (global-semantic-idle-summary-mode +1))
@@ -37,6 +36,11 @@
 (add-hook 'text-mode-hook #'global-flycheck-mode +1)
 
 (with-eval-after-load 'flycheck
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 's)
+      (require 'flycheck)))
+
   (setq flycheck-display-errors-function #'my/display-error-messages-condensed
         flycheck-indication-mode nil)
 
@@ -100,6 +104,10 @@
   (advice-add 'ispell-init-process :around #'nadvice/ispell-init-process))
 
 (with-eval-after-load 'flyspell
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'flyspell)))
+
   (setq flyspell-issue-message-flag nil
         flyspell-issue-welcome-flag nil)
 
@@ -135,6 +143,10 @@
 (setq yas-verbosity 0)
 
 (with-eval-after-load 'yasnippet
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'yasnippet)))
+
   (set-face-attribute 'yas-field-highlight-face nil
                       :foreground nil
                       :background nil
@@ -162,10 +174,10 @@
 
 (defun my/yatemplate-fill-alist ()
   "Fill `auto-insert-alist'."
-  (dolist (filename (sort (file-expand-wildcards
-                            (concat my/yas-template-dir
-                                    "**/*"))
-                           #'string>))
+  (dolist (filename (nreverse (sort (file-expand-wildcards
+                                      (concat my/yas-template-dir
+                                              "**/*"))
+                                     #'string<)))
     (let* ((split-name (split-string filename ":"))
            (file-regex (if (eq (length split-name) 2)
                            (nth 1 split-name)

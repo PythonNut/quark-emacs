@@ -4,11 +4,17 @@
   (with-demoted-errors "Load error: %s"
     (require 'tramp)))
 
+(with-eval-after-load 'password-cache
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'password-cache)))
+
+  (setq password-cache-expiry nil))
+
 (with-eval-after-load 'tramp
   ;; cache passwords for the duration of the session
   ;; note that said cache is _not_ persistent
-  (setq password-cache-expiry nil
-        tramp-default-method "scp"))
+  (setq tramp-default-method "scp"))
 
 ;; =================================
 ;; automatically request root access

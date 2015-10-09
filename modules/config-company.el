@@ -3,11 +3,7 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
-    (require 'flx)
-    (require 'hippie-exp)
-    (require 'company)
-    (require 'company-dabbrev-code)
-    (require 'config-setq)))
+    (require 'flx)))
 
 (defvar company-flx-cache)
 (defvar company-flx-limit 500)
@@ -153,6 +149,10 @@
   (setq completion-styles (list 'fuzzy)))
 
 (with-eval-after-load 'company
+  (eval-when-compile
+     (with-demoted-errors "Load error: %s"
+       (require 'company)))
+
   (global-company-mode +1)
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
   (require 'flx)
@@ -203,6 +203,10 @@
         company-transformers (list #'my/company-flx-transformer))
 
   (eval-and-compile
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'config-setq)))
+
     (cl-macrolet
         ((company-define-specific-modes
           (mode backend)
@@ -309,11 +313,19 @@
   (add-hook 'load-theme-hook #'my/company-setup-template-faces))
 
 (with-eval-after-load 'company-dabbrev-code
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'company-dabbrev-code)))
+
   (setq company-dabbrev-code-everywhere t))
 
 ;;; ==================================================
 ;;; Hippie expand - secondary autocompletion framework
 ;;; ==================================================
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'hippie-exp)))
+
 (defun try-expand-flx-regexp (str)
   "Generate regexp for flexible matching of str."
   (concat "\\b"
@@ -355,7 +367,7 @@
         (when old (he-reset-string))
       (he-substitute-string (pop he-expand-list)))))
 
-(with-eval-after-load 'hippie-expand
+(with-eval-after-load 'hippie-exp
   (setq hippie-expand-try-functions-list
         '(yas-hippie-try-expand
           try-expand-dabbrev

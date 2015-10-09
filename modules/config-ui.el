@@ -3,17 +3,7 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
-    (require 'hydra)
-    (require 'key-chord)
-    (require 'evil)
-    (require 'diminish)
-    (require 'evil-easymotion)
-    (require 'volatile-highlights)
-    (require 'linum-relative)
-    (require 'config-setq)
-    (require 'config-package)
-    (require 'which-key)
-    (require 'framemove)))
+    (require 'diminish)))
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil
@@ -40,6 +30,10 @@
                                 `(autoload ,func "multiple-cursors")))
 
   (with-no-warnings
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'config-setq)))
+
     (my/generate-calls-single
      'autoload-multiple-cursors
      (#'mc/mark-lines
@@ -105,6 +99,10 @@
             (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
 (with-eval-after-load 'framemove
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'framemove)))
+
   (setq framemove-hook-into-windmove t))
 
 (defun pop-window-into-frame ()
@@ -118,6 +116,10 @@
 ;;; iflib - switch buffers alt-tab style
 ;;; ====================================
 (with-eval-after-load 'iflipb
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'hydra)))
+
   (setq iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
         iflipb-wrap-around 't)
 
@@ -173,6 +175,10 @@
 (add-hook 'window-configuration-change-hook #'winner-mode)
 
 (with-eval-after-load 'volatile-highlights
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'volatile-highlights)))
+
   (diminish #'volatile-highlights-mode)
   (vhl/define-extension 'my-evil-highlights
                         'evil-yank
@@ -249,12 +255,6 @@
   (require 'auto-highlight-symbol)
   (global-auto-highlight-symbol-mode +1))
 
-(evil-define-command evil-cycle-spacing (&optional count)
-  (cycle-spacing (or count 1)))
-
-(global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
-(global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing)
-
 ;; ============
 ;; Line numbers
 ;; ============
@@ -308,6 +308,10 @@
 (global-set-key (kbd "C-c C-l") #'linum-cycle)
 
 (with-eval-after-load 'which-key
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'which-key)))
+
   (diminish 'which-key-mode)
   (which-key-mode +1)
   (setq which-key-sort-order nil
@@ -322,17 +326,6 @@
                                        "an"
                                        "inner"))
                      "-\\(.*\\)")) . "\\1")))
-
-(global-set-key (kbd "C-0") #'delete-window)
-(global-set-key (kbd "C-1") #'delete-other-windows)
-(global-set-key (kbd "C-2") #'split-window-below)
-(global-set-key (kbd "C-3") #'split-window-right)
-(global-set-key (kbd "C-4") #'find-file-other-window)
-(global-set-key (kbd "C-5") #'make-frame-command)
-(global-set-key (kbd "M-j") #'evil-join)
-(global-set-key (kbd "C-.") #'er/expand-region)
-(global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
-(global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
 
 (defun isearch-delete-something ()
   "Delete non-matching text or the last character."
@@ -374,5 +367,26 @@
                    name (file-name-nondirectory new-name)))))))
 
 (global-set-key (kbd "C-x C-r") #'rename-current-buffer-file)
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'evil)))
+
+(evil-define-command evil-cycle-spacing (&optional count)
+  (cycle-spacing (or count 1)))
+
+(global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
+(global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing)
+
+(global-set-key (kbd "C-0") #'delete-window)
+(global-set-key (kbd "C-1") #'delete-other-windows)
+(global-set-key (kbd "C-2") #'split-window-below)
+(global-set-key (kbd "C-3") #'split-window-right)
+(global-set-key (kbd "C-4") #'find-file-other-window)
+(global-set-key (kbd "C-5") #'make-frame-command)
+(global-set-key (kbd "M-j") #'evil-join)
+(global-set-key (kbd "C-.") #'er/expand-region)
+(global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
+(global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
 
 (provide 'config-ui)

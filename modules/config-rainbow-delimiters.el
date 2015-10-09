@@ -1,9 +1,5 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'rainbow-delimiters)))
-
 (defvar my/rainbow-delimiters-switch nil
   "t if rainbow-delimiters are currently punched")
 (defvar my/rainbow-delimiters-face-cookies nil
@@ -25,6 +21,10 @@
               (rainbow-delimiters-mode +1))))
 
 (with-eval-after-load 'rainbow-delimiters
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'rainbow-delimiters)))
+
   (set-face-foreground 'rainbow-delimiters-depth-1-face "#889899")
   (set-face-foreground 'rainbow-delimiters-depth-2-face "#9b7b6b")
   (set-face-foreground 'rainbow-delimiters-depth-3-face "#7b88a5")

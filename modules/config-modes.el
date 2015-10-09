@@ -55,13 +55,13 @@
 ;; C-like ======================================================================
 ;; =============================================================================
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'cc-mode)))
-
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 
 (with-eval-after-load 'cc-mode
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+
+      (require 'cc-mode)))
   (package-deferred-install 'irony
       :autoload-names '('irony-mode
                         'irony-version
@@ -202,15 +202,15 @@
 ;; Shell Scripts ===============================================================
 ;; =============================================================================
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'sh-script)))
-
 ;; bind zsh files to sh-mode
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
 
 ;; bind zsh files to the zsh submode of sh-mode
 (with-eval-after-load 'sh-script
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'sh-script)))
+
   (add-hook 'sh-mode-hook
             (lambda ()
               (setq mode-name "sh")
@@ -229,16 +229,15 @@
 ;; Python ======================================================================
 ;; =============================================================================
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'python)))
-
 (package-deferred-install 'company-anaconda
     :autoload-names '('company-anaconda))
 
 (package-deferred-install 'anaconda-mode
     :autoload-names '('anaconda-mode)
     (diminish 'anaconda-mode " ✶")
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'anaconda-mode)))
   (setq anaconda-mode-installation-directory (expand-file-name
                                               "data/anaconda-mode"
                                               user-emacs-directory)))
@@ -291,6 +290,10 @@
             (setq mode-name "Py")))
 
 (with-eval-after-load 'python
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'python)))
+
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
   (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto))
 
@@ -585,13 +588,8 @@
 ;; Dired =======================================================================
 ;; =============================================================================
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'dired)
-    (require 'dired-x)
-    (require 'ls-lisp)))
-
 (with-eval-after-load 'ls-lisp
+  (eval-when-compile (with-demoted-errors "Load error: %s" (require 'ls-lisp)))
   (setq ls-lisp-use-insert-directory-program nil
         ls-lisp-support-shell-wildcards t
         ls-lisp-dirs-first t
@@ -600,7 +598,7 @@
 (with-eval-after-load 'dired
   (require 'ls-lisp)
   (require 'dired-x)
-
+  (eval-when-compile (with-demoted-errors "Load error: %s" (require 'dired)))
   (setq dired-listing-switches "-alh")
 
   (defun dired-first-file ()
@@ -649,6 +647,10 @@
     #'dired-first-file)
   (define-key dired-mode-map (kbd "<remap> <end-of-buffer>")
     #'dired-last-file))
+
+(with-eval-after-load 'dired-aux
+  (eval-when-compile (require 'dired-aux))
+  (add-to-list 'dired-compress-file-suffixes '("\\.zip\\'" ".zip" "unzip")))
 
 ;; =============================================================================
 ;; Comint ======================================================================
@@ -714,12 +716,9 @@
 ;; =============================================================================
 ;; Shell modes =================================================================
 ;; =============================================================================
-
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'hl-line)
-    (require 'em-smart)
-    (require 'em-unix)))
+    (require 'hl-line)))
 
 (defun my/generic-term-init ()
   ;; this disables key-chord-mode
@@ -762,10 +761,6 @@
 
   (advice-add 'ansi-term :filter-args #'nadvice/ansi-term))
 
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (make-variable-buffer-local 'company-idle-delay)))
-
 (defun eshell-kill-whole-line ()
   (interactive)
   (eshell-bol)
@@ -781,13 +776,25 @@
   (remove-hook 'eshell-mode-hook #'my/eshell-onetime-setup))
 
 (with-eval-after-load 'eshell
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'em-smart)
+      (require 'em-unix)
+      (require 'em-cmpl)
+      (require 'company)))
+
+  (add-hook 'eshell-mode-hook
+            (lambda ()
+              (make-variable-buffer-local 'company-idle-delay)))
+
+  (add-hook 'eshell-mode-hook #'my/eshell-onetime-setup)
   (add-hook 'eshell-directory-change-hook
             (lambda ()
               (setq company-idle-delay
                     (if (file-remote-p default-directory)
                         nil
                       0.1))))
-  (add-hook 'eshell-mode-hook #'my/eshell-onetime-setup)
+
   (setq eshell-cmpl-dir-ignore (eval-when-compile
                                  (concat "^"
                                          (regexp-opt

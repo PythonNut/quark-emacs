@@ -2,15 +2,13 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)
-    (require 'evil)
-    (require 'key-chord)
-    (require 'config-setq)
-
-    (require 'icicles-mac)
-    (require 'icicles)))
+    (require 'cl-lib)))
 
 (defun icicle-flx-score-greater-p (s1 s2)
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'icicles)))
+
   "Return non-nil if S1 scores higher than S2 using `flx-score`."
   ;; (message "Testing testing!")
   (let* ((input   (if (icicle-file-name-input-p)
@@ -21,6 +19,11 @@
     (and score1  score2  (> (car score1) (car score2)))))
 
 (with-eval-after-load 'icicles
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'icicles)
+      (require 'icicles-mac)))
+
   (icicle-define-sort-command "by flx score"
                               ;; icicle-dirs-last-p
                               icicle-flx-score-greater-p
@@ -65,6 +68,10 @@
     (apply func args)))
 
 (eval-and-compile
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'config-setq)))
+
   (defmacro my/autoload-icicle (func)
     `(defun ,(cadr func) (&rest args)
        (interactive)
@@ -524,6 +531,11 @@
 (global-set-key (kbd "C-S-s") #'icicle-search-generic)
 (global-set-key (kbd "C-:") #'icicle-pp-eval-expression)
 (global-set-key (kbd "<backtab>") #'icicle-complete-keys)
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'evil)))
+
 (define-key evil-normal-state-map (kbd "<backtab>") #'icicle-complete-keys)
 (define-key evil-insert-state-map (kbd "<backtab>") #'icicle-complete-keys)
 

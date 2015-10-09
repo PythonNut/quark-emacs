@@ -2,8 +2,6 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'avy)
-    (require 'ace-window)
     (require 'key-chord)
     (require 'evil)
     (require 'evil-easymotion)))
@@ -35,6 +33,10 @@
 (advice-add 'self-insert-command :around #'nadvice/self-insert-command)
 
 (with-eval-after-load 'avy
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'avy)))
+
   (setq avy-background t
         avy-style 'de-bruijn
         avy-keys (eval-when-compile (string-to-list "jfkdlsaurieowncpqmxzb")))
@@ -54,6 +56,10 @@
                       :foreground "#839493"))
 
 (with-eval-after-load 'ace-window
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'ace-window)))
+
   (setq aw-keys (eval-when-compile (string-to-list "jfkdlsautnvmircieowpq"))
         aw-ignore-current t
         aw-swap-invert t))

@@ -1,11 +1,5 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'magit)
-    (require 'diff-hl)
-    (require 'config-setq)))
-
 (unless (bound-and-true-p my/slow-device)
   (add-hook 'find-file-hook
             (lambda ()
@@ -14,10 +8,19 @@
                 (diff-hl-update)))))
 
 (with-eval-after-load 'diff-hl
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'diff-hl)))
+
   (setq diff-hl-draw-borders nil)
   (diff-hl-flydiff-mode +1))
 
 (with-eval-after-load 'magit
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'magit)
+      (require 'config-setq)))
+
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
         magit-log-format-graph-function #'magit-log-format-unicode-graph
@@ -197,6 +200,10 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
 (global-set-key (kbd "C-c p") #'my/smart-projectile-tools)
 
 (with-eval-after-load 'ediff
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'ediff)))
+
   (add-hook 'ediff-before-setup-hook
             (lambda ()
               (setq ediff-saved-window-configuration (current-window-configuration))))

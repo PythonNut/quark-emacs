@@ -1,13 +1,5 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)
-    (require 'ivy)
-    (require 'avy)
-    (require 'counsel)
-    (require 'flx-isearch)))
-
 (setq resize-mini-windows t
 
       ;; don't let the cursor go into minibuffer prompt
@@ -38,6 +30,10 @@
 
 (advice-add 'completing-read :before #'nadvice/completing-read-ivy)
 
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'flx-isearch)))
+
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
@@ -51,9 +47,20 @@
   (setq swiper-minibuffer-faces (list 'swiper-minibuffer-match-face-1
                                       'swiper-minibuffer-match-face-2)))
 
+(with-eval-after-load 'swiper
+  (my/ivy-setup-faces))
+
 (with-eval-after-load 'ivy
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'ivy)))
+
   (diminish 'ivy-mode)
   (with-eval-after-load 'avy
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'avy)))
+
     (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
 
   (setq ivy-display-style 'fancy
@@ -64,6 +71,10 @@
   (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
 (with-eval-after-load 'counsel
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'counsel)))
+
   (setq counsel-find-file-ignore-regexp
         (eval-when-compile
           (concat "^.*"
@@ -75,6 +86,10 @@
                          ".zwc"
                          ".zwc.old"))
            "$"))))
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'evil)))
 
 (define-key evil-normal-state-map (kbd "C-s") #'swiper)
 (define-key evil-insert-state-map (kbd "C-s") #'swiper)

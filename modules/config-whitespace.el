@@ -2,8 +2,6 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'auto-indent-mode)
-    (require 'adaptive-wrap)
     (require 'diminish)
     (require 'smie)
     (require 'evil)))
@@ -12,6 +10,10 @@
       line-move-visual t)
 
 (with-eval-after-load 'adaptive-wrap
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'adaptive-wrap)))
+
   (setq-default adaptive-wrap-extra-indent 2))
 
 (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
@@ -54,6 +56,10 @@
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
 
 (with-eval-after-load 'auto-indent-mode
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'auto-indent-mode)))
+
   (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →")))
 
 (defun my/auto-indent-onetime-setup ()
@@ -71,6 +77,10 @@
     (smie-config-guess)))
 
 (add-hook 'after-change-major-mode-hook #'my/smie-auto-guess)
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'evil)))
 
 (evil-define-command back-to-indentation-or-beginning ()
   (if (= (point)

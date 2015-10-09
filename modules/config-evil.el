@@ -2,11 +2,6 @@
 
 (require 'evil)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)
-    (require 'evil-surround)))
-
 (setq evil-auto-indent t
       evil-ex-complete-emacs-commands t
       evil-magic 'very-magic

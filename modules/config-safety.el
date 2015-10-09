@@ -1,10 +1,5 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'autorevert)
-    (require 'config-package)))
-
 (defvar backup-location
   (expand-file-name "data/backups/" user-emacs-directory))
 (defvar autosave-location
@@ -68,6 +63,9 @@
                 (save-some-buffers t)))))
 
 (with-eval-after-load 'autorevert
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'autorevert)))
   (setq global-auto-revert-non-file-buffers t
         auto-revert-verbose nil))
 
@@ -77,6 +75,10 @@
                #'my/auto-revert-onetime-setup))
 
 (add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'config-package)))
 
 (package-deferred-install 'backup-walker
     :autoload-names '('backup-walker-start))

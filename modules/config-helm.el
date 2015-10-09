@@ -3,21 +3,19 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
-    (require 'evil)
-    (require 'helm)
-    (require 'helm-ag)
-    (require 'helm-config)
-    (require 'helm-files)
-    (require 'helm-grep)
-    (require 'helm-command)
-    (require 'helm-imenu)
-    (require 'helm-locate)
-    (require 'helm-semantic)))
+    (require 'helm)))
 
 (defvar helm-flx-cache nil)
 
 (with-eval-after-load 'helm-files
-  (setq helm-ff-skip-boring-files t
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'helm-files)))
+
+  (setq helm-ff-transformer-show-only-basename nil
+        helm-ff-newfile-prompt-p nil
+        helm-recentf-fuzzy-match t
+        helm-ff-skip-boring-files t
         helm-recentf-fuzzy-match t
         helm-boring-file-regexp-list
         (append helm-boring-file-regexp-list '("/\\.$"
@@ -72,21 +70,38 @@
       (setq display (buffer-string)))
     (if real (cons display real) display)))
 
+(with-eval-after-load 'helm-command
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'helm-command)))
+
+  (setq helm-M-x-fuzzy-match t))
+
+(with-eval-after-load 'helm-imenu
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'helm-imenu)))
+
+  (setq helm-imenu-fuzzy-match t))
+
+(with-eval-after-load 'helm-semantic
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'helm-semantic)))
+
+  (setq helm-semantic-fuzzy-match t))
+
+(with-eval-after-load 'helm-mode
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'helm-mode)))
+
+  (setq helm-mode-fuzzy-match t
+        helm-completion-in-region-fuzzy-match t))
+
 (setq helm-fuzzy-sort-fn #'my/helm-fuzzy-matching-sort-fn
       helm-fuzzy-matching-highlight-fn #'my/helm-fuzzy-highlight-match
-
-      helm-M-x-fuzzy-match t
-      helm-buffers-fuzzy-matching t
-      helm-completion-in-region-fuzzy-match t
-      helm-imenu-fuzzy-match t
-      helm-locate-fuzzy-match nil
-      helm-mode-fuzzy-match t
-      helm-recentf-fuzzy-match t
-      helm-semantic-fuzzy-match t
-
-      helm-case-fold-search 'smart
-      helm-ff-transformer-show-only-basename nil
-      helm-ff-newfile-prompt-p nil)
+      helm-case-fold-search 'smart)
 
 (with-eval-after-load 'helm
   (with-eval-after-load 'flx
@@ -106,13 +121,15 @@
     (setq helm-source-buffers-list
           (helm-make-source "Buffers" 'helm-source-buffers)))
 
-  (setq helm-boring-buffer-regexp-list '("\\ "
+  (setq helm-buffers-fuzzy-matching t
+        helm-boring-buffer-regexp-list '("\\ "
                                          "\\*helm"
                                          "\\*Compile"
                                          "\\*Quail")))
 
 (with-eval-after-load 'helm-locate
-  (setq helm-source-locate
+  (setq helm-locate-fuzzy-match nil
+        helm-source-locate
         (helm-make-source "Locate" 'helm-locate-source
           :pattern-transformer 'helm-locate-pattern-transformer
           :candidate-number-limit 100)
@@ -120,6 +137,10 @@
 
 ;; adaptively fallback to ack and ack-grep
 (with-eval-after-load 'helm-ag
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'helm-ag)))
+
   (unless (executable-find "ag")
     (if (executable-find "ack")
         (setq helm-ag-base-command "ack --nocolor --nogroup")
@@ -234,6 +255,10 @@
                       (format "[%s] > " (projectile-project-name))
                     "> ")
           :buffer "*helm-omni*")))
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'evil)))
 
 (defun nadvice/evil-paste-pop (old-fun &rest args)
   (if (memq last-command '(evil-paste-after

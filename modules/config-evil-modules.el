@@ -2,11 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'evil)
-    (require 'evil-snipe)
-    (require 'evil-nerd-commenter)
-    (require 'evil-quickscope)
-    (require 'evil-jumper)))
+    (require 'evil)))
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
@@ -60,6 +56,10 @@
 (define-key evil-normal-state-map "K" #'evil-jump-out-args)
 
 (with-eval-after-load 'evil-snipe
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil-snipe)))
+
   (diminish 'evil-snipe-mode)
 
   (setq evil-snipe-scope 'visible
@@ -105,6 +105,10 @@
 (define-key evil-visual-state-map "S" #'evil-snipe-S)
 
 (with-eval-after-load 'evil-quickscope
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil-quickscope)))
+
   (setq evil-quickscope-word-separator " -./")
   (set-face-attribute 'evil-quickscope-first-face nil
                       :inherit nil)
@@ -132,6 +136,10 @@
   (global-evil-quickscope-always-mode +1))
 
 (with-eval-after-load 'evil-jumper
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil-jumper)))
+
   (setq evil-jumper-file (expand-file-name "jumps" user-emacs-directory))
   (evil-jumper--init-file))
 
@@ -141,7 +149,7 @@
 (autoload #'evil-jumper--set-jump "evil-jumper")
 (autoload #'evil-jumper--window-configuration-hook "evil-jumper")
 
-(defun nadvice/autoload-evil-jumper (&rest args)
+(defun nadvice/autoload-evil-jumper (&rest _args)
   (require 'evil-jumper)
   (evil-jumper--set-jump))
 
