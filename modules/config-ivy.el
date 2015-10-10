@@ -66,7 +66,7 @@
   (setq ivy-display-style 'fancy
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
-        ivy-count-format nil)
+        ivy-count-format "")
 
   (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
