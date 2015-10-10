@@ -51,6 +51,8 @@
   (my/ivy-setup-faces))
 
 (with-eval-after-load 'ivy
+  (ivy-mode +1)
+
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'ivy)))
