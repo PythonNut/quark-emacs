@@ -70,6 +70,8 @@
 (defun restart-emacs (&optional arg)
   (interactive "P")
   (cond
+   ((stringp arg)
+    (my/restart-emacs-engine arg))
    ((or (consp arg) (and (numberp arg) (> arg 0)))
     (desktop-save-in-desktop-dir)
     (my/restart-emacs-engine "--eval '(desktop-read)'"))
