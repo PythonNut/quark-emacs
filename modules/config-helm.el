@@ -165,23 +165,21 @@
     (helm-attrset 'moccur-buffers bufs helm-source-occur)
     (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
     (helm-set-local-variable 'helm-multi-occur-buffer-tick
-                             (cl-loop for b in bufs
-                                      collect
-                                      (buffer-chars-modified-tick
-                                       (get-buffer b))))
+                             (mapcar (lambda (buf)
+                                       (buffer-chars-modified-tick
+                                        (get-buffer buf)))
+                                     bufs))
     (helm :sources
           (append
            ;; projectile explodes when not in project
            (if projectile-root
-               (progn
-                 (require 'helm-projectile)
+               (when (require 'helm-projectile nil t)
                  '(helm-source-projectile-buffers-list))
              '(helm-source-buffers-list))
 
            (if (and (featurep 'semantic)
                     (semantic-active-p))
-               (progn
-                 (require 'helm-semantic)
+               (when (require 'helm-semantic nil t)
                  '(helm-source-semantic))
              (require 'helm-imenu)
              '(helm-source-imenu))
