@@ -98,10 +98,6 @@
   (set-face-attribute 'helm-selection nil :underline nil))
 
 (with-eval-after-load 'helm-buffers
-  (unless helm-source-buffers-list
-    (setq helm-source-buffers-list
-          (helm-make-source "Buffers" 'helm-source-buffers)))
-
   (setq helm-boring-buffer-regexp-list '("\\ "
                                          "\\*helm"
                                          "\\*Compile"
