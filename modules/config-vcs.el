@@ -35,6 +35,10 @@
   (evil-set-initial-state 'magit-revision-mode 'motion)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
+  (add-hook 'git-rebase-mode-hook
+            (lambda ()
+              (set (make-local-variable 'input-method-function) nil)))
+
   (define-key magit-log-mode-map "j" #'next-line)
   (define-key magit-refs-mode-map "j" #'next-line)
   (define-key magit-status-mode-map "j" #'next-line)
