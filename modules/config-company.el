@@ -150,8 +150,8 @@
 
 (with-eval-after-load 'company
   (eval-when-compile
-     (with-demoted-errors "Load error: %s"
-       (require 'company)))
+    (with-demoted-errors "Load error: %s"
+      (require 'company)))
 
   (global-company-mode +1)
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
@@ -221,20 +221,22 @@
 
       (with-no-warnings
         (my/generate-calls
-         'company-define-specific-modes
-         '(('c++-mode-hook     'company-irony)
-           ('objc-mode-hook    'company-irony)
-           ('c-mode-hook       'company-irony)
-           ('arduino-mode-hook 'company-irony)
-           ('cmake-mode-hook   'company-cmake)
-           ('css-mode-hook     'company-css)
-           ('java-mode-hook    'company-eclim)
-           ('nxml-mode-hook    'company-nxml)
-           ('html-mode-hook    'company-web-html)
-           ('web-mode-hook     'company-web-html)
-           ('scheme-mode-hook  'geiser-company-backend)
-           ('texinfo-mode-hook 'company-semantic)
-           ('python-mode-hook  'company-anaconda))))))
+            'company-define-specific-modes
+          '(('c++-mode-hook     'company-irony)
+            ('objc-mode-hook    'company-irony)
+            ('c-mode-hook       'company-irony)
+            ('arduino-mode-hook 'company-irony)
+            ('cmake-mode-hook   'company-cmake)
+            ('css-mode-hook     'company-css)
+            ('java-mode-hook    'company-eclim)
+            ('nxml-mode-hook    'company-nxml)
+            ('html-mode-hook    'company-web-html)
+            ('web-mode-hook     'company-web-html)
+            ('tex-mode          'company-math-symbols-latex)
+            ('latex-mode-hook   'company-math-symbols-latex)
+            ('scheme-mode-hook  'geiser-company-backend)
+            ('texinfo-mode-hook 'company-semantic)
+            ('python-mode-hook  'company-anaconda))))))
 
   (defun company-complete-common-or-complete-full ()
     (interactive)
