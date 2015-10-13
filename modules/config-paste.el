@@ -146,19 +146,27 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 (define-key evil-insert-state-map (kbd "C-w") nil)
 
+
 (define-key evil-insert-state-map
-  (kbd "<remap> <kill-region>") #'cua-cut-region)
-(define-key evil-insert-state-map
+  (kbd "<remap> <kill-ring-save>") #'easy-kill)
+(define-key evil-emacs-state-map
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
 (define-key evil-normal-state-map
   (kbd "<remap> <kill-ring-save>") #'easy-kill)
-(define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
 
 (define-key evil-emacs-state-map
   (kbd "<remap> <kill-region>") #'cua-cut-region)
+(define-key evil-insert-state-map
+  (kbd "<remap> <kill-region>") #'cua-cut-region)
+
 (define-key evil-emacs-state-map
-  (kbd "<remap> <kill-ring-save>") #'easy-kill)
+  (kbd "<remap> <yank-pop>") #'cua-paste-pop)
+(define-key evil-insert-state-map
+  (kbd "<remap> <yank-pop>") #'cua-paste-pop)
+
 (define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
+(define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
+
 
 (defun my/setup-paste (&optional frame)
   (with-selected-frame (or frame (selected-frame))
