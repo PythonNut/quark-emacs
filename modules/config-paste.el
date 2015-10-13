@@ -168,6 +168,12 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
 
 
+
+(with-eval-after-load 'xt-mouse
+  (add-hook 'kill-emacs-hook
+                (lambda ()
+                  (xterm-mouse-mode -1))))
+
 (defun my/setup-paste (&optional frame)
   (with-selected-frame (or frame (selected-frame))
     (unless (display-graphic-p)
@@ -175,17 +181,31 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
                  (or (executable-find "xclip")
                      (executable-find "pbcopy")))
         (xclip-mode +1))
+
+      ;; just in case the terminal is a failure
+      (defvar arrow-keys-brace-map (make-sparse-keymap)
+        "Keymap for untranslated brace arrow keys")
+      (define-key esc-map "[" arrow-keys-brace-map)
+      (define-key arrow-keys-brace-map "A" (kbd "<up>"))
+      (define-key arrow-keys-brace-map "B" (kbd "<down>"))
+      (define-key arrow-keys-brace-map "C" (kbd "<right>"))
+      (define-key arrow-keys-brace-map "D" (kbd "<left>"))
+
+      (defvar arrow-keys-O-map (make-sparse-keymap)
+        "Keymap for untranslated O arrow keys")
+      (define-key esc-map "O" arrow-keys-O-map)
+      (define-key arrow-keys-O-map "A" (kbd "<up>"))
+      (define-key arrow-keys-O-map "B" (kbd "<down>"))
+      (define-key arrow-keys-O-map "C" (kbd "<right>"))
+      (define-key arrow-keys-O-map "D" (kbd "<left>"))
+
       (xterm-mouse-mode +1)
-      (require 'bracketed-paste)
+
       (bracketed-paste-enable)
       (bracketed-paste-setup)
 
       (when (getenv "TMUX")
-        (run-hooks 'terminal-init-xterm-hook))
-
-      (add-hook 'kill-emacs-hook
-                (lambda ()
-                  (xterm-mouse-mode -1))))))
+        (run-hooks 'terminal-init-xterm-hook)))))
 
 (my/setup-paste)
 (add-hook 'after-make-frame-functions #'my/setup-paste)
