@@ -13,8 +13,7 @@
 
 (with-eval-after-load 'helm-files
   (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'helm-files)))
+    (require 'helm-files))
 
   (setq helm-ff-transformer-show-only-basename nil
         helm-ff-newfile-prompt-p nil
@@ -114,8 +113,7 @@
 ;; adaptively fallback to ack and ack-grep
 (with-eval-after-load 'helm-ag
   (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'helm-ag)))
+    (require 'helm-ag))
 
   (unless (executable-find "ag")
     (if (executable-find "ack")
@@ -126,31 +124,18 @@
 (with-eval-after-load 'helm-regexp
   (helm-occur-init-source))
 
-(global-set-key (kbd "M-:") #'helm-eval-expression)
-
-(defun my/helm-buffers (&rest _args)
-  (interactive)
-  (require 'helm-buffers)
-  (require 'helm-files)
-  (helm :sources
-        '(helm-source-buffers-list
-          helm-source-recentf
-          helm-source-files-in-current-dir
-          helm-source-files-in-all-dired
-          helm-source-buffer-not-found)
-        :fuzzy-match t
-        :prompt "> "
-        :buffer "*helm-find-buffers"))
-
-(global-set-key (kbd "C-x C-b") #'my/helm-buffers)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-
 (defun my/helm-omni (&rest _args)
   (interactive)
   (require 'helm-files)
   (require 'helm-ring)
   (require 'helm-misc)
   (require 'projectile)
+
+  (unless (featurep 'helm-ag)
+    (when (or (executable-find "ag")
+              (executable-find "ack")
+              (executable-find "ack-grep"))
+      (require 'helm-ag)))
 
   (let ((helm-sources-using-default-as-input)
         (bufs (list (buffer-name (current-buffer))))
@@ -174,11 +159,11 @@
              '(helm-source-buffers-list))
 
            (if (and (featurep 'semantic)
-                    (semantic-active-p))
-               (when (require 'helm-semantic nil t)
-                 '(helm-source-semantic))
-             (require 'helm-imenu)
-             '(helm-source-imenu))
+                    (semantic-active-p)
+                    (require 'helm-semantic nil t))
+               '(helm-source-semantic)
+             (when (require 'helm-imenu nil t)
+               '(helm-source-imenu)))
 
            (if projectile-root
                (append
@@ -207,15 +192,10 @@
                        (vc-git-responsible-p projectile-root)
                        (require 'helm-git-grep nil t))
                   '(helm-source-git-grep)
-                (unless (featurep 'helm-ag)
-                  (when (or (executable-find "ag")
-                            (executable-find "ack")
-                            (executable-find "ack-grep"))
-                    (require 'helm-ag)))
                 (when (featurep 'helm-ag)
                   '(helm-source-do-ag)))
 
-              ;; file location, of which projectile can be a superset
+              ;; file location, of which projectile is a faster subset
               (unless projectile-root
                 '(helm-source-findutils))
 
@@ -251,5 +231,9 @@
 (define-key evil-replace-state-map (kbd "C-c C-o") #'my/helm-omni)
 
 (global-set-key (kbd "M-=") #'helm-semantic-or-imenu)
+(global-set-key (kbd "M-:") #'helm-eval-expression)
+
+(global-set-key (kbd "C-x C-b") #'helm-buffers-list)
+(global-set-key (kbd "C-x C-f") #'helm-find-files)
 
 (provide 'config-helm)

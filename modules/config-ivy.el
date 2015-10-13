@@ -60,8 +60,7 @@
   (diminish 'ivy-mode)
   (with-eval-after-load 'avy
     (eval-when-compile
-      (with-demoted-errors "Load error: %s"
-        (require 'avy)))
+      (require 'avy))
 
     (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
 
@@ -74,8 +73,7 @@
 
 (with-eval-after-load 'counsel
   (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'counsel)))
+    (require 'counsel))
 
   (setq counsel-find-file-ignore-regexp
         (eval-when-compile
