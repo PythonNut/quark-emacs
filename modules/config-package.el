@@ -230,7 +230,8 @@
                                              package-alist))))
                 (package-install package-desc)
                 (package-delete  old-package)))
-            (message "All package upgrades completed.")))
+            (message "All package upgrades completed.")
+            (x-urgent)))
       (message "All packages are up to date"))))
 
 (eval-and-compile
