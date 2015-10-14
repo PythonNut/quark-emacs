@@ -22,12 +22,19 @@ My personal emacs config.
  * Extremely agressive file autoloading, and fast startup times (~0.4s)
  * An emphasis on correct code and robustness
 
+Portability
+===========
+
+This config should be pretty portable, as long as your OS is UNIX-y. I currently run it on various Arch Linux, Fedora, and Ubuntu builds, as well as Raspberry Pis and Android phones.
+
+One thing that it most certainly does _not_ support is older Emacs versions. Right now, the minimum version is 24.4, and yes, that has bit me a few times. However, given that I arrived on the Emacs scene only just before the release of 24.4, I have a lack of motivation to backport to older Emacsen.
+
 Supported Languages
 ===================
 
 I actively work in the following languages:
 
-  * Python
+  * Python/SAGE
   * C++
   * JS/HTML/CSS
   * Octave
