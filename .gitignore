@@ -74,12 +74,6 @@ ac-comphist.dat
 .yas-compiled-snippets*
 
 
-# personal files
-/data/backups/*
-/data/autosave/*
-/data/tramp-backups/*
-
-
 # tramp connection history
 /tramp
 
