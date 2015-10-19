@@ -135,6 +135,7 @@
     framemove
     ;; helm
     helm-ag
+    helm-flx
     helm-git-grep
     helm-projectile
     hydra

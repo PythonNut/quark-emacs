@@ -9,11 +9,6 @@
     (require 'helm-command)
     (require 'helm-mode)))
 
-(defvar helm-flx-cache nil)
-(defvar helm-flx-limit 5000
-  "The maximum number of helm candidates (N) to sort. If the number of
-candidates is greater than this number, only sort the first N (presorted by length). Set to nil to sort all candidates.")
-
 (with-eval-after-load 'helm-files
   (eval-when-compile
     (require 'helm-files))
@@ -31,76 +26,7 @@ candidates is greater than this number, only sort the first N (presorted by leng
                                                "\\.zwc\\.old$"
                                                "\\.zwc$"))))
 
-(defun my/helm-fuzzy-matching-sort-fn (candidates _source &optional use-real)
-  (require 'flx)
-  (if (string= helm-pattern "")
-      candidates
-    (let ((num-cands (length candidates))
-
-          ;; no need to branch on use-real for every candidate
-          (scored-string-fn (if use-real
-                                (lambda (cand)
-                                  (if (consp cand)
-                                      (cdr cand)
-                                    cand))
-                              (lambda (cand)
-                                (if (consp cand)
-                                    (car cand)
-                                  cand)))))
-      (mapcar #'car
-              (sort (mapcar
-                     (lambda (cand)
-                       (cons cand
-                             (or (car (flx-score (funcall scored-string-fn
-                                                          cand)
-                                                 helm-pattern
-                                                 helm-flx-cache))
-                                 0)))
-                     (if (or (not helm-flx-limit)
-                             (< num-cands helm-flx-limit))
-                         candidates
-                       (let ((seq (sort candidates
-                                        (lambda (c1 c2)
-                                          (< (length (funcall scored-string-fn
-                                                              c1))
-                                             (length (funcall scored-string-fn
-                                                              c2)))))
-                                  (end (min helm-flx-limit
-                                            num-cands))
-                                  (result nil))
-                             (while (and seq
-                                         (>= (setq end (1- end)) 0))
-                               (push (pop seq) result))
-                             result))))
-                    (lambda (c1 c2)
-                      (> (cdr c1)
-                         (cdr c2))))))))
-
-(defun my/helm-fuzzy-highlight-match (candidate)
-  (require 'flx)
-  (let* ((pair (and (consp candidate) candidate))
-         (display (if pair (car pair) candidate))
-         (real (cdr pair)))
-    (with-temp-buffer
-      (insert display)
-      (goto-char (point-min))
-      (if (string-match-p " " helm-pattern)
-          (dolist (p (split-string helm-pattern))
-            (when (search-forward p nil t)
-              (add-text-properties
-               (match-beginning 0) (match-end 0) '(face helm-match))))
-        (dolist (index (cdr (flx-score
-                             (substring-no-properties display)
-                             helm-pattern helm-flx-cache)))
-          (with-demoted-errors
-              (add-text-properties
-               (1+ index) (+ 2 index) '(face helm-match)))))
-      (setq display (buffer-string)))
-    (if real (cons display real) display)))
-
-(setq helm-fuzzy-sort-fn #'my/helm-fuzzy-matching-sort-fn
-      helm-fuzzy-matching-highlight-fn #'my/helm-fuzzy-highlight-match
-      helm-semantic-fuzzy-match t
+(setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match t
       helm-M-x-fuzzy-match t
       helm-mode-fuzzy-match t
@@ -111,9 +37,7 @@ candidates is greater than this number, only sort the first N (presorted by leng
       helm-case-fold-search 'smart)
 
 (with-eval-after-load 'helm
-  (with-eval-after-load 'flx
-    (setq helm-flx-cache (flx-make-string-cache #'flx-get-heatmap-file)))
-
+  (helm-flx-mode +1)
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-i")   #'helm-execute-persistent-action)
