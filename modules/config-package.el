@@ -123,6 +123,7 @@
     ;; avy
     bracketed-paste
     company
+    company-flx
     counsel
     diff-hl
     diminish

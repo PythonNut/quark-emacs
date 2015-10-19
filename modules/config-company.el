@@ -5,149 +5,6 @@
     (require 'cl-lib)
     (require 'flx)))
 
-(defvar company-flx-cache)
-(defvar company-flx-limit 500)
-
-(defun my/company-onetime-setup ()
-  (require 'company)
-  (run-hooks 'load-theme-hook)
-  (remove-hook 'first-change-hook #'my/company-onetime-setup))
-
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (add-hook 'first-change-hook #'my/company-onetime-setup)))
-
-(with-no-warnings
-  (defun completion-fuzzy-commonality (strs)
-    (cl-letf* ((commonality-cache (make-hash-table :test 'equal :size 200))
-               ((symbol-function
-                 #'fuzzy-commonality)
-                (lambda (strs)
-                  (let ((hash-value (gethash strs commonality-cache nil)))
-                    (if hash-value
-                        (if (eq hash-value 'nothing)
-                            nil
-                          hash-value)
-
-                      (setq strs (mapcar #'string-to-list strs))
-                      (let ((res) (tried) (idx))
-                        (dolist (char (car strs))
-                          (unless (memq char tried)
-                            (catch 'notfound
-                              (setq idx (mapcar (lambda (str)
-                                                  (or
-                                                   (cl-position char str)
-                                                   (throw 'notfound nil)))
-                                                strs))
-                              (push (cons char
-                                          (fuzzy-commonality
-                                           (cl-mapcar (lambda (str idx)
-                                                        (cl-subseq str (1+ idx)))
-                                                      strs idx)))
-                                    res)
-                              (push char tried))))
-                        (setq res (if res
-                                      (cl-reduce
-                                       (lambda (a b)
-                                         (if (> (length a) (length b)) a b))
-                                       res)
-                                    nil))
-                        (puthash strs
-                                 (if res res 'nothing)
-                                 commonality-cache)
-                        res))))))
-      (concat (fuzzy-commonality strs)))))
-
-(defun completion-fuzzy-find-holes (merged str)
-  (let ((holes) (matches (cdr (flx-score str merged company-flx-cache))))
-    (dolist (i (number-sequence 0 (- (length matches) 2)))
-      (when (>
-             (elt matches (1+ i))
-             (1+ (elt matches i)))
-        (push (1+ i) holes)))
-    (unless (<= (length str) (car (last matches)))
-      (push (length merged) holes))
-    holes))
-
-(defun completion-fuzzy-merge (strs)
-  (let ((common (completion-fuzzy-commonality strs))
-        (holes))
-    (setq holes (make-vector (1+ (length common)) 0))
-    (dolist (str strs)
-      (dolist (hole (completion-fuzzy-find-holes common str))
-        (cl-incf (elt holes hole))))
-
-    (cons common (append holes nil))))
-
-(defun completion-fuzzy-completion (string table predicate point
-                                           &optional all-p)
-  (let* ((beforepoint (substring string 0 point))
-         (afterpoint (substring string point))
-         (boundaries (completion-boundaries beforepoint table predicate afterpoint))
-         (prefix (substring beforepoint 0 (car boundaries)))
-         (infix (concat
-                 (substring beforepoint (car boundaries))
-                 (substring afterpoint 0 (cdr boundaries))))
-         (suffix (substring afterpoint (cdr boundaries)))
-         ;; |-              string                  -|
-         ;;              point^
-         ;;            |-  boundaries -|
-         ;; |- prefix -|-    infix    -|-  suffix   -|
-         ;;
-         ;; Infix is the part supposed to be completed by table, AFAIKT.
-         (regexp (concat "\\`"
-                         (mapconcat
-                          (lambda (x)
-                            (setq x (string x))
-                            (concat "[^" x "]*" (regexp-quote x)))
-                          infix
-                          "")))
-         (completion-regexp-list (cons regexp completion-regexp-list))
-         (candidates (all-completions prefix table predicate)))
-
-    (if all-p
-        ;; Implement completion-all-completions interface
-        (when candidates
-          ;; Not doing this may result in an error.
-          (setcdr (last candidates) (length prefix))
-          candidates)
-      ;; Implement completion-try-completions interface
-      (if (= (length candidates) 1)
-          (if (equal infix (car candidates))
-              t
-            ;; Avoid quirk of double / for filename completion. I don't
-            ;; know how this is *supposed* to be handled.
-            (when (and (> (length (car candidates)) 0)
-                       (> (length suffix) 0)
-                       (char-equal (aref (car candidates)
-                                         (1- (length (car candidates))))
-                                   (aref suffix 0)))
-              (setq suffix (substring suffix 1)))
-            (cons (concat prefix (car candidates) suffix)
-                  (length (concat prefix (car candidates)))))
-        (if (= (length infix) 0)
-            (cons string point)
-          (cl-destructuring-bind (merged . holes)
-              (completion-fuzzy-merge candidates)
-            (cons
-             (concat prefix merged suffix)
-             (+ (length prefix)
-                (cl-position (apply #'max holes) holes)))))))))
-
-(defun completion-fuzzy-try-completion (string table predicate point)
-  (completion-fuzzy-completion string table predicate point))
-(defun completion-fuzzy-all-completions (string table predicate point)
-  (completion-fuzzy-completion string table predicate point 'all))
-
-(add-to-list 'completion-styles-alist
-             '(fuzzy
-               completion-fuzzy-try-completion
-               completion-fuzzy-all-completions
-               "Simple fuzzy completion, which never alters the string to complete, unless a unique match exists."))
-
-(unless (bound-and-true-p my/slow-device)
-  (setq completion-styles (list 'fuzzy)))
-
 (with-eval-after-load 'company
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -155,33 +12,7 @@
 
   (global-company-mode +1)
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
-  (require 'flx)
-
-  (defun my/company-flx-transformer (cands)
-    (let ((num-cands (length cands)))
-      (mapcar #'car
-              (sort (mapcar
-                     (lambda (cand)
-                       (cons cand
-                             (or (car (flx-score cand
-                                                 company-prefix
-                                                 company-flx-cache))
-                                 0)))
-                     (if (< num-cands company-flx-limit)
-                         cands
-                       (let ((seq (sort cands (lambda (c1 c2)
-                                                (< (length c1)
-                                                   (length c2)))))
-                             (end (min company-flx-limit
-                                       num-cands))
-                             (result nil))
-                         (while (and seq
-                                     (>= (setq end (1- end)) 0))
-                           (push (pop seq) result))
-                         result)))
-                    (lambda (c1 c2)
-                      (> (cdr c1)
-                         (cdr c2)))))))
+  (company-flx-mode +1)
 
   (setq company-idle-delay 0.1
         company-echo-delay 0
@@ -197,10 +28,7 @@
                             company-files
                             company-keywords)
 
-                           company-dabbrev)
-
-        company-flx-cache (flx-make-string-cache 'flx-get-heatmap-str)
-        company-transformers (list #'my/company-flx-transformer))
+                           company-dabbrev))
 
   (eval-and-compile
     (eval-when-compile
