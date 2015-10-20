@@ -145,6 +145,8 @@
 
 (define-key evil-normal-state-map (kbd "C-o") #'evil-jumper/backward)
 (define-key evil-normal-state-map (kbd "C-i") #'evil-jumper/forward)
+(define-key evil-motion-state-map (kbd "C-o") #'evil-jumper/backward)
+(define-key evil-motion-state-map (kbd "C-i") #'evil-jumper/forward)
 
 (autoload #'evil-jumper--set-jump "evil-jumper")
 (autoload #'evil-jumper--window-configuration-hook "evil-jumper")
