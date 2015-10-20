@@ -32,7 +32,7 @@
   (global-set-key (kbd "M-_") #'undo-tree-redo)
   (setq undo-tree-auto-save-history t)
 
-  (add-to-list 'evil-overriding-maps 'undo-tree-visualizer-mode-map)
+  (add-to-list 'evil-overriding-maps '(undo-tree-visualizer-mode-map))
 
   ;; visual line wrapping breaks the 
   (add-hook 'undo-tree-visualizer-mode-hook

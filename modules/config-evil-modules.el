@@ -12,6 +12,7 @@
 (evil-set-initial-state 'profiler-report-mode 'motion)
 (evil-set-initial-state 'backup-walker-mode 'motion)
 
+(add-to-list 'evil-overriding-maps '(backup-walker-mode-map))
 
 ;; Evil exchange, easily swap two things
 (define-key evil-normal-state-map "gx" #'evil-exchange)
