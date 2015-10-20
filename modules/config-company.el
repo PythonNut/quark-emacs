@@ -5,6 +5,15 @@
     (require 'cl-lib)
     (require 'flx)))
 
+(defun my/company-onetime-setup ()
+  (require 'company)
+  (run-hooks 'load-theme-hook)
+  (remove-hook 'first-change-hook #'my/company-onetime-setup))
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (add-hook 'first-change-hook #'my/company-onetime-setup)))
+
 (with-eval-after-load 'company
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
