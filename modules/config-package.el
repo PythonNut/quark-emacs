@@ -173,13 +173,14 @@
 
   (setq idle-require-idle-delay 3
         idle-require-load-break 1
-        idle-require-symbols '(magit
-                               hydra
-                               which-key
+        idle-require-symbols '(which-key
+                               magit
                                evil-snipe
-                               multiple-cursors
                                avy
-                               ace-jump-helm-line)))
+                               ace-jump-helm-line
+                               evil-jumper
+                               multiple-cursors
+                               hydra)))
 
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
