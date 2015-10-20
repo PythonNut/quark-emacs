@@ -67,7 +67,7 @@
 ;; bind command to switch to minibuffer
 (defun switch-window-dwim (arg)
   "switch to minibuffer window (if active)"
-  (interactive "p")
+  (interactive "P")
   (let ((num-windows (length (mapcar #'window-buffer (window-list)))))
     (cond ((= num-windows 1)
            (call-interactively #'split-window-right))
