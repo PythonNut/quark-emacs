@@ -10,6 +10,8 @@
 (evil-set-initial-state 'package-menu-mode 'motion)
 (evil-set-initial-state 'undo-tree-visualizer-mode 'motion)
 (evil-set-initial-state 'profiler-report-mode 'motion)
+(evil-set-initial-state 'backup-walker-mode 'motion)
+
 
 ;; Evil exchange, easily swap two things
 (define-key evil-normal-state-map "gx" #'evil-exchange)
