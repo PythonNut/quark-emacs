@@ -3,19 +3,39 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'cl-lib)
-    (require 'helm)
-    (require 'helm-semantic)
-    (require 'helm-imenu)
-    (require 'helm-command)
-    (require 'helm-mode)))
+    (require 'helm)))
+
+(with-eval-after-load 'helm
+  (helm-flx-mode +1)
+
+  ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
+  (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i")   #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-z")   #'helm-select-action)
+  (define-key helm-map (kbd "C-r" )  #'isearch-backward-regexp)
+  (define-key helm-map (kbd "C-'")   #'ace-jump-helm-line-execute-action)
+
+  (set-face-attribute 'helm-selection nil :underline nil)
+  (setq helm-case-fold-search 'smart))
+
+(with-eval-after-load 'helm-mode
+  (eval-when-compile
+    (require 'helm-mode))
+  (setq helm-mode-fuzzy-match t
+        helm-completion-in-region-fuzzy-match t))
 
 (with-eval-after-load 'helm-files
   (eval-when-compile
     (require 'helm-files))
-
   (setq helm-ff-transformer-show-only-basename nil
         helm-ff-newfile-prompt-p nil
         helm-ff-skip-boring-files t
+        helm-recentf-fuzzy-match t
+
+        helm-source-recentf (helm-make-source "Recentf"
+                                'helm-recentf-source
+                              :fuzzy-match helm-recentf-fuzzy-match)
+
         helm-boring-file-regexp-list (append helm-boring-file-regexp-list
                                              '("/\\.$"
                                                "/\\.\\.$"
@@ -26,34 +46,44 @@
                                                "\\.zwc\\.old$"
                                                "\\.zwc$"))))
 
-(setq helm-semantic-fuzzy-match t
-      helm-imenu-fuzzy-match t
-      helm-M-x-fuzzy-match t
-      helm-mode-fuzzy-match t
-      helm-buffers-fuzzy-matching t
-      helm-projectile-fuzzy-match t
-      helm-recentf-fuzzy-match t
-      helm-completion-in-region-fuzzy-match t
-      helm-case-fold-search 'smart)
-
-(with-eval-after-load 'helm
-  (helm-flx-mode +1)
-  ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
-  (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-i")   #'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-z")   #'helm-select-action)
-  (define-key helm-map (kbd "C-r" )  #'isearch-backward-regexp)
-  (define-key helm-map (kbd "C-'")   #'ace-jump-helm-line-execute-action)
-
-  (set-face-attribute 'helm-selection nil :underline nil))
-
 (with-eval-after-load 'helm-buffers
-  (setq helm-boring-buffer-regexp-list '("\\ "
+  (eval-when-compile
+    (require 'helm-buffers))
+  (setq helm-buffers-fuzzy-matching t
+        helm-boring-buffer-regexp-list '("\\ "
                                          "\\*helm"
                                          "\\*Compile"
                                          "\\*Quail")))
 
+(with-eval-after-load 'helm-semantic
+  (eval-when-compile
+    (require 'helm-semantic))
+  (setq helm-semantic-fuzzy-match t
+        helm-source-semantic (helm-make-source "Semantic Tags"
+                                 'helm-semantic-source
+                               :fuzzy-match helm-semantic-fuzzy-match)))
+
+(with-eval-after-load 'helm-imenu
+  (eval-when-compile
+    (require 'helm-imenu)
+    (setq helm-imenu-fuzzy-match t
+          helm-source-imenu (helm-make-source "Imenu"
+                                'helm-imenu-source
+                              :fuzzy-match helm-imenu-fuzzy-match))))
+
+(with-eval-after-load 'helm-command
+  (eval-when-compile
+    (require 'helm-command))
+  (setq helm-M-x-fuzzy-match t))
+
+(with-eval-after-load 'helm-projectile
+  (eval-when-compile
+    (require 'helm-projectile))
+  (setq helm-projectile-fuzzy-match t))
+
 (with-eval-after-load 'helm-locate
+  (eval-when-compile
+    (require 'helm-locate))
   (setq helm-locate-fuzzy-match nil
         helm-source-locate
         (helm-make-source "Locate" 'helm-locate-source
