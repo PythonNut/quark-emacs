@@ -194,15 +194,16 @@
 
   (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (run-with-idle-timer 0.1 nil
-                                 (lambda ()
-                                   (require 'helm-files)
-                                   (require 'helm-ring)
-                                   (require 'helm-projectile)
-                                   (require 'helm-semantic)
-                                   (idle-require-mode +1)))))
+(unless (bound-and-true-p my/slow-device)
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (run-with-idle-timer 0.1 nil
+                                   (lambda ()
+                                     (require 'helm-files)
+                                     (require 'helm-ring)
+                                     (require 'helm-projectile)
+                                     (require 'helm-semantic)
+                                     (idle-require-mode +1))))))
 
 (defun package-upgrade-all (&optional automatic)
   "Upgrade all packages automatically without showing *Packages* buffer."
