@@ -2,7 +2,8 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'evil)))
+    (require 'evil)
+    (require 'hydra)))
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
@@ -142,6 +143,41 @@
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'evil-jumper)))
+
+  (require 'hydra)
+  (defhydra evil-jumper-hydra ()
+    "switch window"
+    ("C-o" goto-last-change)
+    ("TAB" goto-last-change-reverse))
+
+  (defun nadvice/evil-jumper/backward (old-fun &optional arg)
+    (interactive "P")
+    (cond ((consp arg)
+           (goto-last-change 1)
+           (evil-jumper-hydra/body))
+
+          ((eq '- arg)
+           (funcall old-fun 1)
+           (goto-last-change 1))
+
+          ((or (numberp arg) (not arg))
+           (funcall old-fun (or arg 1)))))
+
+  (defun nadvice/evil-jumper/forward (old-fun &optional arg)
+    (interactive "P")
+    (cond ((consp arg)
+           (goto-last-change-reverse 1)
+           (evil-jumper-hydra/body))
+
+          ((eq '- arg)
+           (funcall old-fun 1)
+           (goto-last-change 1))
+
+          ((or (numberp arg) (not arg))
+           (funcall old-fun (or arg 1)))))
+
+  (advice-add 'evil-jumper/backward :around #'nadvice/evil-jumper/backward)
+  (advice-add 'evil-jumper/forward :around #'nadvice/evil-jumper/forward)
 
   (evil-jumper--savehist-init))
 
