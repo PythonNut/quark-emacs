@@ -143,8 +143,7 @@
     (with-demoted-errors "Load error: %s"
       (require 'evil-jumper)))
 
-  (setq evil-jumper-file (expand-file-name "jumps" user-emacs-directory))
-  (evil-jumper--init-file))
+  (evil-jumper--savehist-init))
 
 (define-key evil-normal-state-map (kbd "C-o") #'evil-jumper/backward)
 (define-key evil-normal-state-map (kbd "C-i") #'evil-jumper/forward)
