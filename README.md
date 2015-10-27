@@ -13,6 +13,7 @@ My personal emacs config.
    * Registers
    * Minibuffer histories
    * Kill ring
+   * Jump list
  * Everything that can be made fuzzy (Sublime style) has been made fuzzy, including:
    * Helm (fuzzy file finder, goto definition, etc.)
    * Company (code autocomplete)
