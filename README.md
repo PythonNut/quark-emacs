@@ -17,7 +17,7 @@ My personal emacs config.
    * Helm (fuzzy file finder, goto definition, etc.)
    * Company (code autocomplete)
    * Icicles (minibuffer completion)
-   * Ido (minibuffer completion)
+   * Ivy (minibuffer completion)
    * Isearch
  * Extremely agressive file autoloading, and fast startup times (~0.4s)
  * An emphasis on correct code and robustness
