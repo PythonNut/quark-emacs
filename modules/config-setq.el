@@ -192,16 +192,17 @@ the syntax class ')'."
 - If arg is any other value, set the urgency.
 
 If you unset the urgency, you still have to visit the frame to make the urgency setting disappear (at least in KDE)."
-  (let* ((wm-hints (append (x-window-property
-                            "WM_HINTS" frame "WM_HINTS"
-                            source nil t) nil))
-         (flags (car wm-hints)))
+  (when (display-graphic-p)
+    (let* ((wm-hints (append (x-window-property
+                              "WM_HINTS" frame "WM_HINTS"
+                              source nil t) nil))
+           (flags (car wm-hints)))
                                         ; (message flags)
-    (setcar wm-hints
-            (if arg
-                (logior flags #x00000100)
-              (logand flags #x1ffffeff)))
-    (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t)))
+      (setcar wm-hints
+              (if arg
+                  (logior flags #x00000100)
+                (logand flags #x1ffffeff)))
+      (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t))))
 
 (defun x-urgent (&optional arg)
   "Mark the current emacs frame as requiring urgent attention.
