@@ -713,6 +713,12 @@
   (add-hook 'geiser-repl-mode-hook (lambda ()
                                      (auto-indent-mode -1))))
 
+(package-deferred-install 'hy-mode
+    :autoload-names '('hy-mode)
+    :mode-entries '('("\\.hy\\'" . hy-mode))
+    :manual-init
+    (add-to-list 'interpreter-mode-alist '("hy" . hy-mode)))
+
 ;; =============================================================================
 ;; Shell modes =================================================================
 ;; =============================================================================
