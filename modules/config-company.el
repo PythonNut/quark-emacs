@@ -40,9 +40,8 @@
                            company-dabbrev))
 
   (eval-and-compile
-    (eval-when-compile
-      (with-demoted-errors "Load error: %s"
-        (require 'config-setq)))
+    (with-demoted-errors "Load error: %s"
+      (require 'config-setq))
 
     (cl-macrolet
         ((company-define-specific-modes
