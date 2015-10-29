@@ -65,11 +65,11 @@
 
 (with-eval-after-load 'helm-imenu
   (eval-when-compile
-    (require 'helm-imenu)
-    (setq helm-imenu-fuzzy-match t
-          helm-source-imenu (helm-make-source "Imenu"
-                                'helm-imenu-source
-                              :fuzzy-match helm-imenu-fuzzy-match))))
+    (require 'helm-imenu))
+  (setq helm-imenu-fuzzy-match t
+        helm-source-imenu (helm-make-source "Imenu"
+                              'helm-imenu-source
+                            :fuzzy-match helm-imenu-fuzzy-match)))
 
 (with-eval-after-load 'helm-command
   (eval-when-compile
