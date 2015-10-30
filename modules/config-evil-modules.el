@@ -139,6 +139,12 @@
             (< (display-color-cells) 256))
   (global-evil-quickscope-always-mode +1))
 
+(autoload #'evil-jumper--set-jump "evil-jumper")
+(autoload #'evil-jumper--window-configuration-hook "evil-jumper")
+
+(autoload #'evil-jumper/backward "evil-jumper")
+(autoload #'evil-jumper/forward "evil-jumper")
+
 (with-eval-after-load 'evil-jumper
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -185,9 +191,6 @@
 (define-key evil-normal-state-map (kbd "C-i") #'evil-jumper/forward)
 (define-key evil-motion-state-map (kbd "C-o") #'evil-jumper/backward)
 (define-key evil-motion-state-map (kbd "C-i") #'evil-jumper/forward)
-
-(autoload #'evil-jumper--set-jump "evil-jumper")
-(autoload #'evil-jumper--window-configuration-hook "evil-jumper")
 
 (defun nadvice/autoload-evil-jumper (&rest _args)
   (require 'evil-jumper)
