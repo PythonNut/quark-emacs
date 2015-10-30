@@ -10,7 +10,7 @@
 ;;; === Evil motion section ===
 
 (eval-and-compile
-  (defun evil-smart-visual-line ()
+  (defun my/smart-evil-visual-line ()
     (unless (fboundp #'evil-visual-line-hydra/body)
       (require 'hydra)
       (defhydra evil-visual-line-hydra
@@ -20,16 +20,38 @@
         ("k" evil-previous-visual-line)))
     (evil-visual-line-hydra/body))
 
+  (defun my/smart-evil-scroll-page (&rest _args)
+    (require 'hydra)
+    (unless (fboundp 'my/smart-evil-scroll-page-hydra/body)
+      (defhydra my/smart-evil-scroll-page-hydra
+        (:pre (setq hydra-is-helpful nil)
+              :post (setq hydra-is-helpful t))
+        "Scroll by page"
+        ("f" evil-scroll-page-down)
+        ("b" evil-scroll-page-up)))
+    (my/smart-evil-scroll-page-hydra/body))
+
   (evil-define-motion evil-smart-next-visual-line (count)
-    (evil-next-visual-line count)
-    (evil-smart-visual-line))
+    (evil-next-visual-line (or count 1))
+    (my/smart-evil-visual-line))
 
   (evil-define-motion evil-smart-previous-visual-line (count)
-    (evil-previous-visual-line count)
-    (evil-smart-visual-line)))
+    (evil-previous-visual-line (or count 1))
+    (my/smart-evil-visual-line))
+
+  (evil-define-motion evil-smart-scroll-page-down (count)
+    (evil-scroll-page-down (or count 1))
+    (my/smart-evil-scroll-page))
+
+  (evil-define-motion evil-smart-scroll-page-up (count)
+    (evil-scroll-page-up (or count 1))
+    (my/smart-evil-scroll-page)))
 
 (define-key evil-motion-state-map "gj" #'evil-smart-next-visual-line)
 (define-key evil-motion-state-map "gk" #'evil-smart-previous-visual-line)
+
+(define-key evil-motion-state-map (kbd "C-f") #'evil-smart-scroll-page-down)
+(define-key evil-motion-state-map (kbd "C-b") #'evil-smart-scroll-page-up)
 
 ;;; === Evil text object section ===
 ;; evil block indentation textobject for Python
