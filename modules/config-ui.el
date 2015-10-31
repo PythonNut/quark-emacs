@@ -209,6 +209,9 @@
   (add-to-list 'ahs-inhibit-face-list 'region)
   (add-to-list 'ahs-inhibit-face-list 'isearch)
 
+  (define-key auto-highlight-symbol-mode-map (kbd "<M-left>") nil)
+  (define-key auto-highlight-symbol-mode-map (kbd "<M-right>") nil)
+
   (defun my/ahs-setup-faces ()
     (if (display-graphic-p)
         (progn
