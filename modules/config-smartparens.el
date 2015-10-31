@@ -6,38 +6,23 @@
   (with-demoted-errors "Load error: %s"
     (require 'evil)
     (require 'diminish)
+    (require 'on-parens)
     (require 'config-setq)))
 
-(setq sp-autoinsert-quote-if-followed-by-closing-pair nil
-      sp-cancel-autoskip-on-backward-movement nil)
+(with-eval-after-load 'smartparens
+  (eval-when-compile (require 'smartparens))
+  (setq sp-autoinsert-quote-if-followed-by-closing-pair nil
+        sp-cancel-autoskip-on-backward-movement nil))
 
 (smartparens-global-mode +1)
-
-;; define smartparens motions as evil motions
-(evil-define-motion evil-forward-sexp (count)
-  (sp-forward-sexp count))
-(evil-define-motion evil-backward-sexp (count)
-  (sp-backward-sexp count))
-(evil-define-motion evil-up-sexp (count)
-  (sp-up-sexp count))
-(evil-define-motion evil-backward-up-sexp (count)
-  (sp-backward-up-sexp count))
-(evil-define-motion evil-down-sexp (count)
-  (sp-down-sexp count))
-(evil-define-motion evil-backward-down-sexp (count)
-  (sp-backward-down-sexp count))
-(evil-define-motion evil-next-sexp (count)
-  (sp-next-sexp count))
-(evil-define-motion evil-previous-sexp (count)
-  (sp-previous-sexp count))
 
 ;; textobject for the sexp immediately after point
 (defun my/evil-next-thing (count &optional _beg _end _type inclusive)
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-next-thing count)
-      (if (> (point) (mark))
-          (exchange-point-and-mark))
+      (when (> (point) (mark))
+        (exchange-point-and-mark))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
               (not (and (string-match
@@ -61,8 +46,8 @@
   (ignore-errors
     (save-excursion
       (call-interactively 'sp-select-previous-thing count)
-      (if (> (point) (mark))
-          (exchange-point-and-mark))
+      (when (> (point) (mark))
+        (exchange-point-and-mark))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
               (not (and
@@ -158,78 +143,84 @@
   (evil-define-motion evil-sp-move ()
     (unless (fboundp 'evil-sp-move-hydra/body)
       (require 'hydra)
-      (defhydra evil-sp-move-hydra (:hint nil :idle 0.3)
-        "[_U_] ↰↱ [_u_]  [_b_] ←→ [_f_]  [_D_] ↲↳ [_d_]  [_p_] ←  next  → [_n_]"
-        ("f" evil-forward-sexp)
-        ("b" evil-backward-sexp)
-        ("d" evil-down-sexp)
-        ("D" evil-backward-down-sexp)
-        ("u" evil-up-sexp)
-        ("U" evil-backward-up-sexp)
-        ("n" evil-next-sexp)
-        ("p" evil-previous-sexp)))
+      (defhydra evil-sp-move-hydra (nil nil
+                                        :hint nil
+                                        :idle 0.3
+                                        :pre (setq hydra-is-helpful nil)
+                                        :post (setq hydra-is-helpful t))
+        ("f" on-parens-forward-sexp-end)
+        ("b" on-parens-backward-sexp)
+        ("n" on-parens-forward-sexp)
+        ("p" on-parens-backward-sexp-end)
+        ("d" on-parens-down-sexp)
+        ("D" on-parens-down-sexp-end)
+        ("u" on-parens-up-sexp-end)
+        ("U" on-parens-up-sexp)))
     (evil-sp-move-hydra/body))
 
   (evil-define-command evil-sp-barfslurp ()
     (unless (fboundp 'evil-sp-barfslurp-hydra/body)
       (require 'hydra)
-      (defhydra evil-sp-barfslurp-hydra (:hint nil :idle 0.3)
+      (defhydra evil-sp-barfslurp-hydra (nil nil
+                                             :hint nil
+                                             :idle 0.3
+                                             :pre (setq hydra-is-helpful nil)
+                                             :post (setq hydra-is-helpful t))
         "[_<_] ← barf  → [_._]  [_>_] ← slurp → [_,_]  [_a_] ← emit  → [_e_]"
-        ("," sp-forward-slurp-sexp)
-        ("." sp-forward-barf-sexp)
-        ("<" sp-backward-slurp-sexp)
-        (">" sp-backward-barf-sexp)
+        ("," on-parens-forward-slurp)
+        ("." on-parens-forward-barf)
+        ("<" on-parens-backward-slurp)
+        (">" on-parens-backward-barf)
         ("a" sp-absorb-sexp)
         ("e" sp-emit-sexp)))
     (evil-sp-barfslurp-hydra/body)))
 
 (evil-define-motion evil-sp-forward-sexp (&rest args)
-  (call-interactively #'evil-forward-sexp args)
+  (call-interactively #'on-parens-forward-sexp-end args)
   (evil-sp-move))
 
 (evil-define-motion evil-sp-backward-sexp (&rest args)
-  (call-interactively #'evil-backward-sexp args)
-  (evil-sp-move))
-
-(evil-define-motion evil-sp-down-sexp (&rest args)
-  (call-interactively #'evil-down-sexp args)
-  (evil-sp-move))
-
-(evil-define-motion evil-sp-backward-down-sexp (&rest args)
-  (call-interactively #'evil-backward-down-sexp args)
-  (evil-sp-move))
-
-(evil-define-motion evil-sp-up-sexp (&rest args)
-  (call-interactively #'evil-up-sexp args)
-  (evil-sp-move))
-
-(evil-define-motion evil-sp-backward-up-sexp (&rest args)
-  (call-interactively #'evil-backward-up-sexp args)
+  (call-interactively #'on-parens-backward-sexp args)
   (evil-sp-move))
 
 (evil-define-motion evil-sp-next-sexp (&rest args)
-  (call-interactively #'evil-next-sexp args)
+  (call-interactively #'on-parens-forward-sexp args)
   (evil-sp-move))
 
 (evil-define-motion evil-sp-previous-sexp (&rest args)
-  (call-interactively #'evil-previous-sexp args)
+  (call-interactively #'on-parens-backward-sexp-end args)
   (evil-sp-move))
 
+(evil-define-motion evil-sp-down-sexp (&rest args)
+  (call-interactively #'on-parens-down-sexp args)
+  (evil-sp-move))
+
+(evil-define-motion evil-sp-backward-down-sexp (&rest args)
+  (call-interactively #'on-parens-down-sexp-end args)
+  (evil-sp-move))
+
+(evil-define-motion evil-sp-up-sexp (&rest args)
+  (call-interactively #'on-parens-up-sexp-end args)
+  (evil-sp-move))
+
+(evil-define-motion evil-sp-backward-up-sexp (&rest args)
+  (call-interactively #'on-parens-up-sexp args)
+  (evil-sp-move))
 
 (evil-define-command evil-sp-forward-slurp-sexp ()
-  (call-interactively #'sp-forward-slurp-sexp)
+  (call-interactively #'on-parens-forward-slurp)
   (evil-sp-barfslurp))
 
 (evil-define-command evil-sp-forward-barf-sexp ()
-  (call-interactively #'sp-forward-barf-sexp)
+  (call-interactively #'on-parens-forward-barf)
   (evil-sp-barfslurp))
 
 (evil-define-command evil-sp-backward-slurp-sexp ()
-  (call-interactively #'sp-backward-slurp-sexp)
+  (call-interactively #'on-parens-backward-slurp)
   (evil-sp-barfslurp))
 
 (evil-define-command evil-sp-backward-barf-sexp ()
-  (call-interactively #'sp-backward-barf-sexp)
+  (call-interactively #'on-parens-backward-barf)
   (evil-sp-barfslurp))
 
 ;; evil normal mode bindings
@@ -251,11 +242,11 @@
        ("U" evil-sp-backward-up-sexp)
        ("n" evil-sp-next-sexp)
        ("p" evil-sp-previous-sexp)
-       ("k" sp-kill-sexp)
+       ("k" on-parens-kill-sexp)
        ("K" sp-backward-kill-sexp)
        ("w" sp-unwrap-sexp)
        ("W" sp-backward-unwrap-sexp)
-       ("s" sp-split-sexp)
+       ("s" on-parens-split-supersexp)
        ("j" sp-join-sexp)
        ("a" sp-absorb-sexp)
        ("e" sp-emit-sexp)

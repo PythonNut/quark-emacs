@@ -112,6 +112,7 @@
     evil-snipe
     evil-surround
     evil-quickscope
+    on-parens
 
     ace-window
     ace-jump-helm-line
