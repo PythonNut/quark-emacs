@@ -4,6 +4,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
+    (require 's)
     (require 'evil)
     (require 'diminish)
     (require 'on-parens)
@@ -15,6 +16,91 @@
         sp-cancel-autoskip-on-backward-movement nil))
 
 (smartparens-global-mode +1)
+
+(defun my/sp-on-delimiter-p ()
+  (ignore-errors (save-excursion
+                   (when (and (fboundp 'evil-normal-state-p)
+                              (not (or (evil-insert-state-p)
+                                       (evil-emacs-state-p)
+                                       (minibuferp)))
+                              (not (eobp)))
+                     (ignore-errors
+                       (forward-char)))
+                   (if (and (sp-get (sp-get-sexp nil) :beg)
+                            (= (point) (sp-get (sp-get-sexp nil) :beg)))
+                       (cons (sp-get (sp-get-sexp nil) :beg)
+                             (sp-get (sp-get-sexp nil) :end))
+                     (if (and (sp-get (sp-get-sexp t) :end)
+                              (= (point) (sp-get (sp-get-sexp t) :end)))
+                         (cons (sp-get (sp-get-sexp t) :beg)
+                               (sp-get (sp-get-sexp t) :end))
+                       nil)))))
+
+(defun nadvice/sp-show--pair-function (&rest _args)
+  "If the matching paren is offscreen, show the matching line in the
+echo area. Has no effect if the character before point is not of
+the syntax class ')'."
+  (require 's)
+  (let ((matching-sexp (my/sp-on-delimiter-p)))
+    (when (and matching-sexp
+               (save-excursion
+                 (or (< (progn (move-to-window-line -1) (line-end-position))
+                        (cdr matching-sexp))
+                     (> (progn (move-to-window-line 0) (point))
+                        (car matching-sexp)))))
+
+      (cl-destructuring-bind (current-line matching-line text)
+          (cons (line-number-at-pos (point))
+                (save-excursion
+                  (goto-char (car matching-sexp))
+                  (list (line-number-at-pos (point))
+                        (s-trim (thing-at-point 'line)))))
+        (message "Matches %s (%d %s)" text
+                 (abs (- current-line matching-line))
+                 (if (> matching-line current-line)
+                     "below"
+                   "above"))))))
+
+(advice-add 'sp-show--pair-function :after #'nadvice/sp-show--pair-function)
+
+(defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
+  (unless (my/sp-on-delimiter-p)
+    (apply old-fun args)))
+
+(advice-add 'eldoc-display-message-no-interference-p :around
+            #'nadvice/eldoc-display-message-no-interference-p)
+
+(show-smartparens-global-mode +1)
+;; (make-variable-buffer-local 'show-paren-mode)
+;; (setq-default show-paren-mode nil)
+
+(with-eval-after-load 'paren
+  (defun nadvice/show-paren-mode (old-fun &rest args)
+    ;; http://emacs.stackexchange.com/questions/12532/buffer-local-idle-timer
+    (cl-letf* ((old-run-with-idle-timer (symbol-function 'run-with-idle-timer))
+               ((symbol-function 'run-with-idle-timer)
+                (lambda (&rest args)
+                  (cl-destructuring-bind (_secs _repeat function &rest rest)
+                      args
+                    (let* (;; Chicken and egg problem.
+                           (fns (make-symbol "local-idle-timer"))
+                           (timer (apply old-run-with-idle-timer args))
+                           (fn `(lambda (&rest args)
+                                  (if (active-minibuffer-window)
+                                      (with-current-buffer ,(current-buffer)
+                                        (apply (function ,function) args))
+                                    (progn
+                                      (message "timer killed!")
+                                      (cancel-timer ,timer))))))
+                      (fset fns fn)
+                      timer)))))
+      (apply old-fun args)))
+
+  (advice-add 'show-paren-mode :around #'nadvice/show-paren-mode))
+
+(add-hook 'minibuffer-setup-hook (lambda ()
+                                   (show-smartparens-mode -1)
+                                   (show-paren-mode +1)))
 
 ;; textobject for the sexp immediately after point
 (defun my/evil-next-thing (count &optional _beg _end _type inclusive)
