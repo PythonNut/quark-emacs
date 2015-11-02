@@ -64,7 +64,7 @@
     (with-demoted-errors "Load error: %s"
       (require 'evil-snipe)))
 
-  (diminish 'evil-snipe-mode)
+  (diminish 'evil-snipe-local-mode)
 
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible
