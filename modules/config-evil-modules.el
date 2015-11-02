@@ -151,39 +151,24 @@
       (require 'evil-jumper)))
 
   (require 'hydra)
-  (defhydra evil-jumper-hydra ()
-    "switch window"
-    ("C-o" goto-last-change)
-    ("TAB" goto-last-change-reverse))
+  (defhydra evil-jumper-hydra (nil nil
+                                   :color blue
+                                   :pre (setq hydra-is-helpful nil)
+                                   :post (setq hydra-is-helpful t))
+    ("C-o" evil-jumper/backward)
+    ("TAB" evil-jumper/forward)
+    ("<tab>" evil-jumper/forward))
 
-  (defun nadvice/evil-jumper/backward (old-fun &optional arg)
+  (defun nadvice/evil-jumper/backward (_old-fun &optional _arg)
     (interactive "P")
-    (cond ((consp arg)
-           (goto-last-change 1)
-           (evil-jumper-hydra/body))
+    (evil-jumper-hydra/body))
 
-          ((eq '- arg)
-           (funcall old-fun 1)
-           (goto-last-change 1))
-
-          ((or (numberp arg) (not arg))
-           (funcall old-fun (or arg 1)))))
-
-  (defun nadvice/evil-jumper/forward (old-fun &optional arg)
+  (defun nadvice/evil-jumper/forward (_old-fun &optional _arg)
     (interactive "P")
-    (cond ((consp arg)
-           (goto-last-change-reverse 1)
-           (evil-jumper-hydra/body))
+    (evil-jumper-hydra/body))
 
-          ((eq '- arg)
-           (funcall old-fun 1)
-           (goto-last-change 1))
-
-          ((or (numberp arg) (not arg))
-           (funcall old-fun (or arg 1)))))
-
-  (advice-add 'evil-jumper/backward :around #'nadvice/evil-jumper/backward)
-  (advice-add 'evil-jumper/forward :around #'nadvice/evil-jumper/forward)
+  (advice-add 'evil-jumper/backward :after #'nadvice/evil-jumper/backward)
+  (advice-add 'evil-jumper/forward :before #'nadvice/evil-jumper/forward)
 
   (evil-jumper--savehist-init))
 
