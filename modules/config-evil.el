@@ -11,7 +11,11 @@
       evil-want-C-w-delete nil
       evil-want-C-w-in-emacs-state nil
       evil-want-fine-undo t
-      evil-replace-state-cursor '("#884444" box))
+      evil-normal-state-cursor '("#8a8a8a" box)
+      evil-operator-state-cursor '("#8a8a8a" evil-half-cursor)
+      evil-replace-state-cursor '("#884444" box)
+      evil-insert-state-cursor `("#8a8a8a" bar)
+      evil-emacs-state-cursor `("#5f8700" bar))
 
 (fset 'evil-visual-update-x-selection 'ignore)
 
