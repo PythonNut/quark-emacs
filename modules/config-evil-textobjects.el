@@ -55,32 +55,33 @@
 
 ;;; === Evil text object section ===
 ;; evil block indentation textobject for Python
-(defun evil-indent--current-indentation ()
+(defun my/evil-indent--current-indentation ()
   "Return the indentation of the current line. Moves point."
   (buffer-substring-no-properties (point-at-bol)
     (progn (back-to-indentation)
-      (point))))
+           (point))))
 
-(defun evil-indent--block-range (&optional point)
+(defun my/evil-indent--block-range (&optional count point)
   "Return the point at the begin and end of the text block "
   ;; there are faster ways to mark the entire file
   ;; so assume the user wants a block and skip to there
   (while (and (string-empty-p
-               (evil-indent--current-indentation))
+               (my/evil-indent--current-indentation))
               (not (eobp)))
     (forward-line))
   (cl-flet* ((empty-line-p ()
-                           (string-match "^[[:space:]]*$"
-                                         (buffer-substring-no-properties
-                                          (line-beginning-position)
-                                          (line-end-position))))
+                           (string-match-p "^[[:space:]]*$"
+                                           (buffer-substring-no-properties
+                                            (line-beginning-position)
+                                            (line-end-position))))
              (line-indent-ok (indent)
                              (or (<= (length indent)
-                                     (length (evil-indent--current-indentation)))
+                                     (length
+                                      (my/evil-indent--current-indentation)))
                                  (empty-line-p))))
-    (let ((indent (evil-indent--current-indentation)) start begin end)
+    (let ((indent (my/evil-indent--current-indentation)) start begin end)
       ;; now skip ahead to the Nth block with this indentation
-      (dotimes (_ (or last-prefix-arg 0))
+      (dotimes (_ (or count 0))
         (while (and (line-indent-ok) (not (eobp))) (forward-line))
         (while (or (line-indent-ok indent) (eobp)) (forward-line)))
       (save-excursion
@@ -100,36 +101,41 @@
 
 (evil-define-text-object evil-indent-i-block (&optional count _beg _end _type)
   "Text object describing the block with the same indentation as the current line."
-  (let ((range (evil-indent--block-range)))
-    (evil-range (first range) (second range) 'line)))
+  (cl-destructuring-bind (begin end)
+      (my/evil-indent--block-range count)
+    (evil-range begin end 'line)))
 
 (evil-define-text-object evil-indent-a-block (&optional count _beg _end _type)
   "Text object describing the block with the same indentation as the current line and the line above."
   :type line
-  (let ((range (evil-indent--block-range)))
+  (cl-destructuring-bind (begin end)
+      (my/evil-indent--block-range count)
     (evil-range (save-excursion
-                  (goto-char (first (evil-indent--block-range)))
+                  (goto-char begin)
                   (forward-line -1)
                   (point-at-bol))
-                (second range) 'line)))
+                end
+                'line)))
 
 (evil-define-text-object evil-indent-a-block-end (count &optional _beg _end _type)
   "Text object describing the block with the same indentation as the current line and the lines above and below."
   :type line
-  (let ((range (evil-indent--block-range)))
+  (cl-destructuring-bind (begin end)
+      (my/evil-indent--block-range count)
     (evil-range (save-excursion
-                  (goto-char (first range))
+                  (goto-char begin)
                   (forward-line -1)
                   (point-at-bol))
                 (save-excursion
-                  (goto-char (second range))
+                  (goto-char end)
                   (forward-line 1)
                   (point-at-eol))
                 'line)))
 
-(define-key evil-inner-text-objects-map "c" #'evil-indent-i-block)
-(define-key evil-outer-text-objects-map "c" #'evil-indent-a-block)
-(define-key evil-outer-text-objects-map "C" #'evil-indent-a-block-end)
+(define-key evil-inner-text-objects-map "i" #'evil-indent-i-block)
+(define-key evil-outer-text-objects-map "i" #'evil-indent-a-block)
+(define-key evil-inner-text-objects-map "I" #'evil-indent-a-block-end)
+(define-key evil-outer-text-objects-map "I" #'evil-indent-a-block-end)
 
 (defun evil-avy-jump-line-and-revert ()
   (interactive)
