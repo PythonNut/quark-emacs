@@ -75,6 +75,7 @@
 (global-set-key (kbd "C-c M") #'mc/mark-pop)
 (global-set-key (kbd "C->") #'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this)
+(global-set-key (kbd "C-?") #'mc/mark-all-like-this-dwim)
 
 ;; interpreted as C-<Arrow> in a terminal
 (global-set-key (kbd "M-[ d") (kbd "<C-left>"))

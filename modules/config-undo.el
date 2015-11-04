@@ -12,8 +12,7 @@
 
 (with-eval-after-load 'undo-tree
   (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'undo-tree)))
+    (require 'undo-tree))
 
   (diminish 'undo-tree-mode " μ")
   (defalias 'redo #'undo-tree-redo)
@@ -23,6 +22,8 @@
   (define-key undo-tree-map (kbd "C-x r u") nil)
   (define-key undo-tree-map (kbd "C-x r U") nil)
   (define-key undo-tree-map (kbd "C-x r") nil)
+
+  (define-key undo-tree-map (kbd "C-?") nil)
 
   (key-chord-define evil-emacs-state-map "uu" #'undo-tree-visualize)
   (key-chord-define evil-insert-state-map "uu" #'undo-tree-visualize)
