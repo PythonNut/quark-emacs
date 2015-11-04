@@ -23,6 +23,7 @@
   (require 'saveplace)
   (when (fboundp 'save-place-mode)
     (save-place-mode +1))
+  (save-place-find-file-hook)
   (remove-hook 'find-file-hook #'my/saveplace-onetime-setup))
 
 (add-hook 'find-file-hook #'my/saveplace-onetime-setup)
