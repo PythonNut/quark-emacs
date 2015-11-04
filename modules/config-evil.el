@@ -203,6 +203,9 @@
 (define-key evil-insert-state-map (kbd "C-d") #'evil-delete)
 (global-set-key (kbd "<remap> <kill-whole-line>") #'evil-delete-whole-line)
 
+(define-key evil-insert-state-map (kbd "<insert>") #'evil-replace-state)
+(define-key evil-replace-state-map (kbd "<insert>") #'evil-insert-state)
+
 (require 'config-evil-modules)
 (require 'config-evil-textobjects)
 
