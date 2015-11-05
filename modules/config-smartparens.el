@@ -162,8 +162,27 @@ the syntax class ')'."
 (cl-macrolet
     ((sp-define-bindings
       (key func)
+      `(evil-define-key 'motion sp-keymap ,key ,func)))
+
+  (with-no-warnings
+    (my/generate-calls
+        'sp-define-bindings
+      '(((kbd "C-M-f") #'on-parens-forward-sexp-end)
+        ((kbd "C-M-b") #'on-parens-backward-sexp)
+
+        ((kbd "C-M-d") #'on-parens-down-sexp)
+        ((kbd "C-M-S-d") #'on-parens-down-sexp-end)
+
+        ((kbd "C-M-u") #'on-parens-up-sexp-end)
+        ((kbd "C-M-S-u") #'on-parens--up-sexp)
+
+        ((kbd "C-M-n") #'on-parens-forward-sexp)
+        ((kbd "C-M-p") #'on-parens--backward-sexp-end)))))
+
+(cl-macrolet
+    ((sp-define-bindings
+      (key func)
       `(progn
-         (evil-define-key 'motion sp-keymap ,key ,func)
          (evil-define-key 'insert sp-keymap ,key ,func)
          (evil-define-key 'emacs sp-keymap ,key ,func)
 
@@ -190,8 +209,36 @@ the syntax class ')'."
 (cl-macrolet
     ((sp-define-bindings
       (key func)
+      `(evil-define-key 'normal sp-keymap ,key ,func)))
+
+  (with-no-warnings
+    (my/generate-calls
+        'sp-define-bindings
+      '(((kbd "C-M-k") #'on-parens-kill-sexp)
+
+        ((kbd "C-M-t") #'sp-transpose-sexp)
+
+        ((kbd "M-(") #'sp-select-previous-thing)
+        ((kbd "M-)") #'sp-select-next-thing)
+
+        ((kbd "C-+") #'sp-rewrap-sexp)
+        ((kbd "M-<delete>") #'on-parens-kill-sexp)
+        ((kbd "M-<backspace>") #'sp-backward-kill-sexp)
+        ((kbd "S-<backspace>") #'sp-backward-unwrap-sexp)
+
+        ((kbd "C-M-a") #'sp-absorb-sexp)
+        ((kbd "C-M-e") #'sp-emit-sexp)
+
+        ((kbd "C-M-,") #'on-parens-forward-slurp)
+        ((kbd "C-M-.") #'on-parens-forward-barf)
+
+        ((kbd "M-<") #'on-parens-backward-slurp)
+        ((kbd "M->") #'on-parens-backward-barf)))))
+
+(cl-macrolet
+    ((sp-define-bindings
+      (key func)
       `(progn
-         (evil-define-key 'normal sp-keymap ,key ,func)
          (evil-define-key 'insert sp-keymap ,key ,func)
          (evil-define-key 'emacs sp-keymap ,key ,func)
 
