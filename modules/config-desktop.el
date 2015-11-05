@@ -179,4 +179,65 @@
               (setq desktop-auto-save-timer
                     (run-with-idle-timer 3 t #'desktop-autosave)))))
 
+(eval-when-compile (require 'server))
+(defun send-file-to-server (&optional arg)
+  (interactive)
+  (server-eval-at (concat "server"
+                          (or arg
+                              (read-from-minibuffer "Server ID: ")))
+                  `(progn (find-file ,(buffer-file-name))
+                          nil)))
+
+(defun send-desktop-to-server ()
+  (interactive)
+  (save-some-buffers t)
+  (let* ((desktop-base-file-name "transplant")
+         (desktop-base-lock-name
+          (concat desktop-base-file-name ".lock")))
+    (desktop-save-in-desktop-dir)
+    (desktop-release-lock))
+  (server-eval-at (concat "server"
+                          (read-from-minibuffer "Server ID: "))
+                  `(let* ((desktop-base-file-name "transplant")
+                          (desktop-base-lock-name
+                           (concat desktop-base-file-name ".lock")))
+                     (desktop-clear)
+                     (desktop-read)
+                     (desktop-remove)))
+  (kill-emacs))
+
+(defun send-all-files-to-server ()
+  (let ((count 1))
+    (catch 'done
+      (while t
+        (if (server-running-p
+             (concat "server" (number-to-string count)))
+            (throw 'done server-name)
+          (cl-incf count))
+        (when (> 20 count)
+          (throw 'done nil))))
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (buffer-file-name (current-buffer))
+          (send-file-to-server (number-to-string count)))))
+    (kill-emacs)))
+
+(defun run-server ()
+  (require 'server)
+  (message "Server id is %s"
+           (catch 'done
+             (let ((count 1))
+               (while t
+                 (setq server-name (concat "server" (number-to-string count)))
+                 (if (server-running-p server-name)
+                     (cl-incf count)
+                   (server-mode)
+                   (throw 'done server-name)))))))
+
+(when (member "-P" command-line-args)
+  (setq debug-on-error t)
+  (delete "-P" command-line-args)
+  (require 'server)
+  (add-hook 'emacs-startup-hook #'send-all-files-to-server))
+
 (provide 'config-desktop)
