@@ -748,7 +748,8 @@
       (if (memq (process-status proc) '(signal exit))
           (let ((buffer (process-buffer proc)))
             (apply old-fun args)
-            (kill-buffer buffer))
+            (kill-buffer buffer)
+            (winner-undo))
         (apply old-fun args))))
   (advice-add 'term-sentinel :around #'nadvice/term-sentinel)
 
@@ -843,6 +844,32 @@
           (find-file file)
           (forward-line line))
       (find-file (pop args)))))
+
+(defun my/popup-ansi-term ()
+  "Toggle a shell popup buffer with the current file's directory as cwd."
+  (interactive)
+  (let* ((dir (file-name-directory (or (buffer-file-name)
+                                        ;; dired
+                                        dired-directory
+                                        ;; use HOME
+                                        "~/")))
+         (popup-buffer (get-buffer "*Popup Shell*"))
+         (new-buffer (unless (buffer-live-p popup-buffer)
+                       (save-window-excursion
+                         (ansi-term (or explicit-shell-file-name
+                                        (getenv "ESHELL")
+                                        (getenv "SHELL")
+                                        "/bin/sh")
+                                    "*Popup Shell*")
+                         (setq popup-buffer (get-buffer "*Popup Shell*")))
+                       t)))
+
+    (select-window (split-window-below))
+    (switch-to-buffer popup-buffer)
+    (unless new-buffer
+      (comint-send-string nil (concat "cd " dir "; clear\n")))))
+
+(global-set-key (kbd "<f12>") #'my/popup-ansi-term)
 
 ;; =============================================================================
 ;; Config file modes ===========================================================
