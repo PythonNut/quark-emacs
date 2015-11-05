@@ -6,12 +6,12 @@
     (require 'evil)
     (require 'evil-easymotion)))
 
-(key-chord-define evil-insert-state-map "jk" #'evil-avy-goto-word-1)
-(key-chord-define evil-insert-state-map "jc" #'evil-avy-goto-char)
+(key-chord-define evil-insert-state-map "jk" #'avy-goto-char-timer)
+(key-chord-define evil-insert-state-map "jw" #'evil-avy-goto-word-1)
 (key-chord-define evil-insert-state-map "jl" #'evil-avy-goto-line)
 
-(key-chord-define evil-emacs-state-map "jk" #'evil-avy-goto-word-1)
-(key-chord-define evil-emacs-state-map "jc" #'evil-avy-goto-char)
+(key-chord-define evil-emacs-state-map "jk" #'avy-goto-char-timer)
+(key-chord-define evil-emacs-state-map "jw" #'evil-avy-goto-word-1)
 (key-chord-define evil-emacs-state-map "jl" #'evil-avy-goto-line)
 
 (global-set-key (kbd "<remap> <goto-line>") #'evil-avy-goto-line)
@@ -39,6 +39,7 @@
 
   (setq avy-background t
         avy-style 'de-bruijn
+        avy-timeout-seconds 0.3
         avy-keys (eval-when-compile (string-to-list "jfkdlsaurieowncpqmxzb")))
 
   (set-face-foreground 'avy-background-face "#586e75")
@@ -89,8 +90,8 @@
 
 (define-key evil-normal-state-map (kbd "SPC l") #'evil-avy-goto-line)
 (define-key evil-motion-state-map (kbd "SPC l") #'evil-avy-goto-line)
-(define-key evil-normal-state-map (kbd "SPC c") #'evil-avy-goto-char)
-(define-key evil-motion-state-map (kbd "SPC c") #'evil-avy-goto-char)
+(define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char-timer)
+(define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char-timer)
 
 (evilem-define (kbd "SPC g s f") 'evil-forward-sexp)
 (evilem-define (kbd "SPC g s b") 'evil-backward-sexp)
