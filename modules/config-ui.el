@@ -263,6 +263,9 @@
 ;; Line numbers
 ;; ============
 
+;; column numbers too
+(column-number-mode +1)
+
 (with-eval-after-load 'linum
   (unless (package-installed-p 'linum-relative)
     (save-window-excursion

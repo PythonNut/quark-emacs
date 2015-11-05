@@ -122,6 +122,7 @@
     (my/ensure-packages-are-installed (bound-and-true-p my/required-packages))
     (restart-emacs)))
 
+(blink-cursor-mode -1)
 (delete-selection-mode +1)
 (global-hl-line-mode +1)
 (subword-mode +1)

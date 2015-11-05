@@ -25,6 +25,12 @@
 
     (defvar my/slow-device nil)
 
+    (menu-bar-mode -1)
+    (when (fboundp 'scroll-bar-mode)
+      (scroll-bar-mode -1))
+    (when (fboundp 'tool-bar-mode)
+      (tool-bar-mode -1))
+
     (when (member "-F" command-line-args)
       (delete "-F" command-line-args)
       (setq my/slow-device t))
