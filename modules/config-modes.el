@@ -60,7 +60,6 @@
 (with-eval-after-load 'cc-mode
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
-
       (require 'cc-mode)))
   (package-deferred-install 'irony
       :autoload-names '('irony-mode
@@ -83,6 +82,15 @@
   (package-deferred-install 'company-irony
       :autoload-names '('company-irony
                         'company-irony-setup-begin-commands))
+
+  (package-deferred-install 'flycheck-irony
+      :autoload-names '('flycheck-irony-setup))
+
+  (with-eval-after-load 'irony
+    (flycheck-irony-setup))
+
+  (add-hook 'irony-mode-hook (lambda ()
+                               (flycheck-select-checker 'irony)))
 
   (setq c-default-style "k&r")
 
@@ -493,7 +501,7 @@
 
 (with-eval-after-load 'sgml-mode
   ;; after deleting a tag, indent properly
-  (defun nadvice/sgml-delete-tag (&rest args)
+  (defun nadvice/sgml-delete-tag (&rest _args)
     (indent-region (point-min) (point-max)))
 
   (advice-add 'sgml-delete-tag :after #'nadvice/sgml-delete-tag))
@@ -662,7 +670,7 @@
         (apply old-fun args)
       (user-error
        (if (string= (cadr err) "Not at command line")
-           (cl-destructuring-bind (n &rest _args) args
+           (cl-destructuring-bind (n &rest ignored) args
              (with-no-warnings
                (if (< n 0)
                    (next-line (- n))
@@ -744,7 +752,7 @@
 
 (with-eval-after-load 'term
   (defun nadvice/term-sentinel (old-fun &rest args)
-    (cl-destructuring-bind (proc msg) args
+    (cl-destructuring-bind (proc _msg) args
       (if (memq (process-status proc) '(signal exit))
           (let ((buffer (process-buffer proc)))
             (apply old-fun args)
