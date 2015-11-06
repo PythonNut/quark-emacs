@@ -19,13 +19,6 @@
 
 (defun my/sp-on-delimiter-p ()
   (ignore-errors (save-excursion
-                   (when (and (fboundp 'evil-normal-state-p)
-                              (not (or (evil-insert-state-p)
-                                       (evil-emacs-state-p)
-                                       (minibuferp)))
-                              (not (eobp)))
-                     (ignore-errors
-                       (forward-char)))
                    (if (and (sp-get (sp-get-sexp nil) :beg)
                             (= (point) (sp-get (sp-get-sexp nil) :beg)))
                        (cons (sp-get (sp-get-sexp nil) :beg)

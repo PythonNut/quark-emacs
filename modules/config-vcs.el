@@ -35,19 +35,16 @@
   (evil-set-initial-state 'magit-revision-mode 'motion)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
-  (add-hook 'git-rebase-mode-hook
-            (lambda ()
-              (set (make-local-variable 'input-method-function) nil)))
-
   (define-key magit-log-mode-map "j" #'next-line)
   (define-key magit-refs-mode-map "j" #'next-line)
   (define-key magit-status-mode-map "j" #'next-line)
+
   (eval-and-compile
     (cl-macrolet
         ((magit-setup-section-k
           (mode &optional command)
-          `(with-demoted-errors
-               (define-key ,mode (kbd "<C-tab>") nil)
+          `(with-demoted-errors "magit setup error: %s"
+             (define-key ,mode (kbd "<C-tab>") nil)
              (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
              (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
              (define-key ,mode (kbd "k") #'previous-line)
@@ -82,6 +79,7 @@
   (add-hook 'magit-refs-mode-hook #'my/setup-magit-mode)
   (add-hook 'magit-status-mode-hook #'my/setup-magit-mode)
   (add-hook 'magit-stash-mode-hook #'my/setup-magit-mode)
+  (add-hook 'git-rebase-mode-hook #'my/setup-magit-mode)
 
   (add-hook 'with-editor-mode-hook #'evil-insert-state)
 
