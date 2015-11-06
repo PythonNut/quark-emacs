@@ -19,8 +19,7 @@
 
 (defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
   (if (and (bound-and-true-p flycheck-mode)
-           (progn (require 's)
-                  (flycheck-overlay-errors-at (point))))
+           (flycheck-overlay-errors-at (point)))
       (flycheck-display-error-at-point)
     (apply old-fun args)))
 
@@ -38,7 +37,6 @@
 (with-eval-after-load 'flycheck
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
-      (require 's)
       (require 'flycheck)))
 
   (setq flycheck-display-errors-function #'my/display-error-messages-condensed
@@ -48,8 +46,7 @@
     (require 'dash)
     (-when-let (messages (-keep #'flycheck-error-message errors))
       (when (flycheck-may-use-echo-area-p)
-        (require 's)
-        (display-message-or-buffer (s-join "\n" messages)
+        (display-message-or-buffer (mapconcat #'identity messages "\n")
                                    flycheck-error-message-buffer))))
 
   (set-face-background 'flycheck-fringe-warning nil)
@@ -142,7 +139,7 @@
 
 (setq yas-verbosity 0)
 
-(defun my/ivy-yasnippet (prompt choices &optional display-fn)
+(defun my/ivy-yasnippet (_prompt choices &optional display-fn)
   "Use ivy to select a snippet. Put this into `yas-prompt-functions.'"
   (if (require 'ivy nil t)
       (let* ((disp-fn (or display-fn 'identity))

@@ -40,7 +40,6 @@
   "If the matching paren is offscreen, show the matching line in the
 echo area. Has no effect if the character before point is not of
 the syntax class ')'."
-  (require 's)
   (let ((matching-sexp (my/sp-on-delimiter-p)))
     (when (and matching-sexp
                (save-excursion
@@ -53,8 +52,13 @@ the syntax class ')'."
           (cons (line-number-at-pos (point))
                 (save-excursion
                   (goto-char (car matching-sexp))
-                  (list (line-number-at-pos (point))
-                        (s-trim (thing-at-point 'line)))))
+                  (let ((line (thing-at-point 'line)))
+                    (when (string-match "\\`[ \t\n\r]+" line)
+                        (setq line (replace-match "" t t line)))
+                    (when (string-match "[ \t\n\r]+\\'" line)
+                        (setq line (replace-match "" t t line)))
+                    (list (line-number-at-pos (point))
+                          line))))
         (message "Matches %s (%d %s)" text
                  (abs (- current-line matching-line))
                  (if (> matching-line current-line)
