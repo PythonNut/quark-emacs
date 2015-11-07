@@ -58,6 +58,7 @@
 (defun my/edit-file-as-root-maybe ()
   "Find file as root if necessary."
   (when (and buffer-file-name
+             (get-buffer-window)
              (not (file-writable-p buffer-file-name))
              (not (string= user-login-name
                            (nth 3 (file-attributes buffer-file-name 'string))))
