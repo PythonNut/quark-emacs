@@ -287,6 +287,9 @@
     (with-demoted-errors "Load error: %s"
       (require 'python)))
 
+  (package-deferred-install 'live-py-mode
+      :autoload-names '('live-py-mode))
+
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
   (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto))
 
