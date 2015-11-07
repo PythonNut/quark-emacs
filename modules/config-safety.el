@@ -13,12 +13,12 @@
 
 (defun my/save-buffer-maybe ()
   (with-current-buffer (current-buffer)
-    (let ((buffer-file-name (buffer-file-name (current-buffer))))
-      (when (and buffer-file-name
+    (let ((bfn (buffer-file-name (current-buffer))))
+      (when (and bfn
                  (buffer-modified-p (current-buffer))
                  (ignore-errors
-                   (file-writable-p buffer-file-name))
-                 (not (file-remote-p buffer-file-name)))
+                   (file-writable-p bfn))
+                 (not (file-remote-p bfn)))
         (with-demoted-errors "%s"
           (save-buffer))))))
 
