@@ -35,6 +35,7 @@ echo area. Has no effect if the character before point is not of
 the syntax class ')'."
   (let ((matching-sexp (my/sp-on-delimiter-p)))
     (when (and matching-sexp
+               (not (minibufferp))
                (save-excursion
                  (or (< (progn (move-to-window-line -1) (line-end-position))
                         (cdr matching-sexp))
@@ -61,7 +62,8 @@ the syntax class ')'."
 (advice-add 'sp-show--pair-function :after #'nadvice/sp-show--pair-function)
 
 (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
-  (unless (my/sp-on-delimiter-p)
+  (unless (and (my/sp-on-delimiter-p)
+               (not (minibufferp)))
     (apply old-fun args)))
 
 (advice-add 'eldoc-display-message-no-interference-p :around
