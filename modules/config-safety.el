@@ -16,7 +16,7 @@
     (let ((buffer-file-name (buffer-file-name (current-buffer))))
       (when (and buffer-file-name
                  (buffer-modified-p (current-buffer))
-                 (with-demoted-errors "%s"
+                 (ignore-errors
                    (file-writable-p buffer-file-name))
                  (not (file-remote-p buffer-file-name)))
         (with-demoted-errors "%s"
