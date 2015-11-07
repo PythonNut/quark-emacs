@@ -72,9 +72,7 @@
                         'irony-cdb-json-add-compile-commands-path
                         'irony-cdb-libclang
                         'irony-completion-at-point
-                        'irony-completion-at-point-async)
-      (setq irony-user-dir (expand-file-name "data/irony"
-                                             user-emacs-directory)))
+                        'irony-completion-at-point-async))
 
   (package-deferred-install 'irony-eldoc
       :autoload-names '('irony-eldoc))
@@ -89,20 +87,7 @@
   (with-eval-after-load 'irony
     (flycheck-irony-setup))
 
-  (add-hook 'irony-mode-hook (lambda ()
-                               (flycheck-select-checker 'irony)))
-
   (setq c-default-style "k&r")
-
-  ;; prefer C++1y
-  (add-hook 'c++-mode-hook
-            (lambda ()
-              (setq flycheck-clang-language-standard "c++1y")))
-
-  ;; prefer C11
-  (add-hook 'c-mode-hook
-            (lambda ()
-              (setq flycheck-clang-language-standard "c11")))
 
   (cl-macrolet
       ((my/setup-cc-mode
@@ -111,8 +96,8 @@
                            (when (eq major-mode ,mode)
                              (irony-mode +1)
                              (eldoc-mode +1)
-                             (irony-eldoc +1))
-                           (semantic-idle-summary-mode -1)))))
+                             (irony-eldoc +1)
+                             (semantic-idle-summary-mode -1))))))
 
     (with-no-warnings
       (my/generate-calls

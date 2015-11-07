@@ -101,7 +101,7 @@ flycheck_*
 
 /.python-environments
 /data/anaconda-mode
-/data/irony
+/irony
 /dunnet
 
 
