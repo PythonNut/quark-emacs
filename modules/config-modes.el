@@ -228,9 +228,6 @@
 (package-deferred-install 'anaconda-mode
     :autoload-names '('anaconda-mode)
     (diminish 'anaconda-mode " ✶")
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'anaconda-mode)))
   (setq anaconda-mode-installation-directory (expand-file-name
                                               "data/anaconda-mode"
                                               user-emacs-directory)))
@@ -745,7 +742,8 @@
           (let ((buffer (process-buffer proc)))
             (apply old-fun args)
             (kill-buffer buffer)
-            (winner-undo))
+            (winner-undo)
+            (message ""))
         (apply old-fun args))))
   (advice-add 'term-sentinel :around #'nadvice/term-sentinel)
 
