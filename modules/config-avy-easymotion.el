@@ -84,6 +84,7 @@
            (other-window arg)))))
 
 (global-set-key (kbd "C-'") #'switch-window-dwim)
+(global-set-key (kbd "C-c '") #'switch-window-dwim)
 
 (require 'evil-easymotion)
 (evilem-default-keybindings "SPC")
