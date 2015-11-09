@@ -18,16 +18,17 @@
 (smartparens-global-mode +1)
 
 (defun my/sp-on-delimiter-p ()
-  (ignore-errors (save-excursion
-                   (if (and (sp-get (sp-get-sexp nil) :beg)
-                            (= (point) (sp-get (sp-get-sexp nil) :beg)))
-                       (cons (sp-get (sp-get-sexp nil) :beg)
-                             (sp-get (sp-get-sexp nil) :end))
-                     (if (and (sp-get (sp-get-sexp t) :end)
-                              (= (point) (sp-get (sp-get-sexp t) :end)))
-                         (cons (sp-get (sp-get-sexp t) :beg)
-                               (sp-get (sp-get-sexp t) :end))
-                       nil)))))
+  (ignore-errors (cl-letf (((symbol-function #'message) #'format))
+                   (save-excursion
+                     (if (and (sp-get (sp-get-sexp nil) :beg)
+                              (= (point) (sp-get (sp-get-sexp nil) :beg)))
+                         (cons (sp-get (sp-get-sexp nil) :beg)
+                               (sp-get (sp-get-sexp nil) :end))
+                       (if (and (sp-get (sp-get-sexp t) :end)
+                                (= (point) (sp-get (sp-get-sexp t) :end)))
+                           (cons (sp-get (sp-get-sexp t) :beg)
+                                 (sp-get (sp-get-sexp t) :end))
+                         nil))))))
 
 (defun nadvice/sp-show--pair-function (&rest _args)
   "If the matching paren is offscreen, show the matching line in the
