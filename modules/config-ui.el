@@ -78,10 +78,20 @@
 (global-set-key (kbd "C-?") #'mc/mark-all-like-this-dwim)
 
 ;; interpreted as C-<Arrow> in a terminal
-(global-set-key (kbd "M-[ d") (kbd "<C-left>"))
-(global-set-key (kbd "M-[ c") (kbd "<C-right>"))
-(global-set-key (kbd "M-[ a") (kbd "<C-up>"))
-(global-set-key (kbd "M-[ b") (kbd "<C-down"))
+(define-key key-translation-map (kbd "M-[ d") (kbd "<C-left>"))
+(define-key key-translation-map (kbd "M-[ c") (kbd "<C-right>"))
+(define-key key-translation-map (kbd "M-[ a") (kbd "<C-up>"))
+(define-key key-translation-map (kbd "M-[ b") (kbd "<C-down"))
+
+(define-key key-translation-map (kbd "M-[ D") (kbd "<C-left>"))
+(define-key key-translation-map (kbd "M-[ C") (kbd "<C-right>"))
+(define-key key-translation-map (kbd "M-[ A") (kbd "<C-up>"))
+(define-key key-translation-map (kbd "M-[ B") (kbd "<C-down>"))
+
+(define-key key-translation-map (kbd "ESC <left>") (kbd "<M-left>"))
+(define-key key-translation-map (kbd "ESC <right>") (kbd "<M-right>"))
+(define-key key-translation-map (kbd "ESC <up>") (kbd "<M-up>"))
+(define-key key-translation-map (kbd "ESC <down>") (kbd "<M-down>"))
 
 ;; directional window movement
 (global-set-key (kbd "<C-left>")  #'windmove-left)
