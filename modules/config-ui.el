@@ -328,27 +328,6 @@
                                        "inner"))
                      "-\\(.*\\)")) . "\\1")))
 
-(defun isearch-delete-something ()
-  "Delete non-matching text or the last character."
-  ;; An attempt at this Emacs SX question:
-  ;; https://emacs.stackexchange.com/questions/10359/delete-portion-of-isearch-string-that-does-not-match-or-last-char-if-complete-m
-  ;; Mostly copied from `isearch-del-char' and Drew's answer on the page above
-  (interactive)
-  (if (= 0 (length isearch-string))
-      (ding)
-    (setq isearch-string
-          (substring isearch-string
-                     0
-                     (or (isearch-fail-pos) (1- (length isearch-string)))))
-    (setq isearch-message
-          (mapconcat #'isearch-text-char-description isearch-string "")))
-  (if isearch-other-end (goto-char isearch-other-end))
-  (isearch-search)
-  (isearch-push-state)
-  (isearch-update))
-
-(define-key isearch-mode-map (kbd "<backspace>") #'isearch-delete-something)
-
 ;; add intelligent buffer renaming
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
