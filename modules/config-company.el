@@ -14,6 +14,43 @@
           (lambda ()
             (add-hook 'first-change-hook #'my/company-onetime-setup)))
 
+(eval-and-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'config-setq))
+
+  (cl-macrolet
+      ((company-define-specific-modes
+        (mode backend)
+        `(progn
+           (add-hook ,mode
+                     (lambda ()
+                       (require 'company)
+                       (let ((old-backends company-backends))
+                         (set (make-local-variable 'company-backends)
+                              (cons (cons
+                                     ,backend
+                                     (cdar old-backends))
+                                    (cdr old-backends)))))))))
+
+    (with-no-warnings
+      (my/generate-calls
+          'company-define-specific-modes
+        '(('c++-mode-hook     'company-irony)
+          ('objc-mode-hook    'company-irony)
+          ('c-mode-hook       'company-irony)
+          ('arduino-mode-hook 'company-irony)
+          ('cmake-mode-hook   'company-cmake)
+          ('css-mode-hook     'company-css)
+          ('java-mode-hook    'company-eclim)
+          ('nxml-mode-hook    'company-nxml)
+          ('html-mode-hook    'company-web-html)
+          ('web-mode-hook     'company-web-html)
+          ('tex-mode-hook     'company-math-symbols-latex)
+          ('latex-mode-hook   'company-math-symbols-latex)
+          ('scheme-mode-hook  'geiser-company-backend)
+          ('texinfo-mode-hook 'company-semantic)
+          ('python-mode-hook  'company-anaconda))))))
+
 (with-eval-after-load 'company
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -38,41 +75,6 @@
                             company-keywords)
 
                            company-dabbrev))
-
-  (eval-and-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'config-setq))
-
-    (cl-macrolet
-        ((company-define-specific-modes
-          (mode backend)
-          `(add-hook ,mode
-                     (lambda ()
-                       (let ((old-backends company-backends))
-                         (set (make-local-variable 'company-backends)
-                              (cons (cons
-                                     ,backend
-                                     (cdar old-backends))
-                                    (cdr old-backends))))))))
-
-      (with-no-warnings
-        (my/generate-calls
-            'company-define-specific-modes
-          '(('c++-mode-hook     'company-irony)
-            ('objc-mode-hook    'company-irony)
-            ('c-mode-hook       'company-irony)
-            ('arduino-mode-hook 'company-irony)
-            ('cmake-mode-hook   'company-cmake)
-            ('css-mode-hook     'company-css)
-            ('java-mode-hook    'company-eclim)
-            ('nxml-mode-hook    'company-nxml)
-            ('html-mode-hook    'company-web-html)
-            ('web-mode-hook     'company-web-html)
-            ('tex-mode          'company-math-symbols-latex)
-            ('latex-mode-hook   'company-math-symbols-latex)
-            ('scheme-mode-hook  'geiser-company-backend)
-            ('texinfo-mode-hook 'company-semantic)
-            ('python-mode-hook  'company-anaconda))))))
 
   (defun company-complete-common-or-complete-full ()
     (interactive)
@@ -171,9 +173,7 @@
                        (concat "\\w*-*" (list x)))
                      str
                      "")
-          "\\w*"
-
-          "\\b"))
+          "\\w*\\b"))
 
 (defun try-expand-flx-collect (str)
   "Find and collect all words that flex-match str, and sort by flx score"
