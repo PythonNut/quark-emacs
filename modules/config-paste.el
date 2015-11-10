@@ -199,6 +199,22 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (define-key arrow-keys-O-map "C" (kbd "<right>"))
       (define-key arrow-keys-O-map "D" (kbd "<left>"))
 
+      ;; interpreted as C-<Arrow> in a terminal
+      (define-key key-translation-map (kbd "M-[ d") (kbd "<C-left>"))
+      (define-key key-translation-map (kbd "M-[ c") (kbd "<C-right>"))
+      (define-key key-translation-map (kbd "M-[ a") (kbd "<C-up>"))
+      (define-key key-translation-map (kbd "M-[ b") (kbd "<C-down"))
+
+      (define-key key-translation-map (kbd "M-[ D") (kbd "<C-left>"))
+      (define-key key-translation-map (kbd "M-[ C") (kbd "<C-right>"))
+      (define-key key-translation-map (kbd "M-[ A") (kbd "<C-up>"))
+      (define-key key-translation-map (kbd "M-[ B") (kbd "<C-down>"))
+
+      (define-key key-translation-map (kbd "ESC <left>") (kbd "<M-left>"))
+      (define-key key-translation-map (kbd "ESC <right>") (kbd "<M-right>"))
+      (define-key key-translation-map (kbd "ESC <up>") (kbd "<M-up>"))
+      (define-key key-translation-map (kbd "ESC <down>") (kbd "<M-down>"))
+
       (xterm-mouse-mode +1)
 
       (bracketed-paste-enable)
