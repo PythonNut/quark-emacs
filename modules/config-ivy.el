@@ -37,21 +37,29 @@
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
-(defun my/ivy-setup-faces ()
-  (set-face-attribute 'swiper-minibuffer-match-face-1 nil
-                      :background nil)
-  (set-face-attribute 'swiper-minibuffer-match-face-2 nil
-                      :background nil
-                      :foreground "#268bd2")
-
-  (setq swiper-minibuffer-faces (list 'swiper-minibuffer-match-face-1
-                                      'swiper-minibuffer-match-face-2)))
-
 (with-eval-after-load 'swiper
-  (my/ivy-setup-faces))
+  (defun my/swiper-setup-faces ()
+    (set-face-attribute 'swiper-minibuffer-match-face-1 nil
+                        :background nil)
+    (set-face-attribute 'swiper-minibuffer-match-face-2 nil
+                        :background nil
+                        :foreground "#268bd2"))
+
+  (my/swiper-setup-faces)
+  (add-hook 'load-theme-hook #'my/swiper-setup-faces))
 
 (with-eval-after-load 'ivy
   (ivy-mode +1)
+
+  (defun my/ivy-setup-faces ()
+    (set-face-attribute 'ivy-minibuffer-match-face-1 nil
+                        :background nil)
+    (set-face-attribute 'ivy-minibuffer-match-face-2 nil
+                        :background nil
+                        :foreground "#268bd2")
+
+    (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
+                                     'ivy-minibuffer-match-face-2)))
 
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -69,6 +77,7 @@
         ivy-extra-directories nil
         ivy-count-format "")
 
+  (my/ivy-setup-faces)
   (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
 (with-eval-after-load 'counsel
