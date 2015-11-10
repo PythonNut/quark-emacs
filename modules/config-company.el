@@ -162,55 +162,55 @@
 ;;; ==================================================
 ;;; Hippie expand - secondary autocompletion framework
 ;;; ==================================================
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'hippie-exp)))
-
-(defun try-expand-flx-regexp (str)
-  "Generate regexp for flexible matching of str."
-  (concat "\\b"
-          (mapconcat (lambda (x)
-                       (concat "\\w*-*" (list x)))
-                     str
-                     "")
-          "\\w*\\b"))
-
-(defun try-expand-flx-collect (str)
-  "Find and collect all words that flex-match str, and sort by flx score"
-  (let ((coll nil)
-        (regexp (try-expand-flx-regexp str)))
-    (save-excursion
-      (goto-char (point-min))
-      (while (search-forward-regexp regexp nil t)
-        (push (thing-at-point 'symbol) coll)))
-    (sort coll #'(lambda (a b)
-                   (> (car (flx-score a str))
-                      (car (flx-score b str)))))))
-
-(defun try-expand-flx (old)
-  "Try to complete word using flx matching."
-  (unless old
-    (he-init-string (he-lisp-symbol-beg) (point))
-    (unless (he-string-member he-search-string he-tried-table)
-      (push he-search-string he-tried-table))
-    (setq he-expand-list
-          (unless (equal he-search-string "")
-            (try-expand-flx-collect he-search-string))))
-  (while (and he-expand-list
-              (he-string-member (car he-expand-list) he-tried-table))
-    (pop he-expand-list))
-  (prog1
-      (null he-expand-list)
-    (if (null he-expand-list)
-        (when old (he-reset-string))
-      (he-substitute-string (pop he-expand-list)))))
-
 (with-eval-after-load 'hippie-exp
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'hippie-exp)))
+
+  (defun my/he-try-expand-flx-regexp (str)
+    "Generate regexp for flexible matching of str."
+    (concat "\\b"
+            (mapconcat (lambda (x)
+                         (concat "\\w*-*" (list x)))
+                       str
+                       "")
+            "\\w*\\b"))
+
+  (defun my/he-try-expand-flx-collect (str)
+    "Find and collect all words that flex-match str, and sort by flx score"
+    (let ((coll nil)
+          (regexp (my/he-try-expand-flx-regexp str)))
+      (save-excursion
+        (goto-char (point-min))
+        (while (search-forward-regexp regexp nil t)
+          (push (thing-at-point 'symbol) coll)))
+      (sort coll #'(lambda (a b)
+                     (> (car (flx-score a str))
+                        (car (flx-score b str)))))))
+
+  (defun my/he-try-expand-flx (old)
+    "Try to complete word using flx matching."
+    (unless old
+      (he-init-string (he-lisp-symbol-beg) (point))
+      (unless (he-string-member he-search-string he-tried-table)
+        (push he-search-string he-tried-table))
+      (setq he-expand-list
+            (unless (equal he-search-string "")
+              (my/he-try-expand-flx-collect he-search-string))))
+    (while (and he-expand-list
+                (he-string-member (car he-expand-list) he-tried-table))
+      (pop he-expand-list))
+    (prog1
+        (null he-expand-list)
+      (if (null he-expand-list)
+          (when old (he-reset-string))
+        (he-substitute-string (pop he-expand-list)))))
+
   (setq hippie-expand-try-functions-list
         '(yas-hippie-try-expand
           try-expand-dabbrev
           try-expand-dabbrev-from-kill
-          try-expand-flx
+          my/he-try-expand-flx
           try-expand-dabbrev-all-buffers
           try-complete-file-name-partially
           try-complete-file-name
@@ -220,6 +220,6 @@
           try-complete-lisp-symbol-partially
           try-complete-lisp-symbol)))
 
-(global-set-key (kbd "M-/") 'hippie-expand)
+(global-set-key (kbd "M-/") #'hippie-expand)
 
 (provide 'config-company)
