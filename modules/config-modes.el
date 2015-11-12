@@ -153,12 +153,6 @@
 ;; Javascript ==================================================================
 ;; =============================================================================
 
-(package-deferred-install 'js2-refactor
-    :autoload-names '('js2r-add-keybindings-with-prefix
-                      'js2r-add-keybindings-with-modifier
-                      'js2r-extract-var
-                      'js2-refactor-mode))
-
 (package-deferred-install 'js2-mode
     :mode-entries '('("\\.js\\'" . js2-mode))
     :autoload-names '('js2-minor-mode
@@ -166,6 +160,12 @@
                       'js2-highlight-unused-variables-mode
                       'js2-imenu-extras-mode
                       'js2-imenu-extras-setup)
+
+    (package-deferred-install 'js2-refactor
+        :autoload-names '('js2r-add-keybindings-with-prefix
+                          'js2r-add-keybindings-with-modifier
+                          'js2r-extract-var
+                          'js2-refactor-mode))
 
     (set-face-foreground 'js2-external-variable
                          (face-foreground 'default))
@@ -222,67 +222,67 @@
 ;; Python ======================================================================
 ;; =============================================================================
 
-(package-deferred-install 'company-anaconda
-    :autoload-names '('company-anaconda))
-
-(package-deferred-install 'anaconda-mode
-    :autoload-names '('anaconda-mode)
-    (diminish 'anaconda-mode " ✶")
-  (setq anaconda-mode-installation-directory (expand-file-name
-                                              "data/anaconda-mode"
-                                              user-emacs-directory)))
-
-(package-deferred-install 'traad
-    :autoload-names '('traad-open
-                      'traad-close
-                      'traad-running?
-                      'traad-display-task-status
-                      'traad-display-full-task-status
-                      'traad-undo
-                      'traad-redo
-                      'traad-display-history
-                      'traad-undo-info
-                      'traad-redo-info
-                      'traad-rename-current-file
-                      'traad-rename
-                      'traad-normalize-arguments
-                      'traad-remove-argument
-                      'traad-extract-method
-                      'traad-extract-variable
-                      'traad-organize-imports
-                      'traad-expand-star-imports
-                      'traad-froms-to-imports
-                      'traad-relatives-to-absolutes
-                      'traad-handle-long-imports
-                      'traad-imports-super-smackdown
-                      'traad-display-occurrences
-                      'traad-display-implementations
-                      'traad-goto-definition
-                      'traad-findit
-                      'traad-code-assist
-                      'traad-display-calltip
-                      'traad-popup-calltip
-                      'traad-display-doc
-                      'traad-popup-doc))
-
-(package-deferred-install 'django-mode
-    :feature-name 'django-html-mode
-    :mode-entries '('("\\.djhtml$" . django-html-mode))
-    :autoload-names '('django-html-mode))
-
-(add-hook 'python-mode-hook #'anaconda-mode)
-(add-hook 'python-mode-hook #'eldoc-mode)
-
-(add-hook 'python-mode-hook
-          (lambda ()
-            ;; conflicts with `eldoc-mode'
-            (semantic-idle-summary-mode -1)
-            (setq mode-name "Py")))
-
 (with-eval-after-load 'python
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'python)))
+
+  (package-deferred-install 'company-anaconda
+      :autoload-names '('company-anaconda))
+
+  (package-deferred-install 'anaconda-mode
+      :autoload-names '('anaconda-mode)
+      (diminish 'anaconda-mode " ✶")
+    (setq anaconda-mode-installation-directory (expand-file-name
+                                                "data/anaconda-mode"
+                                                user-emacs-directory)))
+
+  (package-deferred-install 'traad
+      :autoload-names '('traad-open
+                        'traad-close
+                        'traad-running?
+                        'traad-display-task-status
+                        'traad-display-full-task-status
+                        'traad-undo
+                        'traad-redo
+                        'traad-display-history
+                        'traad-undo-info
+                        'traad-redo-info
+                        'traad-rename-current-file
+                        'traad-rename
+                        'traad-normalize-arguments
+                        'traad-remove-argument
+                        'traad-extract-method
+                        'traad-extract-variable
+                        'traad-organize-imports
+                        'traad-expand-star-imports
+                        'traad-froms-to-imports
+                        'traad-relatives-to-absolutes
+                        'traad-handle-long-imports
+                        'traad-imports-super-smackdown
+                        'traad-display-occurrences
+                        'traad-display-implementations
+                        'traad-goto-definition
+                        'traad-findit
+                        'traad-code-assist
+                        'traad-display-calltip
+                        'traad-popup-calltip
+                        'traad-display-doc
+                        'traad-popup-doc))
+
+  (package-deferred-install 'django-mode
+      :feature-name 'django-html-mode
+      :mode-entries '('("\\.djhtml$" . django-html-mode))
+      :autoload-names '('django-html-mode))
+
+  (add-hook 'python-mode-hook #'anaconda-mode)
+  (add-hook 'python-mode-hook #'eldoc-mode)
+
+  (add-hook 'python-mode-hook
+            (lambda ()
+              ;; conflicts with `eldoc-mode'
+              (semantic-idle-summary-mode -1)
+              (setq mode-name "Py")))
 
   (package-deferred-install 'live-py-mode
       :autoload-names '('live-py-mode))
@@ -497,11 +497,12 @@
                    ("||\n[i]" "RET")
                    ("| " "SPC"))))
 
-(package-deferred-install 'company-web
-    :autoload-names '('company-web-html))
-
 (package-deferred-install 'web-mode
     :autoload-names '('web-mode)
+
+    (package-deferred-install 'company-web
+        :autoload-names '('company-web-html))
+
     (sp-local-pair 'web-mode "{" nil :post-handlers
                    '(:add
                      ("||\n[i]" "RET")
