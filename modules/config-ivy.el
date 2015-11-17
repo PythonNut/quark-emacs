@@ -111,4 +111,25 @@
 
 (define-key evil-normal-state-map (kbd "SPC SPC") #'counsel-M-x)
 
+;; let M-' intelligently resume whatever completion we were working on
+(let ((my/last-used-completion-system nil))
+  (with-eval-after-load 'ivy
+    (defun nadvice/ivy--minibuffer-setup (&rest args)
+      (setq my/last-used-completion-system 'ivy))
+    (advice-add 'ivy--minibuffer-setup :after #'nadvice/ivy--minibuffer-setup))
+
+  (with-eval-after-load 'helm
+    (defun my/helm-last-used-hook ()
+      (setq my/last-used-completion-system 'helm))
+    (add-hook 'helm-minibuffer-set-up-hook #'my/helm-last-used-hook))
+
+  (defun minibuffer-completion-resume ()
+    (interactive)
+    (pcase my/last-used-completion-system
+      (`helm (call-interactively #'helm-resume))
+      (`ivy  (call-interactively #'ivy-resume))
+      (_ (message "You haven't used a completion system yet.")))))
+
+(global-set-key (kbd "M-'") #'minibuffer-completion-resume)
+
 (provide 'config-ivy)
