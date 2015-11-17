@@ -12,15 +12,13 @@
       tramp-backup-directory `((".*" . ,tramp-backup-directory)))
 
 (defun my/save-buffer-maybe ()
-  (with-current-buffer (current-buffer)
-    (let ((bfn (buffer-file-name (current-buffer))))
-      (when (and bfn
-                 (buffer-modified-p (current-buffer))
-                 (ignore-errors
-                   (file-writable-p bfn))
-                 (not (file-remote-p bfn)))
-        (with-demoted-errors "%s"
-          (save-buffer))))))
+  (when (and buffer-file-name
+             (buffer-modified-p)
+             (with-demoted-errors "%s"
+               (file-writable-p buffer-file-name))
+             (not (file-remote-p buffer-file-name)))
+    (with-demoted-errors "%s"
+      (save-buffer))))
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
