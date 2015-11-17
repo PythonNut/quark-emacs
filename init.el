@@ -12,8 +12,8 @@
       (load (concat user-emacs-directory "init-minimal")))
 
   (eval-when-compile (require 'cl-lib))
-  (cl-letf* ((old-load (symbol-function 'load))
-             ((symbol-function 'load)
+  (cl-letf* ((old-load (symbol-function #'load))
+             ((symbol-function #'load)
               (lambda (file &optional noerror _nomessage &rest args)
                 (apply old-load
                        file

@@ -64,8 +64,8 @@
       (add-to-list 'load-path dir))))
 
 (defun nadvice/package-initialize (old-fun &rest args)
-  (cl-letf* ((orig-load (symbol-function 'load))
-             ((symbol-function 'load)
+  (cl-letf* ((orig-load (symbol-function #'load))
+             ((symbol-function #'load)
               (lambda (&rest args)
                 (cl-destructuring-bind
                     (file &optional _noerror _nomessage _nosuffix _must-suffix)
@@ -185,9 +185,9 @@
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
     (with-demoted-errors "Idle require error: %s"
-      (cl-letf* ((old-load (symbol-function 'load))
-                 ((symbol-function 'message) #'format)
-                 ((symbol-function 'load)
+      (cl-letf* ((old-load (symbol-function #'load))
+                 ((symbol-function #'message) #'format)
+                 ((symbol-function #'load)
                   (lambda (file &optional noerror _nomessage &rest args)
                     (apply old-load file noerror t args))))
         (apply old-fun args))))
@@ -240,10 +240,10 @@
 
 (eval-and-compile
   (defun my/remove-keyword-params (seq)
-    (and seq
-         (cl-destructuring-bind (head . tail) seq
-           (if (keywordp head) (my/remove-keyword-params (cdr tail))
-             (cons head (my/remove-keyword-params tail)))))))
+    (when seq
+      (cl-destructuring-bind (head . tail) seq
+        (if (keywordp head) (my/remove-keyword-params (cdr tail))
+          (cons head (my/remove-keyword-params tail)))))))
 
 (cl-defmacro package-deferred-install (package-name
                                        &rest forms

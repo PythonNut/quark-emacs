@@ -21,7 +21,7 @@
 
 (setq-default evil-symbol-word-search t)
 
-(cl-letf (((symbol-function 'message) #'format))
+(cl-letf (((symbol-function #'message) #'format))
   (key-chord-mode +1))
 
 (defun fix-key-chords ()
@@ -30,12 +30,6 @@
   (key-chord-mode +1))
 
 (evil-mode +1)
-
-;; define C-<arrow> for terminals
-(global-set-key (kbd "M-[ d") #'left-word)
-(global-set-key (kbd "M-[ c") #'right-word)
-(global-set-key (kbd "M-[ a") #'backward-paragraph)
-(global-set-key (kbd "M-[ b") #'forward-paragraph)
 
 (define-key evil-normal-state-map (kbd "<down>") #'evil-next-visual-line)
 (define-key evil-motion-state-map (kbd "<up>") #'evil-previous-visual-line)
@@ -82,7 +76,7 @@
 (advice-add 'evil-paste-before :around #'nadvice/evil-paste-indent)
 (advice-add 'evil-paste-after :around #'nadvice/evil-paste-indent)
 
-(let ((my/evil-mode-line-face-cookies nil))
+(let ((my/evil-mode-line-face-cookies))
   (defun my/evil-set-mode-line-face (&optional frame)
     (with-selected-frame (or frame (selected-frame))
       (cl-destructuring-bind (bg-color fg-color)
@@ -93,14 +87,14 @@
                 (`insert  '("black" "grey"))
                 (`visual  '("white" "cyan"))
                 (`replace '("white" "red"))
-                (_other    '("grey"  "black")))
+                (_        '("grey"  "black")))
             (pcase evil-state
               (`normal  '("#586e75" "#eee8d5"))
               (`emacs   '("#859900" "#eee8d5"))
               (`insert  '("#93a1a1" "#073642"))
               (`visual  '("#268bd2" "#eee8d5"))
               (`replace '("#dc322f" "#eee8d5"))
-              (_other    '("grey70"  "black"))))
+              (_        '("grey70"  "black"))))
         (mapc #'face-remap-remove-relative my/evil-mode-line-face-cookies)
         (setq my/evil-mode-line-face-cookies
               (list (face-remap-add-relative
@@ -118,13 +112,13 @@
 ;; open line and stay in normal mode
 (evil-define-command evil-open-below-normal (arg)
   (interactive "p")
-  (let ((evil-echo-state nil))
+  (let ((evil-echo-state))
     (evil-with-state 'normal
       (evil-open-below arg))))
 
 (evil-define-command evil-open-above-normal (arg)
   (interactive "p")
-  (let ((evil-echo-state nil))
+  (let ((evil-echo-state))
     (evil-with-state 'normal
       (evil-open-above arg))))
 

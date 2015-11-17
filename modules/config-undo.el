@@ -2,8 +2,7 @@
 
 (with-eval-after-load 'evil
   (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'evil)))
+    (require 'evil))
 
   (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
     #'undo-tree-visualizer-toggle-timestamps)
@@ -59,7 +58,7 @@
         (concat (make-auto-save-file-name) ".undo.xz")))
 
     (defun nadvice/undo-tree-load-history (old-fun &rest args)
-      (let ((jka-compr-verbose nil))
+      (let ((jka-compr-verbose))
         (apply old-fun args)))
 
     (advice-add 'undo-tree-make-history-save-file-name

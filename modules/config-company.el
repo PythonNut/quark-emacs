@@ -178,7 +178,7 @@
 
   (defun my/he-try-expand-flx-collect (str)
     "Find and collect all words that flex-match str, and sort by flx score"
-    (let ((coll nil)
+    (let ((coll)
           (regexp (my/he-try-expand-flx-regexp str)))
       (save-excursion
         (goto-char (point-min))

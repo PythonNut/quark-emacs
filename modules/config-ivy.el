@@ -112,9 +112,9 @@
 (define-key evil-normal-state-map (kbd "SPC SPC") #'counsel-M-x)
 
 ;; let M-' intelligently resume whatever completion we were working on
-(let ((my/last-used-completion-system nil))
+(let ((my/last-used-completion-system))
   (with-eval-after-load 'ivy
-    (defun nadvice/ivy--minibuffer-setup (&rest args)
+    (defun nadvice/ivy--minibuffer-setup (&rest _args)
       (setq my/last-used-completion-system 'ivy))
     (advice-add 'ivy--minibuffer-setup :after #'nadvice/ivy--minibuffer-setup))
 

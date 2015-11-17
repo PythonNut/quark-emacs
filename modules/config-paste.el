@@ -210,6 +210,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (define-key key-translation-map (kbd "M-[ A") (kbd "<C-up>"))
       (define-key key-translation-map (kbd "M-[ B") (kbd "<C-down>"))
 
+      ;; interpret M-<arrow> when terminal fails to compose ESC
       (define-key key-translation-map (kbd "ESC <left>") (kbd "<M-left>"))
       (define-key key-translation-map (kbd "ESC <right>") (kbd "<M-right>"))
       (define-key key-translation-map (kbd "ESC <up>") (kbd "<M-up>"))

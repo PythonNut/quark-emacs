@@ -77,8 +77,8 @@ the syntax class ')'."
 (with-eval-after-load 'paren
   (defun nadvice/show-paren-mode (old-fun &rest args)
     ;; http://emacs.stackexchange.com/questions/12532/buffer-local-idle-timer
-    (cl-letf* ((old-run-with-idle-timer (symbol-function 'run-with-idle-timer))
-               ((symbol-function 'run-with-idle-timer)
+    (cl-letf* ((old-run-with-idle-timer (symbol-function #'run-with-idle-timer))
+               ((symbol-function #'run-with-idle-timer)
                 (lambda (&rest args)
                   (cl-destructuring-bind (_secs _repeat function &rest rest)
                       args
@@ -89,9 +89,7 @@ the syntax class ')'."
                                   (if (active-minibuffer-window)
                                       (with-current-buffer ,(current-buffer)
                                         (apply (function ,function) args))
-                                    (progn
-                                      (message "timer killed!")
-                                      (cancel-timer ,timer))))))
+                                    (cancel-timer ,timer)))))
                       (fset fns fn)
                       timer)))))
       (apply old-fun args)))

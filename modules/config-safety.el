@@ -56,7 +56,7 @@
 ;; save buffers on blur
 (add-hook 'focus-out-hook
           (lambda ()
-            (cl-letf (((symbol-function 'message) #'format))
+            (cl-letf (((symbol-function #'message) #'format))
               (unless (file-remote-p default-directory)
                 (save-some-buffers t)))))
 

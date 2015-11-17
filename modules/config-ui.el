@@ -146,7 +146,7 @@
   "A `hydra' enabled next-buffer"
   (interactive)
   (require 'iflipb)
-  (cl-letf (((symbol-function 'iflipb-first-iflipb-buffer-switch-command)
+  (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
              (lambda () t)))
     (call-interactively #'iflipb-next-buffer))
   (my/iflipb-smart-buffer))
@@ -155,7 +155,7 @@
   "A `hydra' enabled previous-buffer"
   (interactive)
   (require 'iflipb)
-  (cl-letf (((symbol-function 'iflipb-first-iflipb-buffer-switch-command)
+  (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
              (lambda () t)))
     (call-interactively #'iflipb-previous-buffer))
   (my/iflipb-smart-buffer))
@@ -206,6 +206,7 @@
 
   (define-key auto-highlight-symbol-mode-map (kbd "<M-left>") nil)
   (define-key auto-highlight-symbol-mode-map (kbd "<M-right>") nil)
+  (define-key auto-highlight-symbol-mode-map (kbd "M--") nil)
 
   (defun my/ahs-setup-faces ()
     (if (display-graphic-p)
