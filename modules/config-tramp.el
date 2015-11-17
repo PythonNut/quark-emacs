@@ -58,7 +58,6 @@
 (defun my/edit-file-as-root-maybe ()
   "Find file as root if necessary."
   (when (and buffer-file-name
-             (get-buffer-window)
              (not (file-writable-p buffer-file-name))
              (not (string= user-login-name
                            (nth 3 (file-attributes buffer-file-name 'string))))
@@ -84,5 +83,16 @@
        (signal 'file-error (list "File is not readable" filename))))))
 
 (advice-add #'find-file-noselect-1 :around #'nadvice/find-file-noselect-1)
+
+(defun nadvice/semantic-find-file-noselect (old-fun &rest args)
+  (cl-letf* ((old-aff (symbol-function #'after-find-file))
+             ((symbol-function #'after-find-file)
+              (lambda (&rest args)
+                (let ((find-file-hook))
+                  (apply old-aff args)))))
+    (apply old-fun args)))
+
+(advice-add #'semantic-find-file-noselect :around
+            #'nadvice/semantic-find-file-noselect)
 
 (provide 'config-tramp)
