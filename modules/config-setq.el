@@ -172,14 +172,15 @@
 
 ;; let emacs blink when something interesting happens.
 ;; in KDE this marks the active Emacs icon in the tray.
-(defun x-urgency-hint (frame arg &optional source)
+(defun my/x-urgency-hint (frame arg &optional source)
   "Set the x-urgency hint for the frame to arg:
 
 - If arg is nil, unset the urgency.
 - If arg is any other value, set the urgency.
 
 If you unset the urgency, you still have to visit the frame to make the urgency setting disappear (at least in KDE)."
-  (when (display-graphic-p)
+  (when (and (display-graphic-p)
+             (eq window-system 'x))
     (let* ((wm-hints (append (x-window-property
                               "WM_HINTS" frame "WM_HINTS"
                               source nil t) nil))
@@ -191,12 +192,16 @@ If you unset the urgency, you still have to visit the frame to make the urgency 
                 (logand flags #x1ffffeff)))
       (x-change-window-property "WM_HINTS" wm-hints frame "WM_HINTS" 32 t))))
 
-(defun x-urgent (&optional arg)
+(defun my/x-urgent (&optional arg)
   "Mark the current emacs frame as requiring urgent attention.
 
 With a prefix argument which does not equal a boolean value of nil, remove the urgency flag (which might or might not change display, depending on the window manager)."
   (interactive "P")
   (let (frame (car (car (cdr (current-frame-configuration)))))
-    (x-urgency-hint frame (not arg))))
+    (my/x-urgency-hint frame (not arg)))
+  (unless arg
+    (run-with-timer 10 nil
+                    (lambda ()
+                      (my/x-urgent t)))))
 
 (provide 'config-setq)
