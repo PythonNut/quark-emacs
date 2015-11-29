@@ -73,7 +73,7 @@
     (cond ((= num-windows 1)
            (call-interactively #'split-window-right))
           ((minibufferp)
-           (other-window arg))
+           (other-window (or arg 1)))
           ((active-minibuffer-window)
            (select-window (active-minibuffer-window)))
           ((or (> (length (visible-frame-list)) 1)
@@ -81,7 +81,7 @@
                (numberp arg))
            (ace-window arg))
           (t
-           (other-window arg)))))
+           (other-window (or arg 1))))))
 
 (global-set-key (kbd "C-'") #'switch-window-dwim)
 (global-set-key (kbd "C-c '") #'switch-window-dwim)
