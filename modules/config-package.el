@@ -171,9 +171,13 @@
             (lambda ()
               (diminish 'idle-require-mode)))
 
-  (setq idle-require-idle-delay 3
-        idle-require-load-break 1
-        idle-require-symbols '(which-key
+  (setq idle-require-idle-delay 0.5
+        idle-require-load-break 0.2
+        idle-require-symbols '(helm-files
+                               helm-ring
+                               helm-projectile
+                               helm-semantic
+                               which-key
                                magit
                                evil-snipe
                                avy
@@ -194,16 +198,7 @@
 
   (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
 
-(unless (bound-and-true-p my/slow-device)
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (run-with-idle-timer 0.1 nil
-                                   (lambda ()
-                                     (require 'helm-files)
-                                     (require 'helm-ring)
-                                     (require 'helm-projectile)
-                                     (require 'helm-semantic)
-                                     (idle-require-mode +1))))))
+(add-hook 'emacs-startup-hook #'idle-require-mode)
 
 (defun package-upgrade-all (&optional automatic)
   "Upgrade all packages automatically without showing *Packages* buffer."
