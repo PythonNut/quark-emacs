@@ -10,46 +10,12 @@
 (setq history-length 100
       history-delete-duplicates t)
 
-(with-eval-after-load 'saveplace
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'saveplace)))
-
-  (setq-default save-place t)
-  (setq save-place-file (expand-file-name ".saveplace"
-                                          user-emacs-directory)))
-
-(defun my/saveplace-onetime-setup ()
-  (require 'saveplace)
-  (when (fboundp 'save-place-mode)
-    (save-place-mode +1))
-  (save-place-find-file-hook)
-  (remove-hook 'find-file-hook #'my/saveplace-onetime-setup))
-
-(add-hook 'find-file-hook #'my/saveplace-onetime-setup)
-
-(with-eval-after-load 'savehist
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'savehist)))
-
-  (setq savehist-file (expand-file-name ".savehist"
-                                        user-emacs-directory)
-        savehist-autosave-interval 120
-        savehist-save-minibuffer-history t
-        savehist-additional-variables '(kill-ring
-                                        file-name-mode-alist
-                                        search-ring
-                                        regexp-search-ring)))
-
-(savehist-mode +1)
-
 ;; text properties severely bloat the history so delete them
-(defun my/unpropertize-savehist ()
-  (mapc (lambda (list)
+(defun my/unpropertize-session (&rest _args)
+  (mapc (lambda (lst)
           (with-demoted-errors "Error: %s"
-            (when (boundp list)
-              (set list (mapcar #'substring-no-properties (eval list))))))
+            (when (boundp lst)
+              (set lst (mapcar #'substring-no-properties (eval lst))))))
         '(kill-ring
           minibuffer-history
           helm-grep-history
@@ -59,14 +25,49 @@
           extended-command-history
           evil-ex-history)))
 
-(add-hook 'kill-emacs-hook #'my/unpropertize-savehist)
-(add-hook 'savehist-save-hook #'my/unpropertize-savehist)
+(with-eval-after-load 'session
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'session)))
+
+  (defun nadvice/session-save-session/quiet (old-fun &rest args)
+    (if (called-interactively-p 'any)
+        (apply old-fun args)
+      (cl-letf* (((symbol-function #'message) #'format)
+                 (old-load (symbol-function #'load))
+                 ((symbol-function #'load)
+                  (lambda (file &optional noerror _nomessage &rest args)
+                    (apply old-load
+                           file
+                           noerror
+                           (not (eq debug-on-error 'startup))
+                           args))))
+        (apply old-fun args))))
+
+  (setq session-globals-max-string 16384
+        session-registers-max-string 16384
+        session-globals-max-size 1024
+        session-jump-undo-remember 7
+        session-jump-undo-threshold 60
+        session-initialize '(session
+                             places
+                             keys))
+
+  (advice-add 'session-save-session :around
+              #'nadvice/session-save-session/quiet)
+  (run-with-idle-timer 10 t #'session-save-session)
+  (advice-add 'session-save-session :before #'my/unpropertize-session)
+  (add-hook 'kill-emacs-hook #'my/unpropertize-session)
+  (add-to-list 'session-globals-include 'file-name-mode-alist))
+
+(add-hook 'after-init-hook #'session-initialize)
 
 (defun nadvice/recentf-quiet (old-fun &rest args)
   (cl-letf (((symbol-function #'message) #'format))
     (apply old-fun args)))
 
 (advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
+(advice-add 'session-initialize :around #'nadvice/recentf-quiet)
 
 (with-eval-after-load 'recentf
   (eval-when-compile

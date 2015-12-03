@@ -35,6 +35,7 @@
 # ring save file
 /savehist
 /.savehist
+/.session
 
 # persistent registers
 /saveregisters.el

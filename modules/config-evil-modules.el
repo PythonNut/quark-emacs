@@ -170,7 +170,16 @@
   (advice-add 'evil-jumper/backward :after #'nadvice/evil-jumper/backward)
   (advice-add 'evil-jumper/forward :before #'nadvice/evil-jumper/forward)
 
-  (evil-jumper--savehist-init))
+  (with-eval-after-load 'session
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'session)))
+    (evil-jumper--set-window-jump-list evil-jumper--jump-list)
+    (defun nadvice/session-save-session/evil-jumper (&rest _args)
+      (evil-jumper--savehist-sync))
+    (advice-add 'session-save-session :before
+                #'nadvice/session-save-session/evil-jumper)
+    (add-to-list 'session-globals-include 'evil-jumper--jump-list)))
 
 (define-key evil-normal-state-map (kbd "C-o") #'evil-jumper/backward)
 (define-key evil-normal-state-map (kbd "C-i") #'evil-jumper/forward)
@@ -178,7 +187,6 @@
 (define-key evil-motion-state-map (kbd "C-i") #'evil-jumper/forward)
 
 (defun nadvice/autoload-evil-jumper (&rest _args)
-  (require 'evil-jumper)
   (evil-jumper--set-jump))
 
 (add-hook 'next-error-hook #'evil-jumper--set-jump)

@@ -146,6 +146,7 @@
     magit
     multiple-cursors
     rainbow-delimiters
+    session
     smartparens
     smex
     smooth-scrolling
