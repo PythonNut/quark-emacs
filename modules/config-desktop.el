@@ -36,7 +36,7 @@
       (cl-letf* ((old-wr (symbol-function #'write-region))
                  ((symbol-function #'write-region)
                   (lambda (start end filename
-                                 &optional append visit &rest args)
+                                 &optional append _visit &rest args)
                     (apply old-wr
                            start
                            end
@@ -51,6 +51,11 @@
         session-globals-max-size 1024
         session-jump-undo-remember 7
         session-jump-undo-threshold 60
+        session-name-disable-regexp (eval-when-compile
+                                      (mapconcat #'identity
+                                                 (list "^/tmp"
+                                                       "COMMIT_EDITMSG$")
+                                                 "\\|"))
         session-initialize '(session
                              places
                              keys))
