@@ -1,17 +1,10 @@
 ;; -*- lexical-binding: t -*-
 
-(with-eval-after-load 'evil
-  (eval-when-compile
-    (require 'evil))
-
-  (evil-define-key 'motion undo-tree-visualizer-mode-map (kbd "t")
-    #'undo-tree-visualizer-toggle-timestamps)
-  (evil-define-key 'motion  undo-tree-visualizer-mode-map (kbd "d")
-    #'undo-tree-visualizer-toggle-diff))
 
 (with-eval-after-load 'undo-tree
   (eval-when-compile
-    (require 'undo-tree))
+    (require 'undo-tree)
+    (require 'evil))
 
   (diminish 'undo-tree-mode " μ")
   (defalias 'redo #'undo-tree-redo)
@@ -21,7 +14,6 @@
   (define-key undo-tree-map (kbd "C-x r u") nil)
   (define-key undo-tree-map (kbd "C-x r U") nil)
   (define-key undo-tree-map (kbd "C-x r") nil)
-
   (define-key undo-tree-map (kbd "C-?") nil)
 
   (key-chord-define evil-emacs-state-map "uu" #'undo-tree-visualize)
@@ -32,23 +24,30 @@
   (global-set-key (kbd "M-_") #'undo-tree-redo)
   (setq undo-tree-auto-save-history t)
 
-  (add-to-list 'evil-overriding-maps '(undo-tree-visualizer-mode-map))
-
-  ;; visual line wrapping breaks the 
+  ;; visual line wrapping breaks the
   (add-hook 'undo-tree-visualizer-mode-hook
             (lambda ()
+              (set (make-local-variable 'input-method-function) nil)
+              (set (make-variable-buffer-local 'global-hl-line-mode) nil)
               (visual-line-mode -1)))
 
-  (evil-define-key 'motion undo-tree-visualizer-mode-map
-    "C-g" #'undo-tree-visualizer-quit)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map
+  (evil-set-initial-state 'undo-tree-visualizer-mode 'emacs)
+
+  (define-key undo-tree-visualizer-mode-map
+    (kbd "C-g") #'undo-tree-visualizer-quit)
+  (define-key undo-tree-visualizer-mode-map
     (kbd "<escape>") #'undo-tree-visualizer-quit)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map
-    (kbd "<return>") #'undo-tree-visualizer-quit)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map
-    (kbd "<up>") #'undo-tree-visualize-undo)
-  (evil-define-key 'motion undo-tree-visualizer-mode-map
-    (kbd "<down>") #'undo-tree-visualize-redo)
+  (define-key undo-tree-visualizer-mode-map
+    (kbd "RET") #'undo-tree-visualizer-quit)
+
+  (define-key undo-tree-visualizer-mode-map
+    (kbd "j") #'undo-tree-visualize-redo)
+  (define-key undo-tree-visualizer-mode-map
+    (kbd "k") #'undo-tree-visualize-undo)
+  (define-key undo-tree-visualizer-mode-map
+    (kbd "h") #'undo-tree-visualize-switch-branch-left)
+  (define-key undo-tree-visualizer-mode-map
+    (kbd "l") #'undo-tree-visualize-switch-branch-right)
 
   ;; compress undo with xz
   (when (executable-find "xz")
