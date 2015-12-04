@@ -33,14 +33,16 @@
   (defun nadvice/session-save-session/quiet (old-fun &rest args)
     (if (called-interactively-p 'any)
         (apply old-fun args)
-      (cl-letf* (((symbol-function #'message) #'format)
-                 (old-load (symbol-function #'load))
-                 ((symbol-function #'load)
-                  (lambda (file &optional noerror _nomessage &rest args)
-                    (apply old-load
-                           file
-                           noerror
-                           (not (eq debug-on-error 'startup))
+      (cl-letf* ((old-wr (symbol-function #'write-region))
+                 ((symbol-function #'write-region)
+                  (lambda (start end filename
+                                 &optional append visit &rest args)
+                    (apply old-wr
+                           start
+                           end
+                           filename
+                           append
+                           0
                            args))))
         (apply old-fun args))))
 
