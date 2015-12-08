@@ -134,6 +134,7 @@
         ido-write-file
         iflipb-next-buffer
         iflipb-next-buffer-smart
+        ivy-done
         mark-whole-buffer
         my-helm-buffers
         my-helm-find-files

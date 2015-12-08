@@ -221,6 +221,9 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
       (bracketed-paste-enable)
       (bracketed-paste-setup)
 
+      ;; fix display corruption in certain terminals
+      (add-hook 'isearch-update-post-hook #'redraw-display)
+
       (when (getenv "TMUX")
         (run-hooks 'terminal-init-xterm-hook)))))
 
