@@ -20,6 +20,10 @@
 (defun my/sp-on-delimiter-p ()
   (ignore-errors (cl-letf (((symbol-function #'message) #'format))
                    (save-excursion
+                     (when (or (evil-normal-state-p)
+                               (evil-motion-state-p)
+                               (evil-operator-state-p))
+                       (forward-char))
                      (if (and (sp-get (sp-get-sexp nil) :beg)
                               (= (point) (sp-get (sp-get-sexp nil) :beg)))
                          (cons (sp-get (sp-get-sexp nil) :beg)
