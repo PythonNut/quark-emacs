@@ -29,6 +29,7 @@
       mouse-drag-copy-region nil
       right-margin-width 0
       ring-bell-function 'ignore
+      set-mark-command-repeat-pop t
       split-height-threshold 0
       split-width-threshold 0
       tab-width 4
