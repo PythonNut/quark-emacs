@@ -94,14 +94,14 @@
 (define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char-timer)
 (define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char-timer)
 
-(evilem-define (kbd "SPC g s f") 'evil-forward-sexp)
-(evilem-define (kbd "SPC g s b") 'evil-backward-sexp)
-(evilem-define (kbd "SPC g s d") 'evil-down-sexp)
-(evilem-define (kbd "SPC g s D") 'evil-backward-down-sexp)
-(evilem-define (kbd "SPC g s e") 'evil-up-sexp)
-(evilem-define (kbd "SPC g s U") 'evil-backward-up-sexp)
-(evilem-define (kbd "SPC g s n") 'evil-next-sexp)
-(evilem-define (kbd "SPC g s p") 'evil-previous-sexp)
+(evilem-define (kbd "SPC g s f") 'on-parens-forward-sexp-end)
+(evilem-define (kbd "SPC g s b") 'on-parens-backward-sexp)
+(evilem-define (kbd "SPC g s d") 'on-parens-down-sexp)
+(evilem-define (kbd "SPC g s D") 'on-parens-down-sexp-end)
+(evilem-define (kbd "SPC g s u") 'on-parens-up-sexp-end)
+(evilem-define (kbd "SPC g s U") 'on-parens-up-sexp)
+(evilem-define (kbd "SPC g s n") 'on-parens-forward-sexp)
+(evilem-define (kbd "SPC g s p") 'on-parens-backward-sexp-end)
 
 (evilem-define (kbd "SPC s") 'evil-snipe-repeat
                (lambda ()
