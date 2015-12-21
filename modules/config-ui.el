@@ -317,7 +317,6 @@
   (diminish 'which-key-mode)
   (which-key-mode +1)
   (setq which-key-sort-order nil
-        which-key-prevent-C-h-from-cycling nil
         which-key-side-window-max-height 0.33)
 
   (add-to-list 'which-key-description-replacement-alist
