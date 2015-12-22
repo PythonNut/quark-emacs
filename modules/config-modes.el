@@ -737,6 +737,10 @@
 (add-hook 'eshell-mode-hook #'my/generic-term-init)
 
 (with-eval-after-load 'term
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'term)))
+
   (defun nadvice/term-sentinel (old-fun &rest args)
     (cl-destructuring-bind (proc _msg) args
       (if (memq (process-status proc) '(signal exit))
@@ -747,6 +751,8 @@
             (message ""))
         (apply old-fun args))))
   (advice-add 'term-sentinel :around #'nadvice/term-sentinel)
+
+  (define-key term-raw-map (kbd "<f12>") #'term-kill-subjob)
 
   (defun nadvice/ansi-term (args)
     (interactive "P")
