@@ -115,7 +115,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 ;; make evil respect whole-line-or-region
 (defun nadvice/evil-paste-line (&rest _args)
-  (when (get-text-property 0 'whole-line-or-region (car kill-ring))
+  (when (with-demoted-errors "Failed to check text properties for paste. %s"
+          (get-text-property 0 'whole-line-or-region (car kill-ring)))
     (setf (car kill-ring)
           (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
@@ -125,7 +126,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
 ;; unify evil-paste with cua rectangles
 (defun nadvice/evil-paste-after (old-fun &rest args)
-  (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
+  (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
+            (car (get-text-property 0 'yank-handler (car kill-ring))))
           'rectangle--insert-for-yank)
       (evil-with-state 'normal
         (call-interactively #'evil-append)
@@ -133,7 +135,8 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
     (apply old-fun args)))
 
 (defun nadvice/evil-paste-before (old-fun &rest args)
-  (if (eq (car (get-text-property 0 'yank-handler (car kill-ring)))
+  (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
+            (car (get-text-property 0 'yank-handler (car kill-ring))))
           'rectangle--insert-for-yank)
       (evil-with-state 'normal
         (call-interactively #'evil-insert)

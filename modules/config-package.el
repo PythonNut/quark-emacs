@@ -68,7 +68,7 @@
              ((symbol-function #'load)
               (lambda (&rest args)
                 (cl-destructuring-bind
-                    (file &optional _noerror _nomessage _nosuffix _must-suffix)
+                    (file &rest args_ignored)
                     args
                   (unless (member file my/package-cached-autoloads)
                     (message "Package cache miss: %s" file)
