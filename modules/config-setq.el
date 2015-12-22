@@ -111,6 +111,7 @@
   (let ((default-directory user-emacs-directory)
         (module-dir (expand-file-name "modules" user-emacs-directory)))
     (shell-command "git stash")
+    (shell-command "git clean -ffXd :/")
     (shell-command "git pull --rebase -X histogram")
     (with-demoted-errors "Emergency fix delete error: %s"
       (mapc (lambda (file) (delete-file file t))
