@@ -47,14 +47,17 @@
   (set-face-attribute 'avy-lead-face nil
                       :weight 'normal
                       :background nil
-                      :foreground "#b58900")
+                      :foreground "#b58900"
+                      :inherit nil)
   (set-face-attribute 'avy-lead-face-0 nil
                       :weight 'extra-bold
                       :background nil
-                      :foreground "#dc322f")
+                      :foreground "#dc322f"
+                      :inherit nil)
   (set-face-attribute 'avy-lead-face-1 nil
                       :background nil
-                      :foreground "#839493"))
+                      :foreground "#839493"
+                      :inherit nil))
 
 (with-eval-after-load 'ace-window
   (eval-when-compile
