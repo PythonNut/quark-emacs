@@ -110,11 +110,11 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
         ("R" smerge-refine)
         ("r" smerge-resolve)
 
-        ("RET" smerge-keep-current)
-        ("a" smerge-keep-all)
-        ("b" smerge-keep-base)
-        ("m" smerge-keep-mine)
-        ("o" smerge-keep-other)
+        ("RET" smerge-keep-current :color red)
+        ("a" smerge-keep-all :color red)
+        ("b" smerge-keep-base :color red)
+        ("m" smerge-keep-mine :color red)
+        ("o" smerge-keep-other :color red)
 
         ("n" smerge-next :color red)
         ("p" smerge-prev :color red)
