@@ -8,9 +8,13 @@
 (add-hook 'load-theme-hook
           (lambda ()
             (set-face-attribute 'mode-line nil
-                                :underline nil :box nil)
+                                :underline nil
+                                :box nil
+                                :overline nil)
             (set-face-attribute 'mode-line-inactive nil
-                                :underline nil :box nil)
+                                :underline nil
+                                :box nil
+                                :overline nil)
 
             (if (display-graphic-p)
                 (set-face-attribute 'vertical-border nil
