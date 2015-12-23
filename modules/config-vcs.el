@@ -224,7 +224,7 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
   (setq ;; don't start another frame
    ediff-window-setup-function #'ediff-setup-windows-plain
    ;; put windows side by side
-   ediff-split-window-function #'split-window-horizontally))
+   ediff-split-window-function #'split-window-sensibly))
 
 (defun my/command-line-ediff (switch)
   (let ((file1 (pop command-line-args-left))
