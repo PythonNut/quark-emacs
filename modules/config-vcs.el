@@ -21,6 +21,10 @@
       (require 'magit)
       (require 'config-setq)))
 
+  ;; Don't use graphical password prompt in terminal
+  (unless (display-graphic-p)
+    (setenv "SSH_ASKPASS" "magit-askpass"))
+
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
         magit-log-format-graph-function #'magit-log-format-unicode-graph
