@@ -25,6 +25,8 @@
 (if (<= (display-color-cells) 256)
     (progn
       (load-theme 'tango-dark)
+      (set-face-attribute 'font-lock-keyword-face nil
+                          :weight 'extra-bold)
       (set-face-attribute 'hl-line nil
                           :foreground nil
                           :background "grey20"
