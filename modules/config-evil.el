@@ -10,7 +10,6 @@
       evil-toggle-key "C-M-z"
       evil-want-C-w-delete nil
       evil-want-C-w-in-emacs-state nil
-      evil-want-fine-undo t
       evil-normal-state-cursor '("#8a8a8a" box)
       evil-operator-state-cursor '("#8a8a8a" evil-half-cursor)
       evil-replace-state-cursor '("#884444" box)
