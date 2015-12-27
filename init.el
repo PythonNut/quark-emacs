@@ -40,9 +40,7 @@
                                                 user-emacs-directory)))
 
     ;; suppress the GNU spam
-    (setq inhibit-startup-echo-area-message "pythonnut")
-    (with-eval-after-load 'startup
-      (fset 'display-startup-echo-area-message (lambda ())))
+    (fset 'display-startup-echo-area-message #'ignore)
     (add-hook 'emacs-startup-hook (lambda () (message "")))
 
 
