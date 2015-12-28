@@ -43,6 +43,11 @@
   (define-key magit-refs-mode-map "j" #'next-line)
   (define-key magit-status-mode-map "j" #'next-line)
 
+  (magit-change-popup-key 'magit-fetch-popup  :action ?u ?f)
+  (magit-change-popup-key 'magit-pull-popup   :action ?u ?F)
+  (magit-change-popup-key 'magit-rebase-popup :action ?e ?r)
+  (magit-change-popup-key 'magit-push-popup   :action ?p ?P)
+
   (eval-and-compile
     (cl-macrolet
         ((magit-setup-section-k
