@@ -30,9 +30,7 @@
 ;;; ====================================
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
-
-(add-hook 'prog-mode-hook #'global-flycheck-mode +1)
-(add-hook 'text-mode-hook #'global-flycheck-mode +1)
+(global-flycheck-mode +1)
 
 (with-eval-after-load 'flycheck
   (eval-when-compile
