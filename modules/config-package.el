@@ -172,8 +172,8 @@
             (lambda ()
               (diminish 'idle-require-mode)))
 
-  (setq idle-require-idle-delay 0.5
-        idle-require-load-break 0.2
+  (setq idle-require-idle-delay 0.1
+        idle-require-load-break 0.1
         idle-require-symbols '(helm-files
                                helm-ring
                                helm-projectile
@@ -185,7 +185,12 @@
                                ace-jump-helm-line
                                evil-jumper
                                multiple-cursors
-                               hydra)))
+                               hydra))
+
+  ;; back off for non-essential resources
+  (with-eval-after-load (elt idle-require-symbols 4)
+    (setq idle-require-idle-delay 1
+          idle-require-load-break 1)))
 
 (with-eval-after-load 'idle-require
   (defun nadvice/idle-require-quiet (old-fun &rest args)
