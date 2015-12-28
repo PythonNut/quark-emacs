@@ -1,29 +1,24 @@
 ;; -*- lexical-binding: t -*-
 
-(defvar my/rainbow-delimiters-switch nil
-  "t if rainbow-delimiters are currently punched")
-(defvar my/rainbow-delimiters-face-cookies nil
-  "a list of face-remap-add-relative cookies to reset")
-
-(make-variable-buffer-local 'rainbow-delimiters-switch)
-(make-variable-buffer-local 'rainbow-delimiters-face-cookies)
-
 ;; the equivalent of a global mode, but does not
 ;; turn on for odd non-programming modes
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (when (display-graphic-p)
-              (rainbow-delimiters-mode +1))))
+(defun my/maybe-enable-rainbow-delimiters ()
+  (when (display-graphic-p)
+    (rainbow-delimiters-mode +1)))
 
-(add-hook 'text-mode-hook
-          (lambda ()
-            (when (display-graphic-p)
-              (rainbow-delimiters-mode +1))))
+(unless (bound-and-true-p my/slow-device)
+  (add-hook 'prog-mode-hook #'my/maybe-enable-rainbow-delimiters)
+  (add-hook 'text-mode-hook #'my/maybe-enable-rainbow-delimiters))
 
 (with-eval-after-load 'rainbow-delimiters
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'rainbow-delimiters)))
+
+  (defvar-local my/rainbow-delimiters-switch nil
+    "t if rainbow-delimiters are currently punched")
+  (defvar-local my/rainbow-delimiters-face-cookies nil
+    "a list of face-remap-add-relative cookies to reset")
 
   (set-face-foreground 'rainbow-delimiters-depth-1-face "#889899")
   (set-face-foreground 'rainbow-delimiters-depth-2-face "#9b7b6b")

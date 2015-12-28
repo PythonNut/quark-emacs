@@ -257,10 +257,13 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (define-key iso-transl-ctl-x-8-map "=<" "⇐")
   (define-key iso-transl-ctl-x-8-map "==<" "⇐")
 
-  (let* ((unmod-keys "',-./0123456789;=[\\]`abcdefghijklmnopqrstuvwxyz")
-         (keys (append (mapcar #'string (string-to-list unmod-keys))
-                       '("<left>" "<right>" "<up>" "<down>"
-                         "<return>" "<tab>" "RET" "TAB"))))
+  (let* ((keys (eval-when-compile
+                 (append
+                  (mapcar #'string
+                          (string-to-list
+                           "',-./0123456789;=[\\]`abcdefghijklmnopqrstuvwxyz"))
+                  '("<left>" "<right>" "<up>" "<down>"
+                    "<return>" "<tab>" "RET" "TAB")))))
 
     (define-prefix-command 'iso-cm-map)
     (define-prefix-command 'iso-cs-map)

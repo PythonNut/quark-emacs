@@ -229,7 +229,7 @@
               (let ((old-package (cadr (assq (package-desc-name package-desc)
                                              package-alist))))
                 (package-install package-desc)
-                (package-delete  old-package)))
+                (package-delete old-package)))
             (message "All package upgrades completed.")
             (my/x-urgent)))
       (message "All packages are up to date"))))
