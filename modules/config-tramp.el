@@ -4,17 +4,20 @@
   (with-demoted-errors "Load error: %s"
     (require 'tramp)))
 
+(defvar my/tramp-backup-directory
+  (expand-file-name "data/tramp-backups/" user-emacs-directory))
+
 (with-eval-after-load 'password-cache
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'password-cache)))
-
+  ;; cache passwords for the duration of the session
+  ;; note that said cache is _not_ persistent
   (setq password-cache-expiry nil))
 
 (with-eval-after-load 'tramp
-  ;; cache passwords for the duration of the session
-  ;; note that said cache is _not_ persistent
-  (setq tramp-default-method "scp"))
+  (setq tramp-default-method "scp"
+        tramp-backup-directory-alist `((".*" . ,my/tramp-backup-directory))))
 
 ;; =================================
 ;; automatically request root access

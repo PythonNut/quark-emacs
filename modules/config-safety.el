@@ -4,8 +4,6 @@
   (expand-file-name "data/backups/" user-emacs-directory))
 (defvar autosave-location
   (expand-file-name "data/autosave/" user-emacs-directory))
-(defvar tramp-backup-directory
-  (expand-file-name "data/tramp-backups/" user-emacs-directory))
 
 (setq backup-directory-alist `((".*" . ,backup-location))
       auto-save-file-name-transforms `((".*" ,autosave-location t))
