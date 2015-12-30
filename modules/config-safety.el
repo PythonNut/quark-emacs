@@ -1,13 +1,28 @@
 ;; -*- lexical-binding: t -*-
 
-(defvar backup-location
+(defvar my/backup-location
   (expand-file-name "data/backups/" user-emacs-directory))
-(defvar autosave-location
+(defvar my/autosave-location
   (expand-file-name "data/autosave/" user-emacs-directory))
+(defvar my/unnamed-autosave-location
+  (expand-file-name "data/unnamed-autosave" user-emacs-directory)
+  "Directory in which to store auto-save files for non-file buffers,
+when `auto-save-mode' is invoked manually.")
 
-(setq backup-directory-alist `((".*" . ,backup-location))
-      auto-save-file-name-transforms `((".*" ,autosave-location t))
-      tramp-backup-directory `((".*" . ,tramp-backup-directory)))
+(setq backup-directory-alist `((".*" . ,my/backup-location))
+      auto-save-file-name-transforms `((".*" ,my/autosave-location t)))
+
+;; Use a unified directory for buffers that don't visit files
+(defun nadvice/auto-save-mode (old-fun &rest args)
+  "Use a standard location for auto-save files for non-file buffers"
+  (if buffer-file-name
+      (apply old-fun args)
+    (let ((default-directory my/unnamed-autosave-location))
+      (unless (file-directory-p default-directory)
+        (mkdir default-directory))
+      (apply old-fun args))))
+
+(advice-add 'auto-save-mode :around #'nadvice/auto-save-mode)
 
 (defun my/save-buffer-maybe ()
   (when (and buffer-file-name
