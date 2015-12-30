@@ -279,4 +279,31 @@
 (package-deferred-install 'bug-hunter
     :autoload-names '('bug-hunter-file 'bug-hunter-init-file))
 
+(defun package-uninstall (package-name)
+  (interactive
+   (let ((dir (expand-file-name
+               "elpa"
+               user-emacs-directory)))
+     (list (completing-read
+            "Uninstall package: "
+            (mapcar (lambda (package-dir)
+                      (replace-regexp-in-string
+                       "-[0-9.]+"
+                       ""
+                       (file-relative-name package-dir dir)))
+                    (cl-remove-if-not
+                     (lambda (item)
+                       (and (file-directory-p item)
+                            (not (string-match-p "archives$\\|\\.$" item))))
+                     (directory-files (expand-file-name
+                                       "elpa"
+                                       user-emacs-directory)
+                                      t)))))))
+
+  (dolist (item (file-expand-wildcards
+                 (expand-file-name (concat "elpa/" package-name "*")
+                                   user-emacs-directory)))
+    (delete-directory item t t))
+  (message "done."))
+
 (provide 'config-package)
