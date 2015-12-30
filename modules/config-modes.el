@@ -11,6 +11,8 @@
 ;; Emacs Lisp ==================================================================
 ;; =============================================================================
 
+(add-hook 'lisp-interaction-mode-hook #'auto-save-mode)
+
 (defun emacs-lisp-goto-definition ()
   (interactive)
   (find-function (function-called-at-point)))
