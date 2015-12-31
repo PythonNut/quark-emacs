@@ -15,17 +15,17 @@
 
   (global-semanticdb-minor-mode +1)
   (global-semantic-idle-scheduler-mode +1)
-  (global-semantic-idle-summary-mode +1))
+  (global-semantic-idle-summary-mode +1)
 
-(defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
-  (if (and (bound-and-true-p flycheck-mode)
-           (flycheck-overlay-errors-at (point)))
-      (flycheck-display-error-at-point)
-    (apply old-fun args)))
+  (defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
+    (if (and (bound-and-true-p flycheck-mode)
+             (flycheck-overlay-errors-at (point)))
+        (flycheck-display-error-at-point)
+      (apply old-fun args)))
 
-(advice-add 'semantic-idle-summary-idle-function
-            :around
-            #'nadvice/semantic-idle-summary-idle-function)
+  (advice-add 'semantic-idle-summary-idle-function
+              :around
+              #'nadvice/semantic-idle-summary-idle-function))
 
 ;;; ====================================
 ;;; flycheck - real-time syntax checking

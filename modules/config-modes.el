@@ -247,7 +247,31 @@
       (diminish 'anaconda-mode " ✶")
     (setq anaconda-mode-installation-directory (expand-file-name
                                                 "data/anaconda-mode"
-                                                user-emacs-directory)))
+                                                user-emacs-directory))
+
+    (defun my/anaconda-eldoc-callback-fallback (docstring)
+      (setq docstring
+            (s-join " " (--map
+                         (s-collapse-whitespace
+                          (cdr (assoc 'docstring it)))
+                         docstring)))
+      (eldoc-message
+       (substring docstring 0 (min (frame-width) (length docstring)))))
+
+    (defun my/anaconda-eldoc-callback (result)
+      (if result
+          (eldoc-message (anaconda-mode-eldoc-format result))
+        (anaconda-mode-call
+         "goto_definitions"
+         #'my/anaconda-eldoc-callback-fallback)))
+
+    ;; also show object docstrings
+    (defun nadvice/anaconda-mode-eldoc-function ()
+      (anaconda-mode-call "eldoc" #'my/anaconda-eldoc-callback)
+      nil)
+
+    (advice-add 'anaconda-mode-eldoc-function :override
+                #'nadvice/anaconda-mode-eldoc-function))
 
   (package-deferred-install 'traad
       :autoload-names '('traad-open
