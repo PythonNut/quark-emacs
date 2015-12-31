@@ -67,14 +67,6 @@ the syntax class ')'."
 
 (advice-add 'sp-show--pair-function :after #'nadvice/sp-show--pair-function)
 
-(defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
-  (unless (and (my/sp-on-delimiter-p)
-               (not (minibufferp)))
-    (apply old-fun args)))
-
-(advice-add 'eldoc-display-message-no-interference-p :around
-            #'nadvice/eldoc-display-message-no-interference-p)
-
 (show-smartparens-global-mode +1)
 ;; (make-variable-buffer-local 'show-paren-mode)
 ;; (setq-default show-paren-mode nil)

@@ -29,7 +29,17 @@
   (remove-hook 'before-save-hook #'my/auto-compile-onetime-setup t))
 
 (with-eval-after-load 'eldoc
-  (diminish 'eldoc-mode))
+  (diminish 'eldoc-mode)
+
+  (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
+    (and (apply old-fun args)
+         (not (and (my/sp-on-delimiter-p)
+                   (not (minibufferp))))
+         (not (and (bound-and-true-p flycheck-mode)
+                   (flycheck-overlay-errors-at (point))))))
+
+  (advice-add 'eldoc-display-message-no-interference-p :around
+              #'nadvice/eldoc-display-message-no-interference-p))
 
 (with-eval-after-load 'lisp-mode
   (with-eval-after-load 'smartparens
