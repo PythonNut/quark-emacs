@@ -24,6 +24,59 @@ when `auto-save-mode' is invoked manually.")
 
 (advice-add 'auto-save-mode :around #'nadvice/auto-save-mode)
 
+(defun nadvice/recover-this-file (old-fun &rest args)
+  "Restore BUFFER (or current buffer if omitted) from the autosave archive."
+  (interactive)
+  (if buffer-file-name
+      (apply old-fun args)
+    (let* ((base-file-name
+            (cl-letf* ((default-directory my/unnamed-autosave-location)
+                       ((symbol-function #'make-temp-file) (lambda (arg &rest _args) arg)))
+              (make-auto-save-file-name)))
+           (file-name-list
+            (cl-sort (mapcar
+                      (lambda (file)
+                        (cons file
+                              (nth 5 (file-attributes file))))
+                      (file-expand-wildcards (concat base-file-name "*")))
+                     #'>
+                     :key (lambda (file)
+                            (float-time (cdr file)))))
+           (file (if (and (boundp 'my/last-restored-buffer)
+                          (ignore-errors
+                            (string= (car my/last-restored-buffer)
+                                     (buffer-name))))
+                     (catch 'found-autosave
+                       (dolist (file file-name-list)
+                         (cl-destructuring-bind
+                             (_file-name . modification-time) file
+
+
+                         (when (< (float-time modification-time)
+                                  (cdr my/last-restored-buffer))
+                           (setcdr my/last-restored-buffer
+                                   (float-time modification-time))
+                           (throw 'found-autosave file))))
+                     (setq my/last-restored-buffer nil)
+                     (user-error "No older autosave... Wrapping around."))
+                 (defvar my/last-restored-buffer)
+                 (setq my/last-restored-buffer
+                       (cons (buffer-name)
+                             (float-time (cdar file-name-list))))
+                 (car file-name-list))))
+    (cl-destructuring-bind (file-name . modification-time) file
+      (widen)
+      (erase-buffer)
+      (goto-char (point-min))
+      (insert-file-contents file-name)
+      (message "File: %s (%s)"
+               (replace-regexp-in-string (regexp-quote base-file-name)
+                                         ""
+                                         file-name)
+               (format-time-string "%r %D" modification-time))))))
+
+(advice-add 'recover-this-file :around #'nadvice/recover-this-file)
+
 (defun my/save-buffer-maybe ()
   (when (and buffer-file-name
              (buffer-modified-p)
