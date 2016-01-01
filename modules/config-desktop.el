@@ -25,6 +25,22 @@
           extended-command-history
           evil-ex-history)))
 
+(defun nadvice/recentf-quiet (old-fun &rest args)
+  (cl-letf (((symbol-function #'message) #'format))
+    (apply old-fun args)))
+
+(advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
+
+(with-eval-after-load 'recentf
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'recentf)))
+
+  (setq recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
+        recentf-max-saved-items 200
+        recentf-max-menu-items 30
+        recentf-auto-cleanup 3))
+
 (with-eval-after-load 'session
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -56,35 +72,27 @@
                                                  (list "^/tmp"
                                                        "COMMIT_EDITMSG$")
                                                  "\\|"))
+
+        session-globals-include '(evil-jumper--jump-list
+                                  (kill-ring 400)
+                                  (session-file-alist 200 t)
+                                  (file-name-history 400)
+                                  (file-name-mode-alist 400 t)
+                                  search-ring
+                                  regexp-search-ring)
+
         session-initialize '(session
                              places
                              keys))
 
+  (run-with-idle-timer 10 t #'session-save-session)
+
   (advice-add 'session-save-session :around
               #'nadvice/session-save-session/quiet)
-  (run-with-idle-timer 10 t #'session-save-session)
   (advice-add 'session-save-session :before #'my/unpropertize-session)
-  (add-hook 'kill-emacs-hook #'my/unpropertize-session)
-  (add-to-list 'session-globals-include 'file-name-mode-alist))
+  (advice-add 'session-initialize :around #'nadvice/recentf-quiet))
 
 (add-hook 'after-init-hook #'session-initialize)
-
-(defun nadvice/recentf-quiet (old-fun &rest args)
-  (cl-letf (((symbol-function #'message) #'format))
-    (apply old-fun args)))
-
-(advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
-(advice-add 'session-initialize :around #'nadvice/recentf-quiet)
-
-(with-eval-after-load 'recentf
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'recentf)))
-
-  (setq recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
-        recentf-max-saved-items 200
-        recentf-max-menu-items 30
-        recentf-auto-cleanup 3))
 
 (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 

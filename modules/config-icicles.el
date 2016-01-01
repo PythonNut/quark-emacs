@@ -29,7 +29,7 @@
                               icicle-flx-score-greater-p
                               "Sort completions by flx score."))
 
-;; custom hook run when icicles in initialized
+;; custom hook run when icicles is initialized
 (add-hook 'icicle-init-hook
           (lambda ()
             (setq icicle-max-candidates 1000
