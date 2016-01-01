@@ -303,52 +303,52 @@ the syntax class ')'."
         ("e" sp-emit-sexp)))
     (evil-sp-barfslurp-hydra/body)))
 
-(evil-define-motion evil-sp-forward-sexp (&rest args)
-  (call-interactively #'on-parens-forward-sexp-end args)
+(evil-define-motion evil-sp-forward-sexp (&optional arg &rest _args)
+  (on-parens-forward-sexp-end (or arg 1))
   (evil-sp-move))
 
-(evil-define-motion evil-sp-backward-sexp (&rest args)
-  (call-interactively #'on-parens-backward-sexp args)
+(evil-define-motion evil-sp-backward-sexp (&optional arg &rest _args)
+  (on-parens-backward-sexp (or arg 1))
   (evil-sp-move))
 
-(evil-define-motion evil-sp-next-sexp (&rest args)
-  (call-interactively #'on-parens-forward-sexp args)
+(evil-define-motion evil-sp-next-sexp (&optional arg &rest _args)
+  (on-parens-forward-sexp (or arg 1))
   (evil-sp-move))
 
-(evil-define-motion evil-sp-previous-sexp (&rest args)
-  (call-interactively #'on-parens-backward-sexp-end args)
+(evil-define-motion evil-sp-previous-sexp (&optional arg &rest _args)
+  (on-parens-backward-sexp-end (or arg 1))
   (evil-sp-move))
 
-(evil-define-motion evil-sp-down-sexp (&rest args)
-  (call-interactively #'on-parens-down-sexp args)
+(evil-define-motion evil-sp-down-sexp (&optional arg &rest _args)
+  (on-parens-down-sexp (or arg 1))
   (evil-sp-move))
 
-(evil-define-motion evil-sp-backward-down-sexp (&rest args)
-  (call-interactively #'on-parens-down-sexp-end args)
+(evil-define-motion evil-sp-backward-down-sexp (&optional arg &rest _args)
+  (on-parens-down-sexp-end (or arg 1))
   (evil-sp-move))
 
-(evil-define-motion evil-sp-up-sexp (&rest args)
-  (call-interactively #'on-parens-up-sexp-end args)
+(evil-define-motion evil-sp-up-sexp (&optional arg &rest _args)
+  (on-parens-up-sexp-end (or arg 1))
   (evil-sp-move))
 
-(evil-define-motion evil-sp-backward-up-sexp (&rest args)
-  (call-interactively #'on-parens-up-sexp args)
+(evil-define-motion evil-sp-backward-up-sexp (&optional arg &rest _args)
+  (on-parens-up-sexp (or arg 1))
   (evil-sp-move))
 
-(evil-define-command evil-sp-forward-slurp-sexp ()
-  (call-interactively #'on-parens-forward-slurp)
+(evil-define-command evil-sp-forward-slurp-sexp (&optional arg &rest _args)
+  (on-parens-forward-slurp (or arg 1))
   (evil-sp-barfslurp))
 
-(evil-define-command evil-sp-forward-barf-sexp ()
-  (call-interactively #'on-parens-forward-barf)
+(evil-define-command evil-sp-forward-barf-sexp (&optional arg &rest _args)
+  (on-parens-forward-barf (or arg 1))
   (evil-sp-barfslurp))
 
-(evil-define-command evil-sp-backward-slurp-sexp ()
-  (call-interactively #'on-parens-backward-slurp)
+(evil-define-command evil-sp-backward-slurp-sexp (&optional arg &rest _args)
+  (on-parens-backward-slurp (or arg 1))
   (evil-sp-barfslurp))
 
-(evil-define-command evil-sp-backward-barf-sexp ()
-  (call-interactively #'on-parens-backward-barf)
+(evil-define-command evil-sp-backward-barf-sexp (&optional arg &rest _args)
+  (on-parens-backward-barf (or arg 1))
   (evil-sp-barfslurp))
 
 ;; evil normal mode bindings
