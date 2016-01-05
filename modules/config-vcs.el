@@ -242,4 +242,9 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
 
 (add-to-list 'command-switch-alist '("diff" . my/command-line-ediff))
 
+(package-deferred-install 'git-timemachine
+    :autoload-names '('git-timemachine-toggle
+                      'git-timemachine
+                      'git-timemachine-switch-branch))
+
 (provide 'config-vcs)
