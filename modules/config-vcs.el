@@ -215,6 +215,9 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
 
 (global-set-key (kbd "C-c p") #'my/smart-projectile-tools)
 
+(with-eval-after-load 'diff
+  (setq diff-switches "-u"))
+
 (with-eval-after-load 'ediff
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
