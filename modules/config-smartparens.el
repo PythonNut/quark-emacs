@@ -396,8 +396,6 @@ the syntax class ')'."
       t))
 
   (diminish 'smartparens-mode " σ")
-  (set-face-background 'sp-pair-overlay-face "grey20")
-  (set-face-foreground 'sp-pair-overlay-face "default")
 
   (sp-pair "(" ")" :when '(my/my-sp-pair-function) :wrap "C-)")
   (sp-pair "{" "}" :when '(my/my-sp-pair-function) :wrap "C-}")
