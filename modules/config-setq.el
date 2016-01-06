@@ -1,9 +1,5 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)))
-
 (setq ad-redefinition-action 'accept
       cursor-type 'box
       delete-by-moving-to-trash t
@@ -34,6 +30,8 @@
       split-width-threshold 0
       tab-width 4
       use-dialog-box nil
+      user-full-name "PythonNut"
+      user-mail-address "PythonNut@PythonNut.com"
       visible-cursor nil
       x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
       x-stretch-cursor t)
