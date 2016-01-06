@@ -16,6 +16,13 @@
   (setq password-cache-expiry nil))
 
 (with-eval-after-load 'tramp
+  (with-eval-after-load 'tramp-cache
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'tramp-cache)))
+    (setq tramp-persistency-file-name
+          (expand-file-name "/data/tramp" user-emacs-directory)))
+
   (setq tramp-default-method "scp"
         tramp-backup-directory-alist `((".*" . ,my/tramp-backup-directory))))
 
