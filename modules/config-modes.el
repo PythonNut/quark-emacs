@@ -629,7 +629,10 @@
   (require 'ls-lisp)
   (require 'dired-x)
   (eval-when-compile (with-demoted-errors "Load error: %s" (require 'dired)))
-  (setq dired-listing-switches "-alh")
+  (setq dired-listing-switches "-alh"
+        dired-recursive-copies 'always
+        dired-ls-F-marks-symlinks t
+        dired-dwim-target t)
 
   (defun dired-first-file ()
     (interactive)
