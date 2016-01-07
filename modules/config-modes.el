@@ -239,6 +239,12 @@
     (with-demoted-errors "Load error: %s"
       (require 'python)))
 
+  (add-hook 'python-mode-hook
+            (lambda ()
+              ;; conflicts with `eldoc-mode'
+              (semantic-idle-summary-mode -1)
+              (setq mode-name "Py")))
+
   (package-deferred-install 'company-anaconda
       :autoload-names '('company-anaconda))
 
@@ -273,6 +279,11 @@
     (advice-add 'anaconda-mode-eldoc-function :override
                 #'nadvice/anaconda-mode-eldoc-function))
 
+  (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
+  (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto)
+  (add-hook 'python-mode-hook #'anaconda-mode)
+  (add-hook 'python-mode-hook #'eldoc-mode)
+
   (package-deferred-install 'traad
       :autoload-names '('traad-open
                         'traad-close
@@ -306,25 +317,17 @@
                         'traad-display-doc
                         'traad-popup-doc))
 
-  (package-deferred-install 'django-mode
-      :feature-name 'django-html-mode
-      :mode-entries '('("\\.djhtml$" . django-html-mode))
-      :autoload-names '('django-html-mode))
-
-  (add-hook 'python-mode-hook #'anaconda-mode)
-  (add-hook 'python-mode-hook #'eldoc-mode)
-
-  (add-hook 'python-mode-hook
-            (lambda ()
-              ;; conflicts with `eldoc-mode'
-              (semantic-idle-summary-mode -1)
-              (setq mode-name "Py")))
-
   (package-deferred-install 'live-py-mode
       :autoload-names '('live-py-mode))
 
-  (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
-  (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto))
+  (package-deferred-install 'py-yapf
+      :autoload-names '('py-yapf-buffer
+                        'py-yapf-enable-on-save)))
+
+(package-deferred-install 'django-mode
+    :feature-name 'django-html-mode
+    :mode-entries '('("\\.djhtml$" . django-html-mode))
+    :autoload-names '('django-html-mode))
 
 (package-deferred-install 'cython-mode
     :mode-entries '('("\\.pyx\\'" . cython-mode)
