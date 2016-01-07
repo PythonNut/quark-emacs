@@ -81,10 +81,17 @@
 (global-set-key (kbd "C-c ?") #'mc/mark-all-like-this-dwim)
 
 ;; directional window movement
-(global-set-key (kbd "<C-left>")  #'windmove-left)
-(global-set-key (kbd "<C-right>") #'windmove-right)
-(global-set-key (kbd "<C-up>")    #'windmove-up)
-(global-set-key (kbd "<C-down>")  #'windmove-down)
+(if (display-graphic-p)
+    (progn
+      (global-set-key (kbd "<M-left>")  #'windmove-left)
+      (global-set-key (kbd "<M-right>") #'windmove-right)
+      (global-set-key (kbd "<M-up>")    #'windmove-up)
+      (global-set-key (kbd "<M-down>")  #'windmove-down))
+
+  (global-set-key (kbd "<C-left>")  #'windmove-left)
+  (global-set-key (kbd "<C-right>") #'windmove-right)
+  (global-set-key (kbd "<C-up>")    #'windmove-up)
+  (global-set-key (kbd "<C-down>")  #'windmove-down))
 
 (defun my/framemove-onetime-setup (&optional frame)
   (with-selected-frame (or frame (selected-frame))
