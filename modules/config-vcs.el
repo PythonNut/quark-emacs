@@ -233,12 +233,16 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
     (add-hook 'ediff-quit-hook restore-window-configuration 'append)
     (add-hook 'ediff-suspend-hook restore-window-configuration 'append))
 
-  (setq ;; don't start another frame
-   ediff-window-setup-function #'ediff-setup-windows-plain
-   ;; put windows side by side
-   ediff-split-window-function #'split-window-sensibly))
+  (defun nadvice/ediff-setup-keymap (&rest args)
+    (define-key ediff-mode-map "j" #'ediff-next-difference)
+    (define-key ediff-mode-map "k" #'ediff-previous-difference))
 
-(defun my/command-line-ediff (switch)
+  (advice-add 'ediff-setup-keymap :after #'nadvice/ediff-setup-keymap)
+
+  ;; don't start another frame
+  (setq ediff-window-setup-function #'ediff-setup-windows-plain))
+
+(defun my/command-line-ediff (_switch)
   (let ((file1 (pop command-line-args-left))
         (file2 (pop command-line-args-left)))
     (ediff file1 file2)))
