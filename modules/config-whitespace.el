@@ -59,7 +59,7 @@
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'auto-indent-mode)))
-
+  (setq auto-indent-assign-indent-level-variables nil)
   (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →")))
 
 (defun my/auto-indent-onetime-setup ()

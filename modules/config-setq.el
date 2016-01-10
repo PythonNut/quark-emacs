@@ -28,7 +28,6 @@
       set-mark-command-repeat-pop t
       split-height-threshold 0
       split-width-threshold 0
-      tab-width 4
       use-dialog-box nil
       user-full-name "PythonNut"
       user-mail-address "PythonNut@PythonNut.com"
@@ -37,7 +36,8 @@
       x-stretch-cursor t)
 
 (setq-default buffer-file-coding-system 'utf-8
-              indent-tabs-mode nil)
+              indent-tabs-mode nil
+              indicate-buffer-boundaries '((bottom . left)))
 
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
