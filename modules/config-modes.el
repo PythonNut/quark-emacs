@@ -703,6 +703,8 @@
     (with-demoted-errors "Load error: %s"
       (require 'comint)))
 
+  (setq comint-prompt-read-only t)
+
   (defun nadvice/comint-previous-matching-input-from-input (old-fun &rest args)
     (condition-case err
         (apply old-fun args)
