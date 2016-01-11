@@ -357,11 +357,6 @@
     (sage-shell:define-alias)
     (evil-set-initial-state 'sage-shell-mode 'insert)
 
-    (define-key sage-shell-mode-map (kbd "<up>")
-      #'comint-previous-matching-input-from-input)
-    (define-key sage-shell-mode-map (kbd "<down>")
-      #'comint-next-matching-input-from-input)
-
     (add-hook 'sage-shell-mode-hook #'eldoc-mode)
     (add-hook 'sage-mode-hook #'eldoc-mode)
 
@@ -393,10 +388,6 @@
 
 (with-eval-after-load 'octave
   (evil-set-initial-state 'inferior-octave-mode 'insert)
-  (define-key inferior-octave-mode-map (kbd "<up>")
-    #'comint-previous-matching-input-from-input)
-  (define-key inferior-octave-mode-map (kbd "<down>")
-    #'comint-next-matching-input-from-input)
 
   (with-eval-after-load 'smartparens
     (sp-local-pair 'octave-mode "'" nil :actions nil)))
@@ -633,7 +624,9 @@
 ;; =============================================================================
 
 (with-eval-after-load 'ls-lisp
-  (eval-when-compile (with-demoted-errors "Load error: %s" (require 'ls-lisp)))
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'ls-lisp)))
   (setq ls-lisp-use-insert-directory-program nil
         ls-lisp-support-shell-wildcards t
         ls-lisp-dirs-first t
@@ -642,7 +635,9 @@
 (with-eval-after-load 'dired
   (require 'ls-lisp)
   (require 'dired-x)
-  (eval-when-compile (with-demoted-errors "Load error: %s" (require 'dired)))
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'dired)))
   (setq dired-listing-switches "-alh"
         dired-recursive-copies 'always
         dired-ls-F-marks-symlinks t
@@ -704,6 +699,10 @@
 ;; =============================================================================
 
 (with-eval-after-load 'comint
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'comint)))
+
   (defun nadvice/comint-previous-matching-input-from-input (old-fun &rest args)
     (condition-case err
         (apply old-fun args)
@@ -718,7 +717,12 @@
 
   (advice-add 'comint-previous-matching-input-from-input
               :around
-              #'nadvice/comint-previous-matching-input-from-input))
+              #'nadvice/comint-previous-matching-input-from-input)
+
+  (define-key comint-mode-map (kbd "<up>")
+    #'comint-previous-matching-input-from-input)
+  (define-key comint-mode-map (kbd "<down>")
+    #'comint-next-matching-input-from-input))
 
 
 ;; =============================================================================
@@ -751,11 +755,6 @@
          (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))))
 
 (with-eval-after-load 'geiser-repl
-  (define-key geiser-repl-mode-map (kbd "<up>")
-    #'comint-previous-matching-input-from-input)
-  (define-key geiser-repl-mode-map (kbd "<down>")
-    #'comint-next-matching-input-from-input)
-
   (evil-set-initial-state 'geiser-repl-mode 'emacs)
   (add-hook 'geiser-repl-mode-hook (lambda ()
                                      (auto-indent-mode -1))))
