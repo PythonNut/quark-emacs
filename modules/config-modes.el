@@ -807,6 +807,7 @@
   (advice-add 'term-sentinel :around #'nadvice/term-sentinel)
 
   (define-key term-raw-map (kbd "<f12>") #'term-kill-subjob)
+  (define-key term-raw-map (kbd "<remap> <cua-paste>") #'term-paste)
 
   (defun nadvice/ansi-term (args)
     (interactive "P")
