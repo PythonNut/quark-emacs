@@ -166,12 +166,15 @@
 ;; =============================================================================
 
 (package-deferred-install 'js2-mode
-    :mode-entries '('("\\.js\\'" . js2-mode))
+    :mode-entries '('("\\.js\\'" . js2-mode)
+                    '("\\.jsx\\'" . js2-jsx-mode))
     :autoload-names '('js2-minor-mode
                       'js2-mode
                       'js2-highlight-unused-variables-mode
                       'js2-imenu-extras-mode
                       'js2-imenu-extras-setup)
+    :manual-init
+    (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
     (package-deferred-install 'js2-refactor
         :autoload-names '('js2r-add-keybindings-with-prefix
