@@ -166,15 +166,11 @@
 ;; =============================================================================
 
 (package-deferred-install 'js2-mode
-    :mode-entries '('("\\.js\\'" . js2-mode)
-                    '("\\.jsx\\'" . js2-jsx-mode))
     :autoload-names '('js2-minor-mode
                       'js2-mode
                       'js2-highlight-unused-variables-mode
                       'js2-imenu-extras-mode
                       'js2-imenu-extras-setup)
-    :manual-init
-    (add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
     (package-deferred-install 'js2-refactor
         :autoload-names '('js2r-add-keybindings-with-prefix
@@ -197,7 +193,13 @@
 
     (setq js2-basic-offset 2)
 
-    (add-hook 'js2-mode-hook #'js2-refactor-mode))
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+    (add-hook 'js2-mode-hook (lambda ()
+                               (setq mode-name "JS"))))
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-jsx-mode))
+(add-to-list 'interpreter-mode-alist '("node" . js2-mode))
 
 (package-deferred-install 'json-mode
     :mode-entries '('("\\.json$"   . json-mode)
