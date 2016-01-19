@@ -12,17 +12,36 @@
                          ("melpa" . "https://melpa.org/packages/")))
 
 (defvar my/package-cached-autoloads nil)
+(defvar my/package-cached-descriptors nil)
 (defvar my/package-cache-last-build-time nil)
 
-(defvar package-autoload-file (expand-file-name "data/autoload-cache.el"
+(defvar my/package-autoload-file (expand-file-name "data/package-cache.el"
                                                 user-emacs-directory))
 
-(defun my/package-rebuild-autoloads (&rest _args)
+(defun my/package-rebuild-cache ()
   (interactive)
   (let ((autoloads (file-expand-wildcards
-                    (expand-file-name "elpa/*/*-autoloads.el"
-                                      user-emacs-directory))))
+                    (expand-file-name "*/*-autoloads.el"
+                                      package-user-dir)))
+        (pkg-descs))
+
     (with-temp-buffer
+      (dolist (pkg-dir (cl-remove-if-not
+                        #'file-directory-p
+                        (file-expand-wildcards
+                         (expand-file-name "*" package-user-dir))))
+        (let ((pkg-file (expand-file-name
+                         (package--description-file pkg-dir)
+                         pkg-dir)))
+          (when (file-exists-p pkg-file)
+            (with-temp-buffer
+              (insert-file-contents pkg-file)
+              (goto-char (point-min))
+              (push (cons pkg-dir (read (current-buffer))) pkg-descs)))))
+
+        (insert (format "(setq my/package-cached-descriptors '%S)"
+                        pkg-descs))
+
       (dolist (file autoloads)
         (insert-file-contents file)
 
@@ -36,30 +55,26 @@
                              (file-name-directory file)))))))
 
       (insert (format "(setq my/package-cached-autoloads '%S)"
-                      (mapcar #'file-name-sans-extension
-                              (file-expand-wildcards
-                               (expand-file-name "elpa/*/*-autoloads.el"
-                                                 user-emacs-directory)))))
+                      (mapcar #'file-name-sans-extension autoloads)))
 
       (let ((mtime (nth 6 (file-attributes
-                           (expand-file-name "elpa"
-                                             user-emacs-directory)))))
+                           (expand-file-name package-user-dir)))))
         (insert (format "(setq my/package-cache-last-build-time '%S)" mtime)))
-      (write-file package-autoload-file nil)
+      (write-file my/package-autoload-file nil)
       (cl-letf ((load-path))
-        (load package-autoload-file)))))
+        (load my/package-autoload-file)))))
 
-(unwind-protect (progn (unless (file-exists-p package-autoload-file)
-                         (my/package-rebuild-autoloads))
-                       (load package-autoload-file)
+(unwind-protect (progn (unless (file-exists-p my/package-autoload-file)
+                         (my/package-rebuild-cache))
+                       (load my/package-autoload-file)
                        (unless (equal (nth 6 (file-attributes
                                               (expand-file-name
-                                               "elpa" user-emacs-directory)))
+                                               package-user-dir)))
                                       my/package-cache-last-build-time)
-                         (my/package-rebuild-autoloads)))
+                         (my/package-rebuild-cache)))
 
   (dolist (dir (file-expand-wildcards
-                (expand-file-name "elpa/*" user-emacs-directory)))
+                (expand-file-name "*" package-user-dir)))
     (when (file-directory-p dir)
       (add-to-list 'load-path dir))))
 
@@ -71,12 +86,35 @@
                     (file &rest args_ignored)
                     args
                   (unless (member file my/package-cached-autoloads)
-                    (message "Package cache miss: %s" file)
-                    (my/package-rebuild-autoloads)
+                    (message "Package autoload cache miss: %s" file)
+                    (my/package-rebuild-cache)
                     (apply orig-load args))))))
     (apply old-fun args)))
 
 (advice-add 'package-initialize :around #'nadvice/package-initialize)
+
+(defun nadvice/package-load-descriptor (old-fun pkg-dir)
+  "Load the description file in directory PKG-DIR."
+  (let ((cached-desc (assoc pkg-dir my/package-cached-descriptors)))
+    (if cached-desc
+        (let* ((pkg-file (expand-file-name
+                         (package--description-file pkg-dir)
+                         pkg-dir))
+               (signed-file (concat pkg-dir ".signed"))
+               (pkg-desc (package-process-define-package
+                           (cdr cached-desc) pkg-file)))
+          (setf (package-desc-dir pkg-desc) pkg-dir)
+          (when (file-exists-p signed-file)
+            (setf (package-desc-signed pkg-desc) t))
+          pkg-desc)
+      ;; certain directories are queried, although they do not contain packages
+      (unless (member (file-name-nondirectory pkg-dir)
+                      '("elpa" ".emacs.d" "archives" "gnupg"))
+        (message "Package descriptor cache miss: %s" pkg-dir))
+      (funcall old-fun pkg-dir))))
+
+(advice-add 'package-load-descriptor :around #'nadvice/package-load-descriptor)
+
 (package-initialize)
 
 ;; Guarantee all packages are installed on start
@@ -281,9 +319,7 @@
 
 (defun package-uninstall (package-name)
   (interactive
-   (let ((dir (expand-file-name
-               "elpa"
-               user-emacs-directory)))
+   (let ((dir (expand-file-name package-user-dir)))
      (list (completing-read
             "Uninstall package: "
             (mapcar (lambda (package-dir)
@@ -295,14 +331,10 @@
                      (lambda (item)
                        (and (file-directory-p item)
                             (not (string-match-p "archives$\\|\\.$" item))))
-                     (directory-files (expand-file-name
-                                       "elpa"
-                                       user-emacs-directory)
-                                      t)))))))
+                     (directory-files dir t)))))))
 
   (dolist (item (file-expand-wildcards
-                 (expand-file-name (concat "elpa/" package-name "*")
-                                   user-emacs-directory)))
+                 (expand-file-name (concat package-user-dir "/*"))))
     (delete-directory item t t))
   (message "done."))
 

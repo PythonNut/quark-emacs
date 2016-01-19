@@ -106,5 +106,5 @@ flycheck_*
 /dunnet
 
 
-# autoload cache
-/data/autoload-cache.el
+# package cache
+/data/package-cache.el
