@@ -168,7 +168,7 @@
     (evil-jumper-hydra/body))
 
   (advice-add 'evil-jumper/backward :after #'nadvice/evil-jumper/backward)
-  (advice-add 'evil-jumper/forward :before #'nadvice/evil-jumper/forward)
+  (advice-add 'evil-jumper/forward :after #'nadvice/evil-jumper/forward)
 
   (with-eval-after-load 'session
     (eval-when-compile
@@ -183,8 +183,10 @@
 
 (define-key evil-normal-state-map (kbd "C-o") #'evil-jumper/backward)
 (define-key evil-normal-state-map (kbd "C-i") #'evil-jumper/forward)
+(define-key evil-normal-state-map (kbd "<tab>") #'evil-jumper/forward)
 (define-key evil-motion-state-map (kbd "C-o") #'evil-jumper/backward)
 (define-key evil-motion-state-map (kbd "C-i") #'evil-jumper/forward)
+(define-key evil-motion-state-map (kbd "<tab>") #'evil-jumper/forward)
 
 (defun nadvice/autoload-evil-jumper (&rest _args)
   (evil-jumper--set-jump))
