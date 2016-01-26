@@ -226,7 +226,7 @@
                                hydra))
 
   ;; back off for non-essential resources
-  (with-eval-after-load (elt idle-require-symbols 4)
+  (with-eval-after-load (eval-when-compile (elt idle-require-symbols 4))
     (setq idle-require-idle-delay 1
           idle-require-load-break 1)))
 
@@ -334,7 +334,8 @@
                      (directory-files dir t)))))))
 
   (dolist (item (file-expand-wildcards
-                 (expand-file-name (concat package-user-dir "/*"))))
+                 (expand-file-name (concat package-name "*/*")
+                                   package-user-dir)))
     (delete-directory item t t))
   (message "done."))
 
