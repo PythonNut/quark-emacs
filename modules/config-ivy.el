@@ -59,7 +59,8 @@
                         :foreground "#268bd2")
 
     (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
-                                     'ivy-minibuffer-match-face-2)))
+                                     'ivy-minibuffer-match-face-2)
+          ivy-flx-limit 500))
 
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
