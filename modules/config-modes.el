@@ -119,24 +119,15 @@
          ('c-mode    'c-mode-hook)))))
 
   (with-eval-after-load 'smartparens
-    (cl-macrolet
-        ((my/setup-cc-mode
-          (mode)
-          `(progn
-             (sp-local-pair ,mode "/*" "*/" :post-handlers
-                            '(:add
-                              ("* ||\n[i]" "RET")))
-             (sp-local-pair ,mode "{" nil :post-handlers
-                            '(:add
-                              ("||\n[i]" "RET")
-                              ("| " "SPC"))))))
-
-      (with-no-warnings
-        (my/generate-calls
-         'my/setup-cc-mode
-         '(('c++-mode)
-           ('objc-mode)
-           ('c-mode)))))))
+    (sp-with-modes
+        '(c++-mode objc-mode c-mode)
+      (sp-local-pair "/*" "*/" :post-handlers
+                     '(:add
+                       ("* ||\n[i]" "RET")))
+      (sp-local-pair "{" nil :post-handlers
+                     '(:add
+                       ("||\n[i]" "RET")
+                       ("| " "SPC"))))))
 
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)
