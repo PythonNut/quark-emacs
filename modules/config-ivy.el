@@ -59,8 +59,7 @@
                         :foreground "#268bd2")
 
     (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
-                                     'ivy-minibuffer-match-face-2)
-          ivy-flx-limit 500))
+                                     'ivy-minibuffer-match-face-2)))
 
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -76,7 +75,8 @@
   (setq ivy-display-style 'fancy
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
-        ivy-count-format "")
+        ivy-count-format ""
+        ivy-flx-limit 2000)
 
   (my/ivy-setup-faces)
   (add-hook 'load-theme-hook #'my/ivy-setup-faces))
