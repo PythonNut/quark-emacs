@@ -29,19 +29,6 @@
                               icicle-flx-score-greater-p
                               "Sort completions by flx score."))
 
-;; custom hook run when icicles is initialized
-(add-hook 'icicle-init-hook
-          (lambda ()
-            (setq icicle-max-candidates 1000
-                  icicle-sorting-max-candidates 1000
-
-                  icicle-sort-comparer #'icicle-flx-score-greater-p
-                  icicle-Completions-text-scale-decrease 0
-                  icicle-expand-input-to-common-match 1
-                  icicle-highlight-lighter-flag nil
-                  icicle-show-Completions-help-flag nil
-                  icicle-yank-function #'cua-paste)))
-
 (defun nadvice/auto-icicle (old-func &rest _args)
   (interactive)
   (if (and (not (bound-and-true-p icicle-mode))
@@ -83,7 +70,18 @@
         `(with-no-warnings
            (my/generate-calls-single 'my/autoload-icicle ,commands)
            (with-eval-after-load 'icicles
-             (run-hooks 'icicle-init-hook)
+             (setq icicle-top-level-key-bindings nil
+
+                   icicle-max-candidates 1000
+                   icicle-sorting-max-candidates 1000
+
+                   icicle-sort-comparer #'icicle-flx-score-greater-p
+                   icicle-Completions-text-scale-decrease 0
+                   icicle-expand-input-to-common-match 1
+                   icicle-highlight-lighter-flag nil
+                   icicle-show-Completions-help-flag nil
+                   icicle-yank-function #'cua-paste)
+
              (my/generate-calls-single 'my/auto-icicle-macro ,commands)))))
 
     (setup-icicles
