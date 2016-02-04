@@ -35,11 +35,14 @@
            (called-interactively-p 'any))
       (unwind-protect
           (progn
-            (cl-letf (((symbol-function #'message) #'format))
-              (icicle-mode +1)
-              (run-hooks 'icicle-init-hook))
+            (cl-letf (((symbol-function #'message) #'format)
+                      ((symbol-function #'set-face-attribute)
+                       (lambda (&rest _args))))
+              (icicle-mode +1))
             (call-interactively old-func))
-        (cl-letf (((symbol-function #'message) #'format))
+        (cl-letf (((symbol-function #'message) #'format)
+                  ((symbol-function #'set-face-attribute)
+                   (lambda (&rest _args))))
           (icicle-mode -1)))
     (call-interactively old-func)))
 
