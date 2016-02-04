@@ -130,6 +130,7 @@ when `auto-save-mode' is invoked manually.")
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'autorevert)))
+  (diminish 'auto-revert-mode)
   (setq global-auto-revert-non-file-buffers t
         auto-revert-verbose nil))
 
