@@ -247,35 +247,41 @@
 (defun package-upgrade-all (&optional automatic)
   "Upgrade all packages automatically without showing *Packages* buffer."
   (interactive)
-  (package-refresh-contents)
-  (let (upgrades)
-    (cl-flet ((get-version (name where)
-                           (let ((pkg (cadr (assq name where))))
-                             (when pkg
-                               (package-desc-version pkg)))))
-      (dolist (package (mapcar #'car package-alist))
-        (let ((in-archive (get-version package package-archive-contents)))
-          (when (and in-archive
-                     (version-list-< (get-version package package-alist)
-                                     in-archive))
-            (push (cadr (assq package package-archive-contents))
-                  upgrades)))))
-    (if upgrades
-        (when (or automatic
-                  (yes-or-no-p
-                   (format "Upgrade %d package%s (%s)? "
-                           (length upgrades)
-                           (if (= (length upgrades) 1) "" "s")
-                           (mapconcat #'package-desc-full-name upgrades ", "))))
-          (save-window-excursion
-            (dolist (package-desc upgrades)
-              (let ((old-package (cadr (assq (package-desc-name package-desc)
-                                             package-alist))))
-                (package-install package-desc)
-                (package-delete old-package)))
-            (message "All package upgrades completed.")
-            (my/x-urgent)))
-      (message "All packages are up to date"))))
+  (message "Updating package repositories...")
+  (async-start
+   `(lambda ()
+      ,(async-inject-variables "\\`package-")
+      (package-refresh-contents)
+      (let (upgrades)
+        (cl-flet ((get-version (name where)
+                               (let ((pkg (cadr (assq name where))))
+                                 (when pkg
+                                   (package-desc-version pkg)))))
+          (dolist (package (mapcar #'car package-alist))
+            (let ((in-archive (get-version package package-archive-contents)))
+              (when (and in-archive
+                         (version-list-< (get-version package package-alist)
+                                         in-archive))
+                (push (cadr (assq package package-archive-contents))
+                      upgrades)))))
+        upgrades))
+   (lambda (upgrades)
+     (if upgrades
+         (when (or automatic
+                   (yes-or-no-p
+                    (format "Upgrade %d package%s (%s)? "
+                            (length upgrades)
+                            (if (= (length upgrades) 1) "" "s")
+                            (mapconcat #'package-desc-full-name upgrades ", "))))
+           (save-window-excursion
+             (dolist (package-desc upgrades)
+               (let ((old-package (cadr (assq (package-desc-name package-desc)
+                                              package-alist))))
+                 (package-install package-desc)
+                 (package-delete old-package)))
+             (message "All package upgrades completed.")
+             (my/x-urgent)))
+       (message "All packages are up to date")))))
 
 (eval-and-compile
   (defun my/remove-keyword-params (seq)
