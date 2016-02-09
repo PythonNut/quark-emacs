@@ -78,9 +78,13 @@
              (not (file-writable-p buffer-file-name))
              (not (string= user-login-name
                            (nth 3 (file-attributes buffer-file-name 'string))))
-             (not (my/root-file-name-p buffer-file-name))
-             (y-or-n-p "File is not writable. Open with root? "))
-    (edit-file-as-root)))
+             (not (my/root-file-name-p buffer-file-name)))
+    (setq buffer-read-only nil)
+    (add-hook 'first-change-hook #'root-save-mode nil t)
+    (run-with-idle-timer
+     0.5 nil
+     (lambda ()
+       (message "Modifications will require root permissions to save.")))))
 
 (add-hook 'find-file-hook #'my/edit-file-as-root-maybe)
 
@@ -111,5 +115,36 @@
 
 (advice-add #'semantic-find-file-noselect :around
             #'nadvice/semantic-find-file-noselect)
+
+(defvar root-save-mode-lighter
+  (list " " (propertize "root" 'face 'tty-menu-selected-face))
+  "The mode line lighter for root-save-mode.")
+
+;; Required for the face to be displayed
+(put 'root-save-mode-lighter 'risky-local-variable t)
+
+(defun root-save-mode/before-save ()
+  "Switch the visiting file to a TRAMP su or sudo name if applicable"
+  (when (and (buffer-modified-p)
+             (not (my/root-file-name-p buffer-file-name))
+             (or (not (= (process-file "sudo" nil nil nil "-n" "true") 0))
+                 (yes-or-no-p "File is not readable. Save with root? ")))
+    (let ((change-major-mode-with-file-name nil))
+      (set-visited-file-name (my/make-root-file-name buffer-file-name) t t))
+    (remove-hook 'before-save-hook #'root-save-mode/before-save t)))
+
+(define-minor-mode root-save-mode
+  "Automatically save buffer as root"
+  :lighter root-save-mode-lighter
+  (if root-save-mode
+      ;; Ensure that root-save-mode is visible by promoting it to rank 1
+      (progn
+        (let ((root-save-mode-alist-entry
+               (assoc 'root-save-mode minor-mode-alist)))
+          (setq minor-mode-alist
+                (delete root-save-mode-alist-entry minor-mode-alist))
+          (push root-save-mode-alist-entry minor-mode-alist))
+        (add-hook 'before-save-hook #'root-save-mode/before-save nil t))
+    (remove-hook 'before-save-hook #'root-save-mode/before-save t)))
 
 (provide 'config-tramp)
