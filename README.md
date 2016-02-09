@@ -5,7 +5,7 @@ My personal emacs config.
 
 *Featuring:*
 
- * `vim` emulation including custom textobjects, motions, and operators
+ * [`vim` emulation](https://bitbucket.org/lyro/evil/wiki/Home) including custom textobjects, motions, and operators
  * Extensive version tracking backup system
  * Persistence of:
    * File locations
@@ -14,11 +14,11 @@ My personal emacs config.
    * Minibuffer histories
    * Kill ring
    * Jump list
- * Everything that can be made fuzzy (Sublime style) has been made fuzzy, including:
-   * Helm (fuzzy file finder, goto definition, etc.)
-   * Company (code autocomplete)
-   * Icicles (minibuffer completion)
-   * Ivy (minibuffer completion)
+ * Everything that can be made fuzzy ([Sublime style](https://github.com/lewang/flx)) has been made fuzzy, including:
+   * [Helm](https://github.com/emacs-helm/helm) (fuzzy file finder, goto definition, etc.)
+   * [Company](https://github.com/company-mode/company-mode) (code autocomplete)
+   * [Icicles](https://www.emacswiki.org/emacs/Icicles) (minibuffer completion)
+   * [Ivy](https://github.com/abo-abo/swiper) (minibuffer completion)
    * Isearch
  * Extremely agressive file autoloading, and fast startup times (~0.4s)
  * An emphasis on correct code and robustness
