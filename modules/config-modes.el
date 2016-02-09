@@ -979,6 +979,9 @@
                       'cmake-help-property
                       'cmake-help))
 
+;; Qt qmake project files
+(add-to-list 'auto-mode-alist '("\\.pro\\'" . makefile-mode))
+
 (package-deferred-install 'hgignore-mode
     :mode-entries '('("\\.hgignore\\'" . hgignore-mode))
     :autoload-names '('hgignore-mode))
