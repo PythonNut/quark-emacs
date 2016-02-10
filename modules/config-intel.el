@@ -210,6 +210,9 @@
 ;;; ==================================
 ;;; VLF intelligently edit large files
 ;;; ==================================
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'config-package)))
 
 (package-deferred-install 'vlf
     :autoload-names '('vlf))
