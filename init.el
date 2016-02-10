@@ -58,7 +58,7 @@
                      (define-key query-replace-map [t] 'skip)
                      (y-or-n-p prompt))))
           (if (save-window-excursion
-                (byte-recompile-config t))
+                (not (byte-recompile-config t)))
               (when (my/y-or-n-p "Automatic repair succeed. Press \"y\" to restart.")
                 (restart-emacs))
             (when (my/y-or-n-p "Automatic repair failed. Press \"y\" to try emergency rebuild.")

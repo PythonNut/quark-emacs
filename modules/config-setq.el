@@ -83,24 +83,25 @@
 
 (defun byte-recompile-config (&optional arg)
   (interactive "p")
-  (when (fboundp 'my/concat-autoloads)
-    (my/concat-autoloads))
-  (let ((force (if (called-interactively-p 'any)
-                   (and (integerp arg) (= arg 4))
-                 arg)))
-    (when (progn
+  (let* ((force (if (called-interactively-p 'any)
+                    (and (integerp arg) (= arg 4))
+                  arg))
+         (init-el-error
+          (progn
             (when force
               (delete-file (expand-file-name "init.elc" user-emacs-directory)))
-            (byte-compile-file (expand-file-name
-                                "init.el"
-                                user-emacs-directory)))
-      (not (string-match-p "failed"
-                           (byte-recompile-directory
-                            (expand-file-name
-                             "modules/"
-                             user-emacs-directory)
-                            0
-                            force))))))
+            (not (byte-compile-file (expand-file-name
+                                     "init.el"
+                                     user-emacs-directory)))))
+         (modules-error (string-match-p
+                         "failed"
+                         (byte-recompile-directory
+                          (expand-file-name
+                           "modules/"
+                           user-emacs-directory)
+                          0
+                          force))))
+    (or init-el-error modules-error)))
 
 (defun emergency-fix-config ()
   (interactive)
