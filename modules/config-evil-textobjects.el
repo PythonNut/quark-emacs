@@ -11,13 +11,13 @@
 ;;; === Evil motion section ===
 (defhydra evil-visual-line-hydra
   (:pre (setq hydra-is-helpful nil)
-        :post (setq hydra-is-helpful t))
+   :post (setq hydra-is-helpful t))
   ("j" evil-next-visual-line)
   ("k" evil-previous-visual-line))
 
 (defhydra my/smart-evil-scroll-page-hydra
   (:pre (setq hydra-is-helpful nil)
-        :post (setq hydra-is-helpful t))
+   :post (setq hydra-is-helpful t))
   "Scroll by page"
   ("f" evil-scroll-page-down)
   ("b" evil-scroll-page-up))
@@ -227,12 +227,7 @@
 (define-key evil-normal-state-map "gN" #'evil-narrow-indirect)
 
 (evil-define-operator evil-eval-region (beg end _type)
-  (save-excursion
-    (evil-with-state 'normal
-      (goto-char beg)
-      (evil-visual-state)
-      (goto-char end)
-      (eval-region beg end))))
+  (eval-region beg end))
 
 (define-key evil-operator-state-map "gV" #'evil-eval-region)
 (define-key evil-normal-state-map "gV" #'evil-eval-region)
@@ -247,5 +242,16 @@
 
 (define-key evil-operator-state-map "g|" #'evil-align-regexp)
 (define-key evil-normal-state-map "g|" #'evil-align-regexp)
+
+(evil-define-operator evil-count-words-region (beg end _type)
+  (save-excursion
+    (evil-with-state 'normal
+      (goto-char beg)
+      (evil-visual-state)
+      (goto-char end)
+      (call-interactively #'count-words-region))))
+
+(define-key evil-operator-state-map (kbd "M-=") #'evil-count-words-region)
+(define-key evil-normal-state-map (kbd "M-=") #'evil-count-words-region)
 
 (provide 'config-evil-textobjects)
