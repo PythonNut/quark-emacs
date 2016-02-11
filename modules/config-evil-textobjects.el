@@ -3,49 +3,40 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
+    (require 'hydra)
     (require 'evil)
     (require 'evil-indent-textobject)
     (require 'avy)))
 
 ;;; === Evil motion section ===
+(defhydra evil-visual-line-hydra
+  (:pre (setq hydra-is-helpful nil)
+        :post (setq hydra-is-helpful t))
+  ("j" evil-next-visual-line)
+  ("k" evil-previous-visual-line))
 
-(eval-and-compile
-  (defun my/smart-evil-visual-line ()
-    (unless (fboundp #'evil-visual-line-hydra/body)
-      (require 'hydra)
-      (defhydra evil-visual-line-hydra
-        (:pre (setq hydra-is-helpful nil)
-              :post (setq hydra-is-helpful t))
-        ("j" evil-next-visual-line)
-        ("k" evil-previous-visual-line)))
-    (evil-visual-line-hydra/body))
+(defhydra my/smart-evil-scroll-page-hydra
+  (:pre (setq hydra-is-helpful nil)
+        :post (setq hydra-is-helpful t))
+  "Scroll by page"
+  ("f" evil-scroll-page-down)
+  ("b" evil-scroll-page-up))
 
-  (defun my/smart-evil-scroll-page (&rest _args)
-    (require 'hydra)
-    (unless (fboundp 'my/smart-evil-scroll-page-hydra/body)
-      (defhydra my/smart-evil-scroll-page-hydra
-        (:pre (setq hydra-is-helpful nil)
-              :post (setq hydra-is-helpful t))
-        "Scroll by page"
-        ("f" evil-scroll-page-down)
-        ("b" evil-scroll-page-up)))
-    (my/smart-evil-scroll-page-hydra/body))
+(evil-define-motion evil-smart-next-visual-line (count)
+  (evil-next-visual-line (or count 1))
+  (evil-visual-line-hydra/body))
 
-  (evil-define-motion evil-smart-next-visual-line (count)
-    (evil-next-visual-line (or count 1))
-    (my/smart-evil-visual-line))
+(evil-define-motion evil-smart-previous-visual-line (count)
+  (evil-previous-visual-line (or count 1))
+  (my/smart-evil-visual-line))
 
-  (evil-define-motion evil-smart-previous-visual-line (count)
-    (evil-previous-visual-line (or count 1))
-    (my/smart-evil-visual-line))
+(evil-define-motion evil-smart-scroll-page-down (count)
+  (evil-scroll-page-down (or count 1))
+  (my/smart-evil-scroll-page-hydra/body))
 
-  (evil-define-motion evil-smart-scroll-page-down (count)
-    (evil-scroll-page-down (or count 1))
-    (my/smart-evil-scroll-page))
-
-  (evil-define-motion evil-smart-scroll-page-up (count)
-    (evil-scroll-page-up (or count 1))
-    (my/smart-evil-scroll-page)))
+(evil-define-motion evil-smart-scroll-page-up (count)
+  (evil-scroll-page-up (or count 1))
+  (my/smart-evil-scroll-page))
 
 (define-key evil-motion-state-map "gj" #'evil-smart-next-visual-line)
 (define-key evil-motion-state-map "gk" #'evil-smart-previous-visual-line)

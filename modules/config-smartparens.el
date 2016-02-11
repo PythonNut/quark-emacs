@@ -266,41 +266,36 @@ the syntax class ')'."
        ((kbd "M->") #'sp-backward-barf-sexp)))))
 
 ;; allow quick repetition since normal state key chains are awkward
-(with-no-warnings
-  (evil-define-motion evil-sp-move ()
-    (unless (fboundp 'evil-sp-move-hydra/body)
-      (require 'hydra)
-      (defhydra evil-sp-move-hydra (nil nil
-                                        :hint nil
-                                        :idle 0.3
-                                        :pre (setq hydra-is-helpful nil)
-                                        :post (setq hydra-is-helpful t))
-        ("f" on-parens-forward-sexp-end)
-        ("b" on-parens-backward-sexp)
-        ("n" on-parens-forward-sexp)
-        ("p" on-parens-backward-sexp-end)
-        ("d" on-parens-down-sexp)
-        ("D" on-parens-down-sexp-end)
-        ("u" on-parens-up-sexp-end)
-        ("U" on-parens-up-sexp)))
-    (evil-sp-move-hydra/body))
+(defhydra evil-sp-move-hydra (:hint nil
+                              :idle 0.3
+                              :pre (setq hydra-is-helpful nil)
+                              :post (setq hydra-is-helpful t))
+  ("f" on-parens-forward-sexp-end)
+  ("b" on-parens-backward-sexp)
+  ("n" on-parens-forward-sexp)
+  ("p" on-parens-backward-sexp-end)
+  ("d" on-parens-down-sexp)
+  ("D" on-parens-down-sexp-end)
+  ("u" on-parens-up-sexp-end)
+  ("U" on-parens-up-sexp))
 
-  (evil-define-command evil-sp-barfslurp ()
-    (unless (fboundp 'evil-sp-barfslurp-hydra/body)
-      (require 'hydra)
-      (defhydra evil-sp-barfslurp-hydra (nil nil
-                                             :hint nil
-                                             :idle 0.3
-                                             :pre (setq hydra-is-helpful nil)
-                                             :post (setq hydra-is-helpful t))
-        "[_<_] ← barf  → [_._]  [_>_] ← slurp → [_,_]  [_a_] ← emit  → [_e_]"
-        ("," on-parens-forward-slurp)
-        ("." on-parens-forward-barf)
-        ("<" on-parens-backward-slurp)
-        (">" on-parens-backward-barf)
-        ("a" sp-absorb-sexp)
-        ("e" sp-emit-sexp)))
-    (evil-sp-barfslurp-hydra/body)))
+(defhydra evil-sp-barfslurp-hydra (:hint nil
+                                         :idle 0.3
+                                         :pre (setq hydra-is-helpful nil)
+                                         :post (setq hydra-is-helpful t))
+  "[_<_] ← barf  → [_._]  [_>_] ← slurp → [_,_]  [_a_] ← emit  → [_e_]"
+  ("," on-parens-forward-slurp)
+  ("." on-parens-forward-barf)
+  ("<" on-parens-backward-slurp)
+  (">" on-parens-backward-barf)
+  ("a" sp-absorb-sexp)
+  ("e" sp-emit-sexp))
+
+(evil-define-motion evil-sp-move ()
+  (evil-sp-move-hydra/body))
+
+(evil-define-command evil-sp-barfslurp ()
+  (evil-sp-barfslurp-hydra/body))
 
 (evil-define-motion evil-sp-forward-sexp (&optional arg &rest _args)
   (on-parens-forward-sexp-end (or arg 1))
@@ -350,40 +345,37 @@ the syntax class ')'."
   (on-parens-backward-barf (or arg 1))
   (evil-sp-barfslurp))
 
-;; evil normal mode bindings
-(with-no-warnings
-  (evil-define-motion my/smart-smartparens-tools ()
-    (interactive)
-    (unless (fboundp 'hydra/smartparens-tools/body)
-      (require 'hydra)
-      (defhydra hydra/smartparens-tools (:color blue :hint nil :idle 0.3)
-        "
+(defhydra hydra/smartparens-tools (:color blue :hint nil :idle 0.3)
+  "
 [_U_] ↰↱ [_u_]  [_K_] ←  kill  → [_k_]  [_<_] ← barf  → [_._]   [_s_] split
 [_b_] ←→ [_f_]  [_p_] ←  next  → [_n_]  [_>_] ← slurp → [_,_]   [_j_] join
 [_D_] ↲↳ [_d_]  [_W_] ← unwrap → [_w_]  [_a_] ← emit  → [_e_]   [_t_] trans"
-       ("f" evil-sp-forward-sexp)
-       ("b" evil-sp-backward-sexp)
-       ("d" evil-sp-down-sexp)
-       ("D" evil-sp-backward-down-sexp)
-       ("u" evil-sp-up-sexp)
-       ("U" evil-sp-backward-up-sexp)
-       ("n" evil-sp-next-sexp)
-       ("p" evil-sp-previous-sexp)
-       ("k" on-parens-kill-sexp)
-       ("K" sp-backward-kill-sexp)
-       ("w" sp-unwrap-sexp)
-       ("W" sp-backward-unwrap-sexp)
-       ("s" on-parens-split-supersexp)
-       ("j" sp-join-sexp)
-       ("a" sp-absorb-sexp)
-       ("e" sp-emit-sexp)
-       ("t" sp-transpose-sexp)
-       ("," evil-sp-forward-slurp-sexp)
-       ("." evil-sp-forward-barf-sexp)
-       ("<" evil-sp-backward-barf-sexp)
-       (">" evil-sp-backward-slurp-sexp)))
+  ("f" evil-sp-forward-sexp)
+  ("b" evil-sp-backward-sexp)
+  ("d" evil-sp-down-sexp)
+  ("D" evil-sp-backward-down-sexp)
+  ("u" evil-sp-up-sexp)
+  ("U" evil-sp-backward-up-sexp)
+  ("n" evil-sp-next-sexp)
+  ("p" evil-sp-previous-sexp)
+  ("k" on-parens-kill-sexp)
+  ("K" sp-backward-kill-sexp)
+  ("w" sp-unwrap-sexp)
+  ("W" sp-backward-unwrap-sexp)
+  ("s" on-parens-split-supersexp)
+  ("j" sp-join-sexp)
+  ("a" sp-absorb-sexp)
+  ("e" sp-emit-sexp)
+  ("t" sp-transpose-sexp)
+  ("," evil-sp-forward-slurp-sexp)
+  ("." evil-sp-forward-barf-sexp)
+  ("<" evil-sp-backward-barf-sexp)
+  (">" evil-sp-backward-slurp-sexp))
 
-  (hydra/smartparens-tools/body)))
+;; evil normal mode bindings
+(with-no-warnings
+  (evil-define-motion my/smart-smartparens-tools ()
+    (hydra/smartparens-tools/body)))
 
 (define-key evil-normal-state-map "gs" #'my/smart-smartparens-tools)
 

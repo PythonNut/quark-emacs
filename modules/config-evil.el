@@ -76,7 +76,7 @@
 (advice-add 'evil-paste-after :around #'nadvice/evil-paste-indent)
 
 (let ((my/evil-mode-line-face-cookies))
-  (defun my/evil-set-mode-line-face (&rest args)
+  (defun my/evil-set-mode-line-face (&rest _args)
     (cl-destructuring-bind (bg-color fg-color)
         (if (< (display-color-cells) 256)
             (pcase evil-state
@@ -128,42 +128,36 @@
 
 (define-key evil-normal-state-map "U" #'undo-tree-visualize)
 
-(defun my/evil-window-hydra-wrapper ()
-  (unless (fboundp 'evil-window-hydra/body)
-    (require 'hydra)
-    (with-no-warnings
-      (defhydra evil-window-hydra ()
-        "switch window"
-        ("h" evil-window-left-smart "left")
-        ("j" evil-window-down-smart "down")
-        ("k" evil-window-up-smart "up")
-        ("l" evil-window-right-smart "right")
-        ("RET" nil "quit"))))
-  (with-no-warnings
-    (evil-window-hydra/body)))
+(defhydra evil-window-hydra ()
+  "switch window"
+  ("h" evil-window-left-smart "left")
+  ("j" evil-window-down-smart "down")
+  ("k" evil-window-up-smart "up")
+  ("l" evil-window-right-smart "right")
+  ("RET" nil "quit"))
 
 (evil-define-command evil-window-left-smart ()
   "A `hydra' enabled `evil-window-left'"
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-left))
-  (my/evil-window-hydra-wrapper))
+  (evil-window-hydra/body))
 
 (evil-define-command evil-window-down-smart ()
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-down))
-  (my/evil-window-hydra-wrapper))
+  (evil-window-hydra/body))
 
 (evil-define-command evil-window-up-smart ()
   "A `hydra' enabled `evil-window-left'"
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-up))
-  (my/evil-window-hydra-wrapper))
+  (evil-window-hydra/body))
 
 (evil-define-command evil-window-right-smart ()
   "A `hydra' enabled `evil-window-left'"
   (with-demoted-errors "%s"
     (call-interactively #'evil-window-right))
-  (my/evil-window-hydra-wrapper))
+  (evil-window-hydra/body))
 
 (define-key evil-normal-state-map (kbd "C-w h") #'evil-window-left-smart)
 (define-key evil-normal-state-map (kbd "C-w j") #'evil-window-down-smart)

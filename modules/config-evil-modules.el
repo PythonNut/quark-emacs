@@ -143,30 +143,24 @@
 (autoload #'evil-jumper/backward "evil-jumper")
 (autoload #'evil-jumper/forward "evil-jumper")
 
+(defhydra evil-jumper-hydra (:color blue
+                             :pre (setq hydra-is-helpful nil)
+                             :post (setq hydra-is-helpful t))
+  ("C-o" evil-jumper/backward)
+  ("TAB" evil-jumper/forward)
+  ("<tab>" evil-jumper/forward))
+
 (with-eval-after-load 'evil-jumper
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'evil-jumper)))
 
-  (require 'hydra)
-  (defhydra evil-jumper-hydra (nil nil
-                                   :color blue
-                                   :pre (setq hydra-is-helpful nil)
-                                   :post (setq hydra-is-helpful t))
-    ("C-o" evil-jumper/backward)
-    ("TAB" evil-jumper/forward)
-    ("<tab>" evil-jumper/forward))
-
-  (defun nadvice/evil-jumper/backward (_old-fun &optional _arg)
+  (defun nadvice/evil-jumper (_old-fun &optional _arg)
     (interactive "P")
     (evil-jumper-hydra/body))
 
-  (defun nadvice/evil-jumper/forward (_old-fun &optional _arg)
-    (interactive "P")
-    (evil-jumper-hydra/body))
-
-  (advice-add 'evil-jumper/backward :after #'nadvice/evil-jumper/backward)
-  (advice-add 'evil-jumper/forward :after #'nadvice/evil-jumper/forward)
+  (advice-add 'evil-jumper/backward :after #'nadvice/evil-jumper)
+  (advice-add 'evil-jumper/forward :after #'nadvice/evil-jumper)
 
   (with-eval-after-load 'session
     (eval-when-compile

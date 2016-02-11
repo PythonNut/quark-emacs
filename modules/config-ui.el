@@ -116,6 +116,18 @@
 ;;; ====================================
 ;;; iflib - switch buffers alt-tab style
 ;;; ====================================
+(defhydra iflipb-hydra
+  (:pre (setq hydra-is-helpful nil)
+        :post (setq hydra-is-helpful t))
+  ("<C-tab>"
+   (call-interactively #'iflipb-next-buffer))
+  ("TAB"
+   (call-interactively #'iflipb-next-buffer))
+  ("<C-S-iso-lefttab>"
+   (call-interactively #'iflipb-previous-buffer))
+  ("<backtab>"
+   (call-interactively #'iflipb-previous-buffer)))
+
 (with-eval-after-load 'iflipb
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -124,29 +136,11 @@
   (setq iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
         iflipb-wrap-around 't)
 
-  (defun my/iflipb-smart-buffer ()
-    (unless (fboundp 'iflipb-hydra/body)
-      (require 'hydra)
-      (defhydra iflipb-hydra
-        (:pre (setq hydra-is-helpful nil)
-              :post (setq hydra-is-helpful t))
-        ("<C-tab>"
-         (call-interactively #'iflipb-next-buffer))
-        ("TAB"
-         (call-interactively #'iflipb-next-buffer))
-        ("<C-S-iso-lefttab>"
-         (call-interactively #'iflipb-previous-buffer))
-        ("<backtab>"
-         (call-interactively #'iflipb-previous-buffer))))
+  (defun nadvice/iflipb-first-iflipb-buffer-switch-command ())
 
-    (iflipb-hydra/body)
-
-    (defun nadvice/iflipb-first-iflipb-buffer-switch-command ()
-      nil)
-
-    (advice-add #'iflipb-first-iflipb-buffer-switch-command
-                :override
-                #'nadvice/iflipb-first-iflipb-buffer-switch-command)))
+  (advice-add #'iflipb-first-iflipb-buffer-switch-command
+              :override
+              #'nadvice/iflipb-first-iflipb-buffer-switch-command))
 
 (defun iflipb-next-buffer-smart ()
   "A `hydra' enabled next-buffer"
@@ -155,7 +149,7 @@
   (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
              (lambda () t)))
     (call-interactively #'iflipb-next-buffer))
-  (my/iflipb-smart-buffer))
+  (iflipb-hydra/body))
 
 (defun iflipb-previous-buffer-smart ()
   "A `hydra' enabled previous-buffer"
@@ -164,7 +158,7 @@
   (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
              (lambda () t)))
     (call-interactively #'iflipb-previous-buffer))
-  (my/iflipb-smart-buffer))
+  (iflipb-hydra/body))
 
 (global-set-key (kbd "<C-tab>") #'iflipb-next-buffer-smart)
 (global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer-smart)

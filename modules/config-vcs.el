@@ -102,39 +102,32 @@
   (define-key git-rebase-mode-map "k" #'previous-line)
   (define-key git-rebase-mode-map "K" #'git-rebase-kill-line))
 
-(with-eval-after-load 'smerge-mode
-  (diminish 'smerge-mode)
-
-  (defun my/smart-smerge-tools ()
-    (interactive)
-    (unless (fboundp 'hydra/smerge-tools/body)
-      (require 'hydra)
-      (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
-        "
+(defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
+  "
 _n_ ← → _p_ Keep _a_ll _b_ase _m_ine _o_ther | _C_ombine _E_diff _R_efine _r_esolve
 Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 "
-        ("C" smerge-combine-with-next)
-        ("E" smerge-ediff)
-        ("R" smerge-refine)
-        ("r" smerge-resolve)
+  ("C" smerge-combine-with-next)
+  ("E" smerge-ediff)
+  ("R" smerge-refine)
+  ("r" smerge-resolve)
 
-        ("RET" smerge-keep-current :color red)
-        ("a" smerge-keep-all :color red)
-        ("b" smerge-keep-base :color red)
-        ("m" smerge-keep-mine :color red)
-        ("o" smerge-keep-other :color red)
+  ("RET" smerge-keep-current :color red)
+  ("a" smerge-keep-all :color red)
+  ("b" smerge-keep-base :color red)
+  ("m" smerge-keep-mine :color red)
+  ("o" smerge-keep-other :color red)
 
-        ("n" smerge-next :color red)
-        ("p" smerge-prev :color red)
+  ("n" smerge-next :color red)
+  ("p" smerge-prev :color red)
 
-        ("=<" smerge-diff-base-mine)
-        ("==" smerge-diff-mine-other)
-        ("=>" smerge-diff-base-other)))
+  ("=<" smerge-diff-base-mine)
+  ("==" smerge-diff-mine-other)
+  ("=>" smerge-diff-base-other))
 
-    (hydra/smerge-tools/body))
-
-  (define-key smerge-mode-map smerge-command-prefix #'my/smart-smerge-tools))
+(with-eval-after-load 'smerge-mode
+  (diminish 'smerge-mode)
+  (define-key smerge-mode-map smerge-command-prefix #'hydra/smerge-tools/body))
 
 (add-hook 'find-file-hook (lambda ()
                             (when (vc-backend buffer-file-name)
@@ -147,14 +140,11 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
   (setq projectile-completion-system 'ivy
         projectile-mode-line
         '(:eval (format (if (display-graphic-p) " ↠" " /"))))
-  (define-key projectile-mode-map (kbd "C-c p") #'my/smart-projectile-tools))
+  (define-key projectile-mode-map (kbd "C-c p") #'hydra/projectile-tools/body))
 
-(defun my/smart-projectile-tools ()
-  (interactive)
-  (unless (fboundp 'hydra/projectile-tools/body)
-    (require 'hydra)
-    (defhydra hydra/projectile-tools (:color blue :hint nil :idle 0.3)
-      "
+(defhydra hydra/projectile-tools (global-map "C-c p"
+                                  :color blue :hint nil :idle 0.3)
+  "
 Find^^             Operate on project^^      Other window
 _f_ file           _c_ compile project       _O f_ file
 _d_ dir            _R_ regenerate tags       _O d_ dir
@@ -172,48 +162,44 @@ _v_ vc          _ESC_ project other buffer   _s s_ ag
 _m_ commander   _F_ file any project         _s a_ ack
 
 Tests   _P_ test-project    _t_ toggle implementation←→test"
-      ("O a" projectile-find-other-file-other-window)
-      ("O b" projectile-switch-to-buffer-other-window)
-      ("O C-o" projectile-display-buffer)
-      ("O d" projectile-find-dir-other-window)
-      ("O f" projectile-find-file-other-window)
-      ("O g" projectile-find-file-dwim-other-window)
-      ("O t" projectile-find-implementation-or-test-other-window)
-      ("!" projectile-run-shell-command-in-root)
-      ("&" projectile-run-async-shell-command-in-root)
-      ("a" projectile-find-other-file)
-      ("b" projectile-switch-to-buffer)
-      ("c" projectile-compile-project)
-      ("d" projectile-find-dir)
-      ("D" projectile-dired)
-      ("e" projectile-recentf)
-      ("f" projectile-find-file)
-      ("g" projectile-find-file-dwim)
-      ("F" projectile-find-file-in-known-projects)
-      ("i" projectile-invalidate-cache)
-      ("I" projectile-ibuffer)
-      ("j" projectile-find-tag)
-      ("k" projectile-kill-buffers)
-      ("l" projectile-find-file-in-directory)
-      ("m" projectile-commander)
-      ("o" projectile-multi-occur)
-      ("p" projectile-switch-project)
-      ("P" projectile-test-project)
-      ("r" projectile-replace)
-      ("R" projectile-regenerate-tags)
-      ("s a" helm-projectile-ack)
-      ("s g" projectile-grep)
-      ("s s" helm-projectile-ag)
-      ("S" projectile-save-project-buffers)
-      ("t" projectile-toggle-between-implementation-and-test)
-      ("T" projectile-find-test-file)
-      ("v" projectile-vc)
-      ("z" projectile-cache-current-file)
-      ("ESC" projectile-project-buffers-other-buffer)))
-
-  (hydra/projectile-tools/body))
-
-(global-set-key (kbd "C-c p") #'my/smart-projectile-tools)
+  ("O a" projectile-find-other-file-other-window)
+  ("O b" projectile-switch-to-buffer-other-window)
+  ("O C-o" projectile-display-buffer)
+  ("O d" projectile-find-dir-other-window)
+  ("O f" projectile-find-file-other-window)
+  ("O g" projectile-find-file-dwim-other-window)
+  ("O t" projectile-find-implementation-or-test-other-window)
+  ("!" projectile-run-shell-command-in-root)
+  ("&" projectile-run-async-shell-command-in-root)
+  ("a" projectile-find-other-file)
+  ("b" projectile-switch-to-buffer)
+  ("c" projectile-compile-project)
+  ("d" projectile-find-dir)
+  ("D" projectile-dired)
+  ("e" projectile-recentf)
+  ("f" projectile-find-file)
+  ("g" projectile-find-file-dwim)
+  ("F" projectile-find-file-in-known-projects)
+  ("i" projectile-invalidate-cache)
+  ("I" projectile-ibuffer)
+  ("j" projectile-find-tag)
+  ("k" projectile-kill-buffers)
+  ("l" projectile-find-file-in-directory)
+  ("m" projectile-commander)
+  ("o" projectile-multi-occur)
+  ("p" projectile-switch-project)
+  ("P" projectile-test-project)
+  ("r" projectile-replace)
+  ("R" projectile-regenerate-tags)
+  ("s a" helm-projectile-ack)
+  ("s g" projectile-grep)
+  ("s s" helm-projectile-ag)
+  ("S" projectile-save-project-buffers)
+  ("t" projectile-toggle-between-implementation-and-test)
+  ("T" projectile-find-test-file)
+  ("v" projectile-vc)
+  ("z" projectile-cache-current-file)
+  ("ESC" projectile-project-buffers-other-buffer))
 
 (with-eval-after-load 'diff
   (setq diff-switches "-u"))
