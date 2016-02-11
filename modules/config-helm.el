@@ -105,7 +105,7 @@
 (with-eval-after-load 'helm-regexp
   (helm-occur-init-source))
 
-(defun my/helm-omni (&rest _args)
+(defun my/helm-interfile-omni (&rest _args)
   (interactive)
   (require 'helm-files)
   (require 'helm-ring)
@@ -119,18 +119,10 @@
       (require 'helm-ag)))
 
   (let ((helm-sources-using-default-as-input)
-        (bufs (list (buffer-name (current-buffer))))
         (projectile-root (ignore-errors (projectile-project-p)))
         (file-remote (and buffer-file-name
                           (file-remote-p default-directory))))
 
-    (helm-attrset 'moccur-buffers bufs helm-source-occur)
-    (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
-    (helm-set-local-variable 'helm-multi-occur-buffer-tick
-                             (mapcar (lambda (buf)
-                                       (buffer-chars-modified-tick
-                                        (get-buffer buf)))
-                                     bufs))
     (helm :sources
           (append
            ;; projectile explodes when not in project
@@ -138,13 +130,6 @@
                (when (require 'helm-projectile nil t)
                  '(helm-source-projectile-buffers-list))
              '(helm-source-buffers-list))
-
-           (if (and (featurep 'semantic)
-                    (semantic-active-p)
-                    (require 'helm-semantic nil t))
-               '(helm-source-semantic)
-             (when (require 'helm-imenu nil t)
-               '(helm-source-imenu)))
 
            (if projectile-root
                (append
@@ -156,13 +141,7 @@
 
            '(;; files
              helm-source-files-in-current-dir
-             helm-source-find-files
-             helm-source-occur
-
-             ;; internal sources
-             helm-source-kill-ring
-             helm-source-mark-ring
-             helm-source-global-mark-ring)
+             helm-source-find-files)
 
            ;; disable expensve helm sources when using TRAMP
            (unless file-remote
@@ -188,6 +167,50 @@
                     "> ")
           :buffer "*helm-omni*")))
 
+(defun my/helm-intrafile-omni (&rest _args)
+  (interactive)
+  (require 'helm-files)
+  (require 'helm-ring)
+  (require 'helm-misc)
+
+  (let ((helm-sources-using-default-as-input)
+        (bufs (list (buffer-name (current-buffer))))
+        (projectile-root (ignore-errors (projectile-project-p))))
+
+    (helm-attrset 'moccur-buffers bufs helm-source-occur)
+    (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
+    (helm-set-local-variable 'helm-multi-occur-buffer-tick
+                             (mapcar (lambda (buf)
+                                       (buffer-chars-modified-tick
+                                        (get-buffer buf)))
+                                     bufs))
+
+    (helm :sources
+          (append
+           (if (and (featurep 'semantic)
+                    (semantic-active-p)
+                    (require 'helm-semantic nil t))
+               '(helm-source-semantic)
+             (when (require 'helm-imenu nil t)
+               '(helm-source-imenu)))
+
+           '(;; files
+             helm-source-occur
+
+             ;; internal sources
+             helm-source-register
+             helm-source-kill-ring
+             helm-source-mark-ring
+             helm-source-global-mark-ring
+             helm-source-regexp
+             helm-source-calculation-result))
+
+          :fuzzy-match t
+          :prompt (if projectile-root
+                      (format "[%s] > " (projectile-project-name))
+                    "> ")
+          :buffer "*helm-omni*")))
+
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'evil)))
@@ -197,22 +220,22 @@
                            evil-paste-before
                            evil-visual-paste))
       (apply old-fun args)
-    (call-interactively #'my/helm-omni)))
+    (call-interactively #'my/helm-interfile-omni)))
 
 (advice-add 'evil-paste-pop :around #'nadvice/evil-paste-pop)
 
-(define-key evil-insert-state-map (kbd "C-p") #'my/helm-omni)
-(define-key evil-motion-state-map (kbd "C-p") #'my/helm-omni)
+(define-key evil-insert-state-map (kbd "C-p") #'my/helm-interfile-omni)
+(define-key evil-motion-state-map (kbd "C-p") #'my/helm-interfile-omni)
 
-(global-set-key (kbd "C-c C-o") #'my/helm-omni)
+(global-set-key (kbd "C-c C-o") #'my/helm-interfile-omni)
 (define-key evil-normal-state-map (kbd "C-c C-o") #'my/helm-omni)
 (define-key evil-insert-state-map (kbd "C-c C-o") #'my/helm-omni)
 (define-key evil-emacs-state-map (kbd "C-c C-o") #'my/helm-omni)
 (define-key evil-motion-state-map (kbd "C-c C-o") #'my/helm-omni)
 (define-key evil-replace-state-map (kbd "C-c C-o") #'my/helm-omni)
 
-(global-set-key (kbd "M-=") #'helm-semantic-or-imenu)
 (global-set-key (kbd "M-:") #'helm-eval-expression)
+(global-set-key (kbd "M-p") #'my/helm-intrafile-omni)
 
 (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
