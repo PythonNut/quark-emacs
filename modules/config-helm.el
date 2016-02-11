@@ -16,7 +16,8 @@
   (define-key helm-map (kbd "C-'")   #'ace-jump-helm-line-execute-action)
 
   (set-face-attribute 'helm-selection nil :underline nil)
-  (setq helm-case-fold-search 'smart))
+  (setq helm-case-fold-search 'smart
+        helm-candidate-separator (make-string 20 ?─)))
 
 (with-eval-after-load 'helm-mode
   (eval-when-compile
