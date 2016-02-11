@@ -17,7 +17,8 @@
 
   (set-face-attribute 'helm-selection nil :underline nil)
   (setq helm-case-fold-search 'smart
-        helm-candidate-separator (make-string 20 ?─)))
+        helm-candidate-separator (make-string 20 ?─)
+        helm-inherit-input-method nil))
 
 (with-eval-after-load 'helm-mode
   (eval-when-compile
