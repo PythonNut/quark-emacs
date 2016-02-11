@@ -1,8 +1,5 @@
 ;; -*- lexical-binding: t -*-
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)))
+(require 'cl-lib)
 
 (defun icicle-flx-score-greater-p (s1 s2)
   (eval-when-compile

@@ -1,11 +1,11 @@
 ;; -*- lexical-binding: t -*-
+(require 'cl-lib)
+(require 'config-package)
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)
     (require 'evil)
-    (require 'flycheck)
-    (require 'config-package)))
+    (require 'flycheck)))
 
 ;; =============================================================================
 ;; Emacs Lisp ==================================================================

@@ -1,9 +1,9 @@
 ;; -*- lexical-binding: t -*-
+(require 'cl-lib)
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'desktop)
-    (require 'cl-lib)))
+    (require 'desktop)))
 
 (defvar file-name-mode-alist nil)
 

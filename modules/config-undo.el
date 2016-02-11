@@ -6,6 +6,8 @@
     (require 'undo-tree)
     (require 'evil))
 
+  (evil-set-initial-state 'undo-tree-visualizer-mode 'motion)
+
   (diminish 'undo-tree-mode " μ")
   (defalias 'redo #'undo-tree-redo)
   (defalias 'undo #'undo-tree-undo)

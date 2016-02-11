@@ -1,7 +1,5 @@
 (setq load-prefer-newer t)
-(eval-when-compile
-  (require 'cl)
-  (require 'cl-lib))
+(require 'cl-lib)
 
 (defun nadvice/load-quiet (args)
   (cl-destructuring-bind
@@ -12,7 +10,6 @@
         file noerror nomessage nosuffix must-suffix))))
 
 (defvar my/slow-device nil)
-(eval-when-compile (require 'cl-lib))
 
 (when (member "-F" command-line-args)
   (delete "-F" command-line-args)

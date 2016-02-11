@@ -249,9 +249,7 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
 
 (add-to-list 'command-switch-alist '("diff" . my/command-line-ediff))
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'config-package)))
+(require 'config-package)
 
 (package-deferred-install 'git-timemachine
     :autoload-names '('git-timemachine-toggle

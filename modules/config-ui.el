@@ -1,9 +1,5 @@
 ;; -*- lexical-binding: t -*-
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)
-    (require 'diminish)))
+(require 'cl-lib)
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil

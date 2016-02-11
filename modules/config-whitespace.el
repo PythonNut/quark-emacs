@@ -2,7 +2,6 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'diminish)
     (require 'smie)
     (require 'evil)))
 

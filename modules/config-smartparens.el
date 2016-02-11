@@ -6,7 +6,6 @@
   (with-demoted-errors "Load error: %s"
     (require 's)
     (require 'evil)
-    (require 'diminish)
     (require 'on-parens)
     (require 'config-setq)))
 

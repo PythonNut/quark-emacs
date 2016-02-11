@@ -1,10 +1,6 @@
 ;; -*- lexical-binding: t -*-
-
+(require 'cl-lib)
 (require 'package)
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)))
 
 ;; Package archives
 (setq package-enable-at-startup nil

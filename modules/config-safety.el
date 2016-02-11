@@ -141,11 +141,10 @@ when `auto-save-mode' is invoked manually.")
 
 (add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'config-package)))
+(require 'config-package)
 
 (package-deferred-install 'backup-walker
-    :autoload-names '('backup-walker-start))
+    :autoload-names '('backup-walker-start)
+    (evil-set-initial-state 'backup-walker-mode 'motion))
 
 (provide 'config-safety)

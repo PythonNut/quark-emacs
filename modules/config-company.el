@@ -1,8 +1,8 @@
 ;; -*- lexical-binding: t -*-
+(require 'cl-lib)
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)
     (require 'flx)))
 
 (defun my/company-onetime-setup ()

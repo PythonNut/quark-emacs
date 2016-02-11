@@ -1,9 +1,5 @@
 ;; -*- lexical-binding: t -*-
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'cl-lib)))
-
+(require 'cl-lib)
 (require 'config-tramp)
 
 ;; enable semantic code LALR(1) parser
@@ -210,9 +206,7 @@
 ;;; ==================================
 ;;; VLF intelligently edit large files
 ;;; ==================================
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'config-package)))
+(require 'config-package)
 
 (package-deferred-install 'vlf
     :autoload-names '('vlf))

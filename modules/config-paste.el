@@ -291,9 +291,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
         (kbd (concat "M-: " key))
         (kbd (concat "C-M-S-" key))))))
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'config-package)))
+(require 'config-package)
 
 (package-deferred-install 'legalese
     :autoload-names '('legalese))
