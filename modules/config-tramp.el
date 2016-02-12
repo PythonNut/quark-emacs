@@ -40,13 +40,14 @@
   (let ((sudo (let ((default-directory
                       (file-name-directory file-name))
                     (process-file-side-effects nil))
-                (or (= (process-file "sudo" nil nil nil "-n" "true") 0)
-                    ;; Detect if sudo can be run with a password
-                    (string-match-p
-                     "askpass"
-                     (with-output-to-string
-                       (with-current-buffer standard-output
-                         (process-file "sudo" nil t nil "-v"))))))))
+                (with-demoted-errors "sudo check failed: %s"
+                  (or (= (process-file "sudo" nil nil nil "-n" "true") 0)
+                      ;; Detect if sudo can be run with a password
+                      (string-match-p
+                       "\\(askpass\\|password\\)"
+                       (with-output-to-string
+                         (with-current-buffer standard-output
+                           (process-file "sudo" nil t nil "-vS")))))))))
     (if (tramp-tramp-file-p file-name)
         (with-parsed-tramp-file-name file-name parsed
           (tramp-make-tramp-file-name
