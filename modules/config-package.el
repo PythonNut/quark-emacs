@@ -233,7 +233,8 @@
 
   (defun nadvice/idle-require-quiet (old-fun &rest args)
     (with-demoted-errors "Idle require error: %s"
-      (cl-letf* ((old-message (symbol-function #'message))
+      (cl-letf* ((gc-cons-threshold most-positive-fixnum)
+                 (old-message (symbol-function #'message))
                  (old-load (symbol-function #'load))
                  ((symbol-function #'message)
                   (lambda (&optional fmt &rest iargs)

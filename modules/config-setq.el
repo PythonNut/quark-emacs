@@ -5,7 +5,6 @@
       delete-by-moving-to-trash t
       echo-keystrokes 0.4
       focus-follows-mouse t
-      gc-cons-threshold 20000000
       indent-tabs-mode nil
       inhibit-default-init t
       inhibit-startup-echo-area-message t

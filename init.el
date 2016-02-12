@@ -12,7 +12,9 @@
       (load (concat user-emacs-directory "init-minimal")))
 
   (require 'cl-lib)
-  (cl-letf* ((old-load (symbol-function #'load))
+  (setq gc-cons-threshold 20000000)
+  (cl-letf* ((gc-cons-threshold most-positive-fixnum)
+             (old-load (symbol-function #'load))
              ((symbol-function #'load)
               (lambda (file &optional noerror _nomessage &rest args)
                 (apply old-load
