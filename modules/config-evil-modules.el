@@ -1,9 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)
-    (require 'hydra)))
+(require 'evil)
+(require 'hydra)
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)

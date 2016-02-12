@@ -12,7 +12,7 @@
 (defvar my/package-cache-last-build-time nil)
 
 (defvar my/package-autoload-file (expand-file-name "data/package-cache.el"
-                                                user-emacs-directory))
+                                                   user-emacs-directory))
 
 (defun my/package-rebuild-cache ()
   (interactive)
@@ -35,8 +35,8 @@
               (goto-char (point-min))
               (push (cons pkg-dir (read (current-buffer))) pkg-descs)))))
 
-        (insert (format "(setq my/package-cached-descriptors '%S)"
-                        pkg-descs))
+      (insert (format "(setq my/package-cached-descriptors '%S)"
+                      pkg-descs))
 
       (dolist (file autoloads)
         (insert-file-contents file)
@@ -94,11 +94,11 @@
   (let ((cached-desc (assoc pkg-dir my/package-cached-descriptors)))
     (if cached-desc
         (let* ((pkg-file (expand-file-name
-                         (package--description-file pkg-dir)
-                         pkg-dir))
+                          (package--description-file pkg-dir)
+                          pkg-dir))
                (signed-file (concat pkg-dir ".signed"))
                (pkg-desc (package-process-define-package
-                           (cdr cached-desc) pkg-file)))
+                          (cdr cached-desc) pkg-file)))
           (setf (package-desc-dir pkg-desc) pkg-dir)
           (when (file-exists-p signed-file)
             (setf (package-desc-signed pkg-desc) t))

@@ -1,11 +1,10 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
+(require 'hydra)
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'hydra)
     (require 'evil)
-    (require 'evil-indent-textobject)
     (require 'avy)))
 
 ;;; === Evil motion section ===

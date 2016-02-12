@@ -1,8 +1,5 @@
 ;; -*- lexical-binding: t -*-
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'hydra)))
+(require 'hydra)
 
 (defhydra hydra/registers-and-rectangles (global-map "C-x r"
                                           :color blue :hint nil :idle 0.3)
