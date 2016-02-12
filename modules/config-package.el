@@ -275,6 +275,7 @@
                                               package-alist))))
                  (package-install package-desc)
                  (package-delete old-package)))
+             (my/package-rebuild-cache)
              (message "All package upgrades completed.")
              (my/x-urgent)))
        (message "All packages are up to date")))))
