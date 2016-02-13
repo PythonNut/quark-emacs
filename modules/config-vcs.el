@@ -98,13 +98,16 @@
   (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers))
 
 (with-eval-after-load 'git-rebase
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'git-rebase)))
   (define-key git-rebase-mode-map "j" #'next-line)
   (define-key git-rebase-mode-map "k" #'previous-line)
   (define-key git-rebase-mode-map "K" #'git-rebase-kill-line))
 
 (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
   "
-_n_ ← → _p_ Keep _a_ll _b_ase _m_ine _o_ther | _C_ombine _E_diff _R_efine _r_esolve
+_p_ ← → _n_ Keep _a_ll _b_ase _m_ine _o_ther | _C_ombine _E_diff _R_efine _r_esolve
 Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 "
   ("C" smerge-combine-with-next)
@@ -209,6 +212,8 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
     (with-demoted-errors "Load error: %s"
       (require 'ediff)))
 
+  (defvar ediff-saved-window-configuration)
+
   (add-hook 'ediff-before-setup-hook
             (lambda ()
               (setq ediff-saved-window-configuration (current-window-configuration))))
@@ -219,7 +224,7 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
     (add-hook 'ediff-quit-hook restore-window-configuration 'append)
     (add-hook 'ediff-suspend-hook restore-window-configuration 'append))
 
-  (defun nadvice/ediff-setup-keymap (&rest args)
+  (defun nadvice/ediff-setup-keymap (&rest _args)
     (define-key ediff-mode-map "j" #'ediff-next-difference)
     (define-key ediff-mode-map "k" #'ediff-previous-difference))
 
