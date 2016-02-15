@@ -81,8 +81,7 @@
                                                        "COMMIT_EDITMSG$")
                                                  "\\|"))
 
-        session-globals-include '(evil-jumper--jump-list
-                                  (kill-ring 400)
+        session-globals-include '((kill-ring 400)
                                   (session-file-alist 200 t)
                                   (file-name-history 400)
                                   (file-name-mode-alist 400 t)

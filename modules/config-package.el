@@ -138,7 +138,6 @@
     evil-args
     evil-easymotion
     evil-exchange
-    evil-jumper
     evil-matchit
     evil-nerd-commenter
     evil-org
@@ -222,7 +221,6 @@
                                  evil-snipe
                                  avy
                                  ace-jump-helm-line
-                                 evil-jumper
                                  multiple-cursors
                                  hydra)))
 

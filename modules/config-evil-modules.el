@@ -135,58 +135,20 @@
             (< (display-color-cells) 256))
   (global-evil-quickscope-always-mode +1))
 
-(autoload #'evil-jumper--set-jump "evil-jumper")
-(autoload #'evil-jumper--window-configuration-hook "evil-jumper")
-
-(autoload #'evil-jumper/backward "evil-jumper")
-(autoload #'evil-jumper/forward "evil-jumper")
-
-(defhydra evil-jumper-hydra (:color blue
-                             :pre (setq hydra-is-helpful nil)
-                             :post (setq hydra-is-helpful t))
-  ("C-o" evil-jumper/backward)
-  ("TAB" evil-jumper/forward)
-  ("<tab>" evil-jumper/forward))
-
-(with-eval-after-load 'evil-jumper
+(with-eval-after-load 'session
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
-      (require 'evil-jumper)))
-
-  (defun nadvice/evil-jumper (_old-fun &optional _arg)
-    (interactive "P")
-    (evil-jumper-hydra/body))
-
-  (advice-add 'evil-jumper/backward :after #'nadvice/evil-jumper)
-  (advice-add 'evil-jumper/forward :after #'nadvice/evil-jumper)
-
-  (with-eval-after-load 'session
-    (eval-when-compile
-      (with-demoted-errors "Load error: %s"
-        (require 'session)))
-    (evil-jumper--set-window-jump-list evil-jumper--jump-list)
-    (defun nadvice/session-save-session/evil-jumper (&rest _args)
-      (evil-jumper--savehist-sync))
-    (advice-add 'session-save-session :before
-                #'nadvice/session-save-session/evil-jumper)
-    (add-to-list 'session-globals-include 'evil-jumper--jump-list)))
-
-(define-key evil-normal-state-map (kbd "C-o") #'evil-jumper/backward)
-(define-key evil-normal-state-map (kbd "C-i") #'evil-jumper/forward)
-(define-key evil-normal-state-map (kbd "<tab>") #'evil-jumper/forward)
-(define-key evil-motion-state-map (kbd "C-o") #'evil-jumper/backward)
-(define-key evil-motion-state-map (kbd "C-i") #'evil-jumper/forward)
-(define-key evil-motion-state-map (kbd "<tab>") #'evil-jumper/forward)
-
-(defun nadvice/autoload-evil-jumper (&rest _args)
-  (evil-jumper--set-jump))
-
-(add-hook 'next-error-hook #'evil-jumper--set-jump)
-(add-hook 'window-configuration-change-hook
-          #'evil-jumper--window-configuration-hook)
-
-(advice-add 'evil-set-jump :after #'nadvice/autoload-evil-jumper)
-(advice-add 'switch-to-buffer :before #'nadvice/autoload-evil-jumper)
-(advice-add 'find-tag-noselect :after #'nadvice/autoload-evil-jumper)
+      (require 'session)))
+  (defun my/evil--jumps-savehist-load ()
+    (let ((ring (make-ring evil-jumps-max-length)))
+      (cl-loop for jump in (reverse evil-jumps-history)
+               do (ring-insert ring jump))
+      (setf (evil-jumps-struct-ring (evil--jumps-get-current)) ring)))
+  (add-hook 'session-after-load-save-file-hook #'my/evil--jumps-savehist-load)
+  (defun nadvice/session-save-session/evil--jumps (&rest _args)
+    (evil--jumps-savehist-sync))
+  (advice-add 'session-save-session :before
+              #'nadvice/session-save-session/evil--jumps)
+  (add-to-list 'session-globals-include 'evil-jumps-history))
 
 (provide 'config-evil-modules)
