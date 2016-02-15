@@ -62,6 +62,14 @@
                            args))))
         (apply old-fun args))))
 
+  (defun nadvice/session-save-session/file-name-mode-alist (&rest _args)
+    (setq file-name-mode-alist
+          (nreverse
+           (let ((res)
+                 (orig (my/compress-alist file-name-mode-alist)))
+             (dotimes (_ (min history-length (length orig)) res)
+               (push (pop orig) res))))))
+
   (setq session-globals-max-string 16384
         session-registers-max-string 16384
         session-globals-max-size 1024
@@ -89,6 +97,8 @@
 
   (advice-add 'session-save-session :around
               #'nadvice/session-save-session/quiet)
+  (advice-add 'session-save-session :before
+              #'nadvice/session-save-session/file-name-mode-alist)
   (advice-add 'session-save-session :before #'my/unpropertize-session)
   (advice-add 'session-initialize :around #'nadvice/recentf-quiet))
 
@@ -103,15 +113,6 @@
       (unless (assoc (car elem) result)
         (push elem result)))
     (nreverse result)))
-
-(add-hook 'savehist-save-hook
-          (lambda ()
-            (setq file-name-mode-alist
-                  (nreverse
-                   (let ((res)
-                         (orig (my/compress-alist file-name-mode-alist)))
-                     (dotimes (_ (min history-length (length orig)) res)
-                       (push (pop orig) res)))))))
 
 (defun my/register-file-name-mode-maybe ()
   (when (and buffer-file-name
