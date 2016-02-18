@@ -132,9 +132,13 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
   (diminish 'smerge-mode)
   (define-key smerge-mode-map smerge-command-prefix #'hydra/smerge-tools/body))
 
-(add-hook 'find-file-hook (lambda ()
-                            (when (vc-backend buffer-file-name)
-                              (smerge-mode +1))))
+(defun my/maybe-enable-smerge ()
+  (when (vc-backend buffer-file-name)
+    (smerge-mode +1)))
+
+(add-hook 'find-file-hook #'my/maybe-enable-smerge)
+(add-hook 'magit-revert-buffer-hook #'my/maybe-enable-smerge)
+(add-hook 'after-revert-hook #'my/maybe-enable-smerge)
 
 (with-eval-after-load 'projectile
   (projectile-global-mode +1)
