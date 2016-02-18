@@ -166,20 +166,21 @@
 
 (evil-define-command evil-delete-backward-word-smart ()
   "Delete previous word."
+  (require 'subword)
   (if (and (bolp) (not (bobp)))
       (progn
         (unless evil-backspace-join-lines (user-error "Beginning of line"))
         (delete-char -1))
     (evil-delete (max
                   (let ((word-point (save-excursion
-                                      (evil-backward-word-begin)
+                                      (subword-backward)
                                       (point))))
                     (if (= word-point (save-excursion
-                                        (evil-backward-char)
+                                        (backward-char)
                                         (point)))
                         (save-excursion
-                          (evil-backward-char)
-                          (evil-backward-word-begin)
+                          (backward-char)
+                          (subword-backward)
                           (point))
                       word-point))
                   (line-beginning-position))

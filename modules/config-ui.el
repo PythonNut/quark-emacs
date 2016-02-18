@@ -369,4 +369,8 @@
 (global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
 (global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
 
+(with-eval-after-load 'subword
+  (diminish 'subword-mode))
+(global-subword-mode +1)
+
 (provide 'config-ui)

@@ -125,7 +125,6 @@
 (blink-cursor-mode -1)
 (delete-selection-mode +1)
 (global-hl-line-mode +1)
-(subword-mode +1)
 
 (defun my/auto-compression-onetime-setup ()
   (auto-compression-mode +1)
