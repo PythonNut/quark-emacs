@@ -255,21 +255,24 @@
   (message "Updating package repositories...")
   (async-start
    `(lambda ()
+      (require 'cl-lib)
       ,(async-inject-variables "\\`package-")
       (package-refresh-contents)
-      (let (upgrades)
-        (cl-flet ((get-version (name where)
-                               (let ((pkg (cadr (assq name where))))
-                                 (when pkg
-                                   (package-desc-version pkg)))))
-          (dolist (package (mapcar #'car package-alist))
-            (let ((in-archive (get-version package package-archive-contents)))
-              (when (and in-archive
-                         (version-list-< (get-version package package-alist)
-                                         in-archive))
-                (push (cadr (assq package package-archive-contents))
-                      upgrades)))))
-        upgrades))
+
+      (cl-flet ((get-version (name where)
+                             (let ((pkg (cadr (assq name where))))
+                               (when pkg
+                                 (package-desc-version pkg)))))
+        (mapcar (lambda (package)
+                  (cadr (assq package package-archive-contents)))
+                (cl-remove-if-not
+                 (lambda (package)
+                   (let ((in-archive
+                          (get-version package package-archive-contents)))
+                     (and in-archive
+                          (version-list-< (get-version package package-alist)
+                                          in-archive))))
+                 (mapcar #'car package-alist)))))
    (lambda (upgrades)
      (if upgrades
          (when (or automatic
