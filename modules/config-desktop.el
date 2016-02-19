@@ -26,7 +26,10 @@
           evil-ex-history)))
 
 (defun nadvice/recentf-quiet (old-fun &rest args)
-  (cl-letf (((symbol-function #'message) #'format))
+  (cl-letf (((symbol-function #'message)
+             (lambda (&rest args)
+               (when args
+                 (apply #'format args)))))
     (apply old-fun args)))
 
 (advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
@@ -158,7 +161,10 @@
                    ".lock")))
             (desktop-save-in-desktop-dir))
         (desktop-save-in-desktop-dir)))
-  (cl-letf (((symbol-function #'message) #'format)
+  (cl-letf (((symbol-function #'message)
+             (lambda (&rest args)
+               (when args
+                 (apply #'format args))))
             ((symbol-function #'y-or-n-p) (lambda (_prompt) t)))
     (desktop-save-in-desktop-dir)))
 

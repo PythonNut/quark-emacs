@@ -89,7 +89,10 @@
 ;;; =======================================
 (with-eval-after-load 'ispell
   (defun nadvice/ispell-init-process (old-fun &rest args)
-    (cl-letf (((symbol-function 'message) #'format))
+    (cl-letf (((symbol-function 'message)
+               (lambda (&rest args)
+                 (when args
+                   (apply #'format args)))))
       (apply old-fun args)))
 
   (advice-add 'ispell-init-process :around #'nadvice/ispell-init-process))

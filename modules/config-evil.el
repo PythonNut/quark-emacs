@@ -20,7 +20,10 @@
 
 (setq-default evil-symbol-word-search t)
 
-(cl-letf (((symbol-function #'message) #'format))
+(cl-letf (((symbol-function #'message)
+           (lambda (&rest args)
+             (when args
+               (apply #'format args)))))
   (key-chord-mode +1))
 
 (defun fix-key-chords ()

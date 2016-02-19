@@ -122,7 +122,10 @@ when `auto-save-mode' is invoked manually.")
 ;; save buffers on blur
 (add-hook 'focus-out-hook
           (lambda ()
-            (cl-letf (((symbol-function #'message) #'format))
+            (cl-letf (((symbol-function #'message)
+                       (lambda (&rest args)
+                         (when args
+                           (apply #'format args)))))
               (unless (file-remote-p default-directory)
                 (save-some-buffers t)))))
 

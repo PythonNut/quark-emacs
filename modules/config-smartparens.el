@@ -17,7 +17,10 @@
 (smartparens-global-mode +1)
 
 (defun my/sp-on-delimiter-p ()
-  (ignore-errors (cl-letf (((symbol-function #'message) #'format))
+  (ignore-errors (cl-letf (((symbol-function #'message)
+                            (lambda (&rest args)
+                              (when args
+                                (apply #'format args)))))
                    (save-excursion
                      (when (or (evil-normal-state-p)
                                (evil-motion-state-p)
