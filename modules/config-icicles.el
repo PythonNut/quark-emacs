@@ -27,8 +27,7 @@
                                 icicle-flx-score-greater-p
                                 "Sort completions by flx score.")))
 
-(defun nadvice/auto-icicle (old-func &rest _args)
-  (interactive)
+(defun nadvice/auto-icicle (old-func &rest args)
   (if (and (not (bound-and-true-p icicle-mode))
            (called-interactively-p 'any))
       (unwind-protect
@@ -48,19 +47,19 @@
                   ((symbol-function #'set-face-attribute)
                    (lambda (&rest _args))))
           (icicle-mode -1)))
-    (call-interactively old-func)))
+    (apply old-func args)))
 
 (defmacro my/auto-icicle-macro (func)
   `(advice-add ,func :around #'nadvice/auto-icicle))
 
-(defun my/autoload-icicle-helper (func args)
+(defun my/autoload-icicle-helper (func args interactive)
   (cl-letf (((symbol-function #'eval-after-load) (lambda (&rest _args)))
             ((symbol-function #'message)
              (lambda (&rest args)
                (when args
                  (apply #'format args)))))
     (require 'icicles))
-  (if (called-interactively-p 'any)
+  (if interactive
       (call-interactively func)
     (apply func args)))
 
@@ -71,8 +70,8 @@
 
   (defmacro my/autoload-icicle (func)
     `(defun ,(cadr func) (&rest args)
-       (interactive)
-       (my/autoload-icicle-helper ,func args)))
+       ,(interactive-form (cadr func))
+       (my/autoload-icicle-helper ,func args (called-interactively-p 'any))))
 
   (cl-macrolet
       ((setup-icicles
