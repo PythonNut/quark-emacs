@@ -21,10 +21,11 @@
       (require 'icicles)
       (require 'icicles-mac)))
 
-  (icicle-define-sort-command "by flx score"
-                              ;; icicle-dirs-last-p
-                              icicle-flx-score-greater-p
-                              "Sort completions by flx score."))
+  (eval-and-compile
+    (icicle-define-sort-command "by flx score"
+                                ;; icicle-dirs-last-p
+                                icicle-flx-score-greater-p
+                                "Sort completions by flx score.")))
 
 (defun nadvice/auto-icicle (old-func &rest _args)
   (interactive)
