@@ -37,17 +37,6 @@
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
-(with-eval-after-load 'swiper
-  (defun my/swiper-setup-faces ()
-    (set-face-attribute 'swiper-minibuffer-match-face-1 nil
-                        :background nil)
-    (set-face-attribute 'swiper-minibuffer-match-face-2 nil
-                        :background nil
-                        :foreground "#268bd2"))
-
-  (my/swiper-setup-faces)
-  (add-hook 'load-theme-hook #'my/swiper-setup-faces))
-
 (with-eval-after-load 'ivy
   (ivy-mode +1)
 
