@@ -96,6 +96,11 @@
   (package-deferred-install 'flycheck-irony
       :autoload-names '('flycheck-irony-setup))
 
+  (package-deferred-install 'clang-format
+      :autoload-names '('clang-format
+                        'clang-format-region
+                        'clang-format-buffer))
+
   (with-eval-after-load 'irony
     (flycheck-irony-setup))
 
