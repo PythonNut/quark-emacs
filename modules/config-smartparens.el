@@ -44,6 +44,7 @@ the syntax class ')'."
   (let ((matching-sexp (my/sp-on-delimiter-p)))
     (when (and matching-sexp
                (not (minibufferp))
+               (get-buffer-window)
                (save-excursion
                  (or (< (progn (move-to-window-line -1) (line-end-position))
                         (cdr matching-sexp))
