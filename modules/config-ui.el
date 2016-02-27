@@ -66,15 +66,13 @@
       ))))
 
 (global-set-key (kbd "C-c l") #'mc/edit-lines)
-(global-set-key (kbd "C-c a") #'mc/mark-all-like-this-dwim)
-(global-set-key (kbd "C-c s") #'mc/mark-all-in-region)
-(global-set-key (kbd "C-c M") #'mc/mark-pop)
+(global-set-key (kbd "C-c a") #'mc/mark-all-dwim)
 (global-set-key (kbd "C->") #'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") #'mc/mark-previous-like-this)
-(global-set-key (kbd "C-?") #'mc/mark-all-like-this-dwim)
+(global-set-key (kbd "C-?") #'mc/mark-all-dwim)
 (global-set-key (kbd "C-c >") #'mc/mark-next-like-this)
 (global-set-key (kbd "C-c <") #'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c ?") #'mc/mark-all-like-this-dwim)
+(global-set-key (kbd "C-c ?") #'mc/mark-all-dwim)
 
 ;; directional window movement
 (if (display-graphic-p)
