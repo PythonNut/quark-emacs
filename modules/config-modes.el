@@ -5,7 +5,8 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'evil)
-    (require 'flycheck)))
+    (require 'flycheck)
+    (require 'config-setq)))
 
 ;; =============================================================================
 ;; Emacs Lisp ==================================================================
