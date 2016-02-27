@@ -1032,7 +1032,18 @@
 ;; =============================================================================
 
 (with-eval-after-load 'ob-core
-  (setq org-confirm-babel-evaluate nil))
+  (setq org-confirm-babel-evaluate nil)
+
+  ;; Load languages when needed
+  (defun nadvice/org-babel-execute-src-block (old-fun &rest args)
+    (let ((language (org-element-property :language (org-element-at-point))))
+      (unless (cdr (assoc (intern language) org-babel-load-languages))
+        (add-to-list 'org-babel-load-languages (cons (intern language) t))
+        (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
+      (apply old-fun args)))
+
+  (advice-add 'org-babel-execute-src-block :around
+              #'nadvice/org-babel-execute-src-block))
 
 (with-eval-after-load 'org
   (setq org-src-fontify-natively t))
