@@ -97,31 +97,27 @@
 (define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char-timer)
 (define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char-timer)
 
-(evilem-define (kbd "SPC g s f") 'on-parens-forward-sexp-end)
-(evilem-define (kbd "SPC g s b") 'on-parens-backward-sexp)
-(evilem-define (kbd "SPC g s d") 'on-parens-down-sexp)
-(evilem-define (kbd "SPC g s D") 'on-parens-down-sexp-end)
-(evilem-define (kbd "SPC g s u") 'on-parens-up-sexp-end)
-(evilem-define (kbd "SPC g s U") 'on-parens-up-sexp)
-(evilem-define (kbd "SPC g s n") 'on-parens-forward-sexp)
-(evilem-define (kbd "SPC g s p") 'on-parens-backward-sexp-end)
+(evilem-define (kbd "SPC g s f") #'on-parens-forward-sexp-end)
+(evilem-define (kbd "SPC g s b") #'on-parens-backward-sexp)
+(evilem-define (kbd "SPC g s d") #'on-parens-down-sexp)
+(evilem-define (kbd "SPC g s D") #'on-parens-down-sexp-end)
+(evilem-define (kbd "SPC g s u") #'on-parens-up-sexp-end)
+(evilem-define (kbd "SPC g s U") #'on-parens-up-sexp)
+(evilem-define (kbd "SPC g s n") #'on-parens-forward-sexp)
+(evilem-define (kbd "SPC g s p") #'on-parens-backward-sexp-end)
 
-(evilem-define (kbd "SPC s") 'evil-snipe-repeat
-               (lambda ()
-                 (save-excursion
-                   (ignore-errors
-                     (call-interactively #'evil-snipe-s))))
-               nil
-               ((evil-snipe-enable-highlight)
-                (evil-snipe-enable-incremental-highlight)))
+(evilem-define (kbd "SPC s") #'evil-snipe-repeat
+               :pre-hook (save-excursion
+                           (ignore-errors
+                             (call-interactively #'evil-snipe-s)))
+               :bind ((evil-snipe-enable-highlight)
+                      (evil-snipe-enable-incremental-highlight)))
 
-(evilem-define (kbd "SPC S") 'evil-snipe-repeat-reverse
-               (lambda ()
-                 (save-excursion
-                   (ignore-errors
-                     (call-interactively #'evil-snipe-S))))
-               nil
-               ((evil-snipe-enable-highlight)
-                (evil-snipe-enable-incremental-highlight)))
+(evilem-define (kbd "SPC S") #'evil-snipe-repeat-reverse
+               :pre-hook (save-excursion
+                           (ignore-errors
+                             (call-interactively #'evil-snipe-S)))
+               :bind ((evil-snipe-enable-highlight)
+                      (evil-snipe-enable-incremental-highlight)))
 
 (provide 'config-avy-easymotion)
