@@ -134,6 +134,17 @@
       (set-visited-file-name (my/make-root-file-name buffer-file-name) t t))
     (remove-hook 'before-save-hook #'root-save-mode/before-save t)))
 
+(defun nadvice/find-file-noselect (old-fun &rest args)
+  (cl-letf* ((old-fwp (symbol-function #'file-writable-p))
+             ((symbol-function #'file-writable-p)
+              (lambda (&rest iargs)
+                (or (member 'root-save-mode first-change-hook)
+                    (bound-and-true-p root-save-mode)
+                    (apply old-fwp iargs)))))
+    (apply old-fun args)))
+
+(advice-add 'find-file-noselect :around #'nadvice/find-file-noselect)
+
 (define-minor-mode root-save-mode
   "Automatically save buffer as root"
   :lighter root-save-mode-lighter
