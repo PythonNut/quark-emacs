@@ -5,10 +5,10 @@
 ;;(package-initialize)
 (setq load-prefer-newer t)
 
-(if (member "-E" command-line-args)
+(if (member "-M" command-line-args)
     (progn
       ;; skip and load minimal init instead
-      (delete "-E" command-line-args)
+      (delete "-M" command-line-args)
       (load (concat user-emacs-directory "init-minimal")))
 
   (require 'cl-lib)
