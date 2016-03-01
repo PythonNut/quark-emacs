@@ -85,7 +85,8 @@
                         'irony-cdb-json-add-compile-commands-path
                         'irony-cdb-libclang
                         'irony-completion-at-point
-                        'irony-completion-at-point-async))
+                        'irony-completion-at-point-async)
+      (add-to-list 'irony-additional-clang-options "-std=c++14"))
 
   (package-deferred-install 'irony-eldoc
       :autoload-names '('irony-eldoc))
