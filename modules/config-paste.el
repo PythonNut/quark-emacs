@@ -303,4 +303,12 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (advice-add 'xclip-set-selection :around #'nadvice/xclip-set-selection)
   (advice-add 'xclip-selection-value :around #'nadvice/xclip-set-selection))
 
+(defun remove-clipboard-formatting ()
+  "A quick command to drop clipboard formatting"
+  (interactive)
+  (with-temp-buffer
+    (cua-paste nil)
+    (mark-whole-buffer)
+    (cua-cut-region nil)))
+
 (provide 'config-paste)
