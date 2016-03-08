@@ -1,11 +1,10 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'icicles)))
 
 (defun icicle-flx-score-greater-p (s1 s2)
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'icicles)))
-
   "Return non-nil if S1 scores higher than S2 using `flx-score`."
   ;; (message "Testing testing!")
   (let* ((input   (if (icicle-file-name-input-p)
@@ -52,16 +51,14 @@
 (defmacro my/auto-icicle-macro (func)
   `(advice-add ,func :around #'nadvice/auto-icicle))
 
-(defun my/autoload-icicle-helper (func args interactive)
+(defun my/autoload-icicle-helper (func args)
   (cl-letf (((symbol-function #'eval-after-load) (lambda (&rest _args)))
             ((symbol-function #'message)
              (lambda (&rest args)
                (when args
                  (apply #'format args)))))
     (require 'icicles))
-  (if interactive
-      (call-interactively func)
-    (apply func args)))
+  (apply func args))
 
 (eval-and-compile
   (eval-when-compile
@@ -71,7 +68,7 @@
   (defmacro my/autoload-icicle (func)
     `(defun ,(cadr func) (&rest args)
        ,(interactive-form (cadr func))
-       (my/autoload-icicle-helper ,func args (called-interactively-p 'any))))
+       (my/autoload-icicle-helper ,func args)))
 
   (cl-macrolet
       ((setup-icicles
