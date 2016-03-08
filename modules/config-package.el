@@ -354,7 +354,7 @@
                  (expand-file-name (concat package-name "*/*")
                                    package-user-dir)))
     (delete-directory item t t))
-  (message "done."))
+  (message "Successfully deleted package %s." package-name))
 
 (defun my/package-maintenance ()
   (require 'async)
