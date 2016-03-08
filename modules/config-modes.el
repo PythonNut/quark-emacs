@@ -358,6 +358,10 @@
                       'sage-shell:run-sage
                       'sage-shell:run-new-sage
                       'sage-shell:sage-mode)
+    :regular-init (progn
+                    (autoload 'run-sage "sage-shell-mode" nil t)
+                    (autoload 'run-new-sage "sage-shell-mode" nil t)
+                    (autoload 'sage-mode "sage-shell-mode" nil t))
     (sage-shell:define-alias)
     (evil-set-initial-state 'sage-shell-mode 'insert)
 
@@ -380,11 +384,6 @@
             (funcall old-fun "sage"))))
       (funcall old-fun arg))
     (advice-add 'run-sage :around #'nadvice/run-sage))
-
-(when (package-installed-p 'sage-shell-mode)
-  (autoload 'run-sage "sage-shell-mode" nil t)
-  (autoload 'run-new-sage "sage-shell-mode" nil t)
-  (autoload 'sage-mode "sage-shell-mode" nil t))
 
 ;; =============================================================================
 ;; Octave/MATLAB ===============================================================

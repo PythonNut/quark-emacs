@@ -304,13 +304,15 @@
                                        &key feature-name
                                        mode-entries
                                        autoload-names
-                                       manual-setup
+                                       manual-init
+                                       regular-init
                                        &allow-other-keys)
   (declare (indent 4))
   `(with-no-warnings
-     (unless (package-installed-p ,package-name)
-       ,@(when manual-setup
-           (list manual-setup))
+     (if (package-installed-p ,package-name)
+         ,@(list regular-init)
+       ,@(when manual-init
+           (list manual-init))
        ,@(mapcar (lambda (item)
                    `(add-to-list 'auto-mode-alist ,item))
                  (cadr mode-entries))
