@@ -1034,6 +1034,7 @@
 
 (with-eval-after-load 'ob-core
   (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
   ;; Load languages when needed
   (defun nadvice/org-babel-execute-src-block (old-fun &rest args)
