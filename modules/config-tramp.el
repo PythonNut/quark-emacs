@@ -91,7 +91,7 @@
 
 ;; also fallback to root if file cannot be read
 (defun nadvice/find-file-noselect-1 (old-fun buf filename &rest args)
-  (condition-case nil
+  (condition-case err
       (apply old-fun buf filename args)
     (file-error
      (if (and (not (my/root-file-name-p filename))
@@ -102,7 +102,7 @@
                       (create-file-buffer filename))
                   filename
                   args))
-       (signal 'file-error (list "File is not readable" filename))))))
+       (signal (car err) (cdr err))))))
 
 (advice-add #'find-file-noselect-1 :around #'nadvice/find-file-noselect-1)
 
