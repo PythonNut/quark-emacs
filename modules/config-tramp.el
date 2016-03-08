@@ -129,7 +129,7 @@
   (when (and (buffer-modified-p)
              (not (my/root-file-name-p buffer-file-name))
              (or (not (= (process-file "sudo" nil nil nil "-n" "true") 0))
-                 (yes-or-no-p "File is not readable. Save with root? ")))
+                 (yes-or-no-p "File is not writable. Save with root? ")))
     (let ((change-major-mode-with-file-name nil))
       (set-visited-file-name (my/make-root-file-name buffer-file-name) t t))
     (remove-hook 'before-save-hook #'root-save-mode/before-save t)))
