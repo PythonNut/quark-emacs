@@ -1051,6 +1051,51 @@
   (setq org-src-fontify-natively t
         org-startup-with-inline-images t)
 
+  (defvar ob-language-file-alist
+    (list '(ob-sage . ob-sagemath))
+    "An alist that resolves discrepancies between language names and file names in org-babel")
+
+  (defvar ob-deferred-install-languages (list 'ob-axiom
+                                              'ob-browser
+                                              'ob-cypher
+                                              'ob-elixir
+                                              'ob-go
+                                              'ob-http
+                                              'ob-ipython
+                                              'ob-kotlin
+                                              'ob-lfe
+                                              'ob-mongo
+                                              'ob-prolog
+                                              'ob-redis
+                                              'ob-restclient
+                                              'ob-sagemath
+                                              'ob-scala
+                                              'ob-sly
+                                              'ob-sml
+                                              'ob-translate
+                                              'ob-typescript)
+    "A list of org-babel backends that can be installed with package.el")
+
+  (defun nadvice/org-babel-do-load-languages (old-fun &rest args)
+    (cl-letf* ((old-require (symbol-function #'require))
+               ((symbol-function #'require)
+                (lambda (symbol &rest iargs)
+                  (let ((symbol
+                         (cdr (or (assoc symbol ob-language-file-alist)
+                                  (cons symbol symbol)))))
+                    (when (and (not (funcall old-require
+                                             symbol
+                                             (car-safe iargs)
+                                             t))
+                               (member symbol
+                                       ob-deferred-install-languages))
+                      (package-install symbol)
+                      (apply old-require symbol iargs))))))
+      (apply old-fun args)))
+
+  (advice-add 'org-babel-do-load-languages :around
+              #'nadvice/org-babel-do-load-languages))
+
 ;; =============================================================================
 ;; Speculative languages =======================================================
 ;; =============================================================================
