@@ -49,7 +49,8 @@
           ('latex-mode-hook   'company-math-symbols-latex)
           ('scheme-mode-hook  'geiser-company-backend)
           ('texinfo-mode-hook 'company-semantic)
-          ('python-mode-hook  'company-anaconda))))))
+          ('python-mode-hook  'company-anaconda)
+          ('text-mode-hook    'company-ispell))))))
 
 (with-eval-after-load 'company
   (eval-when-compile
