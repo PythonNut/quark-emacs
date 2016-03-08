@@ -1047,7 +1047,8 @@
               #'nadvice/org-babel-execute-src-block))
 
 (with-eval-after-load 'org
-  (setq org-src-fontify-natively t))
+  (setq org-src-fontify-natively t
+        org-startup-with-inline-images t)
 
 ;; =============================================================================
 ;; Speculative languages =======================================================
