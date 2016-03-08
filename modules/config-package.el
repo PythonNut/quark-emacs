@@ -351,10 +351,11 @@
                      (directory-files dir t)))))))
 
   (dolist (item (file-expand-wildcards
-                 (expand-file-name (concat package-name "*/*")
+                 (expand-file-name (concat package-name "*")
                                    package-user-dir)))
-    (delete-directory item t t))
-  (message "Successfully deleted package %s." package-name))
+    (delete-directory item t))
+  (message "Successfully deleted package %s."
+           (substring-no-properties package-name)))
 
 (defun my/package-maintenance ()
   (require 'async)
