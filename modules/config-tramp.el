@@ -5,7 +5,7 @@
     (require 'tramp)))
 
 (defvar my/tramp-backup-directory
-  (expand-file-name "data/tramp-backups/" user-emacs-directory))
+  (concat user-emacs-directory "data/tramp-backups/"))
 
 (with-eval-after-load 'password-cache
   (eval-when-compile
