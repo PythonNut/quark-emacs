@@ -95,7 +95,17 @@
   (defun nadvice/magit-revert-buffers (&rest _args)
     (run-with-timer 1 nil #'message ""))
 
-  (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers))
+  (defun nadvice/magit-process-username-prompt (process string)
+    "Hide usernames in magit as well"
+    (--when-let (magit-process-match-prompt
+                 magit-process-username-prompt-regexps string)
+      (process-send-string
+       process (magit-process-kill-on-abort process
+                 (concat (read-passwd it nil (user-login-name)) "\n")))))
+
+  (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers)
+  (advice-add 'magit-process-username-prompt :override
+              #'nadvice/magit-process-username-prompt))
 
 (with-eval-after-load 'git-rebase
   (eval-when-compile
