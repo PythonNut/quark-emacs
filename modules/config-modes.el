@@ -541,11 +541,11 @@
                    ("||\n[i]" "RET")
                    ("| " "SPC"))))
 
+(package-deferred-install 'company-web
+    :autoload-names '('company-web-html))
+
 (package-deferred-install 'web-mode
     :autoload-names '('web-mode)
-
-    (package-deferred-install 'company-web
-        :autoload-names '('company-web-html))
 
     (sp-local-pair 'web-mode "{" nil :post-handlers
                    '(:add
