@@ -53,6 +53,7 @@
     (if (called-interactively-p 'any)
         (apply old-fun args)
       (cl-letf* ((old-wr (symbol-function #'write-region))
+                 ((symbol-function #'y-or-n-p) (lambda (&rest _args) t))
                  ((symbol-function #'write-region)
                   (lambda (start end filename
                                  &optional append _visit &rest args)
@@ -245,6 +246,7 @@
     (kill-emacs)))
 
 (defun run-server ()
+  (interactive)
   (require 'server)
   (message "Server id is %s"
            (catch 'done
