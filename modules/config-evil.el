@@ -2,6 +2,10 @@
 
 (require 'evil)
 
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'key-chord)))
+
 (setq evil-auto-indent t
       evil-ex-complete-emacs-commands t
       evil-magic 'very-magic
@@ -62,6 +66,27 @@
 (define-key minibuffer-local-completion-map [escape] #'minibuffer-keyboard-quit)
 (define-key minibuffer-local-must-match-map [escape] #'minibuffer-keyboard-quit)
 (define-key minibuffer-local-isearch-map [escape] #'minibuffer-keyboard-quit)
+
+(defun isearch-exit-chord-worker ()
+  "Exit out of isearch after a chord"
+  (interactive)
+  (isearch-delete-char)
+  (isearch-exit))
+
+(defhydra my/smart-isearch-chord-hydra
+  (:timeout key-chord-one-key-delay
+            :pre (setq hydra-is-helpful nil)
+            :post (setq hydra-is-helpful t))
+  ("j" isearch-exit-chord-worker)
+  ("k" isearch-exit-chord-worker))
+
+(defun isearch-exit-chord ()
+  (interactive)
+  (isearch-printing-char)
+  (my/smart-isearch-chord-hydra/body))
+
+(define-key isearch-mode-map "j" #'isearch-exit-chord)
+(define-key isearch-mode-map "k" #'isearch-exit-chord)
 
 ;; define a key to switch to emacs state
 (define-key evil-insert-state-map (kbd "C-M-z") #'evil-emacs-state)
