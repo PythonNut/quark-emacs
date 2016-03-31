@@ -1,6 +1,5 @@
 (eval-and-compile
-  (add-to-list 'load-path (expand-file-name "modules/"
-                                            user-emacs-directory)))
+  (add-to-list 'load-path (locate-user-emacs-file "modules/")))
 
 (require 'config-setq)
 
@@ -68,9 +67,9 @@
       
       ;; backup locations
       backup-directory-alist
-      `((".*" . ,(expand-file-name "data/backups" user-emacs-directory)))
+      `((".*" . ,(locate-user-emacs-file "data/backups")))
       auto-save-file-name-transforms
-      `((".*" ,(expand-file-name "data/autosave" user-emacs-directory) t))
+      `((".*" ,(locate-user-emacs-file "data/autosave") t))
 
       ;; auto-save parameters
       version-control t 

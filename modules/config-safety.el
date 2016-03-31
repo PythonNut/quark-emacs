@@ -1,11 +1,11 @@
 ;; -*- lexical-binding: t -*-
 
 (defvar my/backup-location
-  (expand-file-name "data/backups/" user-emacs-directory))
+  (locate-user-emacs-file "data/backups/"))
 (defvar my/autosave-location
-  (expand-file-name "data/autosave/" user-emacs-directory))
+  (locate-user-emacs-file "data/autosave/"))
 (defvar my/unnamed-autosave-location
-  (expand-file-name "data/unnamed-autosave" user-emacs-directory)
+  (locate-user-emacs-file "data/unnamed-autosave")
   "Directory in which to store auto-save files for non-file buffers,
 when `auto-save-mode' is invoked manually.")
 

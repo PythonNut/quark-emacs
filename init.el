@@ -9,7 +9,7 @@
     (progn
       ;; skip and load minimal init instead
       (delete "-M" command-line-args)
-      (load (concat user-emacs-directory "init-minimal")))
+      (load (locate-user-emacs-file "init-minimal")))
 
   (require 'cl-lib)
   (setq gc-cons-threshold 20000000)
@@ -38,15 +38,14 @@
       (setq my/slow-device t))
 
     (eval-and-compile
-      (add-to-list 'load-path (expand-file-name "modules/"
-                                                user-emacs-directory)))
+      (add-to-list 'load-path (locate-user-emacs-file "modules/")))
 
     ;; suppress the GNU spam
     (fset 'display-startup-echo-area-message #'ignore)
     (add-hook 'emacs-startup-hook (lambda () (message "")))
 
 
-    (load (setq custom-file (expand-file-name "custom.el" user-emacs-directory)))
+    (load (setq custom-file (locate-user-emacs-file "custom.el")))
 
     (require 'config-setq)
 

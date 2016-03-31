@@ -39,7 +39,7 @@
     (with-demoted-errors "Load error: %s"
       (require 'recentf)))
 
-  (setq recentf-save-file (expand-file-name ".recentf" user-emacs-directory)
+  (setq recentf-save-file (locate-user-emacs-file ".recentf")
         recentf-max-saved-items 200
         recentf-max-menu-items 30
         recentf-auto-cleanup 3))
@@ -129,7 +129,7 @@
 (add-hook 'after-change-major-mode-hook #'my/register-file-name-mode-maybe)
 
 (with-eval-after-load 'desktop
-  (setq desktop-dirname (expand-file-name "desktop/" user-emacs-directory)
+  (setq desktop-dirname (locate-user-emacs-file "desktop/")
         desktop-path (list desktop-dirname)
         desktop-base-file-name "emacs-desktop"
         desktop-base-lock-name "emacs-desktop.lock")

@@ -266,9 +266,8 @@
   (package-deferred-install 'anaconda-mode
       :autoload-names '('anaconda-mode)
       (diminish 'anaconda-mode " ✶")
-    (setq anaconda-mode-installation-directory (expand-file-name
-                                                "data/anaconda-mode"
-                                                user-emacs-directory))
+    (setq anaconda-mode-installation-directory (locate-user-emacs-file
+                                                "data/anaconda-mode"))
 
     (defun my/anaconda-eldoc-callback-fallback (docstring)
       (setq docstring

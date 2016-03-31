@@ -11,8 +11,8 @@
 (defvar my/package-cached-descriptors nil)
 (defvar my/package-cache-last-build-time nil)
 
-(defvar my/package-autoload-file (expand-file-name "data/package-cache.el"
-                                                   user-emacs-directory))
+(defvar my/package-autoload-file (locate-user-emacs-file
+                                  "data/package-cache.el"))
 
 (defun my/package-rebuild-cache ()
   (interactive)
@@ -198,7 +198,7 @@
   (with-demoted-errors "Load error: %s"
     (require 'idle-require)))
 
-(add-to-list 'load-path (expand-file-name "personal/" user-emacs-directory))
+(add-to-list 'load-path (locate-user-emacs-file "personal/"))
 
 (with-eval-after-load 'idle-require
   (eval-when-compile
@@ -384,8 +384,7 @@
                         (file-newer-than-file-p elc el)))))
         (let ((uncompiled-files
                (append
-                (let ((init-file (expand-file-name "init.el"
-                                                   user-emacs-directory)))
+                (let ((init-file (locate-user-emacs-file "init.el")))
                   (unless (file-compiled-p init-file)
                     (list init-file)))
                 (cl-remove-if
@@ -403,9 +402,7 @@
                                   (lambda (path)
                                     (and path
                                          (string-prefix-p
-                                          (expand-file-name
-                                           "modules"
-                                           user-emacs-directory)
+                                          (locate-user-emacs-file "modules")
                                           (expand-file-name path))))
                                   (mapcar #'car load-history))))))))
           (mapcar (lambda (file)

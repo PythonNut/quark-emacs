@@ -17,7 +17,7 @@
 
 (eval-and-compile
   (add-to-list 'load-path
-    (expand-file-name "modules/" user-emacs-directory))
+    (locate-user-emacs-file "modules/"))
 
   (defmacro when* (condition &rest body)
     (when condition
@@ -28,8 +28,7 @@
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
 (advice-add 'load :filter-args #'nadvice/load-quiet)
-
-(load (setq custom-file (concat user-emacs-directory "custom.el")))
+(load (setq custom-file (locate-user-emacs-file "custom.el")))
 
 (message "[                ]")
 (require 'config-setq)
@@ -71,8 +70,6 @@
 
 (setq
   load-dir-debug nil
-  load-dirs (concat
-              user-emacs-directory
-              "modules/modes/"))
+  load-dirs (locate-user-emacs-file "modules/modes/"))
 
 (advice-remove 'load #'nadvice/load-quiet)

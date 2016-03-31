@@ -5,7 +5,7 @@
     (require 'tramp)))
 
 (defvar my/tramp-backup-directory
-  (concat user-emacs-directory "data/tramp-backups/"))
+  (locate-user-emacs-file "data/tramp-backups/"))
 
 (with-eval-after-load 'password-cache
   (eval-when-compile
@@ -21,7 +21,7 @@
       (with-demoted-errors "Load error: %s"
         (require 'tramp-cache)))
     (setq tramp-persistency-file-name
-          (expand-file-name "/data/tramp" user-emacs-directory)))
+          (locate-user-emacs-file "/data/tramp")))
 
   (setq tramp-default-method "scp"
         tramp-backup-directory-alist `((".*" . ,my/tramp-backup-directory))))

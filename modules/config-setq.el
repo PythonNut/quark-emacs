@@ -88,16 +88,12 @@
          (init-el-error
           (progn
             (when force
-              (delete-file (expand-file-name "init.elc" user-emacs-directory)))
-            (not (byte-compile-file (expand-file-name
-                                     "init.el"
-                                     user-emacs-directory)))))
+              (delete-file (locate-user-emacs-file "init.elc")))
+            (not (byte-compile-file (locate-user-emacs-file "init.el")))))
          (modules-error (string-match-p
                          "failed"
                          (byte-recompile-directory
-                          (expand-file-name
-                           "modules/"
-                           user-emacs-directory)
+                          (locate-user-emacs-file "modules/")
                           0
                           force))))
     (or init-el-error modules-error)))
@@ -107,16 +103,16 @@
   (when (fboundp 'my/package-rebuild-autoloads)
     (my/package-rebuild-autoloads))
   (let ((default-directory user-emacs-directory)
-        (module-dir (expand-file-name "modules" user-emacs-directory)))
+        (module-dir (locate-user-emacs-file "modules")))
     (shell-command "git stash")
     (shell-command "git clean -ffXd :/")
     (shell-command "git pull --rebase -X histogram")
     (with-demoted-errors "Emergency fix delete error: %s"
       (mapc (lambda (file) (delete-file file t))
             (append
-             (list (expand-file-name "init.elc" user-emacs-directory))
+             (list (locate-user-emacs-file "init.elc"))
              (file-expand-wildcards (concat module-dir "/*.elc"))))
-      (delete-directory (expand-file-name "elpa" user-emacs-directory) t t))
+      (delete-directory (locate-user-emacs-file "elpa") t t))
     (byte-recompile-config)
     (package-initialize)
     (my/ensure-packages-are-installed (bound-and-true-p my/required-packages))

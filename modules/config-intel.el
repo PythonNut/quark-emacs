@@ -159,19 +159,14 @@
   (add-hook 'yas-global-mode-hook
             (lambda ()
               (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
-  (setq yas-snippet-dirs (list
-                          (expand-file-name
-                           "data/snippets"
-                           user-emacs-directory)))
+  (setq yas-snippet-dirs (list (locate-user-emacs-file "data/snippets")))
   (yas-global-mode +1)
   (yas-reload-all)
 
   (add-to-list 'yas-prompt-functions #'my/ivy-yasnippet))
 
 ;; also use yasnippets for new file templates
-(defvar my/yas-template-dir (expand-file-name
-                                     "data/templates"
-                                     user-emacs-directory))
+(defvar my/yas-template-dir (locate-user-emacs-file "data/templates"))
 
 (defun my/yatemplate-expand-yas-buffer ()
   "Expand the whole buffer with `yas-expand-snippet'."
