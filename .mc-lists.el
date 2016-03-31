@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning
+        back-to-indentation-visual-or-beginning
         backward-sexp
         beginning-of-visual-line
         c-electric-semi&comma
@@ -20,6 +21,7 @@
         easy-kill
         electric-newline-and-maybe-indent
         end-of-visual-line
+        end-of-visual-line-or-end
         ess-smart-S-assign
         eval-and-replace
         eval-last-sexp
@@ -31,6 +33,7 @@
         evil-backward-word-begin
         evil-change
         evil-change-to-previous-state
+        evil-cycle-spacing
         evil-delete
         evil-delete-backward-char-and-join
         evil-delete-backward-word
@@ -116,6 +119,8 @@
         sp-transpose-sexp
         sp-unwrap-sexp
         sp-up-sexp
+        subword-left
+        subword-right
         transpose-sexps
         whole-line-or-region-yank
         yas-expand
