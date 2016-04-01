@@ -10,8 +10,10 @@
       inhibit-startup-echo-area-message t
       inhibit-startup-screen t
       inhibit-x-resources t
-      interprogram-cut-function #'x-select-text
-      interprogram-paste-function #'x-selection-value
+      interprogram-cut-function (and (fboundp #'x-select-text)
+                                     #'x-select-text)
+      interprogram-paste-function (and (fboundp #'x-selection-value)
+                                       #'x-selection-value)
       jit-lock-defer-time 0.04
       jit-lock-stealth-nice 0.1
       jit-lock-stealth-time 0.2
