@@ -56,12 +56,16 @@
                                  " ")))
     (add-hook 'kill-emacs-hook
               (lambda ()
-                (if (display-graphic-p)
+                (if (daemonp)
                     (call-process "sh" nil nil nil "-c"
-                                  (format "emacs %s &"
+                                  (format "emacs --daemon %s &"
                                           command-args))
-                  (suspend-emacs (format "(emacs %s -nw < `tty`) & fg; fg"
-                                         command-args))))
+                    (if (display-graphic-p)
+                        (call-process "sh" nil nil nil "-c"
+                                      (format "emacs %s &"
+                                              command-args))
+                      (suspend-emacs (format "(emacs %s -nw < `tty`) & fg; fg"
+                                             command-args)))))
               t)
     (save-buffers-kill-emacs)))
 
