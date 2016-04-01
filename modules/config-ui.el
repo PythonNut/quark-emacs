@@ -364,6 +364,9 @@
 (global-set-key (kbd "C-5") #'make-frame-command)
 (global-set-key (kbd "M-j") #'evil-join)
 (global-set-key (kbd "C-.") #'er/expand-region)
+
+(define-key key-translation-map (kbd "<mouse-21>") (kbd "<C-mouse-5>"))
+(define-key key-translation-map (kbd "<mouse-20>") (kbd "<C-mouse-4>"))
 (global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
 (global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
 
