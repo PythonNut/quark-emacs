@@ -1060,6 +1060,7 @@
                                               'ob-elixir
                                               'ob-go
                                               'ob-http
+                                              'ob-hy
                                               'ob-ipython
                                               'ob-kotlin
                                               'ob-lfe
