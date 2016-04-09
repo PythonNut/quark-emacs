@@ -37,6 +37,7 @@
   (evil-set-initial-state 'magit-refs-mode 'insert)
   (evil-set-initial-state 'magit-stash-mode 'insert)
   (evil-set-initial-state 'magit-revision-mode 'motion)
+  (evil-set-initial-state 'magit-process-mode 'motion)
   (evil-set-initial-state 'git-rebase-mode 'emacs)
 
   (define-key magit-log-mode-map "j" #'next-line)
