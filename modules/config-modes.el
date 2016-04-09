@@ -811,6 +811,35 @@
   (define-key term-raw-map (kbd "<f12>") #'term-kill-subjob)
   (define-key term-raw-map (kbd "<remap> <cua-paste>") #'term-paste)
 
+  (defun nadvice/term-exec-1 (name buffer command switches)
+      (let* ((environment
+              (list
+               (format "TERM=%s" term-term-name)
+               (format "TERMINFO=%s" data-directory)
+               (format term-termcap-format "TERMCAP="
+                       term-term-name term-height term-width)
+               (format "EMACS=%s (term:%s)" emacs-version term-protocol-version)
+               (format "INSIDE_EMACS=%s,term:%s" emacs-version term-protocol-version)
+               (format "LINES=%d" term-height)
+               (format "COLUMNS=%d" term-width)))
+             (process-environment
+              (append environment
+                      process-environment))
+             (tramp-remote-process-environment
+              (append environment
+                      tramp-remote-process-environment))
+             (process-connection-type t)
+             (coding-system-for-read 'binary))
+        (apply 'start-file-process name buffer
+           "/bin/sh" "-c"
+           (format "stty -nl echo rows %d columns %d sane 2>/dev/null;\
+    if [ $1 = .. ]; then shift; fi; exec \"$@\""
+                   term-height term-width)
+           ".."
+           command switches)))
+
+  (advice-add 'term-exec-1 :override #'nadvice/term-exec-1)
+
   (defun nadvice/ansi-term (args)
     (interactive "P")
     (cl-destructuring-bind (&optional program new-buffer-name) args
