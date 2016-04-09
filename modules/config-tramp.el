@@ -58,7 +58,10 @@
            (let ((tramp-postfix-host-format "|")
                  (tramp-prefix-format))
              (tramp-make-tramp-file-name
-              (if (string= "scp" parsed-method)
+              (if (member parsed-method '("scp"
+                                          "scpx"
+                                          "sshx"
+                                          "rsync"))
                   "ssh"
                 parsed-method)
               parsed-user
