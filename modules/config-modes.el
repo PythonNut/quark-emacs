@@ -1085,7 +1085,9 @@
 
   (defvar ob-deferred-install-languages (list 'ob-axiom
                                               'ob-browser
+                                              'ob-coffee
                                               'ob-cypher
+                                              'ob-diagrams
                                               'ob-elixir
                                               'ob-go
                                               'ob-http
