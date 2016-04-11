@@ -126,8 +126,7 @@ when `auto-save-mode' is invoked manually.")
                        (lambda (&rest args)
                          (when args
                            (apply #'format args)))))
-              (unless (file-remote-p default-directory)
-                (save-some-buffers t)))))
+              (save-some-buffers t))))
 
 (with-eval-after-load 'autorevert
   (eval-when-compile
