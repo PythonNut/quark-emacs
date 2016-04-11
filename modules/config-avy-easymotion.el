@@ -42,22 +42,25 @@
         avy-timeout-seconds 0.3
         avy-keys (eval-when-compile (string-to-list "jfkdlsaurieowncpqmxzb")))
 
-  (set-face-foreground 'avy-background-face "#586e75")
+  (defun my/avy-setup-faces ()
+    (set-face-foreground 'avy-background-face "#586e75")
 
-  (set-face-attribute 'avy-lead-face nil
-                      :weight 'normal
-                      :background nil
-                      :foreground "#b58900"
-                      :inherit nil)
-  (set-face-attribute 'avy-lead-face-0 nil
-                      :weight 'extra-bold
-                      :background nil
-                      :foreground "#dc322f"
-                      :inherit nil)
-  (set-face-attribute 'avy-lead-face-1 nil
-                      :background nil
-                      :foreground "#839493"
-                      :inherit nil))
+    (set-face-attribute 'avy-lead-face nil
+                        :weight 'normal
+                        :background nil
+                        :foreground "#b58900"
+                        :inherit nil)
+    (set-face-attribute 'avy-lead-face-0 nil
+                        :weight 'extra-bold
+                        :background nil
+                        :foreground "#dc322f"
+                        :inherit nil)
+    (set-face-attribute 'avy-lead-face-1 nil
+                        :background nil
+                        :foreground "#839493"
+                        :inherit nil))
+
+  (add-hook 'load-theme-hook #'my/avy-setup-faces))
 
 (with-eval-after-load 'ace-window
   (eval-when-compile
