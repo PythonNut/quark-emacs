@@ -23,7 +23,9 @@
     (setq tramp-persistency-file-name
           (locate-user-emacs-file "/data/tramp")))
 
-  (setq tramp-default-method "scp"
+  (setq tramp-default-method (if (executable-find "rsync")
+                                 "rsync"
+                               tramp-default-method)
         tramp-backup-directory-alist `((".*" . ,my/tramp-backup-directory))))
 
 ;; =================================
