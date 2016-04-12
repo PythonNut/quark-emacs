@@ -134,6 +134,7 @@ when `auto-save-mode' is invoked manually.")
       (require 'autorevert)))
   (diminish 'auto-revert-mode)
   (setq global-auto-revert-non-file-buffers t
+        auto-revert-remote-files t
         auto-revert-verbose nil))
 
 (defun my/auto-revert-onetime-setup ()
