@@ -1124,6 +1124,7 @@
                                               'ob-ipython
                                               'ob-kotlin
                                               'ob-lfe
+                                              'ob-lua
                                               'ob-mongo
                                               'ob-prolog
                                               'ob-redis
