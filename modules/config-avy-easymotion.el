@@ -100,6 +100,10 @@
 (define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char-timer)
 (define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char-timer)
 
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'on-parens)))
+
 (evilem-define (kbd "SPC g s f") #'on-parens-forward-sexp-end)
 (evilem-define (kbd "SPC g s b") #'on-parens-backward-sexp)
 (evilem-define (kbd "SPC g s d") #'on-parens-down-sexp)
@@ -108,6 +112,10 @@
 (evilem-define (kbd "SPC g s U") #'on-parens-up-sexp)
 (evilem-define (kbd "SPC g s n") #'on-parens-forward-sexp)
 (evilem-define (kbd "SPC g s p") #'on-parens-backward-sexp-end)
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'evil-snipe)))
 
 (evilem-define (kbd "SPC s") #'evil-snipe-repeat
                :pre-hook (save-excursion
@@ -122,5 +130,28 @@
                              (call-interactively #'evil-snipe-S)))
                :bind ((evil-snipe-enable-highlight)
                       (evil-snipe-enable-incremental-highlight)))
+
+(with-eval-after-load 'evil-snipe
+  (cl-macrolet
+      ((snipe-repeat-easymotion-forward
+        (key)
+        `(define-key evil-snipe-parent-transient-map (kbd ,(concat "SPC " key))
+           (evilem-create 'evil-snipe-repeat
+                          :bind ((evil-snipe-scope 'buffer)
+                                 (evil-snipe-enable-highlight)
+                                 (evil-snipe-enable-incremental-highlight))))))
+    (my/generate-calls-single 'snipe-repeat-easymotion-forward
+      ("s" "f" "t")))
+
+  (cl-macrolet
+      ((snipe-repeat-easymotion-backward
+        (key)
+        `(define-key evil-snipe-parent-transient-map (kbd ,(concat "SPC " key))
+           (evilem-create 'evil-snipe-repeat-reverse
+                          :bind ((evil-snipe-scope 'buffer)
+                                 (evil-snipe-enable-highlight)
+                                 (evil-snipe-enable-incremental-highlight))))))
+    (my/generate-calls-single 'snipe-repeat-easymotion-backward
+      ("S" "F" "T"))))
 
 (provide 'config-avy-easymotion)
