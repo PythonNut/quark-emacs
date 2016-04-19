@@ -48,27 +48,27 @@
           (icicle-mode -1)))
     (apply old-func args)))
 
-(defmacro my/auto-icicle-macro (func)
-  `(advice-add ,func :around #'nadvice/auto-icicle))
-
-(defun my/autoload-icicle-helper (func args)
+(defun my/autoload-icicle-helper ()
   (cl-letf (((symbol-function #'eval-after-load) (lambda (&rest _args)))
             ((symbol-function #'message)
              (lambda (&rest args)
                (when args
                  (apply #'format args)))))
-    (require 'icicles))
-  (apply func args))
+    (require 'icicles)))
 
 (eval-and-compile
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'config-setq)))
 
+  (defmacro my/auto-icicle-macro (func)
+    `(advice-add ,func :around #'nadvice/auto-icicle))
+
   (defmacro my/autoload-icicle (func)
     `(defun ,(cadr func) (&rest args)
+       (my/autoload-icicle-helper)
        ,(interactive-form (cadr func))
-       (my/autoload-icicle-helper ,func args)))
+       (apply ,func args)))
 
   (cl-macrolet
       ((setup-icicles
