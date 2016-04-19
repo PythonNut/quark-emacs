@@ -158,7 +158,7 @@
 (defmacro my/generate-calls-single (operator arglist)
   (declare (indent 1))
   `(progn
-     ,@(mapcar (lambda (arg) `(,(cadr operator) (,@arg))) arglist)))
+     ,@(mapcar (lambda (arg) `(,(cadr operator) (,@arg))) (cadr arglist))))
 
 (defun really-kill-emacs ()
   "Like `kill-emacs', but ignores `kill-emacs-hook'."

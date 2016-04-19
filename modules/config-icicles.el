@@ -74,7 +74,7 @@
       ((setup-icicles
         (commands)
         `(with-no-warnings
-           (my/generate-calls-single 'my/autoload-icicle ,commands)
+           (my/generate-calls-single 'my/autoload-icicle (quote ,commands))
            (with-eval-after-load 'icicles
              (setq icicle-top-level-key-bindings nil
 
@@ -88,7 +88,8 @@
                    icicle-show-Completions-help-flag nil
                    icicle-yank-function #'cua-paste)
 
-             (my/generate-calls-single 'my/auto-icicle-macro ,commands)))))
+             (my/generate-calls-single 'my/auto-icicle-macro
+               (quote ,commands))))))
 
     (setup-icicles
      (#'icicle-add-buffer-candidate

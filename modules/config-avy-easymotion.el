@@ -141,7 +141,7 @@
                                  (evil-snipe-enable-highlight)
                                  (evil-snipe-enable-incremental-highlight))))))
     (my/generate-calls-single 'snipe-repeat-easymotion-forward
-      ("s" "f" "t")))
+      '("s" "f" "t")))
 
   (cl-macrolet
       ((snipe-repeat-easymotion-backward
@@ -152,6 +152,6 @@
                                  (evil-snipe-enable-highlight)
                                  (evil-snipe-enable-incremental-highlight))))))
     (my/generate-calls-single 'snipe-repeat-easymotion-backward
-      ("S" "F" "T"))))
+      '("S" "F" "T"))))
 
 (provide 'config-avy-easymotion)
