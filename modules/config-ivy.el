@@ -90,8 +90,8 @@
   (with-demoted-errors "Load error: %s"
     (require 'evil)))
 
-(define-key evil-normal-state-map (kbd "C-s") #'swiper)
-(define-key evil-insert-state-map (kbd "C-s") #'swiper)
+(define-key evil-normal-state-map (kbd "C-s") #'isearch-forward-regexp)
+(define-key evil-insert-state-map (kbd "C-s") #'isearch-forward-regexp)
 
 (global-set-key (kbd "M-x") #'counsel-M-x)
 (global-set-key (kbd "C-x b") #'ivy-switch-buffer)
