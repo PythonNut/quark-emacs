@@ -75,7 +75,7 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 
           ;; a whole-line killed from end of file may not have a
           ;; trailing newline -- add one, in these cases
-          (when (not (string-match "\n$" string-to-yank))
+          (when (not (string-match-p "\n$" string-to-yank))
             (insert "\n")
             (forward-line -1))
 
