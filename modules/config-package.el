@@ -237,7 +237,9 @@
                  ((symbol-function #'message)
                   (lambda (&optional fmt &rest iargs)
                     (if (and fmt
-                             (string-match-p "^\\(Beginning \\)?idle-require" fmt))
+                             (string-match-p (rx (optional "Beginning ")
+                                                 "idle-require")
+                                             fmt))
                         (apply #'format fmt iargs)
                       (apply old-message fmt iargs))))
                  ((symbol-function #'load)
@@ -256,7 +258,7 @@
   (async-start
    `(lambda ()
       (require 'cl-lib)
-      ,(async-inject-variables "\\`package-")
+      ,(async-inject-variables (rx line-start "package-"))
       (package-refresh-contents)
 
       (cl-flet ((get-version (name where)
@@ -341,13 +343,15 @@
             "Uninstall package: "
             (mapcar (lambda (package-dir)
                       (replace-regexp-in-string
-                       "-[0-9.]+"
+                       (rx "-" (one-or-more (any num ".")))
                        ""
                        (file-relative-name package-dir dir)))
                     (cl-remove-if-not
                      (lambda (item)
                        (and (file-directory-p item)
-                            (not (string-match-p "archives$\\|\\.$" item))))
+                            (not (string-match-p (rx (or "archives" ".")
+                                                     line-end)
+                                                 item))))
                      (directory-files dir t)))))))
 
   (dolist (item (file-expand-wildcards

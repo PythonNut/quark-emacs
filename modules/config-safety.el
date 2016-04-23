@@ -9,8 +9,10 @@
   "Directory in which to store auto-save files for non-file buffers,
 when `auto-save-mode' is invoked manually.")
 
-(setq backup-directory-alist `((".*" . ,my/backup-location))
-      auto-save-file-name-transforms `((".*" ,my/autosave-location t)))
+(setq backup-directory-alist `((,(rx (zero-or-more not-newline))
+                                . ,my/backup-location))
+      auto-save-file-name-transforms `((,(rx (zero-or-more not-newline))
+                                        ,my/autosave-location t)))
 
 ;; Use a unified directory for buffers that don't visit files
 (defun nadvice/auto-save-mode (old-fun &rest args)

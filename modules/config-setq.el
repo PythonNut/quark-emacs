@@ -97,7 +97,7 @@
               (delete-file (locate-user-emacs-file "init.elc")))
             (not (byte-compile-file (locate-user-emacs-file "init.el")))))
          (modules-error (string-match-p
-                         "failed"
+                         (rx "failed")
                          (byte-recompile-directory
                           (locate-user-emacs-file "modules/")
                           0
@@ -135,10 +135,8 @@
 (add-hook 'find-file-hook #'my/auto-compression-onetime-setup)
 
 ;; encryption mode
-(setq epa-file-name-regexp (eval-when-compile
-                             (concat (regexp-opt (list ".gpg"
-                                                       ".asc"))
-                                     "$")))
+(setq epa-file-name-regexp (rx (or ".gpg" ".asc") line-end))
+
 (epa-file-name-regexp-update)
 (setenv "GPG_AGENT_INFO" nil)
 

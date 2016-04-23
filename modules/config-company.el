@@ -170,12 +170,13 @@
 
   (defun my/he-try-expand-flx-regexp (str)
     "Generate regexp for flexible matching of str."
-    (concat "\\b"
+    (concat (rx word-boundary)
             (mapconcat (lambda (x)
-                         (concat "\\w*-*" (list x)))
+                         (concat (rx (zero-or-more word) (zero-or-more "-"))
+                                 (list x)))
                        str
                        "")
-            "\\w*\\b"))
+            (rx (zero-or-more word) word-boundary)))
 
   (defun my/he-try-expand-flx-collect (str)
     "Find and collect all words that flex-match str, and sort by flx score"

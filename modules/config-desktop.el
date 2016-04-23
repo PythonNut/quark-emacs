@@ -80,10 +80,8 @@
         session-jump-undo-remember 7
         session-jump-undo-threshold 60
         session-name-disable-regexp (eval-when-compile
-                                      (mapconcat #'identity
-                                                 (list "^/tmp"
-                                                       "COMMIT_EDITMSG$")
-                                                 "\\|"))
+                                      (rx (or (and line-start "/tmp")
+                                              (and "COMMIT_EDITMSG" line-end))))
 
         session-globals-include '((kill-ring 400)
                                   (session-file-alist 200 t)
@@ -174,7 +172,12 @@
   (if (= arg 4)
       (let* ((files (cl-remove-if
                      (lambda (item)
-                       (string-match-p "^\\(\\..*\\|.*\.lock\\)$" item))
+                       (string-match-p
+                        (rx line-start
+                            (or (and "." (zero-or-more not-newline))
+                                (and (zero-or-more not-newline) ".lock"))
+                            line-end)
+                        item))
                      (directory-files desktop-dirname)))
              (desktop-base-file-name (completing-read
                                       "Enter a desktop name: "

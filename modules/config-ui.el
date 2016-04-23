@@ -131,7 +131,10 @@
     (with-demoted-errors "Load error: %s"
       (require 'hydra)))
 
-  (setq iflipb-ignore-buffers '("^ " "^*helm" "^*Compile" "^*Quail")
+  (setq iflipb-ignore-buffers (list (rx line-start " ")
+                                    (rx line-start "*helm")
+                                    (rx line-start "*Compile")
+                                    (rx line-start "*Quail"))
         iflipb-wrap-around 't)
 
   (defun nadvice/iflipb-first-iflipb-buffer-switch-command ())
@@ -318,13 +321,11 @@
         which-key-side-window-max-height 0.33)
 
   (add-to-list 'which-key-description-replacement-alist
-               `(,(eval-when-compile
-                    (concat
-                     "evil-"
-                     (regexp-opt (list "a"
-                                       "an"
-                                       "inner"))
-                     "-\\(.*\\)")) . "\\1")))
+               `(,(rx "evil-"
+                      (or "a" "an" "inner")
+                      "-"
+                      (group (zero-or-more not-newline)))
+                 . "\\1")))
 
 ;; add intelligent buffer renaming
 (defun rename-current-buffer-file ()

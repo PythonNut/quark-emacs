@@ -76,15 +76,10 @@
 
   (setq counsel-find-file-ignore-regexp
         (eval-when-compile
-          (concat "^.*"
-           (regexp-opt
-                   (list "~"
-                         ".elc"
-                         ".pyc"
-                         ".swp"
-                         ".zwc"
-                         ".zwc.old"))
-           "$"))))
+          (rx line-start
+              (zero-or-more not-newline)
+              (or "~" ".elc" ".pyc" ".swp" ".zwc" ".zwc.old")
+              line-end))))
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"

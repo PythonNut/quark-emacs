@@ -26,7 +26,8 @@
   (setq tramp-default-method (if (executable-find "rsync")
                                  "rsync"
                                tramp-default-method)
-        tramp-backup-directory-alist `((".*" . ,my/tramp-backup-directory))))
+        tramp-backup-directory-alist `((,(rx (zero-or-more not-newline))
+                                        . ,my/tramp-backup-directory))))
 
 ;; =================================
 ;; automatically request root access
@@ -46,7 +47,7 @@
                   (or (= (process-file "sudo" nil nil nil "-n" "true") 0)
                       ;; Detect if sudo can be run with a password
                       (string-match-p
-                       "\\(askpass\\|password\\)"
+                       (rx (or "askpass" "password"))
                        (with-output-to-string
                          (with-current-buffer standard-output
                            (process-file "sudo" nil t nil "-vS")))))))))

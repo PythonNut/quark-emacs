@@ -39,23 +39,23 @@
                               :fuzzy-match helm-recentf-fuzzy-match)
 
         helm-boring-file-regexp-list (append helm-boring-file-regexp-list
-                                             '("/\\.$"
-                                               "/\\.\\.$"
-                                               "\\.undo\\.xz$"
-                                               "\\.elc$"
-                                               "\\#$"
-                                               "\\~$"
-                                               "\\.zwc\\.old$"
-                                               "\\.zwc$"))))
+                                             (list (rx "/." line-end)
+                                                   (rx "/.." line-end)
+                                                   (rx ".undo.xz" line-end)
+                                                   (rx ".elc" line-end)
+                                                   (rx "#" line-end)
+                                                   (rx "~" line-end)
+                                                   (rx ".zwc.old" line-end)
+                                                   (rx ".zwc" line-end)))))
 
 (with-eval-after-load 'helm-buffers
   (eval-when-compile
     (require 'helm-buffers))
   (setq helm-buffers-fuzzy-matching t
-        helm-boring-buffer-regexp-list '("\\ "
-                                         "\\*helm"
-                                         "\\*Compile"
-                                         "\\*Quail")))
+        helm-boring-buffer-regexp-list (list (rx " ")
+                                             (rx "*helm")
+                                             (rx "*Compile")
+                                             (rx "*Quail"))))
 
 (with-eval-after-load 'helm-semantic
   (eval-when-compile

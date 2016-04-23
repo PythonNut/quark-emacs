@@ -223,7 +223,7 @@
   (add-hook 'sh-mode-hook
             (lambda ()
               (setq mode-name "sh")
-              (if (string-match "\\.zsh$" buffer-file-name)
+              (if (string-match-p (rx ".zsh" line-end) buffer-file-name)
                   (sh-set-shell "zsh")))))
 
 (package-deferred-install 'fish-mode
@@ -252,9 +252,13 @@
   (when (executable-find "ipython")
     (setq python-shell-interpreter "ipython"
           python-shell-interpreter-args "--deep-reload"
-          python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-          python-shell-prompt-block-regexp "\\.\\.\\.\\.: "
-          python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+          python-shell-prompt-regexp (rx "In ["
+                                         (one-or-more digit)
+                                         "]: ")
+          python-shell-prompt-block-regexp (rx "....: ")
+          python-shell-prompt-output-regexp (rx "Out["
+                                                (one-or-more digit)
+                                                "]: ")
           python-shell-completion-setup-code
           "from IPython.core.completerlib import module_completion"
           python-shell-completion-string-code
@@ -918,24 +922,11 @@
                         nil
                       0.1))))
 
-  (setq eshell-cmpl-dir-ignore (eval-when-compile
-                                 (concat "^"
-                                         (regexp-opt
-                                          (list "."
-                                                ".."
-                                                "CVS"
-                                                ".svn"
-                                                ".git"))
-                                         "$"))
-
-        eshell-cmpl-file-ignore (eval-when-compile
-                                  (concat (regexp-opt
-                                           (list ".elc"
-                                                 ".zwc"
-                                                 ".pyc"
-                                                 "~"
-                                                 ".swp"))
-                                          "$"))
+  (setq eshell-cmpl-dir-ignore (rx line-start
+                                   (or "." ".." "CVS" ".svn" ".git")
+                                   line-end)
+        eshell-cmpl-file-ignore (rx (or ".elc" ".zwc" ".pyc" "~" ".swp")
+                                    line-end)
         eshell-cmpl-ignore-case t
 
         eshell-scroll-to-bottom-on-input t
@@ -954,7 +945,8 @@
   "Invoke `find-file' on the file.
 \"emacs +42 foo\" also goes to line 42 in the buffer."
   (while args
-    (if (string-match "\\`\\+\\([0-9]+\\)\\'" (car args))
+    (if (string-match (rx line-start "+" (group (one-or-more digit)) line-end)
+                      (car args))
         (let* ((line (string-to-number (match-string 1 (pop args))))
                (file (pop args)))
           (find-file file)

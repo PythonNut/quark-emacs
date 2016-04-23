@@ -60,7 +60,9 @@
               (not (eobp)))
     (forward-line))
   (cl-flet* ((empty-line-p ()
-                           (string-match-p "^[[:space:]]*$"
+                           (string-match-p (rx line-start
+                                               (zero-or-more whitespace)
+                                               line-end)
                                            (buffer-substring-no-properties
                                             (line-beginning-position)
                                             (line-end-position))))

@@ -56,9 +56,11 @@ the syntax class ')'."
                 (save-excursion
                   (goto-char (car matching-sexp))
                   (let ((line (thing-at-point 'line)))
-                    (when (string-match "\\`[ \t\n\r]+" line)
+                    (when (string-match (rx line-start (one-or-more whitespace))
+                                        line)
                         (setq line (replace-match "" t t line)))
-                    (when (string-match "[ \t\n\r]+\\'" line)
+                    (when (string-match (rx (one-or-more whitespace) line-end)
+                                        line)
                         (setq line (replace-match "" t t line)))
                     (list (line-number-at-pos (point))
                           line))))
@@ -109,10 +111,12 @@ the syntax class ')'."
         (exchange-point-and-mark))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
-              (not (and (string-match
-                         (string (char-after (point))) "[^[:punct:]([{]")
-                        (string-match
-                         (string (char-before (mark))) "[^[:punct:])\]}]"))))
+              (not (and (string-match-p
+                         (rx (not (any punct "([{")))
+                         (string (char-after (point))))
+                        (string-match-p
+                         (rx (not (any punct "}])")))
+                         (string (char-before (mark)))))))
           (evil-range (point) (mark))
         (evil-range (1+ (point)) (1- (mark)))))))
 
@@ -134,13 +138,12 @@ the syntax class ')'."
         (exchange-point-and-mark))
       ;; check, it doesn't make sense to take the "inside" of a symbol
       (if (or inclusive
-              (not (and
-                    (string-match
-                     (string (char-after (point)))
-                     "[^[:punct:]([{]")
-                    (string-match
-                     (string (char-before (mark)))
-                     "[^[:punct:])\]}]"))))
+              (not (and (string-match-p
+                         (rx (not (any punct "([{")))
+                         (string (char-after (point))))
+                        (string-match-p
+                         (rx (not (any punct "}])")))
+                         (string (char-before (mark)))))))
           (evil-range (point) (mark))
         (evil-range (1+ (point)) (1- (mark)))))))
 
@@ -386,7 +389,7 @@ the syntax class ')'."
 (with-eval-after-load 'smartparens
   (defun my/my-sp-pair-function (id action context)
     (if (eq action 'insert)
-        (or (looking-at "[[:space:][:punct:]]")
+        (or (looking-at (rx (any space punct)))
             (sp-point-before-eol-p id action context))
       t))
 

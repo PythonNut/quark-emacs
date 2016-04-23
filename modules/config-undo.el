@@ -55,7 +55,8 @@
   (when (executable-find "xz")
     (defun nadvice/undo-tree-make-history-save-file-name (_ret)
       (let ((auto-save-file-name-transforms
-             '((".*" "/home/pythonnut/.emacs.d/data/undo-backups/" t))))
+             `((,(rx (zero-or-more not-newline))
+                "/home/pythonnut/.emacs.d/data/undo-backups/" t))))
         (concat (make-auto-save-file-name) ".undo.xz")))
 
     (defun nadvice/undo-tree-load-history (old-fun &rest args)
