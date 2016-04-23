@@ -88,6 +88,43 @@
 (define-key evil-normal-state-map (kbd "C-s") #'isearch-forward-regexp)
 (define-key evil-insert-state-map (kbd "C-s") #'isearch-forward-regexp)
 
+(defun isearch-region-dwim-helper ()
+  (when (region-active-p)
+    (let* ((beg (min (mark) (point)))
+           (end (max (mark) (point)))
+           (search-text (buffer-substring-no-properties beg end))
+           (symbol-bounds (bounds-of-thing-at-point 'symbol)))
+      (when (and search-text
+                 ;; Assume that multi-line regions should be extended,
+                 ;; not searched literally.
+                 (= (line-number-at-pos beg)
+                    (line-number-at-pos end)))
+        (deactivate-mark)
+        (setq isearch-regexp t
+              ;; If region is a subregion of the current symbol, then
+              ;; limit it to the contents of symbols in the current buffer
+              isearch-string (if (and (car symbol-bounds)
+                                      (>= beg (car symbol-bounds))
+                                      (<= end (cdr symbol-bounds)))
+                                 (concat (rx symbol-start)
+                                         ;; If the region matches the
+                                         ;; beginning or end of a symbol
+                                         ;; anchor it there.
+                                         (if (= beg (car symbol-bounds)) ""
+                                           (rx (zero-or-more (or (syntax _)
+                                                                 (syntax w)))))
+                                         (regexp-quote search-text)
+                                         (if (= end (cdr symbol-bounds)) ""
+                                           (rx (zero-or-more (or (syntax _)
+                                                                 (syntax w)))))
+                                         (rx symbol-end))
+                               (regexp-quote search-text))
+              isearch-message (mapconcat #'isearch-text-char-description
+                                         isearch-string
+                                         ""))))))
+
+(add-hook 'isearch-mode-hook #'isearch-region-dwim-helper)
+
 (global-set-key (kbd "M-x") #'counsel-M-x)
 (global-set-key (kbd "C-x b") #'ivy-switch-buffer)
 (global-set-key (kbd "C-h f") #'counsel-describe-function)
