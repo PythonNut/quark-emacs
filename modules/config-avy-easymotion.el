@@ -60,6 +60,7 @@
                         :foreground "#839493"
                         :inherit nil))
 
+  (my/avy-setup-faces)
   (add-hook 'load-theme-hook #'my/avy-setup-faces))
 
 (with-eval-after-load 'ace-window
