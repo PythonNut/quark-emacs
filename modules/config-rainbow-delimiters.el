@@ -20,15 +20,19 @@
   (defvar-local my/rainbow-delimiters-face-cookies nil
     "a list of face-remap-add-relative cookies to reset")
 
-  (set-face-foreground 'rainbow-delimiters-depth-1-face "#889899")
-  (set-face-foreground 'rainbow-delimiters-depth-2-face "#9b7b6b")
-  (set-face-foreground 'rainbow-delimiters-depth-3-face "#7b88a5")
-  (set-face-foreground 'rainbow-delimiters-depth-4-face "#889899")
-  (set-face-foreground 'rainbow-delimiters-depth-5-face "#839564")
-  (set-face-foreground 'rainbow-delimiters-depth-6-face "#6391aa")
-  (set-face-foreground 'rainbow-delimiters-depth-7-face "#9d748f")
-  (set-face-foreground 'rainbow-delimiters-depth-8-face "#7b88a5")
-  (set-face-foreground 'rainbow-delimiters-depth-9-face "#659896")
+  (defun my/rainbow-delimiters-setup-faces ()
+    (set-face-foreground 'rainbow-delimiters-depth-1-face "#889899")
+    (set-face-foreground 'rainbow-delimiters-depth-2-face "#9b7b6b")
+    (set-face-foreground 'rainbow-delimiters-depth-3-face "#7b88a5")
+    (set-face-foreground 'rainbow-delimiters-depth-4-face "#889899")
+    (set-face-foreground 'rainbow-delimiters-depth-5-face "#839564")
+    (set-face-foreground 'rainbow-delimiters-depth-6-face "#6391aa")
+    (set-face-foreground 'rainbow-delimiters-depth-7-face "#9d748f")
+    (set-face-foreground 'rainbow-delimiters-depth-8-face "#7b88a5")
+    (set-face-foreground 'rainbow-delimiters-depth-9-face "#659896"))
+
+  (my/rainbow-delimiters-setup-faces)
+  (add-hook 'load-theme-hook #'my/rainbow-delimiters-setup-faces)
 
   (defun my/rainbow-delimiters-focus-on ()
     "Punch the rainbow-delimiters"
