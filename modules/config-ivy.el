@@ -91,7 +91,11 @@
 (defun isearch-region-dwim-helper ()
   (when (region-active-p)
     (let* ((beg (min (mark) (point)))
-           (end (max (mark) (point)))
+           (end (+ (max (mark) (point)) (if (or (evil-normal-state-p)
+                                                (evil-visual-state-p)
+                                                (evil-motion-state-p)
+                                                (evil-operator-state-p))
+                                            1 0)))
            (search-text (buffer-substring-no-properties beg end))
            (symbol-bounds (bounds-of-thing-at-point 'symbol)))
       (when (and search-text
