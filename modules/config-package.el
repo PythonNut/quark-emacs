@@ -155,7 +155,7 @@
     auto-indent-mode
     ;; avy
     bracketed-paste
-    company
+    ;; company
     company-flx
     counsel
     diff-hl
@@ -175,6 +175,7 @@
     icicles
     iflipb
     idle-require
+    ;; ivy
     key-chord
     magit
     multiple-cursors
@@ -184,7 +185,7 @@
     smex
     smooth-scrolling
     solarized-theme
-    swiper
+    ;; swiper
     volatile-highlights
     which-key
     whole-line-or-region
