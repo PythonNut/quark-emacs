@@ -1,6 +1,14 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
 
+(require 'config-avy-easymotion)
+(require 'config-undo)
+
+(require 'config-smartparens)
+(require 'config-rainbow-delimiters)
+
+(require 'config-hydras)
+
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil
       mouse-wheel-follow-mouse t
@@ -9,13 +17,7 @@
       auto-window-vscroll nil
       scroll-conservatively 1000)
 
-(require 'config-avy-easymotion)
-(require 'config-undo)
-
-(require 'config-smartparens)
-(require 'config-rainbow-delimiters)
-
-(require 'config-hydras)
+(smooth-scrolling-mode +1)
 
 (with-eval-after-load 'multiple-cursors
   (define-key mc/keymap (kbd "<return>") nil)
