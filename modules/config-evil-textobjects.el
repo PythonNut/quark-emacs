@@ -35,7 +35,7 @@
 
 (evil-define-motion evil-smart-scroll-page-up (count)
   (evil-scroll-page-up (or count 1))
-  (my/smart-evil-scroll-page))
+  (my/smart-evil-scroll-page-hydra/body))
 
 (define-key evil-motion-state-map "gj" #'evil-smart-next-visual-line)
 (define-key evil-motion-state-map "gk" #'evil-smart-previous-visual-line)
