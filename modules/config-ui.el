@@ -257,6 +257,34 @@
   (require 'auto-highlight-symbol)
   (global-auto-highlight-symbol-mode +1))
 
+;; ==================
+;; Visible whitespace
+;; ==================
+
+(with-eval-after-load 'whitespace
+  (setq whitespace-display-mappings '((space-mark 32 [?·]))
+        whitespace-style '(face trailing spaces space-mark))
+
+  (set-face-attribute 'whitespace-space nil
+                      :inherit nil
+                      :foreground (face-background 'default)
+                      :background nil)
+
+  (set-face-attribute 'whitespace-trailing nil
+                      :inherit 'avy-background-face
+                      :background nil
+                      :inverse-video nil
+                      :foreground nil)
+
+  (defun nadvice/whitespace-trailing-regexp (limit)
+    "Match all trailing spaces. This overloads the definition in whitespace.el."
+    (let ((status t))
+      (while (unless (re-search-forward whitespace-trailing-regexp limit t)
+               (setq status nil)))          ;; end of buffer
+      status))
+  (advice-add 'whitespace-trailing-regexp :override
+              #'nadvice/whitespace-trailing-regexp))
+
 ;; ============
 ;; Line numbers
 ;; ============
