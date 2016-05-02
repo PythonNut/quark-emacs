@@ -217,6 +217,7 @@
                                  helm-ring
                                  helm-projectile
                                  helm-semantic
+                                 counsel
                                  which-key
                                  magit
                                  evil-snipe
