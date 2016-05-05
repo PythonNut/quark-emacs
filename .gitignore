@@ -13,9 +13,7 @@
 /projectile*
 
 # M-x command history
-/smex-items
 /.smex-items
-/smex-save-file
 
 
 # places file

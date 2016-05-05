@@ -129,6 +129,9 @@
 
 (add-hook 'isearch-mode-hook #'isearch-region-dwim-helper)
 
+(with-eval-after-load 'smex
+  (setq smex-save-file (locate-user-emacs-file ".smex-items")))
+
 (global-set-key (kbd "M-x") #'counsel-M-x)
 (global-set-key (kbd "C-x b") #'ivy-switch-buffer)
 (global-set-key (kbd "C-h f") #'counsel-describe-function)
