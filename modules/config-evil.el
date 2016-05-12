@@ -73,6 +73,10 @@
   (isearch-delete-char)
   (isearch-exit))
 
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'hydra)))
+
 (defhydra my/smart-isearch-chord-hydra
   (:timeout key-chord-one-key-delay
             :pre (setq hydra-is-helpful nil)
