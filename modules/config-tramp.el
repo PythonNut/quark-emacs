@@ -15,14 +15,13 @@
   ;; note that said cache is _not_ persistent
   (setq password-cache-expiry nil))
 
-(with-eval-after-load 'tramp
-  (with-eval-after-load 'tramp-cache
-    (eval-when-compile
-      (with-demoted-errors "Load error: %s"
-        (require 'tramp-cache)))
-    (setq tramp-persistency-file-name
-          (locate-user-emacs-file "/data/tramp")))
+(with-eval-after-load 'tramp-cache
+  (eval-when-compile (require 'tramp-cache))
+  (setq tramp-persistency-file-name
+        (locate-user-emacs-file "data/tramp")))
 
+(with-eval-after-load 'tramp
+  (eval-when-compile (require 'tramp))
   (setq tramp-default-method (if (executable-find "rsync")
                                  "rsync"
                                tramp-default-method)
