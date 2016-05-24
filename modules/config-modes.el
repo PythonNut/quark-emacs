@@ -608,12 +608,15 @@
 
 (add-to-list 'auto-mode-alist '("\\.dart\\'" . dart-mode))
 
-(package-deferred-install 'typescript
+(package-deferred-install 'typescript-mode
     :autoload-names '('typescript-mode)
     :manual-init
   (eval-after-load 'folding
     '(when (fboundp 'folding-add-to-marks-list)
-       (folding-add-to-marks-list 'typescript-mode "// {{{" "// }}}" ))))
+       (folding-add-to-marks-list 'typescript-mode "// {{{" "// }}}" )))
+  (package-deferred-install 'tide
+      :autoload-names '('tide-setup))
+  (add-hook 'typescript-mode-hook #'tide-setup))
 
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 
