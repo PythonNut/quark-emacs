@@ -299,6 +299,7 @@
 
   (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
   (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto)
+  (add-hook 'python-mode-hook #'anaconda-eldoc-mode)
   (add-hook 'python-mode-hook #'anaconda-mode)
   (add-hook 'python-mode-hook #'eldoc-mode)
 
