@@ -38,7 +38,10 @@
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'recentf)))
-
+  (add-to-list 'recentf-exclude (eval-when-compile
+                                  (concat (rx line-start)
+                                          (expand-file-name
+                                           (locate-user-emacs-file "elpa")))))
   (setq recentf-save-file (locate-user-emacs-file ".recentf")
         recentf-max-saved-items 1000
         recentf-max-menu-items 50
