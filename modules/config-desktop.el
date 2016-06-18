@@ -40,9 +40,9 @@
       (require 'recentf)))
 
   (setq recentf-save-file (locate-user-emacs-file ".recentf")
-        recentf-max-saved-items 200
-        recentf-max-menu-items 30
-        recentf-auto-cleanup 3))
+        recentf-max-saved-items 1000
+        recentf-max-menu-items 50
+        recentf-auto-cleanup 30))
 
 (with-eval-after-load 'session
   (eval-when-compile
