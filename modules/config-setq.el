@@ -203,4 +203,9 @@ With a prefix argument which does not equal a boolean value of nil, remove the u
                     (lambda ()
                       (my/x-urgent t)))))
 
+(defun my/y-or-n-p-optional (prompt)
+  (let ((query-replace-map (copy-keymap query-replace-map)))
+    (define-key query-replace-map [t] 'skip)
+    (y-or-n-p prompt)))
+
 (provide 'config-setq)
