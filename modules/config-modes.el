@@ -1122,6 +1122,8 @@
                                               'ob-lfe
                                               'ob-lua
                                               'ob-mongo
+                                              'ob-ml-marklogic
+                                              'ob-php
                                               'ob-prolog
                                               'ob-redis
                                               'ob-restclient
@@ -1129,6 +1131,7 @@
                                               'ob-scala
                                               'ob-sly
                                               'ob-sml
+                                              'ob-swift
                                               'ob-translate
                                               'ob-typescript)
     "A list of org-babel backends that can be installed with package.el")
