@@ -1,6 +1,8 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
 (require 'package)
+(eval-when-compile
+  (require 'config-setq))
 
 ;; Package archives
 (setq package-enable-at-startup nil
@@ -292,7 +294,9 @@
                  (package-install package-desc)
                  (package-delete old-package)))
              (my/package-rebuild-cache)
-             (message "All package upgrades completed.")
+             (when (my/y-or-n-p-optional
+                    "All package upgrades completed. Press \"y\" to restart.")
+               (restart-emacs 4))
              (my/x-urgent)))
        (message "All packages are up to date")))))
 
