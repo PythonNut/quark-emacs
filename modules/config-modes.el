@@ -86,7 +86,7 @@
                         'irony-cdb-libclang
                         'irony-completion-at-point
                         'irony-completion-at-point-async)
-    (add-to-list 'irony-additional-clang-options "-std=c++14")
+      (add-to-list 'irony-additional-clang-options "-std=c++14")
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
   (package-deferred-install 'irony-eldoc
@@ -121,10 +121,10 @@
 
     (with-no-warnings
       (my/generate-calls
-       'my/setup-cc-mode
-       '(('c++-mode  'c++-mode-hook)
-         ('objc-mode 'objc-mode-hook)
-         ('c-mode    'c-mode-hook)))))
+          'my/setup-cc-mode
+        '(('c++-mode  'c++-mode-hook)
+          ('objc-mode 'objc-mode-hook)
+          ('c-mode    'c-mode-hook)))))
 
   (with-eval-after-load 'smartparens
     (sp-with-modes
@@ -135,7 +135,12 @@
       (sp-local-pair "{" nil :post-handlers
                      '(:add
                        ("||\n[i]" "RET")
-                       ("| " "SPC"))))))
+                       ("| " "SPC")))))
+
+  (package-deferred-install 'srefactor
+      :autoload-names '('srefactor-refactor-at-point)
+      (define-key c-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
+    (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)))
 
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)
