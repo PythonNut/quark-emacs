@@ -121,9 +121,13 @@
         :post (setq hydra-is-helpful t))
   ("<C-tab>"
    (call-interactively #'iflipb-next-buffer))
+  ("<mouse-7>"
+   (call-interactively #'iflipb-next-buffer))
   ("TAB"
    (call-interactively #'iflipb-next-buffer))
   ("<C-S-iso-lefttab>"
+   (call-interactively #'iflipb-previous-buffer))
+  ("<mouse-6>"
    (call-interactively #'iflipb-previous-buffer))
   ("<backtab>"
    (call-interactively #'iflipb-previous-buffer)))
@@ -162,6 +166,9 @@
              (lambda () t)))
     (call-interactively #'iflipb-previous-buffer))
   (iflipb-hydra/body))
+
+(global-set-key (kbd "<mouse-7>") #'iflipb-next-buffer-smart)
+(global-set-key (kbd "<mouse-6>") #'iflipb-previous-buffer-smart)
 
 (global-set-key (kbd "<C-tab>") #'iflipb-next-buffer-smart)
 (global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer-smart)
