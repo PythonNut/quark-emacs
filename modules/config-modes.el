@@ -1190,7 +1190,9 @@
     :autoload-names '('go-mode
                       'gofmt-before-save
                       'godoc
-                      'go-download-play))
+                      'go-download-play)
+    (package-deferred-install 'company-go
+        :autoload-names 'company-go))
 
 (package-deferred-install 'swift-mode
     :mode-entries '('("\\.swift\\'" . swift-mode))

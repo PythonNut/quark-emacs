@@ -51,7 +51,8 @@
           ('texinfo-mode-hook    'company-semantic)
           ('python-mode-hook     'company-anaconda)
           ('text-mode-hook       'company-ispell)
-          ('livescript-mode-hook 'company-tide))))))
+          ('livescript-mode-hook 'company-tide)
+          ('go-mode-hook         'company-go))))))
 
 (with-eval-after-load 'company
   (eval-when-compile
