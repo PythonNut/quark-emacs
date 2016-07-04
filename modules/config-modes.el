@@ -1192,7 +1192,7 @@
                       'godoc
                       'go-download-play)
     (package-deferred-install 'company-go
-        :autoload-names 'company-go))
+        :autoload-names '('company-go)))
 
 (package-deferred-install 'swift-mode
     :mode-entries '('("\\.swift\\'" . swift-mode))
