@@ -99,8 +99,11 @@
                           (package--description-file pkg-dir)
                           pkg-dir))
                (signed-file (concat pkg-dir ".signed"))
-               (pkg-desc (package-process-define-package
-                          (cdr cached-desc) pkg-file)))
+               (pkg-desc (or (ignore-errors
+                               (package-process-define-package
+                                (cdr cached-desc)))
+                             (package-process-define-package
+                              (cdr cached-desc) pkg-file))))
           (setf (package-desc-dir pkg-desc) pkg-dir)
           (when (file-exists-p signed-file)
             (setf (package-desc-signed pkg-desc) t))
