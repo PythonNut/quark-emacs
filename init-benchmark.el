@@ -1,75 +1,82 @@
+;; -*- lexical-binding: t -*-
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;;(package-initialize)
 (setq load-prefer-newer t)
 (require 'cl-lib)
+(setq gc-cons-threshold 20000000)
 
-(defun nadvice/load-quiet (args)
-  (cl-destructuring-bind
-    (file &optional noerror nomessage nosuffix must-suffix)
-    args
-    (let ((nomessage t))
-      (list
-        file noerror nomessage nosuffix must-suffix))))
+(message "[                ]")
 
 (defvar my/slow-device nil)
+
+(menu-bar-mode -1)
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
 
 (when (member "-F" command-line-args)
   (delete "-F" command-line-args)
   (setq my/slow-device t))
 
 (eval-and-compile
-  (add-to-list 'load-path
-    (locate-user-emacs-file "modules/"))
-
-  (defmacro when* (condition &rest body)
-    (when condition
-      `(progn ,@body))))
+  (add-to-list 'load-path (locate-user-emacs-file "modules/")))
 
 ;; suppress the GNU spam
 (fset 'display-startup-echo-area-message #'ignore)
 (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-(advice-add 'load :filter-args #'nadvice/load-quiet)
+
 (load (setq custom-file (locate-user-emacs-file "custom.el")))
 
-(message "[                ]")
 (require 'config-setq)
-(message "[=               ]")
+
+(unless debug-on-error
+  (defun my/automatic-repair ()
+    (message "Init did not complete! Attempting automatic repairs.")
+    (sit-for 1)
+    (if (save-window-excursion (not (byte-recompile-config t)))
+        (when (my/y-or-n-p-optional
+               "Automatic repair succeed. Press \"y\" to restart.")
+          (restart-emacs))
+      (when (my/y-or-n-p-optional
+             "Automatic repair failed. Press \"y\" to try emergency rebuild.")
+        (emergency-fix-config))))
+  (add-hook 'emacs-startup-hook #'my/automatic-repair))
+
+
 (require 'config-package)
 (message "[==              ]")
-(require 'config-modes)
-(message "[===             ]")
 (require 'config-desktop)
-(message "[====            ]")
+(message "[===             ]")
 (require 'config-safety)
-(message "[=====           ]")
+(message "[====            ]")
 (require 'config-evil)
-(message "[======          ]")
+(message "[=====           ]")
 (require 'config-ui)
-(message "[=======         ]")
+(message "[======          ]")
 (require 'config-whitespace)
-(message "[========        ]")
+(message "[=======         ]")
 (require 'config-paste)
-(message "[=========       ]")
+(message "[========        ]")
 (require 'config-company)
-(message "[==========      ]")
+(message "[=========       ]")
 (require 'config-vcs)
-(message "[===========     ]")
+(message "[==========      ]")
 (require 'config-ivy)
-(message "[============    ]")
+(message "[===========     ]")
 (require 'config-helm)
+(message "[============    ]")
+(unless (bound-and-true-p my/slow-device)
+  (require 'config-icicles))
 (message "[=============   ]")
-(require 'config-minibuffer)
-(message "[==============  ]")
 (require 'config-intel)
+(message "[==============  ]")
+;; (require 'config-mode
 (message "[=============== ]")
 (require 'config-solarized)
 (message "[================]")
 
-(eval-when-compile
-  (ignore-errors
-    (require 'load-dir)))
-
-(setq
-  load-dir-debug nil
-  load-dirs (locate-user-emacs-file "modules/modes/"))
-
-(advice-remove 'load #'nadvice/load-quiet)
+(remove-hook 'emacs-startup-hook #'my/automatic-repair)
