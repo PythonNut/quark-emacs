@@ -20,7 +20,7 @@ My personal emacs config.
    * [Icicles](https://www.emacswiki.org/emacs/Icicles) (minibuffer completion)
    * [Ivy](https://github.com/abo-abo/swiper) (minibuffer completion)
    * Isearch
- * Extremely agressive file autoloading, and fast startup times (~0.4s)
+ * Extremely agressive file autoloading, and fast startup times (~1.0s)
  * An emphasis on correct code and robustness
 
 Portability
