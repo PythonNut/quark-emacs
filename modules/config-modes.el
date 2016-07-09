@@ -556,11 +556,11 @@
 
 (package-deferred-install 'web-mode
     :autoload-names '('web-mode)
-
-    (sp-local-pair 'web-mode "{" nil :post-handlers
-                   '(:add
-                     ("||\n[i]" "RET")
-                     ("| " "SPC"))))
+    (setq web-mode-auto-close-style 1)
+  (sp-local-pair 'web-mode "{" nil :post-handlers
+                 '(:add
+                   ("||\n[i]" "RET")
+                   ("| " "SPC"))))
 
 (package-deferred-install 'less-css-mode
     :mode-entries '('("\\.less\\'" . less-css-mode))
