@@ -409,6 +409,7 @@ the syntax class ')'."
   ;; disable "'" pairing in text mode, as it's often an apostrophe
   (add-hook 'text-mode-hook
             (lambda ()
-              (sp-local-pair major-mode "'" nil :actions nil))))
+              (sp-local-pair major-mode "'" nil :actions nil)))
+  (add-to-list 'sp-navigate-consider-sgml-tags 'web-mode))
 
 (provide 'config-smartparens)
