@@ -174,7 +174,8 @@
                       'js2-mode
                       'js2-highlight-unused-variables-mode
                       'js2-imenu-extras-mode
-                      'js2-imenu-extras-setup)
+                      'js2-imenu-extras-setup
+                      'js2-jsx-mode)
 
     (package-deferred-install 'js2-refactor
         :autoload-names '('js2r-add-keybindings-with-prefix
