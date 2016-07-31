@@ -177,10 +177,10 @@
 (defun my/yatemplate-fill-alist ()
   "Fill `auto-insert-alist'."
   (dolist (filename (nreverse (sort (file-expand-wildcards
-                                      (concat my/yas-template-dir
-                                              "**/*"))
-                                     #'string<)))
-    (let* ((split-name (split-string filename ":"))
+                                     (concat my/yas-template-dir
+                                             "**/*"))
+                                    #'string<)))
+    (let* ((split-name (split-string filename "="))
            (file-regex (if (eq (length split-name) 2)
                            (nth 1 split-name)
                          (lwarn "yatemplate" 'error
