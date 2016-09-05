@@ -53,12 +53,16 @@
       (defun my/automatic-repair ()
         (message "Init did not complete! Attempting automatic repairs.")
         (sit-for 1)
-        (if (save-window-excursion (not (byte-recompile-config t)))
+        (if (save-window-excursion
+              (not (prog1
+                       (byte-recompile-config t)
+                     (delete-file (locate-user-emacs-file
+                                   "data/package-cache.el")))))
             (when (my/y-or-n-p-optional
                    "Automatic repair succeed. Press \"y\" to restart.")
               (restart-emacs))
           (when (my/y-or-n-p-optional
-                 "Automatic repair failed. Press \"y\" to try emergency rebuild.")
+                 "Automatic repair may have failed. Press \"y\" to try emergency rebuild.")
             (emergency-fix-config))))
       (add-hook 'emacs-startup-hook #'my/automatic-repair))
 
