@@ -217,6 +217,20 @@
                   `(progn (find-file ,(buffer-file-name))
                           nil)))
 
+(with-eval-after-load 'server
+  (defun nadvice/server-mode (old-fun &rest args)
+    (catch 'done
+      (let ((count 1))
+        (while t
+          (if (server-running-p server-name)
+              (progn
+                (setq server-name (concat "server" (number-to-string count)))
+                (cl-incf count))
+            (apply old-fun args)
+            (throw 'done server-name))))))
+
+  (advice-add 'server-start :around #'nadvice/server-mode))
+
 (defun send-desktop-to-server ()
   (interactive)
   (save-some-buffers t)
@@ -250,19 +264,6 @@
         (when (buffer-file-name (current-buffer))
           (send-file-to-server (number-to-string count)))))
     (kill-emacs)))
-
-(defun run-server ()
-  (interactive)
-  (require 'server)
-  (message "Server id is %s"
-           (catch 'done
-             (let ((count 1))
-               (while t
-                 (setq server-name (concat "server" (number-to-string count)))
-                 (if (server-running-p server-name)
-                     (cl-incf count)
-                   (server-mode)
-                   (throw 'done server-name)))))))
 
 (when (member "-P" command-line-args)
   (setq debug-on-error t)
