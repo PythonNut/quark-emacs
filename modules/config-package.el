@@ -62,19 +62,21 @@
       (cl-letf ((load-path))
         (load my/package-autoload-file)))))
 
-(unwind-protect (progn (unless (file-exists-p my/package-autoload-file)
-                         (my/package-rebuild-cache))
-                       (load my/package-autoload-file)
-                       (unless (equal (nth 6 (file-attributes
-                                              (expand-file-name
-                                               package-user-dir)))
-                                      my/package-cache-last-build-time)
-                         (my/package-rebuild-cache)))
+(dolist (dir (file-expand-wildcards
+              (expand-file-name "*" package-user-dir)))
+  (when (file-directory-p dir)
+    (add-to-list 'load-path dir)))
 
-  (dolist (dir (file-expand-wildcards
-                (expand-file-name "*" package-user-dir)))
-    (when (file-directory-p dir)
-      (add-to-list 'load-path dir))))
+(unless (file-exists-p my/package-autoload-file)
+  (my/package-rebuild-cache))
+
+(load my/package-autoload-file)
+
+(unless (equal (nth 6 (file-attributes
+                       (expand-file-name
+                        package-user-dir)))
+               my/package-cache-last-build-time)
+  (my/package-rebuild-cache))
 
 (defun nadvice/package-initialize (old-fun &rest args)
   (cl-letf* ((orig-load (symbol-function #'load))
