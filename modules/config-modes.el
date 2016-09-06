@@ -1087,6 +1087,74 @@
                       'company-math-symbols-latex
                       'company-math-symbols-unicode))
 
+(package-deferred-install 'auctex
+    :mode-entries '('("\\.drv\\'" . latex-mode)
+                    '("\\.hva\\'" . latex-mode)
+                    '("\\.dtx\\'" . doctex-mode))
+    :autoload-names '('bib-cite-minor-mode
+                      'turn-on-bib-cite
+                      'ConTeXt-mode
+                      'context-mode
+                      'context-en-mode
+                      'context-nl-mode
+                      'font-latex-setup
+                      'BibTeX-auto-store
+                      'TeX-latex-mode
+                      'docTeX-mode
+                      'TeX-doctex-mode
+                      'multi-prompt-key-value
+                      'TeX-plain-tex-mode
+                      'ams-tex-mode
+                      'preview-install-styles
+                      'LaTeX-preview-setup
+                      'preview-report-bug
+                      'TeX-assoc-string
+                      'TeX-tex-mode
+                      'TeX-auto-generate
+                      'TeX-auto-generate-global
+                      'TeX-submit-bug-report
+                      'TeX-install-toolbar
+                      'LaTeX-install-toolbar
+                      'TeX-fold-mode
+                      'tex-fold-mode
+                      'tex-font-setup
+                      'Texinfo-mode
+                      'TeX-texinfo-mode
+                      'japanese-plain-tex-mode
+                      'japanese-latex-mode
+                      'texmathp
+                      'texmathp-match-switch
+                      'toolbarx-install-toolbar)
+    :manual-init
+    (progn
+      (advice-add 'tex-mode :override #'TeX-tex-mode)
+      (advice-add 'plain-tex-mode :override #'TeX-plain-tex-mode)
+      (advice-add 'texinfo-mode :override #'TeX-texinfo-mode)
+      (advice-add 'latex-mode :override #'TeX-latex-mode)
+      (advice-add 'doctex-mode :override #'TeX-doctex-mode)))
+
+(with-eval-after-load 'tex
+  (setq TeX-auto-save t
+        TeX-save-query nil
+        TeX-parse-self t
+        TeX-PDF-mode t
+        TeX-source-correlate-start-server t)
+
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
+
+  (defun nadvice/TeX-command-master (old-fun arg)
+    (interactive "P")
+    (if (called-interactively-p 'any)
+        (cond
+         ((consp arg)
+          (call-interactively old-fun))
+         (t
+          (let ((TeX-command-force "LaTeX"))
+            (call-interactively old-fun))))))
+
+  (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master))
+
 ;; =============================================================================
 ;; Org mode ====================================================================
 ;; =============================================================================

@@ -40,5 +40,6 @@ I actively work in the following languages:
   * JS/HTML/CSS
   * Octave
   * Elisp (duh)
+  * LaTeX
 
 So expect those languages to be well supported. Of course, this config supports other languages as well. Drop by my [major mode support table](https://github.com/PythonNut/emacs-config/wiki/Major-Mode-project) to see what languages this config supports. I think you'll be surprised.
