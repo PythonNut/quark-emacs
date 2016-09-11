@@ -1140,6 +1140,8 @@
         TeX-PDF-mode t
         TeX-source-correlate-start-server t)
 
+  (add-hook 'LaTeX-mode-hook (lambda ()
+                               (adaptive-wrap-prefix-mode -1)))
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
 
