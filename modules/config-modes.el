@@ -1146,12 +1146,13 @@
   (defun nadvice/TeX-command-master (old-fun arg)
     (interactive "P")
     (if (called-interactively-p 'any)
-        (cond
-         ((consp arg)
-          (call-interactively old-fun))
-         (t
-          (let ((TeX-command-force "LaTeX"))
-            (call-interactively old-fun))))))
+        (if (consp arg)
+            (call-interactively old-fun)
+          (cl-letf* (((symbol-function #'TeX-command-query)
+                      (lambda (name)
+                        (car-safe (TeX-assoc "LaTeX" TeX-command-list)))))
+            (call-interactively old-fun)))
+      (apply old-fun args)))
 
   (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master))
 
