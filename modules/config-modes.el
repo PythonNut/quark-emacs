@@ -1152,6 +1152,7 @@
             (call-interactively old-fun)
           (cl-letf* (((symbol-function #'TeX-command-query)
                       (lambda (name)
+                        (TeX-command-default name)
                         (car-safe (TeX-assoc "LaTeX" TeX-command-list)))))
             (call-interactively old-fun)))
       (apply old-fun args)))
