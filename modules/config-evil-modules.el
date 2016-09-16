@@ -17,6 +17,18 @@
 (define-key evil-normal-state-map "gX" #'evil-exchange-cancel)
 (define-key evil-visual-state-map "gX" #'evil-exchange-cancel)
 
+(autoload #'evil-surround-edit "evil-surround")
+(autoload #'evil-Surround-edit "evil-surround")
+(autoload #'evil-surround-region "evil-surround")
+(autoload #'evil-Surround-region "evil-surround")
+
+;; Evil surround, easily change surrounding chars
+(define-key evil-operator-state-map "s" 'evil-surround-edit)
+(define-key evil-operator-state-map "S" 'evil-Surround-edit)
+
+(define-key evil-visual-state-map (kbd "gw") 'evil-surround-region)
+(define-key evil-visual-state-map (kbd "gW") 'evil-Surround-region)
+
 ;; evil NERD commenter, commenting awesomeness!
 (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines)
 

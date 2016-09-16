@@ -149,6 +149,7 @@
     evil-nerd-commenter
     evil-org
     evil-snipe
+    evil-surround
     evil-quickscope
     on-parens
 
