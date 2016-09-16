@@ -7,13 +7,20 @@
 
 (if (member "-M" command-line-args)
     (progn
-      ;; skip and load minimal init instead
+      ;; Abort and load minimal init instead
+      ;; This is useful if we are running in a resource constrained
+      ;; environment or have broken the main config
       (delete "-M" command-line-args)
       (load (locate-user-emacs-file "init-minimal")))
 
   (require 'cl-lib)
+  ;; Modern machines don't need to run GC for every 8MB allocated.
   (setq gc-cons-threshold 20000000)
-  (cl-letf* ((gc-cons-threshold most-positive-fixnum)
+
+  (cl-letf* (;; In fact, never GC during initialization to save time.
+             (gc-cons-threshold most-positive-fixnum)
+
+             ;; Also override load to hide  superfluous loading messages
              (old-load (symbol-function #'load))
              ((symbol-function #'load)
               (lambda (file &optional noerror _nomessage &rest args)
@@ -49,6 +56,9 @@
 
     (require 'config-setq)
 
+    ;; Automatic repair system attempts to recompile potentially
+    ;; broken bytecode if the init does not complete, and offers to
+    ;; do more extreme things if the init cannot be saved.
     (unless debug-on-error
       (defun my/automatic-repair ()
         (message "Init did not complete! Attempting automatic repairs.")
@@ -64,6 +74,8 @@
           (when (my/y-or-n-p-optional
                  "Automatic repair may have failed. Press \"y\" to try emergency rebuild.")
             (emergency-fix-config))))
+
+      ;; This hook will be removed if the init completes successfully.
       (add-hook 'emacs-startup-hook #'my/automatic-repair))
 
     (message "[=               ]")
@@ -99,4 +111,5 @@
     (require 'config-solarized)
     (message "[================]")
 
+    ;; No need to run the init repair system.
     (remove-hook 'emacs-startup-hook #'my/automatic-repair)))
