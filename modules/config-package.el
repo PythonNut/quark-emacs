@@ -144,6 +144,7 @@
     ;; evil
     evil-args
     evil-easymotion
+    evil-embrace
     evil-exchange
     evil-matchit
     evil-nerd-commenter

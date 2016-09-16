@@ -17,12 +17,19 @@
 (define-key evil-normal-state-map "gX" #'evil-exchange-cancel)
 (define-key evil-visual-state-map "gX" #'evil-exchange-cancel)
 
+;; Evil surround + embrace, easily change surrounding chars
+(add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
+(add-hook 'org-mode-hook 'embrace-org-mode-hook)
+(add-hook 'ruby-mode-hook 'embrace-ruby-mode-hook)
+
+(with-eval-after-load 'evil-surround
+  (evil-embrace-enable-evil-surround-integration))
+
 (autoload #'evil-surround-edit "evil-surround")
 (autoload #'evil-Surround-edit "evil-surround")
 (autoload #'evil-surround-region "evil-surround")
 (autoload #'evil-Surround-region "evil-surround")
 
-;; Evil surround, easily change surrounding chars
 (define-key evil-operator-state-map "s" 'evil-surround-edit)
 (define-key evil-operator-state-map "S" 'evil-Surround-edit)
 
