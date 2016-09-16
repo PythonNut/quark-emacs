@@ -40,6 +40,7 @@
               indent-tabs-mode nil
               indicate-buffer-boundaries '((bottom . left)))
 
+;; For some reason, these features are disabled by default.
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
@@ -53,25 +54,35 @@
 (defalias 'yes-or-no-p #'y-or-n-p)
 
 (defun my/restart-emacs-engine (&rest args)
+  "Restart Emacs.
+ARGS are passed as command line arguments to the new process."
   (let ((command-args (mapconcat (lambda (x) (format "%s" x))
                                  args
                                  " ")))
+    ;; This hook nonsense to ensures that this is run as late as possible.
     (add-hook 'kill-emacs-hook
               (lambda ()
                 (if (daemonp)
                     (call-process "sh" nil nil nil "-c"
                                   (format "emacs --daemon %s &"
                                           command-args))
-                    (if (display-graphic-p)
-                        (call-process "sh" nil nil nil "-c"
-                                      (format "emacs %s &"
-                                              command-args))
-                      (suspend-emacs (format "(emacs %s -nw < `tty`) & fg; fg"
-                                             command-args)))))
+                  (if (display-graphic-p)
+                      (call-process "sh" nil nil nil "-c"
+                                    (format "emacs %s &"
+                                            command-args))
+                    (suspend-emacs (format "(emacs %s -nw < `tty`) & fg; fg"
+                                           command-args)))))
               t)
     (save-buffers-kill-emacs)))
 
 (defun restart-emacs (&optional arg)
+  "Restart Emacs.
+With a string ARG, pass those flags to the new process.
+With a C-u or positive prefix arg, save the Emacs state across the restart.
+With a C-- prefix arg, pass --debug-init
+With a negative prefix arg, save the state and pass --debug-init
+Otherwise, restart normally.
+"
   (interactive "P")
   (cond
    ((stringp arg)
@@ -88,6 +99,9 @@
 
 (defun byte-recompile-config (&optional arg)
   (interactive "p")
+  "Recompile this Emacs configuration.
+If passed a non-nil or called interactively with a C-u, also recompile
+files with (apparently) up to date bytecodes."
   (let* ((force (if (called-interactively-p 'any)
                     (and (integerp arg) (= arg 4))
                   arg))
@@ -105,6 +119,7 @@
     (or init-el-error modules-error)))
 
 (defun emergency-fix-config ()
+  "Non-destructively reset the config to whatever git is tracking."
   (interactive)
   (when (fboundp 'my/package-rebuild-autoloads)
     (my/package-rebuild-autoloads))
@@ -128,6 +143,7 @@
 (delete-selection-mode +1)
 (global-hl-line-mode +1)
 
+;; Lazily load auto-compression-mode
 (defun my/auto-compression-onetime-setup ()
   (auto-compression-mode +1)
   (remove-hook 'find-file-hook #'my/auto-compression-onetime-setup))
@@ -174,10 +190,10 @@
 (defun my/x-urgency-hint (frame arg &optional source)
   "Set the x-urgency hint for the frame to arg:
 
-- If arg is nil, unset the urgency.
-- If arg is any other value, set the urgency.
-
-If you unset the urgency, you still have to visit the frame to make the urgency setting disappear (at least in KDE)."
+If arg is nil, unset the urgency.
+If arg is any other value, set the urgency.
+If you unset the urgency, you still have to visit the frame to make the
+urgency setting disappear (at least in KDE)."
   (when (and (display-graphic-p)
              (eq window-system 'x))
     (let* ((wm-hints (append (x-window-property
@@ -194,7 +210,9 @@ If you unset the urgency, you still have to visit the frame to make the urgency 
 (defun my/x-urgent (&optional arg)
   "Mark the current emacs frame as requiring urgent attention.
 
-With a prefix argument which does not equal a boolean value of nil, remove the urgency flag (which might or might not change display, depending on the window manager)."
+With a prefix argument which does not equal a boolean value of nil,
+remove the urgency flag (which might or might not change display,
+depending on the window manager)."
   (interactive "P")
   (let (frame (car (car (cdr (current-frame-configuration)))))
     (my/x-urgency-hint frame (not arg)))
@@ -204,6 +222,8 @@ With a prefix argument which does not equal a boolean value of nil, remove the u
                       (my/x-urgent t)))))
 
 (defun my/y-or-n-p-optional (prompt)
+  "Prompt the user for a yes or no response, but accept any non-y
+response as a no."
   (let ((query-replace-map (copy-keymap query-replace-map)))
     (define-key query-replace-map [t] 'skip)
     (y-or-n-p prompt)))
