@@ -255,21 +255,6 @@
               (semantic-idle-summary-mode -1)
               (setq mode-name "Py")))
 
-  (when (executable-find "ipython")
-    (setq python-shell-interpreter "ipython"
-          python-shell-interpreter-args "--deep-reload"
-          python-shell-prompt-regexp (rx "In ["
-                                         (one-or-more digit)
-                                         "]: ")
-          python-shell-prompt-block-regexp (rx "....: ")
-          python-shell-prompt-output-regexp (rx "Out["
-                                                (one-or-more digit)
-                                                "]: ")
-          python-shell-completion-setup-code
-          "from IPython.core.completerlib import module_completion"
-          python-shell-completion-string-code
-          "';'.join(get_ipython().Completer.all_completions('''%s'''))\n"))
-
   (package-deferred-install 'company-anaconda
       :autoload-names '('company-anaconda))
 
