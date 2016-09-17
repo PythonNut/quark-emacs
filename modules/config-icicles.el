@@ -6,12 +6,11 @@
 
 (defun icicle-flx-score-greater-p (s1 s2)
   "Return non-nil if S1 scores higher than S2 using `flx-score`."
-  ;; (message "Testing testing!")
-  (let* ((input   (if (icicle-file-name-input-p)
-                      (file-name-nondirectory icicle-current-input)
-                    icicle-current-input))
-         (score1  (flx-score s1 input))
-         (score2  (flx-score s2 input)))
+  (let* ((input (if (icicle-file-name-input-p)
+                    (file-name-nondirectory icicle-current-input)
+                  icicle-current-input))
+         (score1 (flx-score s1 input))
+         (score2 (flx-score s2 input)))
     (and score1  score2  (> (car score1) (car score2)))))
 
 (with-eval-after-load 'icicles
@@ -92,7 +91,10 @@
                (quote ,commands))))))
 
     (setup-icicles
-     (#'icicle-add-buffer-candidate
+     (;; By special exception, since this is called in interactive forms
+      #'icicle-read--expression
+
+      #'icicle-add-buffer-candidate
       #'icicle-add-buffer-config
       #'icicle-add-entry-to-saved-completion-set
       #'icicle-apropos
