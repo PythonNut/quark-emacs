@@ -357,6 +357,7 @@
                     (autoload 'run-sage "sage-shell-mode" nil t)
                     (autoload 'run-new-sage "sage-shell-mode" nil t)
                     (autoload 'sage-mode "sage-shell-mode" nil t))
+    (setq sage-shell:use-prompt-toolkit t)
     (sage-shell:define-alias)
     (evil-set-initial-state 'sage-shell-mode 'insert)
 
