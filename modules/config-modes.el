@@ -1120,6 +1120,9 @@
       (advice-add 'doctex-mode :override #'TeX-doctex-mode)))
 
 (with-eval-after-load 'tex
+  (package-deferred-install 'magic-latex-buffer
+      :autoload-names '('magic-latex-buffer))
+
   (setq TeX-auto-save t
         TeX-save-query nil
         TeX-parse-self t
@@ -1129,6 +1132,7 @@
   (add-hook 'LaTeX-mode-hook (lambda ()
                                (adaptive-wrap-prefix-mode -1)))
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (add-hook 'LaTeX-mode-hook 'magic-latex-buffer)
   (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
 
   (defun nadvice/TeX-command-master (old-fun arg)
