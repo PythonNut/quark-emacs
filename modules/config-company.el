@@ -27,7 +27,7 @@
                        (require 'company)
                        (let ((old-backends company-backends))
                          (set (make-local-variable 'company-backends)
-                              (cons (cons
+                              (cons (append
                                      ,backend
                                      (cdar old-backends))
                                     (cdr old-backends)))))))))
@@ -35,24 +35,27 @@
     (with-no-warnings
       (my/generate-calls
           'company-define-specific-modes
-        '(('c++-mode-hook        'company-irony)
-          ('objc-mode-hook       'company-irony)
-          ('c-mode-hook          'company-irony)
-          ('arduino-mode-hook    'company-irony)
-          ('cmake-mode-hook      'company-cmake)
-          ('css-mode-hook        'company-css)
-          ('java-mode-hook       'company-eclim)
-          ('nxml-mode-hook       'company-nxml)
-          ('html-mode-hook       'company-web-html)
-          ('web-mode-hook        'company-web-html)
-          ('tex-mode-hook        'company-math-symbols-latex)
-          ('latex-mode-hook      'company-math-symbols-latex)
-          ('scheme-mode-hook     'geiser-company-backend)
-          ('texinfo-mode-hook    'company-semantic)
-          ('python-mode-hook     'company-anaconda)
-          ('text-mode-hook       'company-ispell)
-          ('livescript-mode-hook 'company-tide)
-          ('go-mode-hook         'company-go))))))
+        '(('c++-mode-hook        '(company-irony))
+          ('objc-mode-hook       '(company-irony))
+          ('c-mode-hook          '(company-irony))
+          ('arduino-mode-hook    '(company-irony))
+          ('cmake-mode-hook      '(company-cmake))
+          ('css-mode-hook        '(company-css))
+          ('java-mode-hook       '(company-eclim))
+          ('nxml-mode-hook       '(company-nxml))
+          ('html-mode-hook       '(company-web-html))
+          ('web-mode-hook        '(company-web-html))
+          ('tex-mode-hook        '(company-math-symbols-latex))
+          ('latex-mode-hook      '(company-math-symbols-latex))
+          ('scheme-mode-hook     '(geiser-company-backend))
+          ('texinfo-mode-hook    '(company-semantic))
+          ('python-mode-hook     '(company-anaconda))
+          ('text-mode-hook       '(company-ispell))
+          ('LaTeX-mode-hook      '(company-auctex-macros
+                                   company-auctex-symbols
+                                   company-auctex-environments))
+          ('livescript-mode-hook '(company-tide))
+          ('go-mode-hook         '(company-go)))))))
 
 (with-eval-after-load 'company
   (eval-when-compile

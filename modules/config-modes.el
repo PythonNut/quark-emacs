@@ -1123,6 +1123,10 @@
   (package-deferred-install 'magic-latex-buffer
       :autoload-names '('magic-latex-buffer))
 
+  (package-deferred-install 'company-auctex
+      :autoload-names '('company-auctex-symbols
+                        'company-auctex-environments))
+
   (setq TeX-auto-save t
         TeX-save-query nil
         TeX-parse-self t
