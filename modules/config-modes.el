@@ -165,6 +165,13 @@
                     '("\\.glsl\\'" . glsl-mode))
     :autoload-names '('glsl-mode))
 
+(package-deferred-install '(asy-mode :repo "vectorgraphics/asymptote"
+                                     :fetcher github
+                                     :files "base/*.el")
+    :feature-name 'asy-mode
+    :mode-entries '('("\\.asy$" . asy-mode))
+    :autoload-names '('asy-mode))
+
 ;; =============================================================================
 ;; Javascript ==================================================================
 ;; =============================================================================
