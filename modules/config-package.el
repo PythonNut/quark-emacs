@@ -23,7 +23,7 @@
                                       package-user-dir)))
         (pkg-descs))
 
-    (with-temp-buffer
+    (with-temp-file my/package-autoload-file
       (dolist (pkg-dir (cl-remove-if-not
                         #'file-directory-p
                         (file-expand-wildcards
@@ -57,10 +57,9 @@
 
       (let ((mtime (nth 6 (file-attributes
                            (expand-file-name package-user-dir)))))
-        (insert (format "(setq my/package-cache-last-build-time '%S)" mtime)))
-      (write-file my/package-autoload-file nil)
-      (cl-letf ((load-path))
-        (load my/package-autoload-file)))))
+        (insert (format "(setq my/package-cache-last-build-time '%S)" mtime))))
+    (cl-letf ((load-path))
+      (load my/package-autoload-file))))
 
 (dolist (dir (file-expand-wildcards
               (expand-file-name "*" package-user-dir)))
@@ -112,7 +111,7 @@
           pkg-desc)
       ;; certain directories are queried, although they do not contain packages
       (unless (member (file-name-nondirectory pkg-dir)
-                      '("elpa" ".emacs.d" "archives" "gnupg"))
+                      '("elpa" ".emacs.d" "archives" "gnupg" "package-cache.el"))
         (message "Package descriptor cache miss: %s" pkg-dir))
       (funcall old-fun pkg-dir))))
 
