@@ -1123,7 +1123,9 @@
   (package-deferred-install 'magic-latex-buffer
       :autoload-names '('magic-latex-buffer))
 
-  (package-deferred-install 'company-auctex
+  (package-deferred-install '(company-auctex :repo "PythonNut/company-auctex"
+                                             :fetcher github)
+      :feature-name 'company-auctex
       :autoload-names '('company-auctex-symbols
                         'company-auctex-environments))
 
