@@ -9,6 +9,68 @@
       package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
 
+(defvar my/required-packages
+  '(;; evil based modes
+    ;; evil
+    evil-args
+    evil-easymotion
+    evil-embrace
+    evil-exchange
+    evil-matchit
+    evil-nerd-commenter
+    evil-org
+    evil-snipe
+    evil-surround
+    evil-quickscope
+    on-parens
+
+    ace-window
+    ace-jump-helm-line
+    adaptive-wrap
+    aggressive-indent
+    auto-compile
+    auto-highlight-symbol
+    auto-indent-mode
+    ;; avy
+    bracketed-paste
+    ;; company
+    company-flx
+    counsel
+    diff-hl
+    diminish
+    dtrt-indent
+    easy-kill
+    expand-region
+    flx-isearch
+    flycheck
+    framemove
+    ;; helm
+    helm-ag
+    helm-flx
+    helm-git-grep
+    helm-projectile
+    hydra
+    icicles
+    iflipb
+    idle-require
+    ;; ivy
+    key-chord
+    magit
+    multiple-cursors
+    rainbow-delimiters
+    session
+    smartparens
+    smex
+    smooth-scrolling
+    solarized-theme
+    ;; swiper
+    volatile-highlights
+    which-key
+    whole-line-or-region
+    ws-butler
+    xclip
+    yasnippet))
+
 (defvar my/package-cached-autoloads nil)
 (defvar my/package-cached-descriptors nil)
 (defvar my/package-cache-last-build-time nil)
@@ -137,68 +199,6 @@
           (package-install package)))
       (byte-recompile-config)
       (package-initialize))))
-
-(defvar my/required-packages
-  '(;; evil based modes
-    ;; evil
-    evil-args
-    evil-easymotion
-    evil-embrace
-    evil-exchange
-    evil-matchit
-    evil-nerd-commenter
-    evil-org
-    evil-snipe
-    evil-surround
-    evil-quickscope
-    on-parens
-
-    ace-window
-    ace-jump-helm-line
-    adaptive-wrap
-    aggressive-indent
-    auto-compile
-    auto-highlight-symbol
-    auto-indent-mode
-    ;; avy
-    bracketed-paste
-    ;; company
-    company-flx
-    counsel
-    diff-hl
-    diminish
-    dtrt-indent
-    easy-kill
-    expand-region
-    flx-isearch
-    flycheck
-    framemove
-    ;; helm
-    helm-ag
-    helm-flx
-    helm-git-grep
-    helm-projectile
-    hydra
-    icicles
-    iflipb
-    idle-require
-    ;; ivy
-    key-chord
-    magit
-    multiple-cursors
-    rainbow-delimiters
-    session
-    smartparens
-    smex
-    smooth-scrolling
-    solarized-theme
-    ;; swiper
-    volatile-highlights
-    which-key
-    whole-line-or-region
-    ws-butler
-    xclip
-    yasnippet))
 
 (my/ensure-packages-are-installed my/required-packages)
 
