@@ -10,7 +10,10 @@
                          ("melpa" . "https://melpa.org/packages/")))
 
 (defvar my/required-packages
-  '(;; evil based modes
+  '(;; meta-packages
+    quelpa
+
+    ;; evil based modes
     ;; evil
     evil-args
     evil-easymotion
@@ -123,6 +126,23 @@
     (cl-letf ((load-path))
       (load my/package-autoload-file))))
 
+(defun my/package-installed-p (pkg)
+  (package-installed-p (if (consp pkg)
+                           (if (eq (car pkg) 'quote)
+                               (cl-caadr pkg)
+                             (car pkg))
+                         pkg)))
+
+(defun my/package-install (pkg)
+  (message "installing %S %S" (consp pkg) (if (eq (car-safe pkg) 'quote)
+                                              (cdr pkg)
+                                            pkg))
+  (if (consp pkg)
+      (quelpa (if (eq (car-safe pkg) 'quote)
+                  (cdr pkg)
+                pkg))
+    (package-install pkg)))
+
 (dolist (dir (file-expand-wildcards
               (expand-file-name "*" package-user-dir)))
   (when (file-directory-p dir)
@@ -147,8 +167,9 @@
                     (file &rest args_ignored)
                     args
                   (unless (member file my/package-cached-autoloads)
-                    (message "Package autoload cache miss: %s" file)
-                    (my/package-rebuild-cache)
+                    (when (assq (intern file) package-alist)
+                      (message "Package autoload cache miss: %s" file)
+                      (my/package-rebuild-cache))
                     (apply orig-load args))))))
     (apply old-fun args)))
 
@@ -173,7 +194,7 @@
           pkg-desc)
       ;; certain directories are queried, although they do not contain packages
       (unless (member (file-name-nondirectory pkg-dir)
-                      '("elpa" ".emacs.d" "archives" "gnupg" "package-cache.el"))
+                      '("elpa" ".emacs.d" "archives" "gnupg"))
         (message "Package descriptor cache miss: %s" pkg-dir))
       (funcall old-fun pkg-dir))))
 
@@ -185,7 +206,7 @@
 (defun my/has-package-not-installed (packages)
   (catch 'package-return
     (dolist (package packages)
-      (unless (package-installed-p package)
+      (unless (my/package-installed-p package)
         (throw 'package-return t)))
     (throw 'package-return nil)))
 
@@ -195,8 +216,8 @@
     (when (my/has-package-not-installed packages)
       (package-refresh-contents)
       (dolist (package packages)
-        (unless (package-installed-p package)
-          (package-install package)))
+        (unless (my/package-installed-p package)
+          (my/package-install package)))
       (byte-recompile-config)
       (package-initialize))))
 
@@ -322,7 +343,7 @@
                                        &allow-other-keys)
   (declare (indent 4))
   `(with-no-warnings
-     (if (package-installed-p ,package-name)
+     (if (my/package-installed-p ,package-name)
          ,@(list regular-init)
        ,@(when manual-init
            (list manual-init))
@@ -333,7 +354,7 @@
                    `(defun ,(cadr name) (&rest args)
                       (interactive)
                       (save-window-excursion
-                        (package-install ,package-name))
+                        (my/package-install ,package-name))
                       (require ,(or feature-name package-name))
                       (if (called-interactively-p)
                           (call-interactively ,name)
