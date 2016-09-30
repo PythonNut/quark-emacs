@@ -53,7 +53,8 @@
           ('text-mode-hook       '(company-ispell))
           ('LaTeX-mode-hook      '(company-auctex-macros
                                    company-auctex-symbols
-                                   company-auctex-environments))
+                                   company-auctex-environments
+                                   company-ispell))
           ('livescript-mode-hook '(company-tide))
           ('go-mode-hook         '(company-go)))))))
 
