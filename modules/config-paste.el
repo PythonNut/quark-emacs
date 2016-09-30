@@ -5,6 +5,17 @@
     (require 'evil)
     (require 'cua-base)))
 
+;; In GUI Emacs, save the clipboard to the kill ring on focus-in
+;; so we can copy things into Emacs even if we don't yank it first
+;; or we add new items to the kill-ring before we yank.
+(add-hook 'focus-in-hook
+          (lambda ()
+            (let ((gui-selection (gui-selection-value)))
+              (when (and gui-selection
+                         (not (string= gui-selection
+                                       (substring-no-properties (car-safe kill-ring)))))
+                (kill-new gui-selection)))))
+
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
 
