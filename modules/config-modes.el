@@ -1145,6 +1145,8 @@
         TeX-PDF-mode t
         TeX-source-correlate-start-server t)
 
+  (evil-set-initial-state 'TeX-error-overview-mode 'insert)
+
   (add-hook 'LaTeX-mode-hook (lambda ()
                                (adaptive-wrap-prefix-mode -1)))
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
