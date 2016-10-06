@@ -765,6 +765,9 @@
   (progn (add-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
          (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))))
 
+(with-eval-after-load 'geiser-debug
+  (evil-set-initial-state 'geiser-debug-mode 'insert))
+
 (with-eval-after-load 'geiser-repl
   (evil-set-initial-state 'geiser-repl-mode 'emacs)
   (add-hook 'geiser-repl-mode-hook (lambda ()
