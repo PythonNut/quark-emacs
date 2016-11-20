@@ -89,7 +89,8 @@
       (add-to-list 'irony-additional-clang-options "-std=c++14")
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-  (package-deferred-install 'irony-eldoc
+  (package-deferred-install '(irony-eldoc :repo "josteink/irony-eldoc"
+                                          :fetcher github)
       :autoload-names '('irony-eldoc))
 
   (package-deferred-install 'company-irony
