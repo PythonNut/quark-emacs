@@ -77,10 +77,9 @@
 
         company-backends '((company-capf
                             company-yasnippet
-                            company-dabbrev-code
                             company-files
                             company-keywords)
-
+                           (company-dabbrev-code)
                            company-dabbrev))
 
   (defun company-complete-common-or-complete-full ()
