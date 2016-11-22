@@ -106,3 +106,7 @@ flycheck_*
 
 # package cache
 /data/package-cache.el
+
+
+# quelpa cache
+/quelpa
