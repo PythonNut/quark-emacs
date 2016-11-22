@@ -990,6 +990,57 @@
 ;; Config file modes ===========================================================
 ;; =============================================================================
 
+(package-deferred-install 'systemd
+    :autoload-names '('systemd-mode)
+    :manual-init
+  (progn
+    ;; Regexps stolen from:
+    ;; https://github.com/holomorph/systemd-mode/blob/master/systemd.el
+    (add-to-list 'auto-mode-alist `(,(eval-when-compile
+                                       (rx (+? (any "a-zA-Z0-9-_.@\\"))
+                                           "."
+                                           (or "automount"
+                                               "busname"
+                                               "mount"
+                                               "service"
+                                               "slice"
+                                               "socket"
+                                               "swap"
+                                               "target"
+                                               "timer"
+                                               "link"
+                                               "netdev"
+                                               "network")
+                                           string-end))
+                                    . systemd-mode))
+    (add-to-list 'auto-mode-alist `(,(eval-when-compile
+                                       (rx ".#"
+                                           (or (and (+? (any "a-zA-Z0-9-_.@\\"))
+                                                    "."
+                                                    (or "automount"
+                                                        "busname"
+                                                        "mount"
+                                                        "service"
+                                                        "slice"
+                                                        "socket"
+                                                        "swap"
+                                                        "target"
+                                                        "timer"
+                                                        "link"
+                                                        "netdev"
+                                                        "network"))
+                                               "override.conf")
+                                           (= 16 (char hex-digit))
+                                           string-end))
+                                    . systemd-mode))
+    (add-to-list 'auto-mode-alist `(,(rx "/systemd/"
+                                         (+? anything)
+                                         ".d/"
+                                         (+? (not (any ?/)))
+                                         ".conf"
+                                         string-end)
+                                    . systemd-mode))))
+
 (package-deferred-install 'gitattributes-mode
     :mode-entries '('("/\\.gitattributes\\'"       . gitattributes-mode)
                     '("/\\.git/info/attributes\\'" . gitattributes-mode)
