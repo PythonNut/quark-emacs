@@ -59,6 +59,7 @@
     ;; ivy
     key-chord
     magit
+    magit-annex
     multiple-cursors
     rainbow-delimiters
     session
