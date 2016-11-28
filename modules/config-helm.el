@@ -230,11 +230,6 @@
 (define-key evil-motion-state-map (kbd "C-p") #'my/helm-interfile-omni)
 
 (global-set-key (kbd "C-c C-o") #'my/helm-interfile-omni)
-(define-key evil-normal-state-map (kbd "C-c C-o") #'my/helm-omni)
-(define-key evil-insert-state-map (kbd "C-c C-o") #'my/helm-omni)
-(define-key evil-emacs-state-map (kbd "C-c C-o") #'my/helm-omni)
-(define-key evil-motion-state-map (kbd "C-c C-o") #'my/helm-omni)
-(define-key evil-replace-state-map (kbd "C-c C-o") #'my/helm-omni)
 
 (global-set-key (kbd "M-:") #'helm-eval-expression)
 (global-set-key (kbd "M-p") #'my/helm-intrafile-omni)
