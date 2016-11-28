@@ -51,8 +51,9 @@
     (fset 'display-startup-echo-area-message #'ignore)
     (add-hook 'emacs-startup-hook (lambda () (message "")))
 
-
-    (load (setq custom-file (locate-user-emacs-file "custom.el")))
+    (setq custom-file (locate-user-emacs-file "custom.el"))
+    (when (file-exists-p custom-file)
+      (load custom-file))
 
     (require 'config-setq)
 

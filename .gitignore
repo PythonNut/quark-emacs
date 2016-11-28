@@ -110,3 +110,7 @@ flycheck_*
 
 # quelpa cache
 /quelpa
+
+
+# the custom file
+/custom.el
