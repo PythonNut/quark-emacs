@@ -3,7 +3,10 @@
 
 (setq mc/cmds-to-run-for-all
       '(
-        evil-delete-backward-word-smart
+        sp-backward-sexp
+        sp-backward-unwrap-sexp
+        sp-forward-sexp
+        sp-kill-sexp
         ))
 
 (setq mc/cmds-to-run-once
