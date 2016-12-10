@@ -170,7 +170,17 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
 (define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
 (define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
 
-
+;; ensure cua-mode doesn't interfere with evil visual state
+(let ((my/cua-mode-was-on))
+  (add-hook 'evil-visual-state-entry-hook
+            (lambda ()
+              (setq my/cua-mode-was-on cua-mode)
+              (when cua-mode
+                (cua-mode -1))))
+  (add-hook 'evil-visual-state-exit-hook
+            (lambda ()
+              (when my/cua-mode-was-on
+                (cua-mode +1)))))
 
 (with-eval-after-load 'xt-mouse
   (add-hook 'kill-emacs-hook
