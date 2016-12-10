@@ -8,7 +8,7 @@
 
   (evil-set-initial-state 'undo-tree-visualizer-mode 'motion)
 
-  (diminish 'undo-tree-mode " μ")
+  (diminish 'undo-tree-mode)
   (defalias 'redo #'undo-tree-redo)
   (defalias 'undo #'undo-tree-undo)
 
