@@ -159,7 +159,8 @@
   (add-hook 'yas-global-mode-hook
             (lambda ()
               (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
-  (setq yas-snippet-dirs (list (locate-user-emacs-file "data/snippets")))
+  (setq yas-snippet-dirs (list (locate-user-emacs-file "data/snippets"))
+        yas-key-syntaxes (remove "w" yas-key-syntaxes))
   (yas-global-mode +1)
   (yas-reload-all)
 
