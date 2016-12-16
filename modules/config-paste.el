@@ -310,8 +310,15 @@ Optionally, pass in string to be \"yanked\" via STRING-IN."
   (defun nadvice/xclip-set-selection (old-fun &rest args)
     (let ((default-directory "/"))
       (apply old-fun args)))
+
+  (defun nadvice/xclip-selection-value (old-fun &rest args)
+    (let ((default-directory "/"))
+      (unless (string-match-p "^Error: Can't open display: .*\n$"
+                              (shell-command-to-string "xclip -o > /dev/null"))
+        (apply old-fun args))))
+
   (advice-add 'xclip-set-selection :around #'nadvice/xclip-set-selection)
-  (advice-add 'xclip-selection-value :around #'nadvice/xclip-set-selection))
+  (advice-add 'xclip-selection-value :around #'nadvice/xclip-selection-value))
 
 (defun remove-clipboard-formatting ()
   "A quick command to drop clipboard formatting"
