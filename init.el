@@ -52,8 +52,9 @@
     (add-hook 'emacs-startup-hook (lambda () (message "")))
 
     (setq custom-file (locate-user-emacs-file "custom.el"))
-    (when (file-exists-p custom-file)
-      (load custom-file))
+    (condition-case nil
+        (load custom-file)
+      (error (with-temp-file custom-file)))
 
     (require 'config-setq)
 
