@@ -117,22 +117,6 @@
 ;;; ====================================
 ;;; iflib - switch buffers alt-tab style
 ;;; ====================================
-(defhydra iflipb-hydra
-  (:pre (setq hydra-is-helpful nil)
-        :post (setq hydra-is-helpful t))
-  ("<C-tab>"
-   (call-interactively #'iflipb-next-buffer))
-  ("<mouse-7>"
-   (call-interactively #'iflipb-next-buffer))
-  ("TAB"
-   (call-interactively #'iflipb-next-buffer))
-  ("<C-S-iso-lefttab>"
-   (call-interactively #'iflipb-previous-buffer))
-  ("<mouse-6>"
-   (call-interactively #'iflipb-previous-buffer))
-  ("<backtab>"
-   (call-interactively #'iflipb-previous-buffer)))
-
 (with-eval-after-load 'iflipb
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -142,40 +126,16 @@
                                     (rx line-start "*helm")
                                     (rx line-start "*Compile")
                                     (rx line-start "*Quail"))
-        iflipb-wrap-around 't)
+        iflipb-wrap-around 't))
 
-  (defun nadvice/iflipb-first-iflipb-buffer-switch-command ())
+(global-set-key (kbd "<mouse-7>") #'iflipb-next-buffer)
+(global-set-key (kbd "<mouse-6>") #'iflipb-previous-buffer)
 
-  (advice-add #'iflipb-first-iflipb-buffer-switch-command
-              :override
-              #'nadvice/iflipb-first-iflipb-buffer-switch-command))
+(global-set-key (kbd "<C-tab>") #'iflipb-next-buffer)
+(global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer)
 
-(defun iflipb-next-buffer-smart ()
-  "A `hydra' enabled next-buffer"
-  (interactive)
-  (require 'iflipb)
-  (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
-             (lambda () t)))
-    (call-interactively #'iflipb-next-buffer))
-  (iflipb-hydra/body))
-
-(defun iflipb-previous-buffer-smart ()
-  "A `hydra' enabled previous-buffer"
-  (interactive)
-  (require 'iflipb)
-  (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
-             (lambda () t)))
-    (call-interactively #'iflipb-previous-buffer))
-  (iflipb-hydra/body))
-
-(global-set-key (kbd "<mouse-7>") #'iflipb-next-buffer-smart)
-(global-set-key (kbd "<mouse-6>") #'iflipb-previous-buffer-smart)
-
-(global-set-key (kbd "<C-tab>") #'iflipb-next-buffer-smart)
-(global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer-smart)
-
-(global-set-key (kbd "C-c TAB") #'iflipb-next-buffer-smart)
-(global-set-key (kbd "C-c <backtab>") #'iflipb-previous-buffer-smart)
+(global-set-key (kbd "C-c TAB") #'iflipb-next-buffer)
+(global-set-key (kbd "C-c <backtab>") #'iflipb-previous-buffer)
 
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
