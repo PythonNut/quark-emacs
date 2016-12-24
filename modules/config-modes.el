@@ -378,6 +378,8 @@
     (add-hook 'sage-mode-hook
               (lambda () (semantic-idle-summary-mode -1)))
 
+    (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view)
+
     (defun nadvice/run-sage (old-fun &optional arg)
       (interactive "P")
       (if (called-interactively-p 'any)
