@@ -139,6 +139,7 @@
 (global-set-key (kbd "C-x f") #'counsel-find-file)
 
 (define-key evil-normal-state-map (kbd "SPC SPC") #'counsel-M-x)
+(global-set-key (kbd "C-S-y") #'counsel-yank-pop)
 
 ;; let M-' intelligently resume whatever completion we were working on
 (let ((my/last-used-completion-system))
