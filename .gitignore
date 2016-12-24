@@ -114,3 +114,7 @@ flycheck_*
 
 # the custom file
 /custom.el
+
+
+# the abbrev file
+/abbrev_defs
