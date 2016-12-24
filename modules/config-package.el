@@ -4,9 +4,9 @@
 (eval-when-compile
   (require 'config-setq))
 
-;; ==============================================================================
-;; Do horrifying things to make package-initialize faster =======================
-;; ==============================================================================
+;; =============================================================================
+;; Do horrifying things to make package-initialize faster ======================
+;; =============================================================================
 
 (defvar my/package-cached-autoloads nil)
 (defvar my/package-cached-descriptors nil)
@@ -118,9 +118,9 @@
 
 (advice-add 'package-load-descriptor :around #'nadvice/package-load-descriptor)
 
-;; ==============================================================================
-;; Guarantee all packages are installed on start ================================
-;; ==============================================================================
+;; =============================================================================
+;; Guarantee all packages are installed on start ===============================
+;; =============================================================================
 
 ;; Package archives
 (setq package-enable-at-startup nil
@@ -232,9 +232,9 @@
 
 (my/ensure-packages-are-installed my/required-packages)
 
-;; ==============================================================================
-;; Require packages in the background after startup =============================
-;; ==============================================================================
+;; =============================================================================
+;; Require packages in the background after startup ============================
+;; =============================================================================
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
@@ -258,6 +258,7 @@
                                  helm-ring
                                  helm-projectile
                                  helm-semantic
+                                 ;; features below load with 1s delay
                                  counsel
                                  which-key
                                  magit
@@ -294,9 +295,9 @@
 
 (add-hook 'emacs-startup-hook #'idle-require-mode)
 
-;; ==============================================================================
-;; Package manipulation functions ===============================================
-;; ==============================================================================
+;; =============================================================================
+;; Package manipulation functions ==============================================
+;; =============================================================================
 
 (defun package-upgrade-all (&optional automatic)
   "Upgrade all packages automatically without showing *Packages* buffer."
@@ -368,16 +369,19 @@
   (message "Successfully deleted package %s."
            (substring-no-properties package-name)))
 
-;; ==============================================================================
-;; Deferred package installation macro ==========================================
-;; ==============================================================================
+;; =============================================================================
+;; Deferred package installation macro =========================================
+;; =============================================================================
 
 (eval-and-compile
   (defun my/remove-keyword-params (seq)
-    (when seq
-      (cl-destructuring-bind (head . tail) seq
-        (if (keywordp head) (my/remove-keyword-params (cdr tail))
-          (cons head (my/remove-keyword-params tail)))))))
+    (let ((res))
+      (while seq
+        (if (keywordp (car seq))
+            (setq seq (cddr seq))
+          (push (car seq) res)
+          (setq seq (cdr seq))))
+      (nreverse res))))
 
 (cl-defmacro package-deferred-install (package-name
                                        &rest forms
