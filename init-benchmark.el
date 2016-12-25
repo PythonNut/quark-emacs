@@ -74,7 +74,7 @@
 (message "[=============   ]")
 (require 'config-intel)
 (message "[==============  ]")
-;; (require 'config-mode
+(require 'config-modes)
 (message "[=============== ]")
 (require 'config-solarized)
 (message "[================]")
