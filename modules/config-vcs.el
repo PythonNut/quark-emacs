@@ -25,6 +25,9 @@
   (unless (display-graphic-p)
     (setenv "SSH_ASKPASS" "magit-askpass"))
 
+  ;; Automatically refresh when magit state changes
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
         magit-log-format-graph-function #'magit-log-format-unicode-graph
