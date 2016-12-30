@@ -7,6 +7,12 @@
                 (diff-hl-mode +1)
                 (diff-hl-update)))))
 
+(with-eval-after-load 'vc-git
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'vc-git)))
+  (setq vc-git-diff-switches '("--histogram")))
+
 (with-eval-after-load 'diff-hl
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
