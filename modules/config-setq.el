@@ -31,6 +31,7 @@
       right-margin-width 0
       ring-bell-function 'ignore
       save-interprogram-paste-before-kill t
+      sentence-end-double-space nil
       set-mark-command-repeat-pop t
       split-height-threshold 0
       split-width-threshold 0
