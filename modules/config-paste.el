@@ -9,13 +9,14 @@
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
 
 (setq cua-paste-pop-rotate-temporarily t
-      cua-enable-cua-keys nil
+      cua-enable-cua-keys t
       cua-virtual-rectangle-edges t
       cua-auto-tabify-rectangles nil
       cua-rectangle-mark-key (kbd "C-x SPC"))
 
 (define-key evil-insert-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
 (define-key evil-emacs-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
+(define-key evil-insert-state-map (kbd "C-v") #'cua-paste)
 
 (cua-mode +1)
 
