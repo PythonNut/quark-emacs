@@ -37,10 +37,22 @@
        (with-parsed-tramp-file-name file-name parsed
          (string= "root" (substring-no-properties parsed-user)))))
 
+(defun my/file-name-first-existing-parent (file-path)
+  (catch 'found-existing-directory
+    (let ((temp-path (file-name-directory file-path)))
+      (while t
+        (if (file-exists-p temp-path)
+            (throw 'found-existing-directory
+                   temp-path)
+          ;; strip one directory off the path
+          (setq temp-path
+                (directory-file-name
+                 (file-name-directory temp-path))))))))
+
 (defun my/make-root-file-name (file-name)
   (require 'tramp)
   (let ((sudo (let ((default-directory
-                      (file-name-directory file-name))
+                      (my/file-name-first-existing-parent file-name))
                     (process-file-side-effects nil))
                 (with-demoted-errors "sudo check failed: %s"
                   (or (= (process-file "sudo" nil nil nil "-n" "true") 0)
@@ -109,7 +121,31 @@
                   args))
        (signal (car err) (cdr err))))))
 
-(advice-add #'find-file-noselect-1 :around #'nadvice/find-file-noselect-1)
+(advice-add 'find-file-noselect-1 :around #'nadvice/find-file-noselect-1)
+
+(defun nadvice/make-directory/auto-root (old-fun &rest args)
+  (cl-letf*
+      ((old-md (symbol-function #'make-directory))
+       ((symbol-function #'make-directory)
+        (lambda (dir &optional parents)
+          (if (and (not (my/root-file-name-p dir))
+                   (not (file-writable-p
+                         (my/file-name-first-existing-parent dir)))
+                   (y-or-n-p "Insufficient permissions. Create with root? "))
+              (funcall old-md
+                       (my/make-root-file-name dir)
+                       parents)
+            (funcall old-md dir parents)))))
+    (apply old-fun args)))
+
+(advice-add 'basic-save-buffer :around #'nadvice/make-directory/auto-root)
+
+(with-eval-after-load 'helm-files
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'helm-files)))
+  (advice-add 'helm-find-file-or-marked :around
+              #'nadvice/make-directory/auto-root))
 
 (defun nadvice/semantic-find-file-noselect (old-fun &rest args)
   (cl-letf* ((old-aff (symbol-function #'after-find-file))
@@ -119,7 +155,7 @@
                   (apply old-aff args)))))
     (apply old-fun args)))
 
-(advice-add #'semantic-find-file-noselect :around
+(advice-add 'semantic-find-file-noselect :around
             #'nadvice/semantic-find-file-noselect)
 
 (defvar root-save-mode-lighter
