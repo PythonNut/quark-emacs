@@ -1186,7 +1186,8 @@
 
 (with-eval-after-load 'tex
   (package-deferred-install 'magic-latex-buffer
-      :autoload-names '('magic-latex-buffer))
+      :autoload-names '('magic-latex-buffer)
+      (setq magic-latex-enable-block-align nil))
 
   (package-deferred-install '(company-auctex :repo "PythonNut/company-auctex"
                                              :fetcher github)
