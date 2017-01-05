@@ -256,7 +256,8 @@
 (package-deferred-install 'powershell
     :mode-entries '('("\\.ps[dm]?1\\'" . powershell-mode))
     :autoload-names '('powershell-mode
-                      'powershell))
+                      'powershell)
+    (setq powershell-indent 2))
 
 ;; =============================================================================
 ;; Python ======================================================================
