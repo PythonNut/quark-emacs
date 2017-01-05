@@ -118,3 +118,6 @@ flycheck_*
 
 # the abbrev file
 /abbrev_defs
+
+
+/personal
