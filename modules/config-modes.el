@@ -257,7 +257,11 @@
     :mode-entries '('("\\.ps[dm]?1\\'" . powershell-mode))
     :autoload-names '('powershell-mode
                       'powershell)
-    (setq powershell-indent 2))
+    (setq powershell-indent 2)
+    (sp-local-pair 'powershell-mode "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
 
 ;; =============================================================================
 ;; Python ======================================================================
