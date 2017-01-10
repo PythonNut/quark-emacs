@@ -39,6 +39,67 @@
 
 (with-eval-after-load 'ivy
   (ivy-mode +1)
+  (package-deferred-install '(historian :repo "PythonNut/historian.el"
+                                        :fetcher github)
+      :feature-name 'historian
+      :autoload-names '('historian-mode
+                        'historian-load
+                        'historian-save))
+
+  (eval-when-compile
+    (require 'historian))
+
+  (historian-mode +1)
+
+  (defvar historian-ivy-freq-boost-factor 100)
+  (defvar historian-ivy-recent-boost 100)
+  (defvar historian-ivy-recent-decrement 5)
+  (defvar historian--history-table (make-hash-table))
+
+  (defun historian--nadvice/ivy-read/save-this-command (old-fun &rest args)
+    (cl-letf ((saved-this-command this-command))
+      (apply old-fun args)))
+
+  (advice-add 'ivy-read :around #'historian--nadvice/ivy-read/save-this-command)
+
+  (defun historian--nadvice/ivy--flx-sort (old-fun name cands)
+    (if (not (bound-and-true-p historian-mode))
+        (funcall old-fun name cands)
+      (require 'flx)
+      (cl-letf*
+          ((old-flx-score (symbol-function #'flx-score))
+           ((symbol-function #'flx-score)
+            (lambda (str query &optional cache)
+              (let* ((orig-score
+                      (funcall old-flx-score str query cache))
+                     (history (gethash (bound-and-true-p
+                                        saved-this-command)
+                                       historian--history-table)))
+                (if history
+                    (let ((freq (if (gethash str (cdr history))
+                                    (/ (float (gethash str (cdr history) 0))
+                                       (let ((total 0))
+                                         (maphash
+                                          (lambda (key value)
+                                            (cl-incf total value))
+                                          (cdr history))
+                                         total))
+                                  0))
+                          (freq-boost (* freq historian-ivy-freq-boost-factor))
+                          (recent-index (cl-position str (car history)))
+                          (recent-boost (if recent-index
+                                            (- historian-ivy-recent-boost
+                                               (* historian-ivy-recent-decrement
+                                                  recent-index))
+                                          0)))
+                      (message "%s %s %s %s %s" str orig-score freq-boost recent-boost history)
+                      (cons
+                       (+ (car orig-score) freq-boost recent-boost)
+                       (cdr orig-score)))
+                  orig-score)))))
+        (funcall old-fun name cands))))
+
+  (advice-add 'ivy--flx-sort :around #'historian--nadvice/ivy--flx-sort)
 
   (defun my/ivy-setup-faces ()
     (set-face-attribute 'ivy-minibuffer-match-face-1 nil

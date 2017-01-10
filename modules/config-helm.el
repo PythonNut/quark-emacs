@@ -5,6 +5,11 @@
   (with-demoted-errors "Load error: %s"
     (require 'helm)))
 
+(with-eval-after-load 'helm-flx
+  (eval-when-compile
+    (require 'helm-flx))
+  (setq helm-flx-for-helm-locate t))
+
 (with-eval-after-load 'helm
   (helm-flx-mode +1)
 
@@ -91,7 +96,7 @@
         (helm-make-source "Locate" 'helm-locate-source
           :pattern-transformer 'helm-locate-pattern-transformer
           :candidate-number-limit 100)
-        helm-locate-command "locate %s -r %s -be -l 100"))
+        helm-locate-command "locate %s -r %s -e -l 100"))
 
 ;; adaptively fallback to ack and ack-grep
 (with-eval-after-load 'helm-ag
