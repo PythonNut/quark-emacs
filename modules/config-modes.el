@@ -258,6 +258,7 @@
     :autoload-names '('powershell-mode
                       'powershell)
     (setq powershell-indent 2)
+    (sp-local-pair 'powershell-mode "`" nil :actions nil)
     (sp-local-pair 'powershell-mode "{" nil :post-handlers
                    '(:add
                      ("||\n[i]" "RET")
