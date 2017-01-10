@@ -86,7 +86,7 @@
 (with-eval-after-load 'helm-locate
   (eval-when-compile
     (require 'helm-locate))
-  (setq helm-locate-fuzzy-match nil
+  (setq helm-locate-fuzzy-match t
         helm-source-locate
         (helm-make-source "Locate" 'helm-locate-source
           :pattern-transformer 'helm-locate-pattern-transformer
