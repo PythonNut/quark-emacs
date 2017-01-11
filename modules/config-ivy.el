@@ -56,9 +56,10 @@
   (defvar historian-ivy-recent-decrement 5)
   (defvar historian--history-table (make-hash-table))
 
+  (defvar historian--ivy-saved-this-command)
   (defun historian--nadvice/ivy-read/save-this-command (old-fun &rest args)
-    (cl-letf ((saved-this-command this-command))
-      (apply old-fun args)))
+    (setq historian--ivy-saved-this-command this-command)
+    (apply old-fun args))
 
   (advice-add 'ivy-read :around #'historian--nadvice/ivy-read/save-this-command)
 
@@ -73,26 +74,25 @@
               (let* ((orig-score
                       (funcall old-flx-score str query cache))
                      (history (gethash (bound-and-true-p
-                                        saved-this-command)
+                                        historian--ivy-saved-this-command)
                                        historian--history-table)))
                 (if history
-                    (let ((freq (if (gethash str (cdr history))
-                                    (/ (float (gethash str (cdr history) 0))
-                                       (let ((total 0))
-                                         (maphash
-                                          (lambda (key value)
-                                            (cl-incf total value))
-                                          (cdr history))
-                                         total))
-                                  0))
-                          (freq-boost (* freq historian-ivy-freq-boost-factor))
-                          (recent-index (cl-position str (car history)))
-                          (recent-boost (if recent-index
-                                            (- historian-ivy-recent-boost
-                                               (* historian-ivy-recent-decrement
-                                                  recent-index))
-                                          0)))
-                      (message "%s %s %s %s %s" str orig-score freq-boost recent-boost history)
+                    (let* ((freq (if (gethash str (cdr history))
+                                     (/ (float (gethash str (cdr history) 0))
+                                        (let ((total 0))
+                                          (maphash
+                                           (lambda (key value)
+                                             (cl-incf total value))
+                                           (cdr history))
+                                          total))
+                                   0))
+                           (freq-boost (* freq historian-ivy-freq-boost-factor))
+                           (recent-index (cl-position str (car history)))
+                           (recent-boost (if recent-index
+                                             (- historian-ivy-recent-boost
+                                                (* historian-ivy-recent-decrement
+                                                   recent-index))
+                                           0)))
                       (cons
                        (+ (car orig-score) freq-boost recent-boost)
                        (cdr orig-score)))
