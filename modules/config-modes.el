@@ -1237,7 +1237,13 @@
             (call-interactively old-fun)))
       (apply old-fun args)))
 
-  (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master))
+  (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master)
+
+  (require 'embrace)
+  (embrace-add-pair ?= "\\verb|" "|")
+  (embrace-add-pair ?~ "\\texttt{" "}")
+  (embrace-add-pair ?/ "\\emph{" "}")
+  (embrace-add-pair ?* "\\textbf{" "}"))
 
 ;; =============================================================================
 ;; Org mode ====================================================================
