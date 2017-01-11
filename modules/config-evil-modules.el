@@ -71,7 +71,8 @@
 
   (setq evil-snipe-scope 'visible
         evil-snipe-repeat-scope 'visible
-        evil-snipe-smart-case t)
+        evil-snipe-smart-case t
+        evil-snipe-tab-increment t)
 
   (set-face-attribute 'evil-snipe-matches-face nil
                       :background "#586e75")
