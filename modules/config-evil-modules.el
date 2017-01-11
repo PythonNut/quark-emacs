@@ -33,8 +33,8 @@
 (define-key evil-operator-state-map "s" 'evil-surround-edit)
 (define-key evil-operator-state-map "S" 'evil-Surround-edit)
 
-(define-key evil-visual-state-map (kbd "gw") 'evil-surround-region)
-(define-key evil-visual-state-map (kbd "gW") 'evil-Surround-region)
+(define-key evil-visual-state-map (kbd "S") 'evil-surround-region)
+(define-key evil-visual-state-map (kbd "gS") 'evil-Surround-region)
 
 ;; evil NERD commenter, commenting awesomeness!
 (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines)
@@ -94,8 +94,8 @@
 (define-key evil-motion-state-map "F" #'evil-snipe-F)
 (define-key evil-motion-state-map "t" #'evil-snipe-t)
 (define-key evil-motion-state-map "T" #'evil-snipe-T)
-(define-key evil-motion-state-map "s" #'evil-snipe-s)
-(define-key evil-motion-state-map "S" #'evil-snipe-S)
+(define-key evil-motion-state-map "z" #'evil-snipe-s)
+(define-key evil-motion-state-map "Z" #'evil-snipe-S)
 
 (define-key evil-normal-state-map "f" #'evil-snipe-f)
 (define-key evil-normal-state-map "F" #'evil-snipe-F)
@@ -108,8 +108,8 @@
 (define-key evil-visual-state-map "F" #'evil-snipe-F)
 (define-key evil-visual-state-map "t" #'evil-snipe-t)
 (define-key evil-visual-state-map "T" #'evil-snipe-T)
-(define-key evil-visual-state-map "s" #'evil-snipe-s)
-(define-key evil-visual-state-map "S" #'evil-snipe-S)
+(define-key evil-visual-state-map "z" #'evil-snipe-s)
+(define-key evil-visual-state-map "Z" #'evil-snipe-S)
 
 (with-eval-after-load 'evil-quickscope
   (eval-when-compile
