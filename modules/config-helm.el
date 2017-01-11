@@ -86,7 +86,65 @@
 (with-eval-after-load 'helm-projectile
   (eval-when-compile
     (require 'helm-projectile))
-  (setq helm-projectile-fuzzy-match t))
+  (setq helm-projectile-fuzzy-match t)
+
+  (defvar my/helm-non-projectile-buffers-list-cache nil)
+  (defclass helm-source-non-projectile-buffer (helm-source-sync helm-type-buffer)
+    ((init :initform
+           (lambda ()
+             (setq my/helm-non-projectile-buffers-list-cache
+                   (condition-case nil
+                       (mapcar #'buffer-name
+                               (let* ((project-root (projectile-project-root)))
+                                 (cl-remove-if
+                                  (lambda (buffer)
+                                    (projectile-project-buffer-p buffer
+                                                                 project-root))
+                                  (buffer-list))))
+                     (error nil)))
+             (let ((result
+                    (cl-loop for b in my/helm-non-projectile-buffers-list-cache
+                             maximize (length b) into len-buf
+                             maximize (length (with-current-buffer b
+                                                (symbol-name major-mode)))
+                             into len-mode
+                             finally return (cons len-buf len-mode))))
+               (unless helm-buffer-max-length
+                 (setq helm-buffer-max-length (car result)))
+               (unless helm-buffer-max-len-mode
+                 ;; If a new buffer is longer that this value
+                 ;; this value will be updated
+                 (setq helm-buffer-max-len-mode (cdr result))))))
+     (candidates :initform my/helm-non-projectile-buffers-list-cache)
+     (matchplugin :initform nil)
+     (match :initform 'helm-buffers-match-function)
+     (persistent-action :initform 'helm-buffers-list-persistent-action)
+     (keymap :initform helm-buffer-map)
+     (volatile :initform t)
+     (persistent-help
+      :initform
+      "Show this buffer / C-u \\[helm-execute-persistent-action]: Kill this buffer")))
+
+  (defvar helm-source-non-projectile-buffers-list (helm-make-source "Non project buffers" 'helm-source-non-projectile-buffer))
+
+  (defvar helm-source-non-projectile-recentf-list
+    (helm-build-in-buffer-source "Other recent files"
+      :data (lambda ()
+              (condition-case nil
+                  (when (boundp 'recentf-list)
+                    (let ((project-root (projectile-project-root)))
+                      (cl-remove-if
+                       (lambda (f) (string-prefix-p project-root f))
+                       recentf-list)))
+                (error nil)))
+      :fuzzy-match helm-projectile-fuzzy-match
+      :coerce 'helm-projectile-coerce-file
+      :keymap helm-projectile-find-file-map
+      :help-message 'helm-ff-help-message
+      :mode-line helm-read-file-name-mode-line-string
+      :action helm-projectile-file-actions
+      :persistent-action #'helm-projectile-file-persistent-action)
+    "Helm source definition for recent files not in current project."))
 
 (with-eval-after-load 'helm-locate
   (eval-when-compile
@@ -125,6 +183,9 @@
               (executable-find "ack-grep"))
       (require 'helm-ag)))
 
+  (require 'recentf)
+  (when helm-turn-on-recentf (recentf-mode 1))
+
   (let ((helm-sources-using-default-as-input)
         (projectile-root (ignore-errors (projectile-project-p)))
         (file-remote (and buffer-file-name
@@ -135,13 +196,14 @@
            ;; projectile explodes when not in project
            (if projectile-root
                (when (require 'helm-projectile nil t)
-                 '(helm-source-projectile-buffers-list))
+                 '(helm-source-projectile-buffers-list
+                   helm-source-non-projectile-buffers-list))
              '(helm-source-buffers-list))
 
            (if projectile-root
                (append
                 '(helm-source-projectile-recentf-list
-                  helm-source-recentf)
+                  helm-source-non-projectile-recentf-list)
                 (unless file-remote
                   '(helm-source-projectile-files-list)))
              '(helm-source-recentf))
