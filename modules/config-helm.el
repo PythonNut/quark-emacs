@@ -49,7 +49,8 @@
                                                    (rx "#" line-end)
                                                    (rx "~" line-end)
                                                    (rx ".zwc.old" line-end)
-                                                   (rx ".zwc" line-end))))
+                                                   (rx ".zwc" line-end)
+                                                   (rx "/.#"))))
 
   (defun nadvice/helm-ff-filter-candidate-one-by-one (old-fun file)
     (when (or (not (string-match-p (rx (or "." "..") line-end) file))
