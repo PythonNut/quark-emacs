@@ -814,9 +814,9 @@
   (yas-minor-mode -1)
   (setq yas-dont-activate t)
 
-  (set (make-variable-buffer-local 'global-hl-line-mode) nil)
-  (set (make-variable-buffer-local 'scroll-margin) 0)
-  (set (make-variable-buffer-local 'smooth-scroll-margin) 0))
+  (setq-local global-hl-line-mode nil)
+  (setq-local scroll-margin 0)
+  (setq-local smooth-scroll-margin 0))
 
 (add-hook 'term-mode-hook #'my/generic-term-init)
 (add-hook 'shell-mode-hook #'my/generic-term-init)
@@ -938,9 +938,9 @@
 
   (add-hook 'eshell-mode-hook
             (lambda ()
-              (make-variable-buffer-local 'company-idle-delay)))
+              (setq-local company-idle-delay 0.1)
+              (my/eshell-onetime-setup)))
 
-  (add-hook 'eshell-mode-hook #'my/eshell-onetime-setup)
   (add-hook 'eshell-directory-change-hook
             (lambda ()
               (setq company-idle-delay

@@ -233,8 +233,8 @@
   (ws-butler-mode -1)
   (visual-line-mode -1)
   (adaptive-wrap-prefix-mode -1)
-  (set (make-variable-buffer-local 'global-hl-line-mode) nil)
-  (set (make-variable-buffer-local 'column-number-mode) nil)
+  (setq-local global-hl-line-mode nil)
+  (setq-local column-number-mode nil)
   (message "Use C-c C-v → VLF"))
 
 (add-hook 'vlf-mode-hook #'my/vlf-hook)

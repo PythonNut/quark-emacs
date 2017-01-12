@@ -29,8 +29,8 @@
   ;; visual line wrapping breaks the
   (add-hook 'undo-tree-visualizer-mode-hook
             (lambda ()
-              (set (make-local-variable 'input-method-function) nil)
-              (set (make-variable-buffer-local 'global-hl-line-mode) nil)
+              (setq-local input-method-function nil)
+              (setq-local global-hl-line-mode nil)
               (visual-line-mode -1)))
 
   (evil-set-initial-state 'undo-tree-visualizer-mode 'emacs)

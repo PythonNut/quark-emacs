@@ -73,8 +73,6 @@ the syntax class ')'."
 (advice-add 'sp-show--pair-function :after #'nadvice/sp-show--pair-function)
 
 (show-smartparens-global-mode +1)
-;; (make-variable-buffer-local 'show-paren-mode)
-;; (setq-default show-paren-mode nil)
 
 (with-eval-after-load 'paren
   (defun nadvice/show-paren-mode (old-fun &rest args)
