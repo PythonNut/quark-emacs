@@ -1540,4 +1540,9 @@
     :mode-entries '('("\\.sls\\'" . salt-mode))
     :autoload-names '('salt-mode))
 
+
+(package-deferred-install 'ahk-mode
+    :mode-entries '('("\\.ahk\\'" . ahk-mode))
+    :autoload-names '('ahk-mode))
+
 (provide 'config-modes)
