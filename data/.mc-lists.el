@@ -3,9 +3,18 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        back-to-indentation-visual-or-beginning
+        end-of-visual-line-or-end
         evil-delete-backward-word-smart
+        sp-backward-sexp
+        sp-backward-unwrap-sexp
+        sp-down-sexp
+        sp-forward-sexp
+        sp-kill-sexp
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        evil-normal-state
+        hydra/projectile-tools/body
         ))
