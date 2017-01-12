@@ -44,14 +44,22 @@
                               :fuzzy-match helm-recentf-fuzzy-match)
 
         helm-boring-file-regexp-list (append helm-boring-file-regexp-list
-                                             (list (rx "/." line-end)
-                                                   (rx "/.." line-end)
-                                                   (rx ".undo.xz" line-end)
+                                             (list (rx ".undo.xz" line-end)
                                                    (rx ".elc" line-end)
                                                    (rx "#" line-end)
                                                    (rx "~" line-end)
                                                    (rx ".zwc.old" line-end)
-                                                   (rx ".zwc" line-end)))))
+                                                   (rx ".zwc" line-end))))
+
+  (defun nadvice/helm-ff-filter-candidate-one-by-one (old-fun file)
+    (when (or (not (string-match-p (rx (or "." "..") line-end) file))
+              (string-match-p (rx ".")
+                              (helm-basename (or (bound-and-true-p helm-input)
+                                                 ""))))
+      (funcall old-fun file)))
+
+  (advice-add 'helm-ff-filter-candidate-one-by-one :around
+              #'nadvice/helm-ff-filter-candidate-one-by-one))
 
 (with-eval-after-load 'helm-buffers
   (eval-when-compile
