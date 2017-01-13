@@ -239,4 +239,23 @@
 
 (add-hook 'vlf-mode-hook #'my/vlf-hook)
 
+;;; =================================
+;;; Emacs fasd - find files from fasd
+;;; =================================
+
+(package-deferred-install 'fasd
+    :autoload-names '('fasd-find-file)
+    (setq fasd-enable-initial-prompt nil
+          fasd-standard-search "-f")
+
+  (defun nadvice/fasd-find-file (old-fun &rest args)
+    (require 'helm-mode)
+    ;; overriding the completion system in emacs-fasd is surprisingly tricky
+    (cl-letf (((symbol-function #'completing-read)
+               #'helm--completing-read-default))
+      (apply old-fun args)))
+
+  (advice-add 'fasd-find-file :around
+              #'nadvice/fasd-find-file))
+
 (provide 'config-intel)
