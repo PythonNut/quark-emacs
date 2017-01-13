@@ -140,19 +140,20 @@
     (helm-build-in-buffer-source "Other recent files"
       :data (lambda ()
               (condition-case nil
-                  (when (boundp 'recentf-list)
-                    (let ((project-root (projectile-project-root)))
-                      (cl-remove-if
-                       (lambda (f) (string-prefix-p project-root f))
-                       recentf-list)))
+                  (when (bound-and-true-p recentf-list)
+                    (if (projectile-project-p)
+                        (let ((project-root (projectile-project-root)))
+                          (cl-remove-if
+                           (lambda (f) (string-prefix-p project-root f))
+                           recentf-list))
+                      recentf-list))
                 (error nil)))
-      :fuzzy-match helm-projectile-fuzzy-match
-      :coerce 'helm-projectile-coerce-file
-      :keymap helm-projectile-find-file-map
+      :fuzzy-match helm-recentf-fuzzy-match
+      :pattern-transformer #'helm-recentf-pattern-transformer
       :help-message 'helm-ff-help-message
       :mode-line helm-read-file-name-mode-line-string
       :action helm-projectile-file-actions
-      :persistent-action #'helm-projectile-file-persistent-action)
+      :persistent-action #'helm-ff-kill-or-find-buffer-fname)
     "Helm source definition for recent files not in current project."))
 
 (with-eval-after-load 'helm-locate
