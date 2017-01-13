@@ -21,6 +21,11 @@
 
 (with-eval-after-load 'multiple-cursors
   (setq mc/list-file (locate-user-emacs-file "data/.mc-lists.el"))
+
+  ;; This is required to load the save file, due to a poor design
+  ;; decision in multiple-cursors.el
+  (load mc/list-file t)
+
   (define-key mc/keymap (kbd "<return>") nil)
   (define-key mc/keymap (kbd "C-c <return>") 'multiple-cursors-mode))
 
