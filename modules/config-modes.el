@@ -1251,11 +1251,24 @@
 
   (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master)
 
-  (require 'embrace)
-  (embrace-add-pair ?= "\\verb|" "|")
-  (embrace-add-pair ?~ "\\texttt{" "}")
-  (embrace-add-pair ?/ "\\emph{" "}")
-  (embrace-add-pair ?* "\\textbf{" "}"))
+  (defun my/embrace-with-TeX-environment ()
+    (let* ((input (read-string "Environment: ")))
+      (cons (format "\\begin{%s}" (or input "") )
+            (format "\\end{%s}" (or input "")))))
+
+  (defun my/embrace-TeX-setup ()
+    (require 'embrace)
+    (embrace-add-pair ?= "\\verb|" "|")
+    (embrace-add-pair ?~ "\\texttt{" "}")
+    (embrace-add-pair ?/ "\\emph{" "}")
+    (embrace-add-pair ?* "\\textbf{" "}")
+    (embrace-add-pair ?$ "$" "$")
+    (embrace-add-pair ?\\ "\\[" "\\]")
+    (embrace-add-pair-regexp ?e "\\\\begin{[^\}]*?}" "\\\\end{[^\}]*?}"
+                             'my/embrace-with-TeX-environment
+                             (embrace-build-help "\\begin{env}" "\\end{env}")))
+
+  (add-hook 'LaTeX-mode-hook #'my/embrace-TeX-setup))
 
 ;; =============================================================================
 ;; Org mode ====================================================================
