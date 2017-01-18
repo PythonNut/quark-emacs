@@ -1211,6 +1211,18 @@
       :autoload-names '('company-auctex-symbols
                         'company-auctex-environments))
 
+  (with-eval-after-load 'evil
+    (package-deferred-install '(evil-latex-textobjects
+                                :repo "hpdeifel/evil-latex-textobjects"
+                                :fetcher github
+                                :files ("evil-latex-textobjects.el"))
+        :feature-name 'evil-latex-textobjects
+        :autoload-names '('evil-latex-textobjects-mode
+                          'turn-on-evil-latex-textobjects-mode
+                          'turn-off-evil-latex-textobjects-mode))
+
+    (add-hook 'LaTeX-mode-hook 'turn-on-evil-latex-textobjects-mode))
+
   (setq TeX-auto-save t
         TeX-save-query nil
         TeX-parse-self t
