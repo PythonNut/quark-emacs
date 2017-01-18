@@ -1261,9 +1261,14 @@
   (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master)
 
   (defun my/embrace-with-TeX-environment ()
-    (let* ((input (read-string "Environment: ")))
-      (cons (format "\\begin{%s}" (or input "") )
-            (format "\\end{%s}" (or input "")))))
+    (let* ((input (read-string "Environment: "))
+           (newline (if (= (elt input (1- (length input))) ?\n) "\n" ""))
+           (environment (if (or (string-empty-p newline)
+                                (string-empty-p input))
+                            input
+                          (substring input 0 (1- (length input))))))
+      (cons (format "\\begin{%s}%s" (or environment "") newline)
+            (format "%s\\end{%s}" newline (or environment "")))))
 
   (defun my/embrace-TeX-setup ()
     (require 'embrace)
