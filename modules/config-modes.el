@@ -1221,7 +1221,16 @@
                           'turn-on-evil-latex-textobjects-mode
                           'turn-off-evil-latex-textobjects-mode))
 
-    (add-hook 'LaTeX-mode-hook 'turn-on-evil-latex-textobjects-mode))
+    (defun my/evil-LaTeX-setup ()
+      (require 'evil-surround)
+      (evil-latex-textobjects-mode +1)
+      (setq evil-surround-pairs-alist
+            (append (list '(?\( . ("\\left( " . " \\right)"))
+                          '(?\[ . ("\\left[ " . " \\right]"))
+                          '(?\{ . ("\\left{ " . " \\right}")))
+                    evil-surround-pairs-alist)))
+
+    (add-hook 'LaTeX-mode-hook #'my/evil-LaTeX-setup))
 
   (setq TeX-auto-save t
         TeX-save-query nil
