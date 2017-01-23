@@ -245,8 +245,7 @@
 
 (package-deferred-install 'fasd
     :autoload-names '('fasd-find-file)
-    (setq fasd-enable-initial-prompt nil
-          fasd-standard-search "-f")
+    (setq fasd-enable-initial-prompt nil)
 
   (defun nadvice/fasd-find-file (old-fun &rest args)
     (require 'helm-mode)
