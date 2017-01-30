@@ -1260,6 +1260,14 @@
 
   (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master)
 
+  (defun nadvice/TeX-source-correlate-sync-source (&rest args)
+    (recenter)
+    (require 'pulse)
+    (pulse-momentary-highlight-one-line (point)))
+
+  (advice-add 'TeX-source-correlate-sync-source :after
+              #'nadvice/TeX-source-correlate-sync-source)
+
   (defun my/embrace-with-TeX-environment ()
     (let* ((input (read-string "Environment: "))
            (newline (if (= (elt input (1- (length input))) ?\n) "\n" ""))
