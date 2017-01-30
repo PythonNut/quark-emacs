@@ -5,7 +5,6 @@
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
     (require 'evil)
-    (require 'flycheck)
     (require 'config-setq)))
 
 ;; =============================================================================
@@ -30,6 +29,9 @@
   (remove-hook 'before-save-hook #'my/auto-compile-onetime-setup t))
 
 (with-eval-after-load 'eldoc
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'flycheck)))
   (diminish 'eldoc-mode)
 
   (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
@@ -570,6 +572,7 @@
 (package-deferred-install 'web-mode
     :autoload-names '('web-mode)
     (setq web-mode-auto-close-style 1)
+  (add-to-list 'sp-navigate-consider-sgml-tags 'web-mode)
   (sp-local-pair 'web-mode "{" nil :post-handlers
                  '(:add
                    ("||\n[i]" "RET")
