@@ -539,14 +539,15 @@
 (global-set-key (kbd "C-:") #'icicle-pp-eval-expression)
 (global-set-key (kbd "<backtab>") #'icicle-complete-keys)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)))
-
-(define-key evil-normal-state-map (kbd "<backtab>") #'icicle-complete-keys)
-(define-key evil-insert-state-map (kbd "<backtab>") #'icicle-complete-keys)
-
 (global-set-key (kbd "C-S-x C-S-f") #'icicle-find-file)
 (global-set-key (kbd "C-S-X C-S-B") #'icicle-buffer)
+
+(with-eval-after-load 'evil
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil)))
+
+  (define-key evil-normal-state-map (kbd "<backtab>") #'icicle-complete-keys)
+  (define-key evil-insert-state-map (kbd "<backtab>") #'icicle-complete-keys))
 
 (provide 'config-icicles)

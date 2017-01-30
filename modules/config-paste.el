@@ -2,7 +2,6 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'evil)
     (require 'cua-base)))
 
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
@@ -14,18 +13,7 @@
       cua-auto-tabify-rectangles nil
       cua-rectangle-mark-key (kbd "C-x SPC"))
 
-(define-key evil-insert-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
-(define-key evil-emacs-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
-(define-key evil-insert-state-map (kbd "C-v") #'cua-paste)
-
 (cua-mode +1)
-
-(put 'evil-forward-char             'CUA 'move)
-(put 'evil-backward-char            'CUA 'move)
-(put 'evil-next-visual-line         'CUA 'move)
-(put 'evil-previous-visual-line     'CUA 'move)
-(put 'evil-end-of-visual-line       'CUA 'move)
-(put 'evil-beginning-of-visual-line 'CUA 'move)
 
 ;; cua-cut the line if no region
 (defun nadvice/cua-cut-region (old-fun &optional prefix)
@@ -97,79 +85,10 @@
 
   (setq easy-kill-try-things '(url email my-line)))
 
-;; make evil respect whole-line-or-region
-(defun nadvice/evil-paste-line (&rest _args)
-  (when (with-demoted-errors "Failed to check text properties for paste. %s"
-          (get-text-property 0 'whole-line-or-region (car kill-ring)))
-    (setf (car kill-ring)
-          (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
-
-(advice-add 'evil-paste-before :before #'nadvice/evil-paste-line)
-(advice-add 'evil-paste-after  :before #'nadvice/evil-paste-line)
-
-
-;; unify evil-paste with cua rectangles
-(defun nadvice/evil-paste-after (old-fun &rest args)
-  (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
-            (car (get-text-property 0 'yank-handler (car kill-ring))))
-          'rectangle--insert-for-yank)
-      (evil-with-state 'normal
-        (call-interactively #'evil-append)
-        (call-interactively #'cua-paste))
-    (apply old-fun args)))
-
-(defun nadvice/evil-paste-before (old-fun &rest args)
-  (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
-            (car (get-text-property 0 'yank-handler (car kill-ring))))
-          'rectangle--insert-for-yank)
-      (evil-with-state 'normal
-        (call-interactively #'evil-insert)
-        (call-interactively #'cua-paste))
-    (apply old-fun args)))
-
-(advice-add 'evil-paste-after  :around #'nadvice/evil-paste-after)
-(advice-add 'evil-paste-before :around #'nadvice/evil-paste-before)
-
-
-(define-key evil-insert-state-map (kbd "C-w") nil)
-
-
-(define-key evil-insert-state-map
-  (kbd "<remap> <kill-ring-save>") #'easy-kill)
-(define-key evil-emacs-state-map
-  (kbd "<remap> <kill-ring-save>") #'easy-kill)
-(define-key evil-normal-state-map
-  (kbd "<remap> <kill-ring-save>") #'easy-kill)
-
-(define-key evil-emacs-state-map
-  (kbd "<remap> <kill-region>") #'cua-cut-region)
-(define-key evil-insert-state-map
-  (kbd "<remap> <kill-region>") #'cua-cut-region)
-
-(define-key evil-emacs-state-map
-  (kbd "<remap> <yank-pop>") #'cua-paste-pop)
-(define-key evil-insert-state-map
-  (kbd "<remap> <yank-pop>") #'cua-paste-pop)
-
-(define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
-(define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
-
-;; ensure cua-mode doesn't interfere with evil visual state
-(let ((my/cua-mode-was-on))
-  (add-hook 'evil-visual-state-entry-hook
-            (lambda ()
-              (setq my/cua-mode-was-on cua-mode)
-              (when cua-mode
-                (cua-mode -1))))
-  (add-hook 'evil-visual-state-exit-hook
-            (lambda ()
-              (when my/cua-mode-was-on
-                (cua-mode +1)))))
-
 (with-eval-after-load 'xt-mouse
   (add-hook 'kill-emacs-hook
-                (lambda ()
-                  (xterm-mouse-mode -1))))
+            (lambda ()
+              (xterm-mouse-mode -1))))
 
 (defun my/setup-paste (&optional frame)
   (with-selected-frame (or frame (selected-frame))
@@ -285,7 +204,93 @@
         (kbd (concat "M-: " key))
         (kbd (concat "C-M-S-" key))))))
 
-(require 'config-package)
+(with-eval-after-load 'evil
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil)))
+
+  (define-key evil-insert-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
+  (define-key evil-emacs-state-map (kbd "C-x SPC") #'cua-set-rectangle-mark)
+  (define-key evil-insert-state-map (kbd "C-v") #'cua-paste)
+
+  (put 'evil-forward-char             'CUA 'move)
+  (put 'evil-backward-char            'CUA 'move)
+  (put 'evil-next-visual-line         'CUA 'move)
+  (put 'evil-previous-visual-line     'CUA 'move)
+  (put 'evil-end-of-visual-line       'CUA 'move)
+  (put 'evil-beginning-of-visual-line 'CUA 'move)
+
+  ;; make evil respect whole-line-or-region
+  (defun nadvice/evil-paste-line (&rest _args)
+    (when (with-demoted-errors "Failed to check text properties for paste. %s"
+            (get-text-property 0 'whole-line-or-region (car kill-ring)))
+      (setf (car kill-ring)
+            (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
+
+  (advice-add 'evil-paste-before :before #'nadvice/evil-paste-line)
+  (advice-add 'evil-paste-after  :before #'nadvice/evil-paste-line)
+
+
+  ;; unify evil-paste with cua rectangles
+  (defun nadvice/evil-paste-after (old-fun &rest args)
+    (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
+              (car (get-text-property 0 'yank-handler (car kill-ring))))
+            'rectangle--insert-for-yank)
+        (evil-with-state 'normal
+          (call-interactively #'evil-append)
+          (call-interactively #'cua-paste))
+      (apply old-fun args)))
+
+  (defun nadvice/evil-paste-before (old-fun &rest args)
+    (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
+              (car (get-text-property 0 'yank-handler (car kill-ring))))
+            'rectangle--insert-for-yank)
+        (evil-with-state 'normal
+          (call-interactively #'evil-insert)
+          (call-interactively #'cua-paste))
+      (apply old-fun args)))
+
+  (advice-add 'evil-paste-after  :around #'nadvice/evil-paste-after)
+  (advice-add 'evil-paste-before :around #'nadvice/evil-paste-before)
+
+  (define-key evil-insert-state-map (kbd "C-w") nil)
+
+
+  (define-key evil-insert-state-map
+    (kbd "<remap> <kill-ring-save>") #'easy-kill)
+  (define-key evil-emacs-state-map
+    (kbd "<remap> <kill-ring-save>") #'easy-kill)
+  (define-key evil-normal-state-map
+    (kbd "<remap> <kill-ring-save>") #'easy-kill)
+
+  (define-key evil-emacs-state-map
+    (kbd "<remap> <kill-region>") #'cua-cut-region)
+  (define-key evil-insert-state-map
+    (kbd "<remap> <kill-region>") #'cua-cut-region)
+
+  (define-key evil-emacs-state-map
+    (kbd "<remap> <yank-pop>") #'cua-paste-pop)
+  (define-key evil-insert-state-map
+    (kbd "<remap> <yank-pop>") #'cua-paste-pop)
+
+  (define-key evil-emacs-state-map (kbd "C-y") #'cua-paste)
+  (define-key evil-insert-state-map (kbd "C-y") #'cua-paste)
+
+  ;; ensure cua-mode doesn't interfere with evil visual state
+  (let ((my/cua-mode-was-on))
+    (add-hook 'evil-visual-state-entry-hook
+              (lambda ()
+                (setq my/cua-mode-was-on cua-mode)
+                (when cua-mode
+                  (cua-mode -1))))
+    (add-hook 'evil-visual-state-exit-hook
+              (lambda ()
+                (when my/cua-mode-was-on
+                  (cua-mode +1))))))
+
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'config-package)))
 
 (package-deferred-install 'legalese
     :autoload-names '('legalese))
@@ -309,7 +314,9 @@
   (interactive)
   (with-temp-buffer
     (cua-paste nil)
-    (mark-whole-buffer)
+    (push-mark (point))
+    (push-mark (point-max) nil t)
+    (goto-char (point-min))
     (cua-cut-region nil)))
 
 (provide 'config-paste)

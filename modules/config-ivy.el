@@ -98,12 +98,14 @@
               (or "~" ".elc" ".pyc" ".swp" ".zwc" ".zwc.old")
               line-end))))
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)))
+(with-eval-after-load 'evil
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil)))
 
-(define-key evil-normal-state-map (kbd "C-s") #'isearch-forward-regexp)
-(define-key evil-insert-state-map (kbd "C-s") #'isearch-forward-regexp)
+  (define-key evil-normal-state-map (kbd "C-s") #'isearch-forward-regexp)
+  (define-key evil-insert-state-map (kbd "C-s") #'isearch-forward-regexp)
+  (define-key evil-normal-state-map (kbd "SPC SPC") #'counsel-M-x))
 
 (defun isearch-region-dwim-helper ()
   (when (region-active-p)
@@ -147,6 +149,10 @@
 (add-hook 'isearch-mode-hook #'isearch-region-dwim-helper)
 
 (with-eval-after-load 'smex
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'smex)))
+
   (setq smex-save-file (locate-user-emacs-file ".smex-items")))
 
 (global-set-key (kbd "M-x") #'counsel-M-x)
@@ -155,7 +161,6 @@
 (global-set-key (kbd "C-h v") #'counsel-describe-variable)
 (global-set-key (kbd "C-x f") #'counsel-find-file)
 
-(define-key evil-normal-state-map (kbd "SPC SPC") #'counsel-M-x)
 (global-set-key (kbd "C-S-y") #'counsel-yank-pop)
 
 ;; let M-' intelligently resume whatever completion we were working on

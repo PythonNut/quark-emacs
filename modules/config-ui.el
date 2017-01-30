@@ -350,15 +350,16 @@
 
 (global-set-key (kbd "C-x C-r") #'rename-current-buffer-file)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)))
+(with-eval-after-load 'evil
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil)))
 
-(evil-define-command evil-cycle-spacing (&optional count)
-  (cycle-spacing (or count 1)))
+  (evil-define-command evil-cycle-spacing (&optional count)
+    (cycle-spacing (or count 1)))
 
-(global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
-(global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing)
+  (global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
+  (global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing))
 
 (global-set-key (kbd "C-0") #'delete-window)
 (global-set-key (kbd "C-1") #'delete-other-windows)

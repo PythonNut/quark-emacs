@@ -1,21 +1,5 @@
 ;; -*- lexical-binding: t -*-
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'key-chord)
-    (require 'evil)
-    (require 'evil-easymotion)))
-
-(key-chord-define evil-insert-state-map "jk" #'avy-goto-char-timer)
-(key-chord-define evil-insert-state-map "jw" #'evil-avy-goto-word-1)
-(key-chord-define evil-insert-state-map "jl" #'evil-avy-goto-line)
-
-(key-chord-define evil-emacs-state-map "jk" #'avy-goto-char-timer)
-(key-chord-define evil-emacs-state-map "jw" #'evil-avy-goto-word-1)
-(key-chord-define evil-emacs-state-map "jl" #'evil-avy-goto-line)
-
-(global-set-key (kbd "<remap> <goto-line>") #'evil-avy-goto-line)
-
 (defun nadvice/self-insert-command (old-fun &optional arg)
   (interactive "P")
   (cond
@@ -63,6 +47,8 @@
   (my/avy-setup-faces)
   (add-hook 'load-theme-hook #'my/avy-setup-faces))
 
+(global-set-key (kbd "<remap> <goto-line>") #'evil-avy-goto-line)
+
 (with-eval-after-load 'ace-window
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -93,66 +79,80 @@
 (global-set-key (kbd "C-'") #'switch-window-dwim)
 (global-set-key (kbd "C-c '") #'switch-window-dwim)
 
-(require 'evil-easymotion)
-(evilem-default-keybindings "SPC")
+(with-eval-after-load 'evil
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'key-chord)
+      (require 'evil)
+      (require 'evil-easymotion)))
 
-(define-key evil-normal-state-map (kbd "SPC l") #'evil-avy-goto-line)
-(define-key evil-motion-state-map (kbd "SPC l") #'evil-avy-goto-line)
-(define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char-timer)
-(define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char-timer)
+  (key-chord-define evil-insert-state-map "jk" #'avy-goto-char-timer)
+  (key-chord-define evil-insert-state-map "jw" #'evil-avy-goto-word-1)
+  (key-chord-define evil-insert-state-map "jl" #'evil-avy-goto-line)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'on-parens)))
+  (key-chord-define evil-emacs-state-map "jk" #'avy-goto-char-timer)
+  (key-chord-define evil-emacs-state-map "jw" #'evil-avy-goto-word-1)
+  (key-chord-define evil-emacs-state-map "jl" #'evil-avy-goto-line)
 
-(evilem-define (kbd "SPC g s f") #'on-parens-forward-sexp-end)
-(evilem-define (kbd "SPC g s b") #'on-parens-backward-sexp)
-(evilem-define (kbd "SPC g s d") #'on-parens-down-sexp)
-(evilem-define (kbd "SPC g s D") #'on-parens-down-sexp-end)
-(evilem-define (kbd "SPC g s u") #'on-parens-up-sexp-end)
-(evilem-define (kbd "SPC g s U") #'on-parens-up-sexp)
-(evilem-define (kbd "SPC g s n") #'on-parens-forward-sexp)
-(evilem-define (kbd "SPC g s p") #'on-parens-backward-sexp-end)
+  (require 'evil-easymotion)
+  (evilem-default-keybindings "SPC")
+  (define-key evil-normal-state-map (kbd "SPC l") #'evil-avy-goto-line)
+  (define-key evil-motion-state-map (kbd "SPC l") #'evil-avy-goto-line)
+  (define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char-timer)
+  (define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char-timer)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil-snipe)))
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'on-parens)))
 
-(evilem-define (kbd "SPC s") #'evil-snipe-repeat
-               :pre-hook (save-excursion
-                           (ignore-errors
-                             (call-interactively #'evil-snipe-s)))
-               :bind ((evil-snipe-enable-highlight)
-                      (evil-snipe-enable-incremental-highlight)))
+  (evilem-define (kbd "SPC g s f") #'on-parens-forward-sexp-end)
+  (evilem-define (kbd "SPC g s b") #'on-parens-backward-sexp)
+  (evilem-define (kbd "SPC g s d") #'on-parens-down-sexp)
+  (evilem-define (kbd "SPC g s D") #'on-parens-down-sexp-end)
+  (evilem-define (kbd "SPC g s u") #'on-parens-up-sexp-end)
+  (evilem-define (kbd "SPC g s U") #'on-parens-up-sexp)
+  (evilem-define (kbd "SPC g s n") #'on-parens-forward-sexp)
+  (evilem-define (kbd "SPC g s p") #'on-parens-backward-sexp-end)
 
-(evilem-define (kbd "SPC S") #'evil-snipe-repeat-reverse
-               :pre-hook (save-excursion
-                           (ignore-errors
-                             (call-interactively #'evil-snipe-S)))
-               :bind ((evil-snipe-enable-highlight)
-                      (evil-snipe-enable-incremental-highlight)))
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil-snipe)))
 
-(with-eval-after-load 'evil-snipe
-  (cl-macrolet
-      ((snipe-repeat-easymotion-forward
-        (key)
-        `(define-key evil-snipe-parent-transient-map (kbd ,(concat "SPC " key))
-           (evilem-create 'evil-snipe-repeat
-                          :bind ((evil-snipe-scope 'buffer)
-                                 (evil-snipe-enable-highlight)
-                                 (evil-snipe-enable-incremental-highlight))))))
-    (my/generate-calls-single 'snipe-repeat-easymotion-forward
-      '("s" "f" "t")))
+  (evilem-define (kbd "SPC s") #'evil-snipe-repeat
+                 :pre-hook (save-excursion
+                             (ignore-errors
+                               (call-interactively #'evil-snipe-s)))
+                 :bind ((evil-snipe-enable-highlight)
+                        (evil-snipe-enable-incremental-highlight)))
 
-  (cl-macrolet
-      ((snipe-repeat-easymotion-backward
-        (key)
-        `(define-key evil-snipe-parent-transient-map (kbd ,(concat "SPC " key))
-           (evilem-create 'evil-snipe-repeat-reverse
-                          :bind ((evil-snipe-scope 'buffer)
-                                 (evil-snipe-enable-highlight)
-                                 (evil-snipe-enable-incremental-highlight))))))
-    (my/generate-calls-single 'snipe-repeat-easymotion-backward
-      '("S" "F" "T"))))
+  (evilem-define (kbd "SPC S") #'evil-snipe-repeat-reverse
+                 :pre-hook (save-excursion
+                             (ignore-errors
+                               (call-interactively #'evil-snipe-S)))
+                 :bind ((evil-snipe-enable-highlight)
+                        (evil-snipe-enable-incremental-highlight)))
+
+  (with-eval-after-load 'evil-snipe
+    (cl-macrolet
+        ((snipe-repeat-easymotion-forward
+          (key)
+          `(define-key evil-snipe-parent-transient-map (kbd ,(concat "SPC " key))
+             (evilem-create 'evil-snipe-repeat
+                            :bind ((evil-snipe-scope 'buffer)
+                                   (evil-snipe-enable-highlight)
+                                   (evil-snipe-enable-incremental-highlight))))))
+      (my/generate-calls-single 'snipe-repeat-easymotion-forward
+        '("s" "f" "t")))
+
+    (cl-macrolet
+        ((snipe-repeat-easymotion-backward
+          (key)
+          `(define-key evil-snipe-parent-transient-map (kbd ,(concat "SPC " key))
+             (evilem-create 'evil-snipe-repeat-reverse
+                            :bind ((evil-snipe-scope 'buffer)
+                                   (evil-snipe-enable-highlight)
+                                   (evil-snipe-enable-incremental-highlight))))))
+      (my/generate-calls-single 'snipe-repeat-easymotion-backward
+        '("S" "F" "T")))))
 
 (provide 'config-avy-easymotion)

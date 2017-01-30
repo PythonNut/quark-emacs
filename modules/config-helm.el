@@ -290,22 +290,6 @@
                     "> ")
           :buffer "*helm-omni*")))
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)))
-
-(defun nadvice/evil-paste-pop (old-fun &rest args)
-  (if (memq last-command '(evil-paste-after
-                           evil-paste-before
-                           evil-visual-paste))
-      (apply old-fun args)
-    (call-interactively #'my/helm-interfile-omni)))
-
-(advice-add 'evil-paste-pop :around #'nadvice/evil-paste-pop)
-
-(define-key evil-insert-state-map (kbd "C-p") #'my/helm-interfile-omni)
-(define-key evil-motion-state-map (kbd "C-p") #'my/helm-interfile-omni)
-
 (global-set-key (kbd "C-c C-o") #'my/helm-interfile-omni)
 
 (global-set-key (kbd "M-:") #'helm-eval-expression)
@@ -313,5 +297,22 @@
 
 (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
+
+(with-eval-after-load 'evil
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil)))
+
+  (defun nadvice/evil-paste-pop (old-fun &rest args)
+    (if (memq last-command '(evil-paste-after
+                             evil-paste-before
+                             evil-visual-paste))
+        (apply old-fun args)
+      (call-interactively #'my/helm-interfile-omni)))
+
+  (advice-add 'evil-paste-pop :around #'nadvice/evil-paste-pop)
+
+  (define-key evil-insert-state-map (kbd "C-p") #'my/helm-interfile-omni)
+  (define-key evil-motion-state-map (kbd "C-p") #'my/helm-interfile-omni))
 
 (provide 'config-helm)

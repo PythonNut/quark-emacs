@@ -2,8 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'smie)
-    (require 'evil)))
+    (require 'smie)))
 
 (setq require-final-newline t
       line-move-visual t)
@@ -108,16 +107,6 @@
        (t
         (back-to-indentation))))))
 
-(define-key evil-insert-state-map (kbd "C-a")
-  #'back-to-indentation-visual-or-beginning)
-(define-key evil-motion-state-map (kbd "C-a")
-  #'back-to-indentation-visual-or-beginning)
-
-(define-key evil-insert-state-map (kbd "<home>")
-  #'back-to-indentation-visual-or-beginning)
-(define-key evil-motion-state-map (kbd "<home>")
-  #'back-to-indentation-visual-or-beginning)
-
 (defun end-of-visual-line-or-end (&optional n)
   (interactive "^p")
   (or n (setq n 1))
@@ -133,7 +122,21 @@
      (t
       (end-of-visual-line)))))
 
-(define-key evil-insert-state-map (kbd "C-e") #'end-of-visual-line-or-end)
-(define-key evil-insert-state-map (kbd "<end>") #'end-of-visual-line-or-end)
+(with-eval-after-load 'evil
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil)))
+
+  (define-key evil-insert-state-map (kbd "C-a")
+    #'back-to-indentation-visual-or-beginning)
+  (define-key evil-motion-state-map (kbd "C-a")
+    #'back-to-indentation-visual-or-beginning)
+
+  (define-key evil-insert-state-map (kbd "<home>")
+    #'back-to-indentation-visual-or-beginning)
+  (define-key evil-motion-state-map (kbd "<home>")
+    #'back-to-indentation-visual-or-beginning)
+  (define-key evil-insert-state-map (kbd "C-e") #'end-of-visual-line-or-end)
+  (define-key evil-insert-state-map (kbd "<end>") #'end-of-visual-line-or-end))
 
 (provide 'config-whitespace)

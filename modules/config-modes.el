@@ -63,8 +63,9 @@
   (define-key emacs-lisp-mode-map (kbd "M-.") #'emacs-lisp-goto-definition)
   (define-key emacs-lisp-mode-map (kbd "M-,") #'evil-jump-backward)
 
-  (evil-define-key 'normal emacs-lisp-mode-map "gd"
-    #'emacs-lisp-goto-definition))
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal emacs-lisp-mode-map "gd"
+      #'emacs-lisp-goto-definition)))
 
 ;; =============================================================================
 ;; C-like ======================================================================
@@ -314,7 +315,9 @@
     (advice-add 'anaconda-mode-eldoc-function :override
                 #'nadvice/anaconda-mode-eldoc-function))
 
-  (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto)
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto))
+
   (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto)
   (add-hook 'python-mode-hook #'anaconda-eldoc-mode)
   (add-hook 'python-mode-hook #'anaconda-mode)
@@ -386,7 +389,9 @@
     (setq sage-shell:use-prompt-toolkit t
           sage-shell-view-default-resolution 200)
     (sage-shell:define-alias)
-    (evil-set-initial-state 'sage-shell-mode 'insert)
+
+    (with-eval-after-load 'evil
+      (evil-set-initial-state 'sage-shell-mode 'insert))
 
     (add-hook 'sage-shell-mode-hook #'eldoc-mode)
     (add-hook 'sage-mode-hook #'eldoc-mode)
@@ -415,7 +420,8 @@
 ;; =============================================================================
 
 (with-eval-after-load 'octave
-  (evil-set-initial-state 'inferior-octave-mode 'insert)
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'inferior-octave-mode 'insert))
 
   (with-eval-after-load 'smartparens
     (sp-local-pair 'octave-mode "'" nil :actions nil)))
@@ -431,7 +437,9 @@
     :autoload-names '('julia-mode
                       'inferior-julia
                       'run-julia)
-    (evil-set-initial-state 'inferior-julia-mode 'insert)
+
+    (with-eval-after-load 'evil
+      (evil-set-initial-state 'inferior-julia-mode 'insert))
     (add-hook 'inferior-julia-mode-hook (lambda ()
                                           (auto-indent-mode -1))))
 
@@ -698,24 +706,25 @@
       (evil-insert-state))
     (wdired-change-to-wdired-mode))
 
-  (evil-define-key 'normal dired-mode-map "h" #'dired-up-directory)
-  (evil-define-key 'normal dired-mode-map "l" #'dired-find-alternate-file)
-  (evil-define-key 'normal dired-mode-map "j" #'dired-next-line)
-  (evil-define-key 'normal dired-mode-map "k" #'dired-previous-line)
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal dired-mode-map "h" #'dired-up-directory)
+    (evil-define-key 'normal dired-mode-map "l" #'dired-find-alternate-file)
+    (evil-define-key 'normal dired-mode-map "j" #'dired-next-line)
+    (evil-define-key 'normal dired-mode-map "k" #'dired-previous-line)
 
-  (evil-define-key 'normal dired-mode-map "I" #'dired-enable-wdired)
+    (evil-define-key 'normal dired-mode-map "I" #'dired-enable-wdired)
 
-  (evil-define-key 'normal dired-mode-map "o" #'dired-sort-toggle-or-edit)
-  (evil-define-key 'normal dired-mode-map "m" #'dired-toggle-marks)
-  (evil-define-key 'normal dired-mode-map "v" #'dired-mark)
-  (evil-define-key 'normal dired-mode-map "V" #'dired-unmark)
-  (evil-define-key 'normal dired-mode-map (kbd "C-v") #'dired-unmark-all-marks)
-  (evil-define-key 'normal dired-mode-map "u" #'dired-undo)
-  (evil-define-key 'normal dired-mode-map "c" #'dired-create-directory)
+    (evil-define-key 'normal dired-mode-map "o" #'dired-sort-toggle-or-edit)
+    (evil-define-key 'normal dired-mode-map "m" #'dired-toggle-marks)
+    (evil-define-key 'normal dired-mode-map "v" #'dired-mark)
+    (evil-define-key 'normal dired-mode-map "V" #'dired-unmark)
+    (evil-define-key 'normal dired-mode-map (kbd "C-v") #'dired-unmark-all-marks)
+    (evil-define-key 'normal dired-mode-map "u" #'dired-undo)
+    (evil-define-key 'normal dired-mode-map "c" #'dired-create-directory)
 
-  (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
-  (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
-  (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer)
+    (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
+    (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
+    (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer))
 
   (define-key dired-mode-map (kbd "<remap> <beginning-of-buffer>")
     #'dired-first-file)
@@ -789,10 +798,12 @@
          (add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))))
 
 (with-eval-after-load 'geiser-debug
-  (evil-set-initial-state 'geiser-debug-mode 'insert))
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'geiser-debug-mode 'insert)))
 
 (with-eval-after-load 'geiser-repl
-  (evil-set-initial-state 'geiser-repl-mode 'emacs)
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'geiser-repl-mode 'emacs))
   (add-hook 'geiser-repl-mode-hook (lambda ()
                                      (auto-indent-mode -1))))
 
@@ -923,11 +934,12 @@
   (kill-line))
 
 (defun my/eshell-onetime-setup ()
-  (evil-define-key 'insert eshell-mode-map (kbd "<tab>") #'company-complete)
-  (evil-define-key 'insert eshell-mode-map (kbd "C-a") #'eshell-bol)
-  (evil-define-key 'insert eshell-mode-map (kbd "<home>") #'eshell-bol)
-  (evil-define-key 'insert eshell-mode-map (kbd "<C-S-backspace>") #'eshell-kill-whole-line)
-  (evil-define-key 'insert eshell-mode-map (kbd "C-r") #'eshell-isearch-backward)
+  (when (featurep 'evil)
+    (evil-define-key 'insert eshell-mode-map (kbd "<tab>") #'company-complete)
+    (evil-define-key 'insert eshell-mode-map (kbd "C-a") #'eshell-bol)
+    (evil-define-key 'insert eshell-mode-map (kbd "<home>") #'eshell-bol)
+    (evil-define-key 'insert eshell-mode-map (kbd "<C-S-backspace>") #'eshell-kill-whole-line)
+    (evil-define-key 'insert eshell-mode-map (kbd "C-r") #'eshell-isearch-backward))
 
   (remove-hook 'eshell-mode-hook #'my/eshell-onetime-setup))
 
@@ -1233,15 +1245,14 @@
                           '(?\{ . ("\\left{ " . " \\right}")))
                     evil-surround-pairs-alist)))
 
-    (add-hook 'LaTeX-mode-hook #'my/evil-LaTeX-setup))
+    (add-hook 'LaTeX-mode-hook #'my/evil-LaTeX-setup)
+    (evil-set-initial-state 'TeX-error-overview-mode 'insert))
 
   (setq TeX-auto-save t
         TeX-save-query nil
         TeX-parse-self t
         TeX-PDF-mode t
         TeX-source-correlate-start-server t)
-
-  (evil-set-initial-state 'TeX-error-overview-mode 'insert)
 
   (add-hook 'LaTeX-mode-hook (lambda ()
                                (adaptive-wrap-prefix-mode -1)))
