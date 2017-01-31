@@ -3,6 +3,8 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        LaTeX-insert-left-brace
+        TeX-insert-backslash
         back-to-indentation-visual-or-beginning
         end-of-visual-line-or-end
         evil-delete-backward-word-smart
