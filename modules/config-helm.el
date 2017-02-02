@@ -171,11 +171,13 @@
   (eval-when-compile
     (require 'helm-ag))
 
-  (unless (executable-find "ag")
-    (if (executable-find "ack")
-        (setq helm-ag-base-command "ack --nocolor --nogroup")
-      (when (executable-find "ack-grep")
-        (setq helm-ag-base-command "ack-grep --nocolor --nogroup")))))
+  (if (executable-find "rg")
+      (setq helm-ag-base-command "rg -Hn --color never --no-heading")
+    (unless (executable-find "ag")
+      (if (executable-find "ack")
+          (setq helm-ag-base-command "ack --nocolor --nogroup")
+        (when (executable-find "ack-grep")
+          (setq helm-ag-base-command "ack-grep --nocolor --nogroup"))))))
 
 (with-eval-after-load 'helm-regexp
   (helm-occur-init-source))
