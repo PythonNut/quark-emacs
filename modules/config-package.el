@@ -261,7 +261,6 @@
                                  ;; features below load with 1s delay
                                  counsel
                                  which-key
-                                 magit
                                  evil-snipe
                                  avy
                                  ace-jump-helm-line
