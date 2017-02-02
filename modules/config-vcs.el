@@ -21,6 +21,8 @@
   (setq diff-hl-draw-borders nil)
   (diff-hl-flydiff-mode +1))
 
+(defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
+
 (with-eval-after-load 'magit
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
