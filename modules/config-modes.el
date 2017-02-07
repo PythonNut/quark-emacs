@@ -724,7 +724,33 @@
 
     (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
     (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
-    (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer))
+    (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer)
+
+    (defun my/dired-avy-navigate-down ()
+      (interactive)
+      (evilem--jump (evilem--collect #'dired-next-line)))
+
+    (defun my/dired-avy-navigate-up ()
+      (interactive)
+      (evilem--jump (evilem--collect #'dired-previous-line)))
+
+    (defun my/dired-avy-find-file-down ()
+      (interactive)
+      (my/dired-avy-navigate-down)
+      (dired-find-file))
+
+    (defun my/dired-avy-find-file-up ()
+      (interactive)
+      (my/dired-avy-navigate-up)
+      (dired-find-file))
+
+    (evil-define-key 'normal dired-mode-map (kbd "SPC J") #'my/dired-avy-navigate-down)
+
+    (evil-define-key 'normal dired-mode-map (kbd "SPC K") #'my/dired-avy-navigate-up)
+
+    (evil-define-key 'normal dired-mode-map (kbd "SPC j") #'my/dired-avy-find-file-down)
+
+    (evil-define-key 'normal dired-mode-map (kbd "SPC k") #'my/dired-avy-find-file-up))
 
   (define-key dired-mode-map (kbd "<remap> <beginning-of-buffer>")
     #'dired-first-file)
