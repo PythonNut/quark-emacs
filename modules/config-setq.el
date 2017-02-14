@@ -71,13 +71,16 @@ ARGS are passed as command line arguments to the new process."
               (lambda ()
                 (if (daemonp)
                     (call-process "sh" nil nil nil "-c"
-                                  (format "emacs --daemon %s &"
+                                  (format "%a --daemon %s &"
+                                          invocation-name
                                           command-args))
                   (if (display-graphic-p)
                       (call-process "sh" nil nil nil "-c"
-                                    (format "emacs %s &"
+                                    (format "%s %s &"
+                                            invocation-name
                                             command-args))
-                    (suspend-emacs (format "(emacs %s -nw < `tty`) & fg; fg"
+                    (suspend-emacs (format "(%s %s -nw < `tty`) & fg; fg"
+                                           invocation-name
                                            command-args)))))
               t)
     (save-buffers-kill-emacs)))
