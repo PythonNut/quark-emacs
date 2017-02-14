@@ -108,6 +108,10 @@ flycheck_*
 /data/package-cache.el
 
 
+# historian statistics
+/data/.historian
+
+
 # quelpa cache
 /quelpa
 

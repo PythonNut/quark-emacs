@@ -54,7 +54,11 @@
                                             :files ("historian-ivy.el"))
       :feature-name 'historian-ivy
       :autoload-names '('historian-ivy-mode))
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'historian)))
 
+  (setq historian-save-file (locate-user-emacs-file "data/.historian"))
   (historian-ivy-mode +1)
 
   (defun my/ivy-setup-faces ()
