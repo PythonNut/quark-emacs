@@ -34,6 +34,15 @@
 (with-eval-after-load 'helm-files
   (eval-when-compile
     (require 'helm-files))
+
+  (defun my/helm-find-files-slash (arg)
+    (interactive "p")
+    (if (looking-back "/" (1- (point)))
+        (self-insert-command arg)
+      (helm-execute-persistent-action)))
+
+  (define-key helm-find-files-map (kbd "/") #'my/helm-find-files-slash)
+
   (setq helm-ff-transformer-show-only-basename nil
         helm-ff-newfile-prompt-p nil
         helm-ff-skip-boring-files t
