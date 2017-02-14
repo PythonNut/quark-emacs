@@ -9,7 +9,7 @@
       delete-by-moving-to-trash t
       echo-keystrokes 0.4
       focus-follows-mouse t
-      frame-title-format "%b [%m]"
+      frame-title-format "ε %b [%m]"
       indent-tabs-mode nil
       inhibit-default-init t
       inhibit-startup-echo-area-message t
