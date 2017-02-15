@@ -56,9 +56,16 @@
 
       (let ((mtime (nth 6 (file-attributes
                            (expand-file-name package-user-dir)))))
-        (insert (format "(setq my/package-cache-last-build-time '%S)" mtime))))
+        (insert (format "(setq my/package-cache-last-build-time '%S)" mtime)))
+
+      ;; remove byte-compiler suppression
+      (goto-char (point-min))
+      (while (re-search-forward ";; no-byte-compile: t\n" (point-max) t)
+        (replace-match "")))
+
+    (byte-compile-file my/package-autoload-file)
     (cl-letf ((load-path))
-      (load my/package-autoload-file))))
+      (load (file-name-sans-extension my/package-autoload-file)))))
 
 
 (dolist (dir (file-expand-wildcards
@@ -69,7 +76,7 @@
 (unless (file-exists-p my/package-autoload-file)
   (my/package-rebuild-cache))
 
-(load my/package-autoload-file)
+(load (file-name-sans-extension my/package-autoload-file))
 
 (unless (equal (nth 6 (file-attributes
                        (expand-file-name
