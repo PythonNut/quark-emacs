@@ -56,7 +56,7 @@
     (defun nadvice/undo-tree-make-history-save-file-name (_ret)
       (let ((auto-save-file-name-transforms
              `((,(rx (zero-or-more not-newline))
-                "/home/pythonnut/.emacs.d/data/undo-backups/" t))))
+                ,(locate-user-emacs-file "data/undo-backups") t))))
         (concat (make-auto-save-file-name) ".undo.xz")))
 
     (defun nadvice/undo-tree-load-history (old-fun &rest args)
