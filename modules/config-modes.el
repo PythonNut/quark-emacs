@@ -1281,9 +1281,10 @@
         TeX-source-correlate-start-server t)
 
   (add-hook 'LaTeX-mode-hook (lambda ()
-                               (adaptive-wrap-prefix-mode -1)))
+                               (adaptive-wrap-prefix-mode -1)
+                               (when (display-graphic-p)
+                                 (magic-latex-buffer))))
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  (add-hook 'LaTeX-mode-hook 'magic-latex-buffer)
   (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
 
   (defun nadvice/TeX-command-master (old-fun arg)
