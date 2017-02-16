@@ -7,6 +7,7 @@
         "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4"
         default)
       delete-by-moving-to-trash t
+      disabled-command-function nil
       echo-keystrokes 0.4
       focus-follows-mouse t
       frame-title-format "ε %b [%m]"
@@ -46,15 +47,6 @@
 (setq-default buffer-file-coding-system 'utf-8
               indent-tabs-mode nil
               indicate-buffer-boundaries '((bottom . left)))
-
-;; For some reason, these features are disabled by default.
-(put 'set-goal-column 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'scroll-left 'disabled nil)
-(put 'erase-buffer 'disabled nil)
 
 (prefer-coding-system 'utf-8)
 
