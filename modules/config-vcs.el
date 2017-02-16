@@ -19,7 +19,9 @@
       (require 'diff-hl)))
 
   (setq diff-hl-draw-borders nil)
-  (diff-hl-flydiff-mode +1))
+  (diff-hl-flydiff-mode +1)
+  ;; Automatically refresh when magit state changes
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
 
@@ -32,9 +34,6 @@
   ;; Don't use graphical password prompt in terminal
   (unless (display-graphic-p)
     (setenv "SSH_ASKPASS" "magit-askpass"))
-
-  ;; Automatically refresh when magit state changes
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
 
   (setq magit-push-always-verify nil
         magit-completing-read-function #'magit-ido-completing-read
