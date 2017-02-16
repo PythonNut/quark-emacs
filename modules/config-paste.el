@@ -2,7 +2,8 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'cua-base)))
+    (require 'cua-base)
+    (require 'config-package)))
 
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
