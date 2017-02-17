@@ -9,7 +9,8 @@
 # recentf file
 /data/.recentf
 
-/.session
+/data/.session
+
 # semantic parser cache
 /semanticdb
 

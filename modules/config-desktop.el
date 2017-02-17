@@ -52,6 +52,8 @@
     (with-demoted-errors "Load error: %s"
       (require 'session)))
 
+  (setq session-save-file (locate-user-emacs-file "data/.session"))
+
   (defun nadvice/session-save-session/quiet (old-fun &rest args)
     (if (called-interactively-p 'any)
         (apply old-fun args)
