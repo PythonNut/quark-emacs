@@ -1,63 +1,15 @@
 # elpa files
 /elpa
 
-# session backups
-/session*
-
-
-# ido cache
-/ido.last
-
-
 # project file cache
 /projectile*
-
 # M-x command history
 /.smex-items
-
-
-# places file
-/places
-
-
-# evil jump markers
-/jumps
-
-# save last place in files
-/saveplace
-/.saveplace
 
 # recentf file
 /data/.recentf
 
-# ring save file
-/savehist
-/.savehist
 /.session
-
-# persistent registers
-/saveregisters.el
-
-
-# thumbnail cache from dired
-/image-dired
-
-# backup files are always redundant
-*~
-
-
-# eshell history and dirstack
-/eshell
-
-
-# auto-complete cache
-ac-comphist.dat
-
-
-# helm completion history
-/helm-adaptive-history
-
-
 # semantic parser cache
 /semanticdb
 
@@ -69,22 +21,13 @@ ac-comphist.dat
 /var
 
 
-# Yasnippet extras
-.yas-compiled-snippets*
-
-
 # tramp connection history
 /data/tramp
 
 
-# EDE projects file
-/ede-projects.el
-
-# Srecode map files
-/srecode-map.el
-
 
 # misc
+*~
 *.undo.xz
 *#
 .#*
@@ -92,16 +35,10 @@ flycheck_*
 *.swp
 *.elc
 /.elisp-cache-stamp
-/kkrc
-/kkcrc
 
-# savehist history file
-/history
 
-/.python-environments
 /data/anaconda-mode
 /irony
-/dunnet
 
 
 # package cache
