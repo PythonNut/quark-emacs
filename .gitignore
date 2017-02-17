@@ -2,7 +2,9 @@
 /elpa
 
 # project file cache
-/projectile*
+/data/.projectile-bookmarks.eld
+/data/.projectile.cache
+
 # M-x command history
 /.smex-items
 

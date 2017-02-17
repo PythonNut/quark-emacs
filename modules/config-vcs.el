@@ -162,8 +162,12 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 (add-hook 'after-revert-hook #'my/maybe-enable-smerge)
 
 (with-eval-after-load 'projectile
+  (setq projectile-known-projects-file
+        (locate-user-emacs-file "data/.projectile-bookmarks.eld")
+        projectile-cache-file
+        (locate-user-emacs-file "data/.projectile.cache"))
+
   (projectile-global-mode +1)
-  (require 'magit)
 
   (setq projectile-completion-system 'ivy
         projectile-mode-line
