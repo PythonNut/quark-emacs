@@ -59,7 +59,7 @@ flycheck_*
 
 
 # the abbrev file
-/abbrev_defs
+/data/.abbrev_defs
 
 
 /personal

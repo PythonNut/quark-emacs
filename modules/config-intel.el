@@ -23,6 +23,9 @@
               :around
               #'nadvice/semantic-idle-summary-idle-function))
 
+(with-eval-after-load 'abbrev
+  (setq abbrev-file-name (locate-user-emacs-file "data/.abbrev_defs")))
+
 ;;; ====================================
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
