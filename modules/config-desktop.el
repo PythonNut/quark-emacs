@@ -42,7 +42,7 @@
                                   (concat (rx line-start)
                                           (expand-file-name
                                            (locate-user-emacs-file "elpa")))))
-  (setq recentf-save-file (locate-user-emacs-file ".recentf")
+  (setq recentf-save-file (locate-user-emacs-file "data/.recentf")
         recentf-max-saved-items 1000
         recentf-max-menu-items 50
         recentf-auto-cleanup 30))

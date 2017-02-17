@@ -28,7 +28,7 @@
 /.saveplace
 
 # recentf file
-/.recentf
+/data/.recentf
 
 # ring save file
 /savehist
