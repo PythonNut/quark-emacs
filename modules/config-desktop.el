@@ -130,7 +130,7 @@
 (add-hook 'after-change-major-mode-hook #'my/register-file-name-mode-maybe)
 
 (with-eval-after-load 'desktop
-  (setq desktop-dirname (locate-user-emacs-file "desktop/")
+  (setq desktop-dirname (locate-user-emacs-file "data/desktop/")
         desktop-path (list desktop-dirname)
         desktop-base-file-name "emacs-desktop"
         desktop-base-lock-name "emacs-desktop.lock")
