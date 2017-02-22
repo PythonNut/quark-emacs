@@ -309,6 +309,7 @@
   "Upgrade all packages automatically without showing *Packages* buffer."
   (interactive)
   (message "Updating package repositories...")
+  (require 'async)
   (async-start
    `(lambda ()
       (require 'cl-lib)
