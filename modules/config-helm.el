@@ -37,7 +37,7 @@
 
   (defun my/helm-find-files-slash (arg)
     (interactive "p")
-    (if (looking-back "/" (1- (point)))
+    (if (looking-back "[/~]" (1- (point)))
         (self-insert-command arg)
       (helm-execute-persistent-action)))
 
