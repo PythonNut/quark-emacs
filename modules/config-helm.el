@@ -41,9 +41,21 @@
 
   (defun my/helm-find-files-slash (arg)
     (interactive "p")
-    (if (looking-back "[/~]" (1- (point)))
-        (self-insert-command arg)
-      (helm-execute-persistent-action)))
+    (require 's)
+    (if (and (looking-back "~\\([a-zA-Z0-9]+\\)" (- (point) 10))
+             (executable-find "fasd"))
+        (let* ((target (match-string 1))
+               (result (s-trim
+                        (shell-command-to-string
+                         (format "fasd -ld1 \"%s\"" target)))))
+          (if (string-empty-p result)
+              (self-insert-command arg)
+            (beginning-of-line)
+            (kill-line)
+            (insert (concat result "/"))))
+      (if (looking-back "[/~]" (1- (point)))
+          (self-insert-command arg)
+        (helm-execute-persistent-action))))
 
   (define-key helm-find-files-map (kbd "/") #'my/helm-find-files-slash)
 
