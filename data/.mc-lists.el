@@ -3,8 +3,10 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        LaTeX-babel-insert-hyphen
         LaTeX-insert-left-brace
         TeX-insert-backslash
+        TeX-newline
         back-to-indentation-visual-or-beginning
         end-of-visual-line-or-end
         evil-delete-backward-word-smart
@@ -13,10 +15,13 @@
         sp-down-sexp
         sp-forward-sexp
         sp-kill-sexp
+        sp-remove-active-pair-overlay
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        evil-mouse-drag-region
         evil-normal-state
+        handle-select-window
         hydra/projectile-tools/body
         ))
