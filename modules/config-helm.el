@@ -14,11 +14,15 @@
   (helm-flx-mode +1)
 
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
-  (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-i")   #'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-z")   #'helm-select-action)
-  (define-key helm-map (kbd "C-r" )  #'isearch-backward-regexp)
-  (define-key helm-map (kbd "C-'")   #'ace-jump-helm-line-execute-action)
+  (define-key helm-map (kbd "<tab>")     #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i")       #'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-z")       #'helm-select-action)
+  (define-key helm-map (kbd "C-r" )      #'isearch-backward-regexp)
+  (define-key helm-map (kbd "C-'")       #'ace-jump-helm-line-execute-action)
+  (define-key helm-map (kbd "<left>")    #'backward-char)
+  (define-key helm-map (kbd "<right>")   #'forward-char)
+  (define-key helm-map (kbd "M-<left>")  #'helm-previous-source)
+  (define-key helm-map (kbd "M-<right>") #'helm-next-source)
 
   (set-face-attribute 'helm-selection nil :underline nil)
   (setq helm-case-fold-search 'smart
