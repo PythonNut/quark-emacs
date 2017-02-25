@@ -53,7 +53,8 @@
                               :fuzzy-match helm-recentf-fuzzy-match)
 
         helm-boring-file-regexp-list (append helm-boring-file-regexp-list
-                                             (list (rx ".undo.xz" line-end)
+                                             (list (rx ".synctex.gz" line-end)
+                                                   (rx ".undo.xz" line-end)
                                                    (rx ".elc" line-end)
                                                    (rx "#" line-end)
                                                    (rx "~" line-end)
