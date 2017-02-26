@@ -8,7 +8,8 @@
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
 
-(setq cua-paste-pop-rotate-temporarily t
+(setq kill-do-not-save-duplicates t
+      cua-paste-pop-rotate-temporarily t
       cua-enable-cua-keys t
       cua-virtual-rectangle-edges t
       cua-auto-tabify-rectangles nil
