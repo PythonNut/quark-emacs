@@ -2,8 +2,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'cua-base)
-    (require 'config-package)))
+    (require 'cua-base)))
 
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
@@ -290,9 +289,7 @@
                 (when my/cua-mode-was-on
                   (cua-mode +1))))))
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'config-package)))
+(require 'config-package)
 
 (package-deferred-install 'legalese
     :autoload-names '('legalese))

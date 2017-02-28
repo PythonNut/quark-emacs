@@ -32,8 +32,9 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'flx-isearch)
-    (require 'config-package)))
+    (require 'flx-isearch)))
+
+(require 'config-package)
 
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
