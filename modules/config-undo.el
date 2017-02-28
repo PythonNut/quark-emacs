@@ -68,6 +68,16 @@
                 #'nadvice/undo-tree-make-history-save-file-name)
     (advice-add 'undo-tree-load-history
                 :around
-                #'nadvice/undo-tree-load-history)))
+                #'nadvice/undo-tree-load-history))
+
+  (defun nadvice/undo-tree-ignore-text-properties (old-fun &rest args)
+    (dolist (item buffer-undo-list)
+      (and (consp item)
+           (stringp (car item))
+           (setcar item (substring-no-properties (car item)))))
+    (apply old-fun args))
+
+  (advice-add 'undo-list-transfer-to-tree :around
+              #'nadvice/undo-tree-ignore-text-properties))
 
 (provide 'config-undo)
