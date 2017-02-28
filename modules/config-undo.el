@@ -68,20 +68,6 @@
                 #'nadvice/undo-tree-make-history-save-file-name)
     (advice-add 'undo-tree-load-history
                 :around
-                #'nadvice/undo-tree-load-history))
-
-  ;; Keep region when undoing in region
-  (defun nadvice/undo-tree-undo (old-fun &rest args)
-    (if (use-region-p)
-        (let ((m (set-marker (make-marker) (mark)))
-              (p (set-marker (make-marker) (point))))
-          (apply old-fun args)
-          (goto-char p)
-          (set-mark m)
-          (set-marker p nil)
-          (set-marker m nil))
-      (apply old-fun args)))
-
-  (advice-add 'undo-tree-undo :around #'nadvice/undo-tree-undo))
+                #'nadvice/undo-tree-load-history)))
 
 (provide 'config-undo)
