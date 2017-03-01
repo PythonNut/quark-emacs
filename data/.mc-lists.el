@@ -6,6 +6,7 @@
         LaTeX-babel-insert-hyphen
         LaTeX-insert-left-brace
         TeX-insert-backslash
+        TeX-insert-sub-or-superscript
         TeX-newline
         back-to-indentation-visual-or-beginning
         end-of-visual-line-or-end
