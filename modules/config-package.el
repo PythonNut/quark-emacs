@@ -61,6 +61,10 @@
       ;; remove byte-compiler suppression
       (goto-char (point-min))
       (while (re-search-forward ";; no-byte-compile: t\n" (point-max) t)
+        (replace-match ""))
+
+      (goto-char (point-min))
+      (while (re-search-forward "(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))\n" (point-max) t)
         (replace-match "")))
 
     (byte-compile-file my/package-autoload-file)
