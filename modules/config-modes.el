@@ -1280,6 +1280,7 @@
         TeX-PDF-mode t
         TeX-source-correlate-start-server t)
 
+  (add-to-list 'sp-sexp-suffix (list 'latex-mode 'regexp ""))
   (add-hook 'LaTeX-mode-hook (lambda ()
                                (adaptive-wrap-prefix-mode -1)
                                (when (display-graphic-p)
