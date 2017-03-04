@@ -191,6 +191,7 @@
     magit-annex
     multiple-cursors
     rainbow-delimiters
+    s
     session
     smartparens
     smex
