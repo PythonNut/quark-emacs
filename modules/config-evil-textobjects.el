@@ -27,7 +27,7 @@
 
 (evil-define-motion evil-smart-previous-visual-line (count)
   (evil-previous-visual-line (or count 1))
-  (my/smart-evil-visual-line))
+  (evil-visual-line-hydra/body))
 
 (evil-define-motion evil-smart-scroll-page-down (count)
   (evil-scroll-page-down (or count 1))
