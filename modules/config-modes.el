@@ -1262,6 +1262,59 @@
                           'turn-on-evil-latex-textobjects-mode
                           'turn-off-evil-latex-textobjects-mode))
 
+    (with-eval-after-load 'evil-latex-textobjects
+      (defun my/evil-TeX--expression-range (&optional count exclusive)
+        (let* ((terminators (rx (or "&"
+                                    "="
+                                    "\\\\"
+                                    "\\item"
+                                    "%"
+                                    "\\label"
+                                    "\end"
+                                    "\\]"
+                                    "\\["
+                                    "$"
+                                    (and "\\begin{"
+                                         (zero-or-more
+                                          (or letter "*"))
+                                         "}"))))
+               (beg (save-excursion
+                      (while (not (or
+                                   (bobp)
+                                   (looking-back (if exclusive
+                                                     (concat (format "\\(%s\\)" terminators)
+                                                             (rx (zero-or-more (or space "\n"))))
+                                                   terminators)
+                                                 (max (point-min)
+                                                      (- (point) 80)))))
+                        (forward-char -1))
+                      (point)))
+               (end (save-excursion
+                      (while (not (or
+                                   (eobp)
+                                   (looking-at (if exclusive
+                                                   (concat (rx (zero-or-more (or space "\n")))
+                                                           (format "\\(%s\\)" terminators))
+                                                 terminators))))
+                        (forward-char 1))
+                      (point))))
+          (list beg end)))
+
+      (evil-define-text-object evil-indent-i-TeX-expression (&optional count _beg _end _type)
+        "Text object describing the block with the same indentation as the current line."
+        (cl-destructuring-bind (begin end)
+            (my/evil-TeX--expression-range count t)
+          (evil-range begin end 'char)))
+
+      (evil-define-text-object evil-indent-a-TeX-expression (&optional count _beg _end _type)
+        "Text object describing the block with the same indentation as the current line."
+        (cl-destructuring-bind (begin end)
+            (my/evil-TeX--expression-range count nil)
+          (evil-range begin end 'char)))
+
+      (define-key evil-latex-textobjects-inner-map "=" #'evil-indent-i-TeX-expression)
+      (define-key evil-latex-textobjects-outer-map "=" #'evil-indent-a-TeX-expression))
+
     (defun my/evil-LaTeX-setup ()
       (require 'evil-surround)
       (evil-latex-textobjects-mode +1)
