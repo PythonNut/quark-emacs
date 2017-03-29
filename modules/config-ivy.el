@@ -51,17 +51,17 @@
 
   (historian-mode +1)
 
-  (package-deferred-install '(historian-ivy :repo "PythonNut/historian.el"
+  (package-deferred-install '(ivy-historian :repo "PythonNut/historian.el"
                                             :fetcher github
-                                            :files ("historian-ivy.el"))
-      :feature-name 'historian-ivy
-      :autoload-names '('historian-ivy-mode))
+                                            :files ("ivy-historian.el"))
+      :feature-name 'ivy-historian
+      :autoload-names '('ivy-historian-mode))
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'historian)))
 
   (setq historian-save-file (locate-user-emacs-file "data/.historian"))
-  (historian-ivy-mode +1)
+  (ivy-historian-mode +1)
 
   (defun my/ivy-setup-faces ()
     (set-face-attribute 'ivy-minibuffer-match-face-1 nil
