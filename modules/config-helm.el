@@ -41,7 +41,7 @@
 
   (defun my/helm-find-files-slash (arg)
     (interactive "p")
-    (require 's)
+    (eval-and-compile (require 's))
     (if (and (looking-back "~\\([a-zA-Z0-9]+\\)" (- (point) 10))
              (executable-find "fasd"))
         (let* ((target (match-string 1))
@@ -193,10 +193,16 @@
         helm-locate-command "locate %s -r %s -e -l 100"))
 
 ;; adaptively fallback to ack and ack-grep
+(defvar my/ag-available nil)
 (with-eval-after-load 'helm-ag
   (eval-when-compile
     (require 'helm-ag))
-
+  (setq my/ag-available
+        (or (executable-find "rg")
+            (executable-find "ag")
+            (executable-find "ack")
+            (executable-find "ack-grep")))
+  
   (if (executable-find "rg")
       (setq helm-ag-base-command "rg -Hn --color never --no-heading")
     (unless (executable-find "ag")
@@ -214,21 +220,15 @@
   (require 'helm-ring)
   (require 'helm-misc)
   (require 'projectile)
-
-  (unless (featurep 'helm-ag)
-    (when (or (executable-find "ag")
-              (executable-find "ack")
-              (executable-find "ack-grep"))
-      (require 'helm-ag)))
-
+  (require 'helm-ag)
   (require 'recentf)
+
   (when helm-turn-on-recentf (recentf-mode 1))
 
   (let ((helm-sources-using-default-as-input)
         (projectile-root (ignore-errors (projectile-project-p)))
         (file-remote (and buffer-file-name
                           (file-remote-p default-directory))))
-
     (helm :sources
           (append
            ;; projectile explodes when not in project
@@ -259,7 +259,7 @@
                        (vc-git-responsible-p projectile-root)
                        (require 'helm-git-grep nil t))
                   '(helm-source-git-grep)
-                (when (featurep 'helm-ag)
+                (when my/ag-available
                   '(helm-source-do-ag)))
 
               ;; file location, of which projectile is a faster subset
