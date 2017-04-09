@@ -203,7 +203,16 @@
     whole-line-or-region
     ws-butler
     xclip
-    yasnippet))
+    yasnippet
+
+    ;; mission-critical major-modes
+    auctex
+    company-math
+    company-auctex
+    (evil-latex-textobjects
+     :repo "hpdeifel/evil-latex-textobjects"
+     :fetcher github
+     :files ("evil-latex-textobjects.el"))))
 
 (package-initialize)
 
