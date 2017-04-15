@@ -179,7 +179,8 @@
     ;; helm
     helm-ag
     helm-flx
-    helm-git-grep
+    (helm-git-grep :repo "PythonNut/helm-git-grep"
+                   :fetcher github)
     helm-projectile
     hydra
     icicles
