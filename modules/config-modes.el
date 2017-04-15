@@ -1252,6 +1252,21 @@
       :autoload-names '('company-auctex-symbols
                         'company-auctex-environments))
 
+  (add-hook 'TeX-mode-hook
+            (lambda ()
+              (let ((old-backends company-backends))
+                (set (make-local-variable 'company-backends)
+                     (append (list (append
+                                    '(company-auctex-macros
+                                      company-auctex-symbols
+                                      company-auctex-environments
+                                      company-latex-commands
+                                      company-math-symbols-latex
+                                      company-dabbrev)
+                                    (cdar old-backends)))
+                             '((company-ispell))
+                             (cdr old-backends))))))
+
   (with-eval-after-load 'evil
     (package-deferred-install '(evil-latex-textobjects
                                 :repo "hpdeifel/evil-latex-textobjects"

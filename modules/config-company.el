@@ -45,17 +45,10 @@
           ('nxml-mode-hook       '(company-nxml))
           ('html-mode-hook       '(company-web-html))
           ('web-mode-hook        '(company-web-html))
-          ('tex-mode-hook        '(company-math-symbols-latex))
-          ('latex-mode-hook      '(company-math-symbols-latex))
           ('scheme-mode-hook     '(geiser-company-backend))
           ('texinfo-mode-hook    '(company-semantic))
           ('python-mode-hook     '(company-anaconda))
           ('text-mode-hook       '(company-ispell))
-          ('LaTeX-mode-hook      '(company-auctex-macros
-                                   company-auctex-symbols
-                                   company-auctex-environments
-                                   company-latex-commands
-                                   company-math-symbols-latex))
           ('livescript-mode-hook '(company-tide))
           ('go-mode-hook         '(company-go)))))))
 
