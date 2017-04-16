@@ -28,6 +28,10 @@
   (auto-compile-on-save-mode +1)
   (remove-hook 'before-save-hook #'my/auto-compile-onetime-setup t))
 
+(with-eval-after-load 'auto-compile
+  (setq auto-compile-display-buffer nil
+        auto-compile-mode-line-counter t))
+
 (with-eval-after-load 'eldoc
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
