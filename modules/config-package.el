@@ -15,6 +15,29 @@
 (defvar my/package-autoload-file (locate-user-emacs-file
                                   "data/package-cache.el"))
 
+(defmacro my/byte-compile-silently (&rest args)
+  "Wraps byte-compilation commands to suppress the compilation buffer."
+  ;; See github.com/raxod502/straight.el
+  `(cl-letf (;; Prevent Emacs from asking the user to save all their
+             ;; files before compiling.
+             ((symbol-function #'save-some-buffers) #'ignore)
+             ;; Die, byte-compile log, die!!!
+             ((symbol-function #'byte-compile-log-1) #'ignore)
+             ((symbol-function #'byte-compile-log-file) #'ignore)
+             ((symbol-function #'byte-compile-log-warning) #'ignore)
+             ;; Suppress messages about byte-compilation progress.
+             (byte-compile-verbose nil)
+             ;; Suppress messages about byte-compilation warnings.
+             (byte-compile-warnings nil)
+             ;; Suppress the remaining messages.
+             (inhibit-message t)
+             (message-log-max nil))
+     ;; We need to load `bytecomp' so that the `symbol-function'
+     ;; assignments below are sure to work. Since we byte-compile this
+     ;; file, we need to `require' the feature at compilation time too.
+     (eval-and-compile (require 'bytecomp))
+     ,@args))
+
 (defun my/package-rebuild-cache ()
   (interactive)
   (let ((autoloads (file-expand-wildcards
@@ -67,7 +90,9 @@
       (while (re-search-forward "(add-to-list 'load-path (directory-file-name (or (file-name-directory #$) (car load-path))))\n" (point-max) t)
         (replace-match "")))
 
-    (byte-compile-file my/package-autoload-file)
+    (my/byte-compile-silently
+     (byte-compile-file my/package-autoload-file))
+
     (cl-letf ((load-path))
       (load (file-name-sans-extension my/package-autoload-file)))))
 
