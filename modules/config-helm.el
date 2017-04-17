@@ -12,6 +12,7 @@
 
 (with-eval-after-load 'helm
   (helm-flx-mode +1)
+  (helm-flx-historian-mode +1)
 
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>")     #'helm-execute-persistent-action)

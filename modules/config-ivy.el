@@ -41,21 +41,8 @@
 
 (with-eval-after-load 'ivy
   (ivy-mode +1)
-  (package-deferred-install '(historian :repo "PythonNut/historian.el"
-                                        :fetcher github
-                                        :files ("historian.el"))
-      :feature-name 'historian
-      :autoload-names '('historian-mode
-                        'historian-load
-                        'historian-save))
-
   (historian-mode +1)
 
-  (package-deferred-install '(ivy-historian :repo "PythonNut/historian.el"
-                                            :fetcher github
-                                            :files ("ivy-historian.el"))
-      :feature-name 'ivy-historian
-      :autoload-names '('ivy-historian-mode))
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'historian)))

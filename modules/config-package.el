@@ -204,14 +204,23 @@
     ;; helm
     helm-ag
     helm-flx
+    (helm-flx-historian :repo "PythonNut/historian.el"
+                        :fetcher github
+                        :files ("helm-flx-historian.el"))
     (helm-git-grep :repo "PythonNut/helm-git-grep"
                    :fetcher github)
     helm-projectile
+    (historian :repo "PythonNut/historian.el"
+               :fetcher github
+               :files ("historian.el"))
     hydra
     icicles
     iflipb
     idle-require
     ;; ivy
+    (ivy-historian :repo "PythonNut/historian.el"
+                   :fetcher github
+                   :files ("ivy-historian.el"))
     key-chord
     magit
     magit-annex
