@@ -254,9 +254,7 @@
                                               (cdr pkg)
                                             pkg))
   (if (consp pkg)
-      (quelpa (if (eq (car-safe pkg) 'quote)
-                  (cdr pkg)
-                pkg))
+      (quelpa pkg)
     (package-install pkg)))
 
 (defun my/has-package-not-installed (packages)
