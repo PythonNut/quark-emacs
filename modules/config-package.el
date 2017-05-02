@@ -275,14 +275,15 @@
 
 (defun my/ensure-packages-are-installed (packages)
   (interactive)
-  (save-window-excursion
-    (when (my/has-package-not-installed packages)
-      (package-refresh-contents)
-      (dolist (package packages)
-        (unless (my/package-installed-p package)
-          (my/package-install package)))
-      (byte-recompile-config)
-      (package-initialize))))
+  (my/byte-compile-silently
+   (save-window-excursion
+     (when (my/has-package-not-installed packages)
+       (package-refresh-contents)
+       (dolist (package packages)
+         (unless (my/package-installed-p package)
+           (my/package-install package)))
+       (byte-recompile-config)
+       (package-initialize)))))
 
 (my/ensure-packages-are-installed my/required-packages)
 
@@ -389,8 +390,9 @@
              (dolist (package-desc upgrades)
                (let ((old-package (cadr (assq (package-desc-name package-desc)
                                               package-alist))))
-                 (package-install package-desc)
-                 (package-delete old-package)))
+                 (my/byte-compile-silently
+                  (package-install package-desc)
+                  (package-delete old-package))))
              (my/package-rebuild-cache)
              (when (my/y-or-n-p-optional
                     "All package upgrades completed. Press \"y\" to restart.")
