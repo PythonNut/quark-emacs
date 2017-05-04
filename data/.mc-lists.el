@@ -9,12 +9,16 @@
         TeX-insert-sub-or-superscript
         TeX-newline
         back-to-indentation-visual-or-beginning
+        cua-paste
         end-of-visual-line-or-end
+        evil-cycle-spacing
         evil-delete-backward-word-smart
+        indent-for-tab-command
         sp-backward-sexp
         sp-backward-unwrap-sexp
         sp-down-sexp
         sp-forward-sexp
+        sp-forward-slurp-sexp
         sp-kill-sexp
         sp-remove-active-pair-overlay
         ))
