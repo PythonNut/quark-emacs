@@ -216,7 +216,6 @@
     hydra
     icicles
     iflipb
-    idle-require
     ;; ivy
     (ivy-historian :repo "PythonNut/historian.el"
                    :fetcher github
@@ -291,63 +290,45 @@
 ;; Require packages in the background after startup
 ;; ================================================
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'idle-require)))
-
 (add-to-list 'load-path (locate-user-emacs-file "personal/"))
 
-(with-eval-after-load 'idle-require
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'idle-require)))
+(defun my/sit-for (seconds)
+  "Redisplay, then wait for SECONDS seconds.  Stop when input is available.
+SECONDS may be a floating-point value.
+\(On operating systems that do not support waiting for fractions of a
+second, floating-point values are rounded down to the nearest integer.)"
+  (unless (input-pending-p t)
+    (redisplay)
+    (let ((read (let ((input-method-function nil))
+                  (read-event nil t seconds))))
+      (when read
+        ;; This is from the normal definition of sit-for, but
+        ;; "(cons t read)" has been replaced by "read".
+        ;; This is to avoid nasty "<t> is undefined" errors.
+        (push read unread-command-events)))))
 
-  (add-hook 'idle-require-mode-hook
-            (lambda ()
-              (diminish 'idle-require-mode)))
+(defvar idle-require-symbols '(helm-files
+                               helm-ring
+                               helm-projectile
+                               helm-semantic
+                               counsel
+                               which-key
+                               evil-snipe
+                               avy
+                               ace-jump-helm-line
+                               multiple-cursors
+                               hydra)
+  "Symbols which need to be autoloaded.")
 
-  (eval-and-compile
-    (setq idle-require-idle-delay 0.1
-          idle-require-load-break 0.1
-          idle-require-symbols '(helm-files
-                                 helm-ring
-                                 helm-projectile
-                                 helm-semantic
-                                 ;; features below load with 1s delay
-                                 counsel
-                                 which-key
-                                 evil-snipe
-                                 avy
-                                 ace-jump-helm-line
-                                 multiple-cursors
-                                 hydra)))
+(defvar idle-require-timer (run-with-idle-timer 0.1 t 'idle-require-load-next))
 
-  ;; back off for non-essential resources
-  (with-eval-after-load (eval-when-compile (elt idle-require-symbols 4))
-    (setq idle-require-idle-delay 1
-          idle-require-load-break 1))
-
-  (defun nadvice/idle-require-quiet (old-fun &rest args)
-    (with-demoted-errors "Idle require error: %s"
-      (cl-letf* ((gc-cons-threshold most-positive-fixnum)
-                 (old-message (symbol-function #'message))
-                 (old-load (symbol-function #'load))
-                 ((symbol-function #'message)
-                  (lambda (&optional fmt &rest iargs)
-                    (if (and fmt
-                             (string-match-p (rx (optional "Beginning ")
-                                                 "idle-require")
-                                             fmt))
-                        (apply #'format fmt iargs)
-                      (apply old-message fmt iargs))))
-                 ((symbol-function #'load)
-                  (lambda (file &optional noerror _nomessage &rest args)
-                    (apply old-load file noerror t args))))
-        (apply old-fun args))))
-
-  (advice-add 'idle-require-load-next :around #'nadvice/idle-require-quiet))
-
-(add-hook 'emacs-startup-hook #'idle-require-mode)
+(defun idle-require-load-next ()
+  "Load symbols from `idle-require-symbols' until input occurs."
+  (let (symbol)
+    (while (and idle-require-symbols
+                (not (input-pending-p)))
+      (require (pop idle-require-symbols))
+      (my/sit-for 0.1))))
 
 ;; ==============================
 ;; Package manipulation functions
