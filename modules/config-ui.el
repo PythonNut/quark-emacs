@@ -154,7 +154,8 @@
   (vhl/define-extension 'my-evil-highlights
                         'evil-yank
                         'evil-paste-after
-                        'evil-paste-before)
+                        'evil-paste-before
+                        'evil-move)
 
   (vhl/install-extension 'my-evil-highlights)
 
