@@ -54,7 +54,7 @@
             (beginning-of-line)
             (kill-line)
             (insert (concat result "/"))))
-      (if (looking-back "[/~]" (1- (point)))
+      (if (looking-back "[/~:]" (1- (point)))
           (self-insert-command arg)
         (helm-execute-persistent-action))))
 
