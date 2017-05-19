@@ -1383,6 +1383,12 @@
   (advice-add 'TeX-source-correlate-sync-source :after
               #'nadvice/TeX-source-correlate-sync-source)
 
+  (defun nadvice/LaTeX-math-insert (old-fun &rest args)
+    (let ((TeX-insert-braces nil))
+      (apply old-fun args)))
+
+  (advice-add 'LaTeX-math-insert :around #'nadvice/LaTeX-math-insert)
+
   (defun my/embrace-with-TeX-environment ()
     (let* ((input (read-string "Environment: "))
            (newline (if (= (elt input (1- (length input))) ?\n) "\n" ""))
