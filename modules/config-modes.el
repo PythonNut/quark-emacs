@@ -1411,7 +1411,18 @@
                              'my/embrace-with-TeX-environment
                              (embrace-build-help "\\begin{env}" "\\end{env}")))
 
-  (add-hook 'LaTeX-mode-hook #'my/embrace-TeX-setup))
+  (add-hook 'LaTeX-mode-hook #'my/embrace-TeX-setup)
+
+  (defun my/auto-yasnippet-TeX-macro ()
+    "Convert the TeX macro around point into a YASnippet snippet"
+    (let ((beg (TeX-find-macro-start))
+          (end (TeX-find-macro-end)))
+      (when (and beg end)
+        (yas-expand-snippet (replace-regexp-in-string "{}" "{${}}" (substring-no-properties (buffer-substring beg end)))
+                            beg
+                            end))))
+
+  (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro))
 
 ;; =============================================================================
 ;; Org mode ====================================================================
