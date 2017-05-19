@@ -1422,7 +1422,38 @@
                             beg
                             end))))
 
-  (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro))
+  (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro)
+
+  (defvar my/TeX-environment-or-macro-default "align*")
+  (defun LaTeX-environment-or-macro (arg)
+    "TeX-insert-macro and LaTeX-environment merged into one command"
+    (interactive "*P")
+    (let* ((symbol-list (TeX-symbol-list-filtered))
+           (thing (completing-read
+                   (concat "Thing: (default "
+                           my/TeX-environment-or-macro-default
+                           ") ")
+                   (append (LaTeX-environment-list-filtered)
+                           symbol-list)
+                   nil nil nil
+                   'LaTeX-environment-and-macro-history
+                   my/TeX-environment-or-macro-default)))
+
+      (setq my/TeX-environment-or-macro-default thing)
+      (if (not (assoc thing symbol-list))
+          (let ((entry (assoc thing (LaTeX-environment-list))))
+            (when (interactive-p)
+              (setq LaTeX-default-environment thing))
+            (if (null entry) (LaTeX-add-environments (list thing)))
+            (if arg
+                (LaTeX-modify-environment thing)
+              (LaTeX-environment-menu thing)))
+        (when (interactive-p)
+          (setq TeX-default-macro thing))
+        (TeX-parse-macro thing (cdr-safe (assoc thing (TeX-symbol-list))))
+        (run-hooks 'TeX-after-insert-macro-hook))))
+
+  (define-key TeX-mode-map (kbd ";") #'LaTeX-environment-or-macro))
 
 ;; =============================================================================
 ;; Org mode ====================================================================
