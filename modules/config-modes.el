@@ -1357,6 +1357,7 @@
                                (adaptive-wrap-prefix-mode -1)
                                (when (display-graphic-p)
                                  (magic-latex-buffer))))
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
 
