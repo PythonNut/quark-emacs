@@ -196,10 +196,10 @@ the syntax class ')'."
           ((kbd "C-M-S-d") #'on-parens-down-sexp-end)
 
           ((kbd "C-M-u") #'on-parens-up-sexp-end)
-          ((kbd "C-M-S-u") #'on-parens--up-sexp)
+          ((kbd "C-M-S-u") #'on-parens-up-sexp)
 
           ((kbd "C-M-n") #'on-parens-forward-sexp)
-          ((kbd "C-M-p") #'on-parens--backward-sexp-end)))))
+          ((kbd "C-M-p") #'on-parens-backward-sexp-end)))))
 
   (cl-macrolet
       ((sp-define-bindings
