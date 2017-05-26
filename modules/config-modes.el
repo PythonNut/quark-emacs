@@ -1350,7 +1350,9 @@
         TeX-save-query nil
         TeX-parse-self t
         TeX-PDF-mode t
-        TeX-source-correlate-start-server t)
+        TeX-source-correlate-start-server t
+        LaTeX-math-list '(("\'" "dif")
+                          ("\"" "Dif")))
 
   (add-to-list 'sp-sexp-suffix (list 'latex-mode 'regexp ""))
   (add-hook 'LaTeX-mode-hook (lambda ()
