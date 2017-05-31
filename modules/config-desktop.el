@@ -32,20 +32,25 @@
                  (apply #'format args)))))
     (apply old-fun args)))
 
-(advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet)
+(defun my/recentf-onetime-setup ()
+  (recentf-mode +1)
+  (remove-hook 'find-file-hook #'my/recentf-onetime-setup))
+
+(add-hook 'find-file-hook #'my/recentf-onetime-setup)
 
 (with-eval-after-load 'recentf
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'recentf)))
+  (setq recentf-save-file (locate-user-emacs-file "data/.recentf")
+        recentf-max-saved-items 1000
+        recentf-max-menu-items 50
+        recentf-auto-cleanup 30)
   (add-to-list 'recentf-exclude (eval-when-compile
                                   (concat (rx line-start)
                                           (expand-file-name
                                            (locate-user-emacs-file "elpa")))))
-  (setq recentf-save-file (locate-user-emacs-file "data/.recentf")
-        recentf-max-saved-items 1000
-        recentf-max-menu-items 50
-        recentf-auto-cleanup 30))
+  (advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet))
 
 (with-eval-after-load 'session
   (eval-when-compile
