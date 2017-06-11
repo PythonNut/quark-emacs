@@ -1570,9 +1570,6 @@
   (require 'poly-noweb)
   (require 'poly-slim))
 
-;;; MARKDOWN
-(add-to-list 'auto-mode-alist '("\\.md$" . poly-markdown-mode))
-
 ;;; R related modes
 (add-to-list 'auto-mode-alist '("\\.Snw$" . poly-noweb+r-mode))
 (add-to-list 'auto-mode-alist '("\\.Rnw$" . poly-noweb+r-mode))
