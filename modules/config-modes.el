@@ -1186,6 +1186,11 @@
                     '("\\.md\\'"   . markdown-mode))
     :autoload-names '('markdown-mode 'gfm-mode))
 
+(package-deferred-install 'markdown-preview-mode
+    :autoload-names '('markdown-preview-open-browser
+                      'markdown-preview-cleanup
+                      'markdown-preview-mode))
+
 (package-deferred-install 'bbcode-mode
     :mode-entries '('("\\.bbcode$" . bbcode-mode))
     :autoload-names '('bbcode-mode))
