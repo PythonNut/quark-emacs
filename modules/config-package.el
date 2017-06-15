@@ -327,7 +327,15 @@ second, floating-point values are rounded down to the nearest integer.)"
   (let (symbol)
     (while (and idle-require-symbols
                 (not (input-pending-p)))
-      (require (pop idle-require-symbols))
+      (cl-letf* ((old-load (symbol-function #'load))
+                 ((symbol-function #'load)
+                  (lambda (file &optional noerror _nomessage &rest args)
+                    (apply old-load
+                           file
+                           noerror
+                           (not (eq debug-on-error 'startup))
+                           args))))
+        (require (pop idle-require-symbols)))
       (my/sit-for 0.1))))
 
 ;; ==============================
