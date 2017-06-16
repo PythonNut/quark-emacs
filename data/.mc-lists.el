@@ -12,6 +12,7 @@
         cua-paste
         end-of-visual-line-or-end
         evil-cycle-spacing
+        evil-delete-backward-char-and-join
         evil-delete-backward-word-smart
         indent-for-tab-command
         sp-backward-sexp
