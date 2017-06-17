@@ -886,35 +886,35 @@
   (define-key term-raw-map (kbd "<remap> <cua-paste>") #'term-paste)
 
   (defun nadvice/term-exec-1 (name buffer command switches)
-      (let* ((environment
-              (list
-               (format "TERM=%s" term-term-name)
-               (format "TERMINFO=%s" data-directory)
-               (format term-termcap-format "TERMCAP="
-                       term-term-name term-height term-width)
-               (format "EMACS=%s (term:%s)" emacs-version term-protocol-version)
-               (format "INSIDE_EMACS=%s,term:%s" emacs-version term-protocol-version)
-               (format "LINES=%d" term-height)
-               (format "COLUMNS=%d" term-width)))
-             (process-environment
-              (append environment
-                      process-environment))
-             (tramp-remote-process-environment
-              (append environment
-                      tramp-remote-process-environment))
-             (process-connection-type t)
-             (coding-system-for-read 'binary))
-        (apply 'start-file-process name buffer
-           "/bin/sh" "-c"
-           (format "stty -nl echo rows %d columns %d sane 2>/dev/null;\
+    (let* ((environment
+            (list
+             (format "TERM=%s" term-term-name)
+             (format "TERMINFO=%s" data-directory)
+             (format term-termcap-format "TERMCAP="
+                     term-term-name term-height term-width)
+             (format "EMACS=%s (term:%s)" emacs-version term-protocol-version)
+             (format "INSIDE_EMACS=%s,term:%s" emacs-version term-protocol-version)
+             (format "LINES=%d" term-height)
+             (format "COLUMNS=%d" term-width)))
+           (process-environment
+            (append environment
+                    process-environment))
+           (tramp-remote-process-environment
+            (append environment
+                    tramp-remote-process-environment))
+           (process-connection-type t)
+           (coding-system-for-read 'binary))
+      (apply 'start-file-process name buffer
+             "/bin/sh" "-c"
+             (format "stty -nl echo rows %d columns %d sane 2>/dev/null;\
     if [ $1 = .. ]; then shift; fi; exec \"$@\""
-                   term-height term-width)
-           ".."
-           command switches)))
+                     term-height term-width)
+             ".."
+             command switches)))
 
   (advice-add 'term-exec-1 :override #'nadvice/term-exec-1)
 
-  (defun nadvice/ansi-term (args)
+  (defun nadvice/ansi-term (&optional args)
     (interactive "P")
     (cl-destructuring-bind (&optional program new-buffer-name) args
       (let ((default-shell
@@ -941,20 +941,22 @@
                 (when (tramp-tramp-file-p default-directory)
                   (with-parsed-tramp-file-name
                       buffer-file-name vec
-                    (or  (tramp-find-executable
-                          vec "bash" (tramp-get-remote-path vec) t t)
-                         (tramp-find-executable
-                          vec "ksh" (tramp-get-remote-path vec) t t)
-                         (tramp-get-connection-property
-                          (tramp-get-connection-process vec) "remote-shell" nil)
-                         (tramp-get-method-parameter
-                          (tramp-file-name-method vec) 'tramp-remote-shell))))
+                    (or (tramp-find-executable
+                         vec "bash" (tramp-get-remote-path vec) t t)
+                        (tramp-find-executable
+                         vec "ksh" (tramp-get-remote-path vec) t t)
+                        (tramp-get-connection-property
+                         (tramp-get-connection-process vec) "remote-shell" nil)
+                        (tramp-get-method-parameter
+                         (tramp-file-name-method vec) 'tramp-remote-shell))))
                 (list "/bin/sh")))))
-        (if (consp program)
-            (list (read-from-minibuffer "Run program: "
-                                        default-shell)
-                  new-buffer-name)
-          (list default-shell new-buffer-name)))))
+        (if (stringp program)
+            (list program new-buffer-name)
+          (if (consp program)
+              (list (read-from-minibuffer "Run program: "
+                                          default-shell)
+                    new-buffer-name)
+            (list default-shell new-buffer-name))))))
 
   (advice-add 'ansi-term :filter-args #'nadvice/ansi-term))
 
@@ -1027,21 +1029,40 @@
 (defun my/popup-ansi-term ()
   "Toggle a shell popup buffer with the current file's directory as cwd."
   (interactive)
-  (let* ((dir (file-name-directory (or (buffer-file-name)
-                                        ;; dired
-                                        dired-directory
-                                        ;; use HOME
-                                        "~/")))
+  (require 's)
+  (let* ((dir (file-name-directory (or buffer-file-name
+                                       ;; dired
+                                       dired-directory
+                                       ;; use HOME
+                                       "~/")))
          (popup-buffer (get-buffer "*Popup Shell*"))
-         (new-buffer (unless (buffer-live-p popup-buffer)
-                       (save-window-excursion
-                         (ansi-term (or explicit-shell-file-name
-                                        (getenv "ESHELL")
-                                        (getenv "SHELL")
-                                        "/bin/sh")
-                                    "*Popup Shell*")
-                         (setq popup-buffer (get-buffer "*Popup Shell*")))
-                       t)))
+         (new-buffer
+          (unless (buffer-live-p popup-buffer)
+            (save-window-excursion
+              (ansi-term
+               (or explicit-shell-file-name
+                   (when (file-remote-p buffer-file-name)
+                     (with-parsed-tramp-file-name buffer-file-name parsed
+                       (let* ((login-shell
+                               (s-trim
+                                (substring-no-properties
+                                 (shell-command-to-string
+                                  (format
+                                   "getent passwd \"%s\" | cut -f7 -d:"
+                                   (shell-quote-argument parsed-user))))))
+                              (login-shell-fullpath (tramp-make-tramp-file-name
+                                                     parsed-method
+                                                     parsed-user
+                                                     parsed-host
+                                                     login-shell)))
+                         (when (file-exists-p login-shell-fullpath)
+                           login-shell-fullpath))))
+                   (getenv "ESHELL")
+                   (getenv "SHELL")
+                   "/bin/sh")
+               "*Popup Shell*")
+              (setq popup-buffer (get-buffer "*Popup Shell*")))
+            t)))
 
     (select-window (split-window-below))
     (switch-to-buffer popup-buffer)
