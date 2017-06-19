@@ -133,9 +133,6 @@
                                     (rx line-start "*Quail"))
         iflipb-wrap-around 't))
 
-(global-set-key (kbd "<mouse-7>") #'iflipb-next-buffer)
-(global-set-key (kbd "<mouse-6>") #'iflipb-previous-buffer)
-
 (global-set-key (kbd "<C-tab>") #'iflipb-next-buffer)
 (global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer)
 
