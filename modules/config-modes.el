@@ -175,8 +175,10 @@
 
   (package-deferred-install 'srefactor
       :autoload-names '('srefactor-refactor-at-point)
-      (define-key c-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
-    (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)))
+      (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
+
+  (define-key c-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
+  (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point))
 
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)
