@@ -178,7 +178,10 @@
       (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
 
   (define-key c-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
-  (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point))
+  (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
+
+  (define-key c-mode-map (kbd "M-.") #'dumb-jump-go)
+  (define-key c++-mode-map (kbd "M-.") #'dumb-jump-go))
 
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)

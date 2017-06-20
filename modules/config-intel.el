@@ -261,4 +261,19 @@
   (advice-add 'fasd-find-file :around
               #'nadvice/fasd-find-file))
 
+;;; =================================================
+;;; dumb-jump an unintelligent goto-definition system
+;;; =================================================
+
+(package-deferred-install 'dumb-jump
+    :autoload-names '('dumb-jump-back
+                      'dumb-jump-quick-look
+                      'dumb-jump-go-other-window
+                      'dumb-jump-go-current-window
+                      'dumb-jump-go-prefer-external
+                      'dumb-jump-go-prompt
+                      'dumb-jump-go-prefer-external-other-window
+                      'dumb-jump-go
+                      'dumb-jump-mode))
+
 (provide 'config-intel)
