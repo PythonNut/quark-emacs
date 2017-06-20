@@ -104,6 +104,9 @@
       :autoload-names '('company-irony
                         'company-irony-setup-begin-commands))
 
+  (package-deferred-install 'company-irony-c-headers
+      :autoload-names '('company-irony-c-headers))
+
   (package-deferred-install 'flycheck-irony
       :autoload-names '('flycheck-irony-setup))
 
@@ -116,6 +119,31 @@
     (flycheck-irony-setup))
 
   (setq c-default-style "k&r")
+
+  (eval-and-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'config-setq))
+
+    (cl-macrolet
+        ((company-define-specific-modes
+          (mode backend)
+          `(progn
+             (add-hook ,mode
+                       (lambda ()
+                         (require 'company)
+                         (let ((old-backends company-backends))
+                           (set (make-local-variable 'company-backends)
+                                (cons (append
+                                       ,backend
+                                       (cdar old-backends))
+                                      (cdr old-backends)))))))))
+
+      (with-no-warnings
+        (my/generate-calls
+            'company-define-specific-modes
+          '(('c++-mode-hook  '(company-irony-c-headers company-irony))
+            ('objc-mode-hook '(company-irony-c-headers company-irony))
+            ('c-mode-hook    '(company-irony-c-headers company-irony)))))))
 
   (cl-macrolet
       ((my/setup-cc-mode
