@@ -300,12 +300,12 @@
 
 (defun linum-cycle ()
   (interactive)
-  (if (bound-and-true-p linum-mode)
+  (if (bound-and-true-p global-linum-mode)
       (if (eq linum-format 'dynamic)
-          (linum-mode -1)
+          (global-linum-mode -1)
         (setq linum-format 'dynamic))
     (progn
-      (linum-mode +1)
+      (global-linum-mode +1)
       (setq linum-format 'linum-relative))))
 
 (global-set-key (kbd "C-c L") #'linum-cycle)
