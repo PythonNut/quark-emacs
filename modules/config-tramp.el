@@ -47,7 +47,9 @@
           ;; strip one directory off the path
           (setq temp-path
                 (directory-file-name
-                 (file-name-directory temp-path))))))))
+                 (file-name-directory (if (file-name-absolute-p temp-path)
+                                          temp-path
+                                        (expand-file-name temp-path))))))))))
 
 (defun my/make-root-file-name (file-name)
   (require 'tramp)
