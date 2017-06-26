@@ -126,24 +126,26 @@
 
     (cl-macrolet
         ((company-define-specific-modes
-          (mode backend)
+          (mode)
           `(progn
              (add-hook ,mode
                        (lambda ()
                          (require 'company)
+                         (require 'cl-lib)
                          (let ((old-backends company-backends))
                            (set (make-local-variable 'company-backends)
-                                (cons (append
-                                       ,backend
-                                       (cdar old-backends))
-                                      (cdr old-backends)))))))))
-
+                                '((company-irony-c-headers
+                                   company-irony
+                                   company-yasnippet
+                                   company-files)
+                                  (company-dabbrev-code)
+                                  company-dabbrev))))))))
       (with-no-warnings
-        (my/generate-calls
+        (my/generate-calls-single
             'company-define-specific-modes
-          '(('c++-mode-hook  '(company-irony-c-headers company-irony))
-            ('objc-mode-hook '(company-irony-c-headers company-irony))
-            ('c-mode-hook    '(company-irony-c-headers company-irony)))))))
+          '('c++-mode-hook
+            'objc-mode-hook
+            'c-mode-hook)))))
 
   (cl-macrolet
       ((my/setup-cc-mode
