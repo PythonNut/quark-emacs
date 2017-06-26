@@ -81,6 +81,16 @@
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'cc-mode)))
+
+  (setq c-default-style "k&r")
+
+  (package-deferred-install '(irony-eldoc :repo "josteink/irony-eldoc"
+                                          :fetcher github)
+      :autoload-names '('irony-eldoc))
+
+  (package-deferred-install 'flycheck-irony
+      :autoload-names '('flycheck-irony-setup))
+
   (package-deferred-install 'irony
       :autoload-names '('irony-mode
                         'irony-version
@@ -93,12 +103,10 @@
                         'irony-cdb-libclang
                         'irony-completion-at-point
                         'irony-completion-at-point-async)
-      (add-to-list 'irony-additional-clang-options "-std=c++14")
+      (flycheck-irony-setup)
+    (add-to-list 'irony-additional-clang-options "-std=c++14")
+    (add-hook 'irony-mode-hook 'irony-eldoc)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-  (package-deferred-install '(irony-eldoc :repo "josteink/irony-eldoc"
-                                          :fetcher github)
-      :autoload-names '('irony-eldoc))
 
   (package-deferred-install 'company-irony
       :autoload-names '('company-irony
@@ -107,18 +115,10 @@
   (package-deferred-install 'company-irony-c-headers
       :autoload-names '('company-irony-c-headers))
 
-  (package-deferred-install 'flycheck-irony
-      :autoload-names '('flycheck-irony-setup))
-
   (package-deferred-install 'clang-format
       :autoload-names '('clang-format
                         'clang-format-region
                         'clang-format-buffer))
-
-  (with-eval-after-load 'irony
-    (flycheck-irony-setup))
-
-  (setq c-default-style "k&r")
 
   (eval-and-compile
     (with-demoted-errors "Load error: %s"
@@ -151,8 +151,6 @@
         `(add-hook ,hook (lambda ()
                            (when (eq major-mode ,mode)
                              (irony-mode +1)
-                             (eldoc-mode +1)
-                             (irony-eldoc +1)
                              (semantic-idle-summary-mode -1))))))
 
     (with-no-warnings
