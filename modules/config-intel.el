@@ -129,6 +129,10 @@
 ;;; yasnippet -- extensible programmable snippets
 ;;; =============================================
 
+(setq yas-verbosity 0
+      yas-alias-to-yas/prefix-p nil
+      yas-use-menu nil)
+
 (defun my/yasnippet-onetime-setup ()
   (require 'yasnippet)
   (remove-hook 'first-change-hook #'my/yasnippet-onetime-setup))
@@ -136,8 +140,6 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
             (add-hook 'first-change-hook #'my/yasnippet-onetime-setup)))
-
-(setq yas-verbosity 0)
 
 (defun my/ivy-yasnippet (_prompt choices &optional display-fn)
   "Use ivy to select a snippet. Put this into `yas-prompt-functions.'"
@@ -154,7 +156,6 @@
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'yasnippet)))
-
   (set-face-attribute 'yas-field-highlight-face nil
                       :foreground nil
                       :background nil

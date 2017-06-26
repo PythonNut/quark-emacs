@@ -75,9 +75,9 @@
 
   (defun company-complete-common-or-complete-full ()
     (interactive)
-    (when (or (not yas/minor-mode)
-              (not (let ((yas/fallback-behavior 'return-nil))
-                     (yas/expand))))
+    (when (or (not yas-minor-mode)
+              (not (let ((yas-fallback-behavior 'return-nil))
+                     (yas-expand))))
       (when (company-manual-begin)
         (if (eq last-command #'company-complete-common-or-cycle)
             (let ((company-selection-wrap-around t))

@@ -58,7 +58,31 @@
     (with-demoted-errors "Load error: %s"
       (require 'auto-indent-mode)))
   (setq auto-indent-assign-indent-level-variables nil)
-  (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →")))
+  (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →"))
+
+  ;; This is patched to support the latest yasnippet
+  (defun my/auto-indent-par-region ()
+    "Indent a parenthetical region (based on a timer)."
+    (when (or (not (fboundp 'yas--snippets-at-point))
+              (and (boundp 'yas-minor-mode) (not yas-minor-mode))
+              (and yas-minor-mode
+                   (let ((yap (yas--snippets-at-point 'all-snippets)))
+                     (or (not yap) (and yap (= 0 (length yap)))))))
+      (when auto-indent-next-pair
+        (let ((mark-active mark-active))
+          (when (and (not (minibufferp))
+                     (not (looking-at "[^ \t]"))
+                     (not (memq major-mode auto-indent-multiple-indent-modes))
+                     (not (looking-back "^[ \t]+" nil)))
+            (let ((start-time (float-time)))
+              (indent-region auto-indent-pairs-begin auto-indent-pairs-end)
+              (auto-indent-par-region-interval-update (- (float-time) start-time)))
+            (when (or (> (point) auto-indent-pairs-end)
+                      (< (point) auto-indent-pairs-begin))
+              (set (make-local-variable 'auto-indent-pairs-begin) nil)
+              (set (make-local-variable 'auto-indent-pairs-end) nil)))))))
+
+  (advice-add 'auto-indent-par-region :override #'my/auto-indent-par-region))
 
 (defun my/auto-indent-onetime-setup ()
   (auto-indent-global-mode +1)
