@@ -153,6 +153,10 @@
         `(add-hook ,hook (lambda ()
                            (when (eq major-mode ,mode)
                              (irony-mode +1)
+                             (eldoc-mode +1)
+                             (irony-eldoc +1)
+                             (auto-indent-mode -1)
+                             (aggressive-indent-mode +1)
                              (semantic-idle-summary-mode -1))))))
 
     (with-no-warnings
@@ -231,24 +235,24 @@
                           'js2r-extract-var
                           'js2-refactor-mode))
 
-    (set-face-foreground 'js2-external-variable
-                         (face-foreground 'default))
+  (set-face-foreground 'js2-external-variable
+                       (face-foreground 'default))
 
-    (set-face-attribute 'js2-external-variable nil :weight 'extra-bold)
-    (set-face-attribute 'js2-external-variable nil :underline t)
-    (js2r-add-keybindings-with-prefix "C-c C-r")
+  (set-face-attribute 'js2-external-variable nil :weight 'extra-bold)
+  (set-face-attribute 'js2-external-variable nil :underline t)
+  (js2r-add-keybindings-with-prefix "C-c C-r")
 
-    (with-eval-after-load 'smartparens
-      (sp-local-pair 'js2-mode "{" nil :post-handlers
-                     '(:add
-                       ("||\n[i]" "RET")
-                       ("| " "SPC"))))
+  (with-eval-after-load 'smartparens
+    (sp-local-pair 'js2-mode "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
 
-    (setq js2-basic-offset 2)
+  (setq js2-basic-offset 2)
 
-    (add-hook 'js2-mode-hook #'js2-refactor-mode)
-    (add-hook 'js2-mode-hook (lambda ()
-                               (setq mode-name "JS"))))
+  (add-hook 'js2-mode-hook #'js2-refactor-mode)
+  (add-hook 'js2-mode-hook (lambda ()
+                             (setq mode-name "JS"))))
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx\\'" . js2-jsx-mode))
