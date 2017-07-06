@@ -39,6 +39,9 @@
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
+(with-eval-after-load 'historian
+  (setq historian-save-file (locate-user-emacs-file "data/.historian")))
+
 (with-eval-after-load 'ivy
   (ivy-mode +1)
   (historian-mode +1)
@@ -47,7 +50,6 @@
     (with-demoted-errors "Load error: %s"
       (require 'historian)))
 
-  (setq historian-save-file (locate-user-emacs-file "data/.historian"))
   (ivy-historian-mode +1)
 
   (defun my/ivy-setup-faces ()
