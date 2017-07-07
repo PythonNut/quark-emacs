@@ -104,7 +104,6 @@
                         'irony-completion-at-point
                         'irony-completion-at-point-async)
       (flycheck-irony-setup)
-    (add-to-list 'irony-additional-clang-options "-std=c++14")
     (add-hook 'irony-mode-hook 'irony-eldoc)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
