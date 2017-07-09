@@ -109,7 +109,14 @@
 
   (package-deferred-install 'company-irony
       :autoload-names '('company-irony
-                        'company-irony-setup-begin-commands))
+                        'company-irony-setup-begin-commands)
+
+      (defun nadvice/irony-completion-post-complete (old-fun &rest args)
+        (unless (irony-eldoc--which-funcall)
+          (apply old-fun args)))
+
+    (advice-add 'irony-completion-post-complete :around
+                #'nadvice/irony-completion-post-complete))
 
   (package-deferred-install 'company-irony-c-headers
       :autoload-names '('company-irony-c-headers))
