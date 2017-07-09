@@ -134,7 +134,7 @@
       yas-use-menu nil)
 
 (defun my/yasnippet-onetime-setup ()
-  (require 'yasnippet)
+  (yas-global-mode +1)
   (remove-hook 'first-change-hook #'my/yasnippet-onetime-setup))
 
 (add-hook 'emacs-startup-hook
@@ -169,7 +169,15 @@
         yas-triggers-in-field t
         yas-key-syntaxes (list "w_." "w_.()" #'yas-try-key-from-whitespace))
 
-  (yas-global-mode +1)
+  (defun yas-company-complete-or-next-field ()
+    (interactive)
+    (if company-candidates
+        (company-complete-common-or-complete-full)
+      (yas-next-field)))
+
+  (define-key yas-keymap (kbd "<tab>") 'yas-company-complete-or-next-field)
+  (define-key yas-keymap (kbd "TAB") 'yas-company-complete-or-next-field)
+
   (yas-reload-all)
 
   (add-to-list 'yas-prompt-functions #'my/ivy-yasnippet))
