@@ -2,6 +2,8 @@
 (require 'cl-lib)
 (require 'config-tramp)
 
+(setq eldoc-idle-delay 0.1)
+
 ;; enable semantic code LALR(1) parser
 (add-hook 'prog-mode-hook #'semantic-mode)
 (with-eval-after-load 'semantic
