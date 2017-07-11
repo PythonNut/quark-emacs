@@ -379,6 +379,7 @@ second, floating-point values are rounded down to the nearest integer.)"
              (dolist (package-desc upgrades)
                (let ((old-package (cadr (assq (package-desc-name package-desc)
                                               package-alist))))
+                 (message "Upgrading %s" (package-desc-name package-desc))
                  (my/byte-compile-silently
                   (package-install package-desc)
                   (package-delete old-package))))
