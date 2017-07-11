@@ -120,10 +120,28 @@
   (package-deferred-install 'company-irony
       :autoload-names '('company-irony
                         'company-irony-setup-begin-commands)
+      (setq company-irony-ignore-case t)
 
-      (defun nadvice/irony-completion-post-complete (old-fun &rest args)
-        (unless (irony-eldoc--which-funcall)
-          (apply old-fun args)))
+    (defun nadvice/company-irony--filter-candidates (prefix candidates)
+      (let ((regex (concat "\\`"
+                           (mapconcat
+                            (lambda (x)
+                              (setq x (string x))
+                              (concat "[^" x "]*" (regexp-quote x)))
+                            prefix
+                            "")))
+            (case-fold-search company-irony-ignore-case))
+        (cl-loop for candidate in candidates
+                 when (string-match-p regex (car candidate))
+                 collect (propertize (car candidate) 'company-irony candidate))))
+
+    (with-eval-after-load 'company-irony
+      (advice-add 'company-irony--filter-candidates :override
+                  #'nadvice/company-irony--filter-candidates))
+
+    (defun nadvice/irony-completion-post-complete (old-fun &rest args)
+      (unless (irony-eldoc--which-funcall)
+        (apply old-fun args)))
 
     (advice-add 'irony-completion-post-complete :around
                 #'nadvice/irony-completion-post-complete))
