@@ -75,7 +75,17 @@
 ;; C-like ======================================================================
 ;; =============================================================================
 
-(add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(defun c-or-c++-header ()
+  "Sets either c-mode or c++-mode, whichever is appropriate."
+  (interactive)
+  (let ((c-file (concat (file-name-sans-extension
+                         (buffer-file-name))
+                        ".c")))
+    (if (file-exists-p c-file)
+        (c-mode)
+      (c++-mode))))
+
+(add-to-list 'auto-mode-alist '("\\.h\\'" . c-or-c++-header))
 
 (with-eval-after-load 'cc-mode
   (eval-when-compile
