@@ -197,6 +197,9 @@
       :autoload-names '('srefactor-refactor-at-point)
       (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
 
+  (define-key c-mode-map (kbd "C-c o") #'ff-find-other-file)
+  (define-key c++-mode-map (kbd "C-c o") #'ff-find-other-file)
+
   (define-key c-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
   (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
 
