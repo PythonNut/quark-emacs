@@ -190,7 +190,7 @@
         helm-source-locate
         (helm-make-source "Locate" 'helm-locate-source
           :pattern-transformer 'helm-locate-pattern-transformer
-          :candidate-number-limit 100)
+          :candidate-number-limit 1000)
         helm-locate-command "locate %s -r %s -e -l 100"))
 
 ;; adaptively fallback to ack and ack-grep
@@ -344,5 +344,8 @@
 
   (define-key evil-insert-state-map (kbd "C-p") #'my/helm-interfile-omni)
   (define-key evil-motion-state-map (kbd "C-p") #'my/helm-interfile-omni))
+
+(global-set-key (kbd "C-S-p") #'helm-locate)
+(global-set-key (kbd "M-P") #'helm-locate)
 
 (provide 'config-helm)
