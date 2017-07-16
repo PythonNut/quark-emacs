@@ -197,6 +197,7 @@
     diminish
     dtrt-indent
     easy-kill
+    el-patch
     expand-region
     flx-isearch
     flycheck

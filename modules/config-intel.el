@@ -290,4 +290,12 @@
                       'dumb-jump-go
                       'dumb-jump-mode))
 
+(defun my/jump-to-definition-dwim ()
+  (interactive)
+  (if (and (executable-find "global")
+           (or (getenv "GTAGSROOT")
+               (locate-dominating-file default-directory "GTAGS")))
+      (helm-gtags-dwim)
+    (dumb-jump-go)))
+
 (provide 'config-intel)

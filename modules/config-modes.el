@@ -191,6 +191,7 @@
                              (irony-eldoc +1)
                              (auto-indent-mode -1)
                              (aggressive-indent-mode +1)
+                             (helm-gtags-mode +1)
                              (semantic-idle-summary-mode -1))))))
 
     (with-no-warnings
@@ -221,8 +222,8 @@
   (define-key c-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
   (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
 
-  (define-key c-mode-map (kbd "M-.") #'dumb-jump-go)
-  (define-key c++-mode-map (kbd "M-.") #'dumb-jump-go))
+  (define-key c-mode-map (kbd "M-.") #'my/jump-to-definition-dwim)
+  (define-key c++-mode-map (kbd "M-.") #'my/jump-to-definition-dwim))
 
 (package-deferred-install 'arduino-mode
     :mode-entries '('("\\.pde\\'" . arduino-mode)
