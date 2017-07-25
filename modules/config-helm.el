@@ -1,16 +1,17 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'helm)))
-
-(with-eval-after-load 'helm-flx
-  (eval-when-compile
-    (require 'helm-flx))
+(use-package helm-flx
+  :config
   (setq helm-flx-for-helm-locate t))
 
-(with-eval-after-load 'helm
+(use-package helm-flx-historian
+  :recipe (helm-flx-historian :type git :host github :repo "PythonNut/historian.el"))
+
+(use-package ace-jump-helm-line)
+
+(use-package helm
+  :config
   (helm-flx-mode +1)
   (helm-flx-historian-mode +1)
 
@@ -119,9 +120,8 @@
     (require 'helm-command))
   (setq helm-M-x-fuzzy-match t))
 
-(with-eval-after-load 'helm-projectile
-  (eval-when-compile
-    (require 'helm-projectile))
+(use-package helm-projectile
+  :config
   (setq helm-projectile-fuzzy-match t)
 
   (defvar my/helm-non-projectile-buffers-list-cache nil)
@@ -193,17 +193,17 @@
           :candidate-number-limit 1000)
         helm-locate-command "locate %s -r %s -e -l 100"))
 
-;; adaptively fallback to ack and ack-grep
-(defvar my/ag-available nil)
-(with-eval-after-load 'helm-ag
-  (eval-when-compile
-    (require 'helm-ag))
+(use-package helm-ag
+  :init
+  ;; adaptively fallback to ack and ack-grep
+  (defvar my/ag-available nil)
+  :config
   (setq my/ag-available
         (or (executable-find "rg")
             (executable-find "ag")
             (executable-find "ack")
             (executable-find "ack-grep")))
-  
+
   (if (executable-find "rg")
       (setq helm-ag-base-command "rg -Hn --color never --no-heading")
     (unless (executable-find "ag")
@@ -328,11 +328,8 @@
 (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 
-(with-eval-after-load 'evil
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'evil)))
-
+(use-package evil
+  :config
   (defun nadvice/evil-paste-pop (old-fun &rest args)
     (if (memq last-command '(evil-paste-after
                              evil-paste-before
@@ -348,38 +345,37 @@
 (global-set-key (kbd "C-S-p") #'helm-locate)
 (global-set-key (kbd "M-P") #'helm-locate)
 
-;; Unfortunately, this must be declared at toplevel.
-(setq helm-gtags-fuzzy-match t)
-
-(package-deferred-install 'helm-gtags
-    :autoload-names '('helm-gtags-clear-all-cache
-                      'helm-gtags-clear-cache
-                      'helm-gtags-next-history
-                      'helm-gtags-previous-history
-                      'helm-gtags-select
-                      'helm-gtags-select-path
-                      'helm-gtags-tags-in-this-function
-                      'helm-gtags-create-tags
-                      'helm-gtags-delete-tags
-                      'helm-gtags-find-tag
-                      'helm-gtags-find-tag-other-window
-                      'helm-gtags-find-rtag
-                      'helm-gtags-find-symbol
-                      'helm-gtags-find-pattern
-                      'helm-gtags-find-files
-                      'helm-gtags-find-tag-from-here
-                      'helm-gtags-dwim
-                      'helm-gtags-parse-file
-                      'helm-gtags-pop-stack
-                      'helm-gtags-show-stack
-                      'helm-gtags-clear-stack
-                      'helm-gtags-clear-all-stacks
-                      'helm-gtags-update-tags
-                      'helm-gtags-resume
-                      'helm-gtags-mode)
-    (eval-when-compile
-      (require 'helm-gtags))
-
+(use-package helm-gtags
+  :defer-install t
+  :commands (helm-gtags-clear-all-cache
+             helm-gtags-clear-cache
+             helm-gtags-next-history
+             helm-gtags-previous-history
+             helm-gtags-select
+             helm-gtags-select-path
+             helm-gtags-tags-in-this-function
+             helm-gtags-create-tags
+             helm-gtags-delete-tags
+             helm-gtags-find-tag
+             helm-gtags-find-tag-other-window
+             helm-gtags-find-rtag
+             helm-gtags-find-symbol
+             helm-gtags-find-pattern
+             helm-gtags-find-files
+             helm-gtags-find-tag-from-here
+             helm-gtags-dwim
+             helm-gtags-parse-file
+             helm-gtags-pop-stack
+             helm-gtags-show-stack
+             helm-gtags-clear-stack
+             helm-gtags-clear-all-stacks
+             helm-gtags-update-tags
+             helm-gtags-resume
+             helm-gtags-mode)
+  :init
+  ;; Unfortunately, this must be declared at toplevel.
+  (setq helm-gtags-fuzzy-match t)
+  :config
   (require 'el-patch)
   (setq helm-gtags-auto-update t
         helm-gtags-ignore-case t

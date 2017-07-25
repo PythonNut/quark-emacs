@@ -4,6 +4,27 @@
   (with-demoted-errors "Load error: %s"
     (require 'cua-base)))
 
+(use-package xclip
+  :config
+  (defun nadvice/xclip-set-selection (old-fun &rest args)
+    (let ((default-directory "/"))
+      (apply old-fun args)))
+
+  (defun nadvice/xclip-selection-value (old-fun &rest args)
+    (let ((default-directory "/"))
+      (unless (string-match-p "^Error: Can't open display: .*\n$"
+                              (shell-command-to-string "xclip -o > /dev/null"))
+        (apply old-fun args))))
+
+  (advice-add 'xclip-set-selection :around #'nadvice/xclip-set-selection)
+  (advice-add 'xclip-selection-value :around #'nadvice/xclip-selection-value))
+
+(use-package bracketed-paste
+  :config
+  (add-hook 'bracketed-paste--pasting-mode-hook
+            (lambda ()
+              (smartparens-mode -1))))
+
 (autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
 (autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
 
@@ -79,11 +100,8 @@
       (put-text-property 0 1 'whole-line-or-region t str)
       (easy-kill-adjust-candidate 'my-line str))))
 
-(with-eval-after-load 'easy-kill
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'easy-kill)))
-
+(use-package easy-kill
+  :config
   (setq easy-kill-try-things '(url email my-line)))
 
 (with-eval-after-load 'xt-mouse
@@ -146,11 +164,6 @@
 
 (my/setup-paste)
 (add-hook 'after-make-frame-functions #'my/setup-paste)
-
-(with-eval-after-load 'bracketed-paste
-  (add-hook 'bracketed-paste--pasting-mode-hook
-            (lambda ()
-              (smartparens-mode -1))))
 
 (with-eval-after-load 'iso-transl
   (eval-when-compile
@@ -289,24 +302,9 @@
                 (when my/cua-mode-was-on
                   (cua-mode +1))))))
 
-(require 'config-package)
-
-(package-deferred-install 'legalese
-    :autoload-names '('legalese))
-
-(with-eval-after-load 'xclip
-  (defun nadvice/xclip-set-selection (old-fun &rest args)
-    (let ((default-directory "/"))
-      (apply old-fun args)))
-
-  (defun nadvice/xclip-selection-value (old-fun &rest args)
-    (let ((default-directory "/"))
-      (unless (string-match-p "^Error: Can't open display: .*\n$"
-                              (shell-command-to-string "xclip -o > /dev/null"))
-        (apply old-fun args))))
-
-  (advice-add 'xclip-set-selection :around #'nadvice/xclip-set-selection)
-  (advice-add 'xclip-selection-value :around #'nadvice/xclip-selection-value))
+(use-package legalese
+  :defer-install t
+  :commands (legalese))
 
 (defun remove-clipboard-formatting ()
   "A quick command to drop clipboard formatting"

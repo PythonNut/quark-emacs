@@ -1,25 +1,21 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
-(require 'hydra)
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)
-    (require 'avy)))
 
 ;;; === Evil motion section ===
-(defhydra evil-visual-line-hydra
-  (:pre (setq hydra-is-helpful nil)
-   :post (setq hydra-is-helpful t))
-  ("j" evil-next-visual-line)
-  ("k" evil-previous-visual-line))
+(use-package hydra
+  :config
+  (defhydra evil-visual-line-hydra
+    (:pre (setq hydra-is-helpful nil)
+          :post (setq hydra-is-helpful t))
+    ("j" evil-next-visual-line)
+    ("k" evil-previous-visual-line))
 
-(defhydra my/smart-evil-scroll-page-hydra
-  (:pre (setq hydra-is-helpful nil)
-   :post (setq hydra-is-helpful t))
-  "Scroll by page"
-  ("f" evil-scroll-page-down)
-  ("b" evil-scroll-page-up))
+  (defhydra my/smart-evil-scroll-page-hydra
+    (:pre (setq hydra-is-helpful nil)
+          :post (setq hydra-is-helpful t))
+    "Scroll by page"
+    ("f" evil-scroll-page-down)
+    ("b" evil-scroll-page-up)))
 
 (evil-define-motion evil-smart-next-visual-line (count)
   (evil-next-visual-line (or count 1))

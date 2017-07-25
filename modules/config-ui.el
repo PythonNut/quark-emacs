@@ -17,9 +17,68 @@
       auto-window-vscroll nil
       scroll-conservatively 1000)
 
-(smooth-scrolling-mode +1)
+(defun isearch-exit-chord-worker ()
+  "Exit out of isearch after a chord"
+  (interactive)
+  (isearch-delete-char)
+  (isearch-exit))
 
-(with-eval-after-load 'multiple-cursors
+(eval-when-compile
+  (with-demoted-errors "Load error: %s"
+    (require 'hydra)))
+
+(defhydra my/smart-isearch-chord-hydra
+  (:timeout key-chord-one-key-delay
+            :pre (setq hydra-is-helpful nil)
+            :post (setq hydra-is-helpful t))
+  ("j" isearch-exit-chord-worker)
+  ("k" isearch-exit-chord-worker))
+
+(defun isearch-exit-chord ()
+  (interactive)
+  (isearch-printing-char)
+  (my/smart-isearch-chord-hydra/body))
+
+(define-key isearch-mode-map "j" #'isearch-exit-chord)
+(define-key isearch-mode-map "k" #'isearch-exit-chord)
+
+(use-package smooth-scrolling
+  :config
+  (smooth-scrolling-mode +1))
+
+(use-package multiple-cursors
+  :commands (mc/mark-lines
+             mc/mark-next-lines
+             mc/mark-previous-lines
+             mc/unmark-next-like-this
+             mc/unmark-previous-like-this
+             mc/skip-to-previous-like-this
+             mc/mark-all-like-this
+             mc/mark-all-words-like-this
+             mc/mark-all-symbols-like-this
+             mc/mark-all-in-region
+             mc/mark-all-in-region-regexp
+             mc/mark-more-like-this-extended
+             mc/mmlte--up
+             mc/mmlte--down
+             mc/mmlte--left
+             mc/mmlte--right
+             mc/mark-all-like-this-dwim
+             mc/mark-all-dwim
+             mc/mark-all-like-this-in-defun
+             mc/mark-all-words-like-this-in-defun
+             mc/mark-all-symbols-like-this-in-defun
+             mc/add-cursor-on-click
+             mc/mark-sgml-tag-pair
+             mc/mark-pop
+             set-rectangular-region-anchor
+             rrm/switch-to-multiple-cursors
+             mc/insert-numbers
+             mc/reverse-regions
+             mc/sort-regions
+             hum/keyboard-quit
+             mc-hide-unmatched-lines-mode)
+  :config
   (setq mc/list-file (locate-user-emacs-file "data/.mc-lists.el"))
 
   ;; This is required to load the save file, due to a poor design
@@ -28,50 +87,6 @@
 
   (define-key mc/keymap (kbd "<return>") nil)
   (define-key mc/keymap (kbd "C-c <return>") 'multiple-cursors-mode))
-
-(cl-macrolet
-    ((autoload-multiple-cursors (func)
-                                `(autoload ,func "multiple-cursors")))
-
-  (with-no-warnings
-    (eval-when-compile
-      (with-demoted-errors "Load error: %s"
-        (require 'config-setq)))
-
-    (my/generate-calls-single
-        'autoload-multiple-cursors
-      '(#'mc/mark-lines
-        #'mc/mark-next-lines
-        #'mc/mark-previous-lines
-        #'mc/unmark-next-like-this
-        #'mc/unmark-previous-like-this
-        #'mc/skip-to-previous-like-this
-        #'mc/mark-all-like-this
-        #'mc/mark-all-words-like-this
-        #'mc/mark-all-symbols-like-this
-        #'mc/mark-all-in-region
-        #'mc/mark-all-in-region-regexp
-        #'mc/mark-more-like-this-extended
-        #'mc/mmlte--up
-        #'mc/mmlte--down
-        #'mc/mmlte--left
-        #'mc/mmlte--right
-        #'mc/mark-all-like-this-dwim
-        #'mc/mark-all-dwim
-        #'mc/mark-all-like-this-in-defun
-        #'mc/mark-all-words-like-this-in-defun
-        #'mc/mark-all-symbols-like-this-in-defun
-        #'mc/add-cursor-on-click
-        #'mc/mark-sgml-tag-pair
-        #'mc/mark-pop
-        #'set-rectangular-region-anchor
-        #'rrm/switch-to-multiple-cursors
-        #'mc/insert-numbers
-        #'mc/reverse-regions
-        #'mc/sort-regions
-        #'hum/keyboard-quit
-        #'mc-hide-unmatched-lines-mode
-        ))))
 
 (global-set-key (kbd "C-c l") #'mc/edit-lines)
 (global-set-key (kbd "C-c a") #'mc/mark-all-dwim)
@@ -95,21 +110,19 @@
   (global-set-key (kbd "<C-up>")    #'windmove-up)
   (global-set-key (kbd "<C-down>")  #'windmove-down))
 
-(defun my/framemove-onetime-setup (&optional frame)
-  (with-selected-frame (or frame (selected-frame))
-    (require 'framemove)
-    (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
+(use-package framemove
+  :init
+  (defun my/framemove-onetime-setup (&optional frame)
+    (with-selected-frame (or frame (selected-frame))
+      (require 'framemove)
+      (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
-;; directional frame movement too
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
+  ;; directional frame movement too
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
-(with-eval-after-load 'framemove
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'framemove)))
-
+  :config
   (setq framemove-hook-into-windmove t))
 
 (defun pop-window-into-frame ()
@@ -122,11 +135,8 @@
 ;;; ====================================
 ;;; iflib - switch buffers alt-tab style
 ;;; ====================================
-(with-eval-after-load 'iflipb
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'hydra)))
-
+(use-package iflipb
+  :config
   (setq iflipb-ignore-buffers (list (rx line-start " ")
                                     (rx line-start "*helm")
                                     (rx line-start "*Compile")
@@ -142,7 +152,16 @@
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
 
-(with-eval-after-load 'volatile-highlights
+(use-package volatile-highlights
+	     :ensure t
+  :init
+  (defun my/vhl-onetime-setup ()
+    (remove-hook 'first-change-hook #'my/vhl-onetime-setup))
+
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
+  :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'volatile-highlights)))
@@ -164,15 +183,14 @@
 
   (volatile-highlights-mode +1))
 
-(defun my/vhl-onetime-setup ()
-  (require 'volatile-highlights)
-  (remove-hook 'first-change-hook #'my/vhl-onetime-setup))
+(use-package auto-highlight-symbol
+  :init
+  (unless (or (bound-and-true-p my/slow-device)
+              (< (display-color-cells) 256))
+    (require 'auto-highlight-symbol)
+    (global-auto-highlight-symbol-mode +1))
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
-
-(with-eval-after-load 'auto-highlight-symbol
+  :config
   (setq ahs-idle-interval 0.3)
   (add-to-list 'ahs-inhibit-face-list 'font-lock-keyword-face)
   (add-to-list 'ahs-inhibit-face-list 'region)
@@ -217,16 +235,11 @@
                         :foreground nil
                         :underline '(:color "black")))
 
-  (add-hook 'load-theme-hook #'my/ahs-setup-faces))
+  (add-hook 'load-theme-hook #'my/ahs-setup-faces)
 
-(add-hook 'auto-highlight-symbol-mode-hook
-          (lambda ()
-            (diminish 'auto-highlight-symbol-mode)))
-
-(unless (or (bound-and-true-p my/slow-device)
-            (< (display-color-cells) 256))
-  (require 'auto-highlight-symbol)
-  (global-auto-highlight-symbol-mode +1))
+  (add-hook 'auto-highlight-symbol-mode-hook
+            (lambda ()
+              (diminish 'auto-highlight-symbol-mode))))
 
 ;; ==================
 ;; Visible whitespace
@@ -263,61 +276,59 @@
 ;; column numbers too
 (column-number-mode +1)
 
-(with-eval-after-load 'linum
-  (unless (package-installed-p 'linum-relative)
-    (save-window-excursion
-      (package-install 'linum-relative)))
+(use-package linum
+  :ensure nil
+  :init
+  (defun linum-cycle ()
+    (interactive)
+    (if (bound-and-true-p global-linum-mode)
+        (if (eq linum-format 'dynamic)
+            (global-linum-mode -1)
+          (setq linum-format 'dynamic))
+      (progn
+        (global-linum-mode +1)
+        (setq linum-format 'linum-relative))))
 
-  (require 'linum-relative)
-
-  (setq linum-relative-current-symbol ""
-        linum-relative-format "%3s "
-        linum-delay t)
+  (global-set-key (kbd "C-c L") #'linum-cycle)
+  (global-set-key (kbd "C-c C-l") #'linum-cycle)
+  :config
+  (setq linum-delay t)
 
   (set-face-background 'linum nil)
-  (set-face-attribute 'linum-relative-current-face nil
-                      :weight 'extra-bold
-                      :foreground nil
-                      :background nil
-                      :inherit '(hl-line default))
 
-  ;; truncate current line to three digits
-  (defun nadvice/linum-relative (line-number)
-    (let* ((diff1 (abs (- line-number linum-relative-last-pos)))
-           (diff (if (< diff1 0)
-                     diff1
-                   (+ diff1 linum-relative-plusp-offset)))
-           (current-p (= diff linum-relative-plusp-offset))
-           (current-symbol (if (and linum-relative-current-symbol current-p)
-                               (if (string= "" linum-relative-current-symbol)
-                                   (number-to-string (% line-number 1000))
-                                 linum-relative-current-symbol)
-                             (number-to-string diff)))
-           (face (if current-p 'linum-relative-current-face 'linum)))
-      (propertize (format linum-relative-format current-symbol) 'face face)))
 
-  (advice-add 'linum-relative :override #'nadvice/linum-relative))
+  (use-package linum-relative
+    :config
+    (setq linum-relative-current-symbol ""
+          linum-relative-format "%3s ")
 
-(defun linum-cycle ()
-  (interactive)
-  (if (bound-and-true-p global-linum-mode)
-      (if (eq linum-format 'dynamic)
-          (global-linum-mode -1)
-        (setq linum-format 'dynamic))
-    (progn
-      (global-linum-mode +1)
-      (setq linum-format 'linum-relative))))
+    (set-face-attribute 'linum-relative-current-face nil
+                        :weight 'extra-bold
+                        :foreground nil
+                        :background nil
+                        :inherit '(hl-line default))
 
-(global-set-key (kbd "C-c L") #'linum-cycle)
-(global-set-key (kbd "C-c C-l") #'linum-cycle)
+    ;; truncate current line to three digits
+    (defun nadvice/linum-relative (line-number)
+      (let* ((diff1 (abs (- line-number linum-relative-last-pos)))
+             (diff (if (< diff1 0)
+                       diff1
+                     (+ diff1 linum-relative-plusp-offset)))
+             (current-p (= diff linum-relative-plusp-offset))
+             (current-symbol (if (and linum-relative-current-symbol current-p)
+                                 (if (string= "" linum-relative-current-symbol)
+                                     (number-to-string (% line-number 1000))
+                                   linum-relative-current-symbol)
+                               (number-to-string diff)))
+             (face (if current-p 'linum-relative-current-face 'linum)))
+        (propertize (format linum-relative-format current-symbol) 'face face)))
 
-(with-eval-after-load 'which-key
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'which-key)))
+    (advice-add 'linum-relative :override #'nadvice/linum-relative)))
 
-  (diminish 'which-key-mode)
-  (which-key-mode +1)
+(use-package which-key
+  :init (which-key-mode +1)
+  :diminish which-key-mode
+  :config
   (setq which-key-sort-order nil
         which-key-side-window-max-height 0.33)
 
@@ -348,17 +359,6 @@
 
 (global-set-key (kbd "C-x C-r") #'rename-current-buffer-file)
 
-(with-eval-after-load 'evil
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'evil)))
-
-  (evil-define-command evil-cycle-spacing (&optional count)
-    (cycle-spacing (or count 1)))
-
-  (global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
-  (global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing))
-
 (global-set-key (kbd "C-0") #'delete-window)
 (global-set-key (kbd "C-1") #'delete-other-windows)
 (global-set-key (kbd "C-2") #'split-window-below)
@@ -373,8 +373,9 @@
 (global-set-key (kbd "<C-mouse-5>") #'evil-scroll-page-down)
 (global-set-key (kbd "<C-mouse-4>") #'evil-scroll-page-up)
 
-(with-eval-after-load 'subword
-  (diminish 'subword-mode))
-(global-subword-mode +1)
+(use-package subword
+  :ensure t
+  :diminish subword-mode
+  :init (global-subword-mode +1))
 
 (provide 'config-ui)

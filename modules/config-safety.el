@@ -1,18 +1,14 @@
 ;; -*- lexical-binding: t -*-
 
-(defvar my/backup-location
-  (locate-user-emacs-file "data/backups/"))
-(defvar my/autosave-location
-  (locate-user-emacs-file "data/autosave/"))
 (defvar my/unnamed-autosave-location
   (locate-user-emacs-file "data/unnamed-autosave")
   "Directory in which to store auto-save files for non-file buffers,
 when `auto-save-mode' is invoked manually.")
 
 (setq backup-directory-alist `((,(rx (zero-or-more not-newline))
-                                . ,my/backup-location))
+                                . ,(locate-user-emacs-file "data/backups/")))
       auto-save-file-name-transforms `((,(rx (zero-or-more not-newline))
-                                        ,my/autosave-location t)))
+                                        ,(locate-user-emacs-file "data/autosave/") t)))
 
 ;; Use a unified directory for buffers that don't visit files
 (defun nadvice/auto-save-mode (old-fun &rest args)
@@ -96,11 +92,12 @@ when `auto-save-mode' is invoked manually.")
 (advice-add 'switch-to-buffer :before #'nadvice/save-buffer-maybe)
 (advice-add 'other-window     :before #'nadvice/save-buffer-maybe)
 
-(with-eval-after-load 'windmove
-  (advice-add 'windmove-up    :before #'nadvice/save-buffer-maybe)
-  (advice-add 'windmove-down  :before #'nadvice/save-buffer-maybe)
-  (advice-add 'windmove-left  :before #'nadvice/save-buffer-maybe)
-  (advice-add 'windmove-right :before #'nadvice/save-buffer-maybe))
+(use-package windmove
+             :config
+             (advice-add 'windmove-up    :before #'nadvice/save-buffer-maybe)
+             (advice-add 'windmove-down  :before #'nadvice/save-buffer-maybe)
+             (advice-add 'windmove-left  :before #'nadvice/save-buffer-maybe)
+             (advice-add 'windmove-right :before #'nadvice/save-buffer-maybe))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups
@@ -130,15 +127,12 @@ when `auto-save-mode' is invoked manually.")
                            (apply #'format args)))))
               (save-some-buffers t))))
 
-(with-eval-after-load 'autorevert
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'autorevert)
-      (require 'diminish)))
-  (diminish 'auto-revert-mode)
-  (setq global-auto-revert-non-file-buffers t
-        auto-revert-remote-files t
-        auto-revert-verbose nil))
+(use-package autorevert
+             :diminish auto-revert-mode
+             :config
+             (setq global-auto-revert-non-file-buffers t
+                   auto-revert-remote-files t
+                   auto-revert-verbose nil))
 
 (defun my/auto-revert-onetime-setup ()
   (global-auto-revert-mode +1)
@@ -147,10 +141,8 @@ when `auto-save-mode' is invoked manually.")
 
 (add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
 
-(require 'config-package)
-
-(package-deferred-install 'backup-walker
-    :autoload-names '('backup-walker-start)
-    (evil-set-initial-state 'backup-walker-mode 'motion))
+;; (package-deferred-install 'backup-walker
+;;     :autoload-names '('backup-walker-start)
+;;     (evil-set-initial-state 'backup-walker-mode 'motion))
 
 (provide 'config-safety)
