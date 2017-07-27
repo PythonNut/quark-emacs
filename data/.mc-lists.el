@@ -9,6 +9,12 @@
         TeX-insert-sub-or-superscript
         TeX-newline
         back-to-indentation-visual-or-beginning
+        c-electric-lt-gt
+        c-electric-paren
+        c-electric-semi&comma
+        c-electric-star
+        c-indent-line-or-region
+        cua-cut-region
         cua-paste
         end-of-visual-line-or-end
         evil-cycle-spacing
