@@ -8,7 +8,7 @@
 ;; Setup straight.el
 ;; =============================================
 
-(setq straight-recipe-overrides '((nil . ((straight :type git :host github :repo "PythonNut/straight.el" :branch "develop" :files ("straight.el"))))))
+(setq straight-recipe-overrides '((nil . ((straight :type git :host github :repo "raxod502/straight.el" :branch "develop" :files ("straight.el"))))))
 
 (let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
       (bootstrap-version 2))
