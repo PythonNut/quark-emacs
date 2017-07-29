@@ -105,7 +105,20 @@ If the package is installed, its entry is removed from
 (setq use-package-always-ensure t
       use-package-always-defer t)
 
-(use-package el-patch :demand t)
+(defvar el-patch--patches (make-hash-table :test 'equal)
+  "Hash table of patches that have been defined.
+The keys are symbols naming the objects that have been patched.
+The values are hash tables mapping definition types (symbols
+`defun', `defmacro', etc.) to patch definitions, which are lists
+beginning with `defun', `defmacro', etc.
+
+Note that the symbols are from the versions of patches that have
+been resolved in favor of the modified version, when a patch
+renames a symbol.")
+
+(use-package el-patch
+  :recipe (el-patch :type git :host github :repo "PythonNut/el-patch" :branch "feature/compile-time-patch"))
+
 (el-patch-defvar use-package--deferred-packages (make-hash-table)
   "Hash mapping packages to data about their installation.
 
