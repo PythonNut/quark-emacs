@@ -1,6 +1,4 @@
 ;; -*- lexical-binding: t -*-
-(require 'cl-lib)
-
 (use-package helm-flx
   :config
   (setq helm-flx-for-helm-locate t))
