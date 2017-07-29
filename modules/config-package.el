@@ -85,12 +85,44 @@ second, floating-point values are rounded down to the nearest integer.)"
                          :host github
                          :repo "PythonNut/use-package"))
 
-(require 'use-package)
+(autoload 'use-package-install-deferred-package "use-package"
+  "Install a package whose installation has been deferred.
+NAME should be a symbol naming a package (actually, a feature).
+This is done by calling `use-package-ensure-function' is called
+with four arguments: the key (NAME) and the two elements of the
+cons in `use-package--deferred-packages' (the value passed to
+`:ensure', and the `state' plist), and a keyword providing
+information about the context in which the installation is
+happening. (This defaults to `:unknown' but can be overridden by
+providing CONTEXT.)
+
+Return t if the package is installed, nil otherwise. (This is
+determined by the return value of `use-package-ensure-function'.)
+If the package is installed, its entry is removed from
+`use-package--deferred-packages'. If the package has no entry in
+`use-package--deferred-packages', do nothing and return t.")
+
 (setq use-package-always-ensure t
       use-package-always-defer t)
 
+(use-package el-patch :demand t)
+(el-patch-defvar use-package--deferred-packages (make-hash-table)
+  "Hash mapping packages to data about their installation.
+
+The keys are not actually symbols naming packages, but rather
+symbols naming the features which are the names of \"packages\"
+required by `use-package' forms. Since
+`use-package-ensure-function' could be set to anything, it is
+actually impossible for `use-package' to determine what package
+is supposed to provide the feature being ensured just based on
+the value of `:ensure'.
+
+Each value is a cons, with the car being the the value passed to
+`:ensure' and the cdr being the `state' plist. See
+`use-package-install-deferred-package' for information about how
+these values are used to call `use-package-ensure-function'.")
+
 (use-package hydra)
 (use-package s)
-(use-package el-patch)
 
 (provide 'config-package)
