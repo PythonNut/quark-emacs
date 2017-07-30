@@ -1430,8 +1430,17 @@
 
 (use-package tex
   :ensure nil
-  :defer t
   :config
+  (setq TeX-auto-save t
+        TeX-save-query nil
+        TeX-parse-self t
+        TeX-PDF-mode t
+        TeX-source-correlate-start-server t
+        LaTeX-math-list '(("\'" "dif")
+                          ("\"" "Dif")
+                          ("$" "int")
+                          ("=" "implies")))
+
   (use-package magic-latex-buffer
     :defer-install t
     :commands (magic-latex-buffer)
@@ -1464,14 +1473,14 @@
     :config
     (use-package evil-latex-textobjects
       :recipe (evil-latex-textobjects :type git
-                                      :host github                     :
+                                      :host github
                                       :repo "hpdeifel/evil-latex-textobjects"
                                       :files ("evil-latex-textobjects.el"))
       :commands (evil-latex-textobjects-mode
                  turn-on-evil-latex-textobjects-mode
-                 turn-off-evil-latex-textobjects-mode))
+                 turn-off-evil-latex-textobjects-mode)
 
-    (with-eval-after-load 'evil-latex-textobjects
+      :config
       (defun my/evil-TeX--expression-range (&optional count exclusive)
         (let* ((terminators (rx (or "&"
                                     "="
@@ -1535,16 +1544,6 @@
 
     (add-hook 'LaTeX-mode-hook #'my/evil-LaTeX-setup)
     (evil-set-initial-state 'TeX-error-overview-mode 'insert))
-
-  (setq TeX-auto-save t
-        TeX-save-query nil
-        TeX-parse-self t
-        TeX-PDF-mode t
-        TeX-source-correlate-start-server t
-        LaTeX-math-list '(("\'" "dif")
-                          ("\"" "Dif")
-                          ("$" "int")
-                          ("=" "implies")))
 
   (add-to-list 'sp-sexp-suffix (list 'latex-mode 'regexp ""))
   (add-hook 'LaTeX-mode-hook (lambda ()
