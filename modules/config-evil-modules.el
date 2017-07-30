@@ -30,9 +30,11 @@
   :init
   (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
   (add-hook 'org-mode-hook 'embrace-org-mode-hook)
-  (add-hook 'ruby-mode-hook 'embrace-ruby-mode-hook)
-  :config
-  (evil-embrace-enable-evil-surround-integration))
+  (add-hook 'ruby-mode-hook 'embrace-ruby-mode-hook))
+
+(use-package evil-embrace
+  :commands (evil-embrace-enable-evil-surround-integration
+             evil-embrace-disable-evil-surround-integration))
 
 (use-package evil-surround
   :commands (evil-surround-edit
@@ -47,7 +49,7 @@
   (define-key evil-visual-state-map (kbd "gS") 'evil-Surround-region)
 
   :config
-  )
+  (evil-embrace-enable-evil-surround-integration))
 
 
 ;; evil NERD commenter, commenting awesomeness!
