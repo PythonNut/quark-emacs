@@ -38,7 +38,7 @@
 (add-hook 'before-save-hook #'cleanup-buffer-safe)
 
 (use-package ws-butler
-             :diminish (ws-butler-mode ." β"))
+  :diminish (ws-butler-mode ." β"))
 
 ;; autoload ws-butler on file open
 (defun my/ws-butler-onetime-setup ()
@@ -48,7 +48,7 @@
 (add-hook 'find-file-hook #'my/ws-butler-onetime-setup)
 
 (use-package dtrt-indent
-             :config (add-hook 'find-file-hook #'dtrt-indent-mode))
+  :init (add-hook 'find-file-hook #'dtrt-indent-mode))
 
 ;; ws-butler also loads highlight-changes-mode
 (add-hook 'highlight-changes-mode-hook
@@ -56,7 +56,7 @@
             (diminish 'highlight-changes-mode)))
 
 (use-package aggressive-indent
-             :config
+  :config
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
 
 (use-package auto-indent-mode
