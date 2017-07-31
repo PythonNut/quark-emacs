@@ -25,8 +25,10 @@
             (lambda ()
               (smartparens-mode -1))))
 
-(autoload #'whole-line-or-region-call-with-region "whole-line-or-region")
-(autoload #'whole-line-or-region-call-with-prefix "whole-line-or-region")
+(use-package whole-line-or-region
+  :commands (whole-line-or-region-call-with-region
+             whole-line-or-region-call-with-prefix))
+
 
 (setq kill-do-not-save-duplicates t
       cua-paste-pop-rotate-temporarily t
