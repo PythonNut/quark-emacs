@@ -80,7 +80,7 @@
 
 
 (use-package evil-easymotion
-  :config
+  :init
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'key-chord)
