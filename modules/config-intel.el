@@ -86,7 +86,23 @@
       (concat (if (display-graphic-p) " ✓" " Γ") text)))
 
   (advice-add 'flycheck-mode-line-status-text :override
-              #'nadvice/flycheck-mode-line-status-text))
+              #'nadvice/flycheck-mode-line-status-text)
+
+  (defun flycheck-goto-nearest-error ()
+    (interactive)
+    (let ((next (flycheck-next-error-pos 1 nil))
+          (prev (flycheck-next-error-pos -1 nil)))
+      (cond
+       ((and next prev)
+        (goto-char (if  (< (abs (- (point) prev))
+                           (abs (- (point) next)))
+                       prev
+                     next)))
+       (next (goto-char next))
+       (prev (goto-char prev))
+       (t (user-error "No Flycheck errors")))))
+
+  (define-key flycheck-mode-map (kbd "C-!") #'flycheck-goto-nearest-error))
 
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
