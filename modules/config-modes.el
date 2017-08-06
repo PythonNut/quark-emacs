@@ -77,6 +77,10 @@
     (evil-define-key 'normal emacs-lisp-mode-map "gd"
       #'emacs-lisp-goto-definition)))
 
+(use-package suggest
+  :defer-install t
+  :commands (suggest suggest-update))
+
 ;; =============================================================================
 ;; C-like ======================================================================
 ;; =============================================================================
