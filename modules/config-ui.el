@@ -296,8 +296,8 @@
 
   (set-face-background 'linum nil)
 
-
   (use-package linum-relative
+    :commands (linum-relative)
     :config
     (setq linum-relative-current-symbol ""
           linum-relative-format "%3s ")
