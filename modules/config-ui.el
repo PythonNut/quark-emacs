@@ -415,32 +415,26 @@ Have a look at the function `window-splittable-p' if you want to
 know how `split-window-sensibly' determines whether WINDOW can be
 split."
   (let ((window (or window (selected-window))))
-    (or (el-patch-swap
-          (and (window-splittable-p window)
-               ;; Split window vertically.
-               (with-selected-window window
-                 (split-window-below)))
-          (and (window-splittable-p window t)
-               ;; Split window horizontally.
-               (with-selected-window window
-                 (split-window-right))))
-        (el-patch-swap
-          (and (window-splittable-p window t)
-               ;; Split window horizontally.
-               (with-selected-window window
-                 (split-window-right)))
-          (and (window-splittable-p window)
-               ;; Split window vertically.
-               (with-selected-window window
-                 (split-window-below))))
-        (and (eq window (frame-root-window (window-frame window)))
-             (not (window-minibuffer-p window))
-             ;; If WINDOW is the only window on its frame and is not the
-             ;; minibuffer window, try to split it vertically disregarding
-             ;; the value of `split-height-threshold'.
-             (let ((split-height-threshold 0))
-               (when (window-splittable-p window)
-                 (with-selected-window window
-                   (split-window-below))))))))
+    (el-patch-let (($vertical
+                    (and (window-splittable-p window)
+                         ;; Split window vertically.
+                         (with-selected-window window
+                           (split-window-below))))
+                   ($horizontal
+                    (and (window-splittable-p window t)
+                         ;; Split window horizontally.
+                         (with-selected-window window
+                           (split-window-right)))))
+      (or (el-patch-swap $vertical $horizontal)
+          (el-patch-swap $horizontal $vertical)
+          (and (eq window (frame-root-window (window-frame window)))
+               (not (window-minibuffer-p window))
+               ;; If WINDOW is the only window on its frame and is not the
+               ;; minibuffer window, try to split it vertically disregarding
+               ;; the value of `split-height-threshold'.
+               (let ((split-height-threshold 0))
+                 (when (window-splittable-p window)
+                   (with-selected-window window
+                     (split-window-below)))))))))
 
 (provide 'config-ui)
