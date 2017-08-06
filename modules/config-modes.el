@@ -168,6 +168,11 @@
                clang-format-region
                clang-format-buffer))
 
+  (use-package flycheck-clang-analyzer
+    :ensure t
+    :after flycheck
+    :config (flycheck-clang-analyzer-setup))
+
   (eval-and-compile
     (with-demoted-errors "Load error: %s"
       (require 'config-setq))
