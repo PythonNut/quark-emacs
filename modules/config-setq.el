@@ -35,8 +35,8 @@
       save-interprogram-paste-before-kill t
       sentence-end-double-space nil
       set-mark-command-repeat-pop t
-      split-height-threshold 0
-      split-width-threshold 0
+      split-height-threshold 48
+      split-width-threshold 160
       use-dialog-box nil
       user-full-name "PythonNut"
       user-mail-address "PythonNut@PythonNut.com"
