@@ -24,64 +24,95 @@
           (lambda ()
             (setq-local global-hl-line-mode nil)))
 
-(defun nadvice/completing-read-ivy (&rest _args)
-  (ivy-mode +1)
-  (advice-remove #'completing-read #'nadvice/completing-read-ivy))
-
-(advice-add 'completing-read :before #'nadvice/completing-read-ivy)
-
-(require 'config-package)
-
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
 (use-package historian
-             :config
-             (setq historian-save-file (locate-user-emacs-file "data/.historian")))
+  :config
+  (setq historian-save-file (locate-user-emacs-file "data/.historian")))
 
 (use-package ivy-historian)
 
 (use-package ivy
-	     :init
-             (ivy-mode +1)
-             (historian-mode +1)
-             :config
+  :init
+  ;; shamelessly stolen from the el-patch docs
+  (el-patch-defvar ivy-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map [remap switch-to-buffer]
+        'ivy-switch-buffer)
+      (define-key map [remap switch-to-buffer-other-window]
+        'ivy-switch-buffer-other-window)
+      map)
+    "Keymap for `ivy-mode'.")
 
-             (eval-when-compile
-               (with-demoted-errors "Load error: %s"
-                 (require 'historian)))
+  (el-patch-define-minor-mode ivy-mode
+    "Toggle Ivy mode on or off.
+Turn Ivy mode on if ARG is positive, off otherwise.
+Turning on Ivy mode sets `completing-read-function' to
+`ivy-completing-read'.
 
-             (ivy-historian-mode +1)
+Global bindings:
+\\{ivy-mode-map}
 
-             (defun my/ivy-setup-faces ()
-               (set-face-attribute 'ivy-minibuffer-match-face-1 nil
-                                   :background nil)
-               (set-face-attribute 'ivy-minibuffer-match-face-2 nil
-                                   :background nil
-                                   :foreground "#268bd2")
+Minibuffer bindings:
+\\{ivy-minibuffer-map}"
+    :group 'ivy
+    :global t
+    :keymap ivy-mode-map
+    :lighter " ivy"
+    (if ivy-mode
+        (progn
+          (setq completing-read-function 'ivy-completing-read)
+          ;; effectively, ivy-do-completion-in-region = 2
+          (el-patch-splice 2
+            (when ivy-do-completion-in-region
+              (setq completion-in-region-function 'ivy-completion-in-region))))
+      (setq completing-read-function 'completing-read-default)
+      (setq completion-in-region-function 'completion--in-region)))
 
-               (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
-                                                'ivy-minibuffer-match-face-2)))
+  (ivy-mode +1)
 
-             (eval-when-compile
-               (with-demoted-errors "Load error: %s"
-                 (require 'ivy)))
+  ;; needs to be done late.
+  (diminish 'ivy-mode)
 
-             (diminish 'ivy-mode)
-             (with-eval-after-load 'avy
-               (eval-when-compile
-                 (require 'avy))
+  (historian-mode +1)
 
-               (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
+  :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'historian)))
 
-             (setq ivy-display-style 'fancy
-                   ivy-re-builders-alist '((t . ivy--regex-fuzzy))
-                   ivy-extra-directories nil
-                   ivy-count-format ""
-                   ivy-flx-limit 2000)
+  (ivy-historian-mode +1)
 
-             (my/ivy-setup-faces)
-             (add-hook 'load-theme-hook #'my/ivy-setup-faces))
+  (defun my/ivy-setup-faces ()
+    (set-face-attribute 'ivy-minibuffer-match-face-1 nil
+                        :background nil)
+    (set-face-attribute 'ivy-minibuffer-match-face-2 nil
+                        :background nil
+                        :foreground "#268bd2")
+
+    (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
+                                     'ivy-minibuffer-match-face-2)))
+
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'ivy)))
+
+  (diminish 'ivy-mode)
+  (with-eval-after-load 'avy
+    (eval-when-compile
+      (require 'avy))
+
+    (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
+
+  (setq ivy-display-style 'fancy
+        ivy-re-builders-alist '((t . ivy--regex-fuzzy))
+        ivy-extra-directories nil
+        ivy-count-format ""
+        ivy-flx-limit 2000)
+
+  (my/ivy-setup-faces)
+  (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
 (with-eval-after-load 'counsel
   (eval-when-compile
@@ -145,12 +176,12 @@
 (add-hook 'isearch-mode-hook #'isearch-region-dwim-helper)
 
 (use-package smex
-             :config
-             (eval-when-compile
-               (with-demoted-errors "Load error: %s"
-                 (require 'smex)))
+  :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'smex)))
 
-             (setq smex-save-file (locate-user-emacs-file ".smex-items")))
+  (setq smex-save-file (locate-user-emacs-file ".smex-items")))
 
 (global-set-key (kbd "M-x") #'counsel-M-x)
 (global-set-key (kbd "C-x b") #'ivy-switch-buffer)
