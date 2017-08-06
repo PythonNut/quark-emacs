@@ -30,57 +30,58 @@
 
 (advice-add 'completing-read :before #'nadvice/completing-read-ivy)
 
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'flx-isearch)))
-
 (require 'config-package)
 
 (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
 (global-set-key (kbd "C-M-r") #'flx-isearch-backward)
 
-(with-eval-after-load 'historian
-  (setq historian-save-file (locate-user-emacs-file "data/.historian")))
+(use-package historian
+             :config
+             (setq historian-save-file (locate-user-emacs-file "data/.historian")))
 
-(with-eval-after-load 'ivy
-  (ivy-mode +1)
-  (historian-mode +1)
+(use-package ivy-historian)
 
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'historian)))
+(use-package ivy
+	     :init
+             (ivy-mode +1)
+             (historian-mode +1)
+             :config
 
-  (ivy-historian-mode +1)
+             (eval-when-compile
+               (with-demoted-errors "Load error: %s"
+                 (require 'historian)))
 
-  (defun my/ivy-setup-faces ()
-    (set-face-attribute 'ivy-minibuffer-match-face-1 nil
-                        :background nil)
-    (set-face-attribute 'ivy-minibuffer-match-face-2 nil
-                        :background nil
-                        :foreground "#268bd2")
+             (ivy-historian-mode +1)
 
-    (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
-                                     'ivy-minibuffer-match-face-2)))
+             (defun my/ivy-setup-faces ()
+               (set-face-attribute 'ivy-minibuffer-match-face-1 nil
+                                   :background nil)
+               (set-face-attribute 'ivy-minibuffer-match-face-2 nil
+                                   :background nil
+                                   :foreground "#268bd2")
 
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'ivy)))
+               (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
+                                                'ivy-minibuffer-match-face-2)))
 
-  (diminish 'ivy-mode)
-  (with-eval-after-load 'avy
-    (eval-when-compile
-      (require 'avy))
+             (eval-when-compile
+               (with-demoted-errors "Load error: %s"
+                 (require 'ivy)))
 
-    (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
+             (diminish 'ivy-mode)
+             (with-eval-after-load 'avy
+               (eval-when-compile
+                 (require 'avy))
 
-  (setq ivy-display-style 'fancy
-        ivy-re-builders-alist '((t . ivy--regex-fuzzy))
-        ivy-extra-directories nil
-        ivy-count-format ""
-        ivy-flx-limit 2000)
+               (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
 
-  (my/ivy-setup-faces)
-  (add-hook 'load-theme-hook #'my/ivy-setup-faces))
+             (setq ivy-display-style 'fancy
+                   ivy-re-builders-alist '((t . ivy--regex-fuzzy))
+                   ivy-extra-directories nil
+                   ivy-count-format ""
+                   ivy-flx-limit 2000)
+
+             (my/ivy-setup-faces)
+             (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
 (with-eval-after-load 'counsel
   (eval-when-compile
@@ -143,12 +144,13 @@
 
 (add-hook 'isearch-mode-hook #'isearch-region-dwim-helper)
 
-(with-eval-after-load 'smex
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'smex)))
+(use-package smex
+             :config
+             (eval-when-compile
+               (with-demoted-errors "Load error: %s"
+                 (require 'smex)))
 
-  (setq smex-save-file (locate-user-emacs-file ".smex-items")))
+             (setq smex-save-file (locate-user-emacs-file ".smex-items")))
 
 (global-set-key (kbd "M-x") #'counsel-M-x)
 (global-set-key (kbd "C-x b") #'ivy-switch-buffer)

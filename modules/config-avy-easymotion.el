@@ -16,7 +16,8 @@
 
 (advice-add 'self-insert-command :around #'nadvice/self-insert-command)
 
-(with-eval-after-load 'avy
+(use-package avy
+  :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'avy)))
@@ -49,10 +50,8 @@
 
 (global-set-key (kbd "<remap> <goto-line>") #'evil-avy-goto-line)
 
-(with-eval-after-load 'ace-window
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'ace-window)))
+(use-package ace-window
+  :config
 
   (setq aw-keys (eval-when-compile (string-to-list "jfkdlsautnvmircieowpq"))
         aw-ignore-current t
@@ -79,7 +78,9 @@
 (global-set-key (kbd "C-'") #'switch-window-dwim)
 (global-set-key (kbd "C-c '") #'switch-window-dwim)
 
-(with-eval-after-load 'evil
+
+(use-package evil-easymotion
+  :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'key-chord)
@@ -94,16 +95,11 @@
   (key-chord-define evil-emacs-state-map "jw" #'evil-avy-goto-word-1)
   (key-chord-define evil-emacs-state-map "jl" #'evil-avy-goto-line)
 
-  (require 'evil-easymotion)
   (evilem-default-keybindings "SPC")
   (define-key evil-normal-state-map (kbd "SPC l") #'evil-avy-goto-line)
   (define-key evil-motion-state-map (kbd "SPC l") #'evil-avy-goto-line)
   (define-key evil-normal-state-map (kbd "SPC c") #'avy-goto-char-timer)
   (define-key evil-motion-state-map (kbd "SPC c") #'avy-goto-char-timer)
-
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'on-parens)))
 
   (evilem-define (kbd "SPC g s f") #'on-parens-forward-sexp-end)
   (evilem-define (kbd "SPC g s b") #'on-parens-backward-sexp)
@@ -113,10 +109,6 @@
   (evilem-define (kbd "SPC g s U") #'on-parens-up-sexp)
   (evilem-define (kbd "SPC g s n") #'on-parens-forward-sexp)
   (evilem-define (kbd "SPC g s p") #'on-parens-backward-sexp-end)
-
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'evil-snipe)))
 
   (evilem-define (kbd "SPC s") #'evil-snipe-repeat
                  :pre-hook (save-excursion
@@ -131,8 +123,8 @@
                                (call-interactively #'evil-snipe-S)))
                  :bind ((evil-snipe-enable-highlight)
                         (evil-snipe-enable-incremental-highlight)))
-
-  (with-eval-after-load 'evil-snipe
+  (use-package evil-snipe
+    :config
     (cl-macrolet
         ((snipe-repeat-easymotion-forward
           (key)

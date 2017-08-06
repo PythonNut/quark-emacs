@@ -7,12 +7,15 @@
 (setq require-final-newline t
       line-move-visual t)
 
-(with-eval-after-load 'adaptive-wrap
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'adaptive-wrap)))
+(use-package adaptive-wrap
+	     :ensure t
+	     
+             :config
+             (eval-when-compile
+               (with-demoted-errors "Load error: %s"
+                 (require 'adaptive-wrap)))
 
-  (setq-default adaptive-wrap-extra-indent 2))
+             (setq-default adaptive-wrap-extra-indent 2))
 
 (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
 (add-hook 'visual-line-mode-hook
@@ -34,8 +37,8 @@
 
 (add-hook 'before-save-hook #'cleanup-buffer-safe)
 
-(with-eval-after-load 'ws-butler
-  (diminish 'ws-butler-mode " β"))
+(use-package ws-butler
+  :diminish (ws-butler-mode ." β"))
 
 ;; autoload ws-butler on file open
 (defun my/ws-butler-onetime-setup ()
@@ -43,46 +46,48 @@
   (remove-hook 'find-file-hook #'my/ws-butler-onetime-setup))
 
 (add-hook 'find-file-hook #'my/ws-butler-onetime-setup)
-(add-hook 'find-file-hook #'dtrt-indent-mode)
+
+(use-package dtrt-indent
+  :init (add-hook 'find-file-hook #'dtrt-indent-mode))
 
 ;; ws-butler also loads highlight-changes-mode
 (add-hook 'highlight-changes-mode-hook
           (lambda ()
             (diminish 'highlight-changes-mode)))
 
-(with-eval-after-load 'aggressive-indent
+(use-package aggressive-indent
+  :config
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
 
-(with-eval-after-load 'auto-indent-mode
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'auto-indent-mode)))
-  (setq auto-indent-assign-indent-level-variables nil)
-  (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →"))
+(use-package auto-indent-mode
+             :config
 
-  ;; This is patched to support the latest yasnippet
-  (defun my/auto-indent-par-region ()
-    "Indent a parenthetical region (based on a timer)."
-    (when (or (not (fboundp 'yas--snippets-at-point))
-              (and (boundp 'yas-minor-mode) (not yas-minor-mode))
-              (and yas-minor-mode
-                   (let ((yap (yas--snippets-at-point 'all-snippets)))
-                     (or (not yap) (and yap (= 0 (length yap)))))))
-      (when auto-indent-next-pair
-        (let ((mark-active mark-active))
-          (when (and (not (minibufferp))
-                     (not (looking-at "[^ \t]"))
-                     (not (memq major-mode auto-indent-multiple-indent-modes))
-                     (not (looking-back "^[ \t]+" nil)))
-            (let ((start-time (float-time)))
-              (indent-region auto-indent-pairs-begin auto-indent-pairs-end)
-              (auto-indent-par-region-interval-update (- (float-time) start-time)))
-            (when (or (> (point) auto-indent-pairs-end)
-                      (< (point) auto-indent-pairs-begin))
-              (set (make-local-variable 'auto-indent-pairs-begin) nil)
-              (set (make-local-variable 'auto-indent-pairs-end) nil)))))))
+             (setq auto-indent-assign-indent-level-variables nil)
+             (diminish 'auto-indent-mode (if (display-graphic-p) " ⇉" " →"))
 
-  (advice-add 'auto-indent-par-region :override #'my/auto-indent-par-region))
+             ;; This is patched to support the latest yasnippet
+             (defun my/auto-indent-par-region ()
+               "Indent a parenthetical region (based on a timer)."
+               (when (or (not (fboundp 'yas--snippets-at-point))
+                         (and (boundp 'yas-minor-mode) (not yas-minor-mode))
+                         (and yas-minor-mode
+                              (let ((yap (yas--snippets-at-point 'all-snippets)))
+                                (or (not yap) (and yap (= 0 (length yap)))))))
+                 (when auto-indent-next-pair
+                   (let ((mark-active mark-active))
+                     (when (and (not (minibufferp))
+                                (not (looking-at "[^ \t]"))
+                                (not (memq major-mode auto-indent-multiple-indent-modes))
+                                (not (looking-back "^[ \t]+" nil)))
+                       (let ((start-time (float-time)))
+                         (indent-region auto-indent-pairs-begin auto-indent-pairs-end)
+                         (auto-indent-par-region-interval-update (- (float-time) start-time)))
+                       (when (or (> (point) auto-indent-pairs-end)
+                                 (< (point) auto-indent-pairs-begin))
+                         (set (make-local-variable 'auto-indent-pairs-begin) nil)
+                         (set (make-local-variable 'auto-indent-pairs-end) nil)))))))
+
+             (advice-add 'auto-indent-par-region :override #'my/auto-indent-par-region))
 
 (defun my/auto-indent-onetime-setup ()
   (auto-indent-global-mode +1)

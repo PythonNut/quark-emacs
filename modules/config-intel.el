@@ -4,13 +4,13 @@
 
 (setq eldoc-idle-delay 0.1)
 
-;; enable semantic code LALR(1) parser
-(add-hook 'prog-mode-hook #'semantic-mode)
-(with-eval-after-load 'semantic
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'semantic)))
+(use-package semantic
+  :ensure nil
+  :init
+  ;; enable semantic code LALR(1) parser
+  (add-hook 'prog-mode-hook #'semantic-mode)
 
+  :config
   (global-semanticdb-minor-mode +1)
   (global-semantic-idle-scheduler-mode +1)
   (global-semantic-idle-summary-mode +1)
@@ -25,19 +25,18 @@
               :around
               #'nadvice/semantic-idle-summary-idle-function))
 
-(with-eval-after-load 'abbrev
+(use-package abbrev
+  :ensure nil
+  :config
   (setq abbrev-file-name (locate-user-emacs-file "data/.abbrev_defs")))
 
 ;;; ====================================
 ;;; flycheck - real-time syntax checking
 ;;; ====================================
-(global-flycheck-mode +1)
 
-(with-eval-after-load 'flycheck
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'flycheck)))
-
+(use-package flycheck
+  :init (global-flycheck-mode +1)
+  :config
   (setq flycheck-display-errors-function #'my/display-error-messages-condensed
         flycheck-indication-mode nil)
 
@@ -92,7 +91,9 @@
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
 ;;; =======================================
-(with-eval-after-load 'ispell
+(use-package ispell
+  :ensure nil
+  :config
   (defun nadvice/ispell-init-process (old-fun &rest args)
     (cl-letf (((symbol-function 'message)
                (lambda (&rest args)
@@ -102,11 +103,15 @@
 
   (advice-add 'ispell-init-process :around #'nadvice/ispell-init-process))
 
-(with-eval-after-load 'flyspell
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'flyspell)))
-
+(use-package flyspell
+  :ensure nil
+  :init
+  (when (or (executable-find "ispell")
+            (executable-find "aspell")
+            (executable-find "hunspell"))
+    (add-hook 'text-mode-hook #'flyspell-mode)
+    (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+  :config
   (setq flyspell-issue-message-flag nil
         flyspell-issue-welcome-flag nil)
 
@@ -121,43 +126,38 @@
     (when (executable-find "aspell")
       (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
 
-(when (or (executable-find "ispell")
-          (executable-find "aspell")
-          (executable-find "hunspell"))
-  (add-hook 'text-mode-hook #'flyspell-mode)
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+
 
 ;;; =============================================
 ;;; yasnippet -- extensible programmable snippets
 ;;; =============================================
 
-(setq yas-verbosity 0
-      yas-alias-to-yas/prefix-p nil
-      yas-use-menu nil)
+(use-package yasnippet
+  :init
+  (setq yas-verbosity 0
+        yas-alias-to-yas/prefix-p nil
+        yas-use-menu nil)
 
-(defun my/yasnippet-onetime-setup ()
-  (yas-global-mode +1)
-  (remove-hook 'first-change-hook #'my/yasnippet-onetime-setup))
+  (defun my/yasnippet-onetime-setup ()
+    (yas-global-mode +1)
+    (remove-hook 'first-change-hook #'my/yasnippet-onetime-setup))
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (add-hook 'first-change-hook #'my/yasnippet-onetime-setup)))
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (add-hook 'first-change-hook #'my/yasnippet-onetime-setup)))
 
-(defun my/ivy-yasnippet (_prompt choices &optional display-fn)
-  "Use ivy to select a snippet. Put this into `yas-prompt-functions.'"
-  (if (require 'ivy nil t)
-      (let* ((disp-fn (or display-fn 'identity))
-             (cands (mapcar (lambda (x) (cons (funcall disp-fn x) x)) choices))
-             (result (ivy-read "Snippet: " (mapcar #'car cands))))
-        (if (null result)
-            (signal 'quit "user quit!")
-          (cdr (assoc result cands))))
-    nil))
+  (defun my/ivy-yasnippet (_prompt choices &optional display-fn)
+    "Use ivy to select a snippet. Put this into `yas-prompt-functions.'"
+    (if (require 'ivy nil t)
+        (let* ((disp-fn (or display-fn 'identity))
+               (cands (mapcar (lambda (x) (cons (funcall disp-fn x) x)) choices))
+               (result (ivy-read "Snippet: " (mapcar #'car cands))))
+          (if (null result)
+              (signal 'quit "user quit!")
+            (cdr (assoc result cands))))
+      nil))
 
-(with-eval-after-load 'yasnippet
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'yasnippet)))
+  :config
   (set-face-attribute 'yas-field-highlight-face nil
                       :foreground nil
                       :background nil
@@ -182,51 +182,58 @@
 
   (yas-reload-all)
 
-  (add-to-list 'yas-prompt-functions #'my/ivy-yasnippet))
+  (add-to-list 'yas-prompt-functions #'my/ivy-yasnippet)
 
-;; also use yasnippets for new file templates
-(defvar my/yas-template-dir (locate-user-emacs-file "data/templates"))
+  ;; also use yasnippets for new file templates
+  (defvar my/yas-template-dir (locate-user-emacs-file "data/templates"))
 
-(defun my/yatemplate-expand-yas-buffer ()
-  "Expand the whole buffer with `yas-expand-snippet'."
-  (require 'yasnippet)
-  (yas-expand-snippet (buffer-string) (point-min) (point-max))
-  (evil-insert-state))
+  (defun my/yatemplate-expand-yas-buffer ()
+    "Expand the whole buffer with `yas-expand-snippet'."
+    (require 'yasnippet)
+    (yas-expand-snippet (buffer-string) (point-min) (point-max))
+    (evil-insert-state))
 
-(defun my/yatemplate-fill-alist ()
-  "Fill `auto-insert-alist'."
-  (dolist (filename (nreverse (sort (file-expand-wildcards
-                                     (concat my/yas-template-dir
-                                             "**/*"))
-                                    #'string<)))
-    (let* ((split-name (split-string filename "="))
-           (file-regex (if (eq (length split-name) 2)
-                           (nth 1 split-name)
-                         (lwarn "yatemplate" 'error
-                                "%s filename does not contain exactly one colon"
-                                filename)
-                         nil)))
-      (when file-regex
-        (push (cons (intern file-regex)
-                    (vector filename #'my/yatemplate-expand-yas-buffer))
-              auto-insert-alist)))))
+  (defun my/yatemplate-fill-alist ()
+    "Fill `auto-insert-alist'."
+    (dolist (filename (nreverse (sort (file-expand-wildcards
+                                       (concat my/yas-template-dir
+                                               "**/*"))
+                                      #'string<)))
+      (let* ((split-name (split-string filename "="))
+             (file-regex (if (eq (length split-name) 2)
+                             (nth 1 split-name)
+                           (lwarn "yatemplate" 'error
+                                  "%s filename does not contain exactly one colon"
+                                  filename)
+                           nil)))
+        (when file-regex
+          (push (cons (intern file-regex)
+                      (vector filename #'my/yatemplate-expand-yas-buffer))
+                auto-insert-alist))))))
 
-(with-eval-after-load 'autoinsert
+(use-package autoinsert
+  :ensure nil
+  :init
+  (add-hook 'after-change-major-mode-hook
+            (lambda ()
+              (when (= (point-min) (point-max))
+                (auto-insert))))
+
+  :config
+  (use-package yasnippet :demand t)
   (setq auto-insert-alist nil)
   (my/yatemplate-fill-alist))
 
-(add-hook 'after-change-major-mode-hook
-          (lambda ()
-            (when (= (point-min) (point-max))
-              (auto-insert))))
+
 
 ;;; ==================================
 ;;; VLF intelligently edit large files
 ;;; ==================================
 (require 'config-package)
 
-(package-deferred-install 'vlf
-    :autoload-names '('vlf))
+(use-package vlf
+  :defer-install t
+  :commands (vlf))
 
 (defun nadvice/abort-if-file-too-large (_old-fun &rest args)
   (cl-destructuring-bind (size _op-type _filename) args
@@ -235,12 +242,12 @@
                large-file-warning-threshold
                (< large-file-warning-threshold size))
       (unless (package-installed-p 'vlf)
-             (save-window-excursion
-               (package-install 'vlf)))
+        (save-window-excursion
+          (package-install 'vlf)))
       (advice-remove 'abort-if-file-too-large
                      #'nadvice/abort-if-file-too-large)
-           (require 'vlf-setup)
-           (apply #'abort-if-file-too-large args))))
+      (require 'vlf-setup)
+      (apply #'abort-if-file-too-large args))))
 
 (advice-add 'abort-if-file-too-large :around #'nadvice/abort-if-file-too-large)
 
@@ -261,9 +268,11 @@
 ;;; Emacs fasd - find files from fasd
 ;;; =================================
 
-(package-deferred-install 'fasd
-    :autoload-names '('fasd-find-file)
-    (setq fasd-enable-initial-prompt nil)
+(use-package fasd
+  :defer-install t
+  :commands (fasd-find-file)
+  :config
+  (setq fasd-enable-initial-prompt nil)
 
   (defun nadvice/fasd-find-file (old-fun &rest args)
     (require 'helm-mode)
@@ -279,23 +288,25 @@
 ;;; dumb-jump an unintelligent goto-definition system
 ;;; =================================================
 
-(package-deferred-install 'dumb-jump
-    :autoload-names '('dumb-jump-back
-                      'dumb-jump-quick-look
-                      'dumb-jump-go-other-window
-                      'dumb-jump-go-current-window
-                      'dumb-jump-go-prefer-external
-                      'dumb-jump-go-prompt
-                      'dumb-jump-go-prefer-external-other-window
-                      'dumb-jump-go
-                      'dumb-jump-mode))
+(use-package dumb-jump
+  :init
+  (defun my/jump-to-definition-dwim ()
+    (interactive)
+    (if (and (executable-find "global")
+             (or (getenv "GTAGSROOT")
+                 (locate-dominating-file default-directory "GTAGS")))
+        (helm-gtags-dwim)
+      (dumb-jump-go)))
 
-(defun my/jump-to-definition-dwim ()
-  (interactive)
-  (if (and (executable-find "global")
-           (or (getenv "GTAGSROOT")
-               (locate-dominating-file default-directory "GTAGS")))
-      (helm-gtags-dwim)
-    (dumb-jump-go)))
+  :defer-install t
+  :commands (dumb-jump-back
+             dumb-jump-quick-look
+             dumb-jump-go-other-window
+             dumb-jump-go-current-window
+             dumb-jump-go-prefer-external
+             dumb-jump-go-prompt
+             dumb-jump-go-prefer-external-other-window
+             dumb-jump-go
+             dumb-jump-mode))
 
 (provide 'config-intel)

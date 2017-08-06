@@ -1,6 +1,9 @@
 # elpa files
 /elpa
 
+# straight.el files
+/straight
+
 # project file cache
 /data/.projectile-bookmarks.eld
 /data/.projectile.cache

@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t -*-
 
+(use-package solarized-theme)
+
 (defun nadvice/load-theme (&rest _args)
   (run-hooks 'load-theme-hook))
 

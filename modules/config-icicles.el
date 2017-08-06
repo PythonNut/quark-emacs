@@ -1,25 +1,20 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'icicles)))
 
-(defun icicle-flx-score-greater-p (s1 s2)
-  "Return non-nil if S1 scores higher than S2 using `flx-score`."
-  (let* ((input (if (icicle-file-name-input-p)
-                    (file-name-nondirectory icicle-current-input)
-                  icicle-current-input))
-         (score1 (flx-score s1 input))
-         (score2 (flx-score s2 input)))
-    (and score1  score2  (> (car score1) (car score2)))))
-
-(with-eval-after-load 'icicles
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'icicles)
-      (require 'icicles-mac)))
+(use-package icicles
+  :config
+  (defun icicle-flx-score-greater-p (s1 s2)
+    "Return non-nil if S1 scores higher than S2 using `flx-score`."
+    (let* ((input (if (icicle-file-name-input-p)
+                      (file-name-nondirectory icicle-current-input)
+                    icicle-current-input))
+           (score1 (flx-score s1 input))
+           (score2 (flx-score s2 input)))
+      (and score1  score2  (> (car score1) (car score2)))))
 
   (eval-and-compile
+    (eval-when-compile (require 'icicles-mac)
+                       (require 'icicles-fn))
     (icicle-define-sort-command "by flx score"
                                 ;; icicle-dirs-last-p
                                 icicle-flx-score-greater-p
@@ -542,11 +537,8 @@
 (global-set-key (kbd "C-S-x C-S-f") #'icicle-find-file)
 (global-set-key (kbd "C-S-X C-S-B") #'icicle-buffer)
 
-(with-eval-after-load 'evil
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'evil)))
-
+(use-package evil
+  :config
   (define-key evil-normal-state-map (kbd "<backtab>") #'icicle-complete-keys)
   (define-key evil-insert-state-map (kbd "<backtab>") #'icicle-complete-keys))
 

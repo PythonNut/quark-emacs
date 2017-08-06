@@ -1,5 +1,17 @@
 ;; -*- lexical-binding: t -*-
 
+(use-package vc-git
+  :ensure nil
+  :config
+  (setq vc-git-diff-switches '("--histogram")))
+
+(use-package diff-hl
+  :config
+  (setq diff-hl-draw-borders nil)
+  (diff-hl-flydiff-mode +1)
+  ;; Automatically refresh when magit state changes
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
 (unless (bound-and-true-p my/slow-device)
   (add-hook 'find-file-hook
             (lambda ()
@@ -7,30 +19,9 @@
                 (diff-hl-mode +1)
                 (diff-hl-update)))))
 
-(with-eval-after-load 'vc-git
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'vc-git)))
-  (setq vc-git-diff-switches '("--histogram")))
-
-(with-eval-after-load 'diff-hl
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'diff-hl)))
-
-  (setq diff-hl-draw-borders nil)
-  (diff-hl-flydiff-mode +1)
-  ;; Automatically refresh when magit state changes
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
-
-(defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
-
-(with-eval-after-load 'magit
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'magit)
-      (require 'config-setq)))
-
+(use-package magit
+  :init (defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
+  :config
   ;; Don't use graphical password prompt in terminal
   (unless (display-graphic-p)
     (setenv "SSH_ASKPASS" "magit-askpass"))
@@ -59,36 +50,35 @@
   (magit-change-popup-key 'magit-rebase-popup :action ?e ?r)
   (magit-change-popup-key 'magit-push-popup   :action ?p ?P)
 
-  (eval-and-compile
-    (cl-macrolet
-        ((magit-setup-section-k
-          (mode &optional command)
-          `(with-demoted-errors "magit setup error: %s"
-             (define-key ,mode (kbd "<C-tab>") nil)
-             (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
-             (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
-             (define-key ,mode (kbd "k") #'previous-line)
-             ,(when command
-                `(define-key ,mode (kbd "K") ,command)))))
-      (with-no-warnings
-        (my/generate-calls
-            'magit-setup-section-k
-          '((magit-branch-section-map #'magit-branch-delete)
-            (magit-commit-section-map)
-            (magit-file-section-map #'magit-discard)
-            (magit-hunk-section-map #'magit-discard)
-            (magit-log-mode-map)
-            (magit-module-commit-section-map)
-            (magit-remote-section-map)
-            (magit-staged-section-map #'magit-discard)
-            (magit-stash-section-map #'magit-stash-drop)
-            (magit-stashes-section-map)
-            (magit-status-mode-map)
-            (magit-tag-section-map #'magit-tag-delete)
-            (magit-unpulled-section-map)
-            (magit-unpushed-section-map)
-            (magit-unstaged-section-map #'magit-discard)
-            (magit-untracked-section-map #'magit-discard))))))
+  (cl-macrolet
+      ((magit-setup-section-k
+        (mode &optional command)
+        `(with-demoted-errors "magit setup error: %s"
+           (define-key ,mode (kbd "<C-tab>") nil)
+           (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
+           (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
+           (define-key ,mode (kbd "k") #'previous-line)
+           ,(when command
+              `(define-key ,mode (kbd "K") ,command)))))
+    (with-no-warnings
+      (my/generate-calls
+          'magit-setup-section-k
+        '((magit-branch-section-map #'magit-branch-delete)
+          (magit-commit-section-map)
+          (magit-file-section-map #'magit-discard)
+          (magit-hunk-section-map #'magit-discard)
+          (magit-log-mode-map)
+          (magit-module-commit-section-map)
+          (magit-remote-section-map)
+          (magit-staged-section-map #'magit-discard)
+          (magit-stash-section-map #'magit-stash-drop)
+          (magit-stashes-section-map)
+          (magit-status-mode-map)
+          (magit-tag-section-map #'magit-tag-delete)
+          (magit-unpulled-section-map)
+          (magit-unpushed-section-map)
+          (magit-unstaged-section-map #'magit-discard)
+          (magit-untracked-section-map #'magit-discard)))))
 
   ;; disable regular key chords by switching input methods
   (defun my/setup-magit-mode ()
@@ -175,7 +165,7 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
   (define-key projectile-mode-map (kbd "C-c p") #'hydra/projectile-tools/body))
 
 (defhydra hydra/projectile-tools (global-map "C-c p"
-                                  :color blue :hint nil :idle 0.3)
+                                             :color blue :hint nil :idle 0.3)
   "
 Find^^             Operate on project^^      Other window
 _f_ file           _c_ compile project       _O f_ file
@@ -233,10 +223,21 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
   ("z" projectile-cache-current-file)
   ("ESC" projectile-project-buffers-other-buffer))
 
-(with-eval-after-load 'diff
+(use-package diff
+  :ensure nil
+  :config
   (setq diff-switches "-u"))
 
-(with-eval-after-load 'ediff
+(use-package ediff
+  :ensure nil
+  :init
+  (defun my/command-line-ediff (_switch)
+    (let ((file1 (pop command-line-args-left))
+          (file2 (pop command-line-args-left)))
+      (ediff file1 file2)))
+
+  (add-to-list 'command-switch-alist '("diff" . my/command-line-ediff))
+  :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'ediff)))
@@ -262,18 +263,10 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
   ;; don't start another frame
   (setq ediff-window-setup-function #'ediff-setup-windows-plain))
 
-(defun my/command-line-ediff (_switch)
-  (let ((file1 (pop command-line-args-left))
-        (file2 (pop command-line-args-left)))
-    (ediff file1 file2)))
-
-(add-to-list 'command-switch-alist '("diff" . my/command-line-ediff))
-
-(require 'config-package)
-
-(package-deferred-install 'git-timemachine
-    :autoload-names '('git-timemachine-toggle
-                      'git-timemachine
-                      'git-timemachine-switch-branch))
+(use-package git-timemachine
+  :defer-install t
+  :commands (git-timemachine-toggle
+             git-timemachine
+             git-timemachine-switch-branch))
 
 (provide 'config-vcs)
