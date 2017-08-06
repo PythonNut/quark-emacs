@@ -24,8 +24,12 @@
           (lambda ()
             (setq-local global-hl-line-mode nil)))
 
-(global-set-key (kbd "C-M-s") #'flx-isearch-forward)
-(global-set-key (kbd "C-M-r") #'flx-isearch-backward)
+(use-package flx-isearch
+  :commands (flx-isearch-forward
+             flx-isearch-backward)
+  :init
+  (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
+  (global-set-key (kbd "C-M-r") #'flx-isearch-backward))
 
 (use-package historian
   :config
