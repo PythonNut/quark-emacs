@@ -25,6 +25,7 @@
         evil-toggle-key "C-M-z"
         evil-want-C-w-delete nil
         evil-want-C-w-in-emacs-state nil
+        evil-want-fine-undo t
         evil-normal-state-cursor '("#8a8a8a" box)
         evil-operator-state-cursor '("#8a8a8a" evil-half-cursor)
         evil-replace-state-cursor '("#884444" box)
@@ -134,15 +135,15 @@
   (define-key evil-normal-state-map "U" #'undo-tree-visualize)
 
   (use-package hydra
-:demand t
+    :demand t
     :config
-  (defhydra evil-window-hydra ()
-    "switch window"
-    ("h" evil-window-left-smart "left")
-    ("j" evil-window-down-smart "down")
-    ("k" evil-window-up-smart "up")
-    ("l" evil-window-right-smart "right")
-    ("RET" nil "quit")))
+    (defhydra evil-window-hydra ()
+      "switch window"
+      ("h" evil-window-left-smart "left")
+      ("j" evil-window-down-smart "down")
+      ("k" evil-window-up-smart "up")
+      ("l" evil-window-right-smart "right")
+      ("RET" nil "quit")))
 
   (evil-define-command evil-window-left-smart ()
     "A `hydra' enabled `evil-window-left'"
