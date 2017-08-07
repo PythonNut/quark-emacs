@@ -7,7 +7,7 @@
   :config
   (setq sp-cancel-autoskip-on-backward-movement nil)
 
-  (defun my/my-sp-pair-function (id action context)
+  (defun my/sp-pair-function (id action context)
     (if (eq action 'insert)
         (or (looking-at (rx (any space punct)))
             (sp-point-before-eol-p id action context))
@@ -15,11 +15,11 @@
 
   (diminish 'smartparens-mode " σ")
 
-  (sp-pair "(" ")" :when '(my/my-sp-pair-function) :wrap "C-)")
-  (sp-pair "{" "}" :when '(my/my-sp-pair-function) :wrap "C-}")
-  (sp-pair "[" "]" :when '(my/my-sp-pair-function) :wrap "C-]")
-  (sp-pair "\"" "\"" :when '(my/my-sp-pair-function) :wrap "C-\"")
-  (sp-pair "'" "'" :when '(my/my-sp-pair-function))
+  (sp-pair "(" ")" :when '(my/sp-pair-function) :wrap "C-)")
+  (sp-pair "{" "}" :when '(my/sp-pair-function) :wrap "C-}")
+  (sp-pair "[" "]" :when '(my/sp-pair-function) :wrap "C-]")
+  (sp-pair "\"" "\"" :when '(my/sp-pair-function) :wrap "C-\"")
+  (sp-pair "'" "'" :when '(my/sp-pair-function))
 
   ;; disable "'" pairing in text mode, as it's often an apostrophe
   (add-hook 'text-mode-hook
