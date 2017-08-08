@@ -40,6 +40,9 @@
 (use-package ivy
   :init
   ;; shamelessly stolen from the el-patch docs
+
+  (el-patch-feature ivy)
+
   (el-patch-defvar ivy-mode-map
     (let ((map (make-sparse-keymap)))
       (define-key map [remap switch-to-buffer]

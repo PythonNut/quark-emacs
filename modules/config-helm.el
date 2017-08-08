@@ -383,6 +383,7 @@
         helm-gtags-ignore-case t
         helm-gtags-direct-helm-completing t)
 
+  (el-patch-feature helm-gtags)
   (el-patch-defun helm-gtags--read-tagname (type &optional default-tagname)
     (let ((tagname (helm-gtags--token-at-point type))
           (prompt (assoc-default type helm-gtags--prompt-alist))
