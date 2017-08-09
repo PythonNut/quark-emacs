@@ -19,7 +19,7 @@
   (sp-pair "{" "}" :when '(my/sp-pair-function) :wrap "C-}")
   (sp-pair "[" "]" :when '(my/sp-pair-function) :wrap "C-]")
   (sp-pair "\"" "\"" :when '(my/sp-pair-function) :wrap "C-\"")
-  (sp-pair "'" "'" :when '(my/sp-pair-function))
+  (sp-pair "'" "'" :when '(my/sp-pair-function) :unless '(sp-in-comment-p))
 
   ;; disable "'" pairing in text mode, as it's often an apostrophe
   (add-hook 'text-mode-hook
