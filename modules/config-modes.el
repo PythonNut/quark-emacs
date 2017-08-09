@@ -230,7 +230,7 @@
         '(c++-mode objc-mode c-mode)
       (sp-local-pair "/*" "*/" :post-handlers
                      '(:add
-                       ("* ||\n[i]" "RET")))
+                       ("* [i]|\n[i]" "RET")))
       (sp-local-pair "{" nil :post-handlers
                      '(:add
                        ("||\n[i]" "RET")
