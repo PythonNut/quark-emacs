@@ -102,6 +102,19 @@
   :config
   (setq c-default-style "k&r")
 
+  (defun nadvice/c-indent-new-comment-line (&rest _args)
+    (when (and
+           (looking-at (rx (zero-or-more (not-char ?\n)) "*/"))
+           (not (looking-at (rx (zero-or-more (not-char ?\n)) "/*"))))
+      (save-excursion
+        (re-search-forward (rx "*/") (line-end-position))
+        (forward-char -2)
+        (newline)
+        (indent-according-to-mode))))
+
+  (advice-add 'c-indent-new-comment-line :after
+              #'nadvice/c-indent-new-comment-line)
+  
   (use-package irony-eldoc
     :defer-install t
     :commands (irony-eldoc))
@@ -230,7 +243,8 @@
         '(c++-mode objc-mode c-mode)
       (sp-local-pair "/*" "*/" :post-handlers
                      '(:add
-                       ("* [i]|\n[i]" "RET")))
+                       ("* [i]|\n[i]" newline evil-ret)
+                       (" " c-context-line-break c-indent-new-comment-line)))
       (sp-local-pair "{" nil :post-handlers
                      '(:add
                        ("||\n[i]" "RET")
@@ -244,6 +258,9 @@
 
   (define-key c-mode-map (kbd "C-c o") #'ff-find-other-file)
   (define-key c++-mode-map (kbd "C-c o") #'ff-find-other-file)
+
+  (define-key c-mode-map (kbd "RET") #'c-context-line-break)
+  (define-key c++-mode-map (kbd "RET") #'c-context-line-break)
 
   (define-key c-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
   (define-key c++-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
@@ -264,7 +281,7 @@
                company-arduino-turn-on
                company-arduino-turn-off))
 
-    (add-hook 'irony-mode-hook 'company-arduino-turn-on))
+  (add-hook 'irony-mode-hook 'company-arduino-turn-on))
 
 (use-package cuda-mode
   :defer-install t
@@ -511,36 +528,36 @@
     (autoload 'run-sage "sage-shell-mode" nil t)
     (autoload 'run-new-sage "sage-shell-mode" nil t)
     (autoload 'sage-mode "sage-shell-mode" nil t))
+  :config
+  (setq sage-shell:use-prompt-toolkit t
+        sage-shell-view-default-resolution 200)
+  (sage-shell:define-alias)
+
+  (use-package evil
     :config
-    (setq sage-shell:use-prompt-toolkit t
-          sage-shell-view-default-resolution 200)
-    (sage-shell:define-alias)
+    (evil-set-initial-state 'sage-shell-mode 'insert))
 
-    (use-package evil
-      :config
-      (evil-set-initial-state 'sage-shell-mode 'insert))
+  (add-hook 'sage-shell-mode-hook #'eldoc-mode)
+  (add-hook 'sage-mode-hook #'eldoc-mode)
 
-    (add-hook 'sage-shell-mode-hook #'eldoc-mode)
-    (add-hook 'sage-mode-hook #'eldoc-mode)
+  (add-hook 'sage-shell-mode-hook
+            (lambda () (semantic-idle-summary-mode -1)))
 
-    (add-hook 'sage-shell-mode-hook
-              (lambda () (semantic-idle-summary-mode -1)))
+  (add-hook 'sage-mode-hook
+            (lambda () (semantic-idle-summary-mode -1)))
 
-    (add-hook 'sage-mode-hook
-              (lambda () (semantic-idle-summary-mode -1)))
+  (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view)
 
-    (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view)
-
-    (defun nadvice/run-sage (old-fun &optional arg)
-      (interactive "P")
-      (if (called-interactively-p 'any)
-          (cond
-           ((consp arg)
-            (call-interactively old-fun))
-           (t
-            (funcall old-fun "sage"))))
-      (funcall old-fun arg))
-    (advice-add 'run-sage :around #'nadvice/run-sage))
+  (defun nadvice/run-sage (old-fun &optional arg)
+    (interactive "P")
+    (if (called-interactively-p 'any)
+        (cond
+         ((consp arg)
+          (call-interactively old-fun))
+         (t
+          (funcall old-fun "sage"))))
+    (funcall old-fun arg))
+  (advice-add 'run-sage :around #'nadvice/run-sage))
 
 ;; =============================================================================
 ;; Octave/MATLAB ===============================================================
@@ -730,12 +747,12 @@
 (use-package less-css-mode
   :defer-install t
   :commands (less-css-mode less-css-compile)
-    :mode (("\\.less\\'" . less-css-mode))
-    :config
-    (sp-local-pair 'less-css-mode "{" nil :post-handlers
-                   '(:add
-                     ("||\n[i]" "RET")
-                     ("| " "SPC"))))
+  :mode (("\\.less\\'" . less-css-mode))
+  :config
+  (sp-local-pair 'less-css-mode "{" nil :post-handlers
+                 '(:add
+                   ("||\n[i]" "RET")
+                   ("| " "SPC"))))
 
 (use-package scss-mode
   :defer-install t
@@ -1366,7 +1383,11 @@
   :defer-install t
   :commands (markdown-mode gfm-mode)
   :mode (("\\.text\\'" . markdown-mode)
-         ("\\.md\\'"   . markdown-mode)))
+         ("\\.md\\'"   . markdown-mode))
+
+  :config
+  (when (executable-find "marked")
+    (setq markdown-command "marked")))
 
 (use-package markdown-preview-mode
   :defer-install t
