@@ -1676,7 +1676,15 @@
         (TeX-parse-macro thing (cdr-safe (assoc thing (TeX-symbol-list))))
         (run-hooks 'TeX-after-insert-macro-hook))))
 
-  (define-key TeX-mode-map (kbd ";") #'LaTeX-environment-or-macro))
+  (defun LaTeX-environment-or-macro-or-self-insert (arg)
+    "TeX-insert-macro and LaTeX-environment merged into one command"
+    (interactive "*P")
+    (if (string= (LaTeX-current-environment)
+                 "tikzpicture")
+        (self-insert-command arg)
+      (LaTeX-environment-or-macro arg)))
+
+  (define-key TeX-mode-map (kbd ";") #'LaTeX-environment-or-macro-or-self-insert))
 
 ;; =============================================================================
 ;; Org mode ====================================================================
