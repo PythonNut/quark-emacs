@@ -1512,41 +1512,54 @@
 
       :config
       (defun my/evil-TeX--expression-range (&optional count exclusive)
-        (let* ((terminators (rx (or "&"
-                                    "="
-                                    "\\\\"
-                                    "\\item"
-                                    "%"
-                                    "\\label"
-                                    "\\end"
-                                    "\\]"
-                                    "\\["
-                                    "$"
-                                    (and "\\begin{"
-                                         (zero-or-more
-                                          (or letter "*"))
-                                         "}"))))
-               (beg (save-excursion
-                      (while (not (or
-                                   (bobp)
-                                   (looking-back (if exclusive
-                                                     (concat (format "\\(%s\\)" terminators)
-                                                             (rx (zero-or-more (or space "\n"))))
-                                                   terminators)
-                                                 (max (point-min)
-                                                      (- (point) 80)))))
-                        (forward-char -1))
-                      (point)))
-               (end (save-excursion
-                      (while (not (or
-                                   (eobp)
-                                   (looking-at (if exclusive
-                                                   (concat (rx (zero-or-more (or space "\n")))
-                                                           (format "\\(%s\\)" terminators))
-                                                 terminators))))
-                        (forward-char 1))
-                      (point))))
-          (list beg end)))
+        (cond
+         ((string= (LaTeX-current-environment) "minted")
+          (list (cdr (evil-latex-textobjects-env-beginning))
+                (car (evil-latex-textobjects-env-end))))
+         (t
+          (let* ((terminators (rx (or "&"
+                                      "="
+                                      "\\\\"
+                                      "\\item"
+                                      "%"
+                                      "\\label"
+                                      "\\end"
+                                      "\\]"
+                                      "\\["
+                                      "$"
+                                      (and "\\begin{"
+                                           (zero-or-more
+                                            (or letter "*"))
+                                           "}"
+                                           (zero-or-more
+                                            (or
+                                             (and "["
+                                                  (zero-or-more char)
+                                                  "]")
+                                             (and "{"
+                                                  (zero-or-more char)
+                                                  "}")))))))
+                 (beg (save-excursion
+                        (while (not (or
+                                     (bobp)
+                                     (looking-back (if exclusive
+                                                       (concat (format "\\(%s\\)" terminators)
+                                                               (rx (zero-or-more (or space "\n"))))
+                                                     terminators)
+                                                   (max (point-min)
+                                                        (- (point) 80)))))
+                          (forward-char -1))
+                        (point)))
+                 (end (save-excursion
+                        (while (not (or
+                                     (eobp)
+                                     (looking-at (if exclusive
+                                                     (concat (rx (zero-or-more (or space "\n")))
+                                                             (format "\\(%s\\)" terminators))
+                                                   terminators))))
+                          (forward-char 1))
+                        (point))))
+            (list beg end)))))
 
       (evil-define-text-object evil-indent-i-TeX-expression (&optional count _beg _end _type)
         "Text object describing the block with the same indentation as the current line."
