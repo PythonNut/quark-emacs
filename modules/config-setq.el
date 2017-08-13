@@ -49,6 +49,7 @@
               indicate-buffer-boundaries '((bottom . left)))
 
 (prefer-coding-system 'utf-8)
+(define-coding-system-alias 'UTF-8 'utf-8)
 
 (defalias 'yes-or-no-p #'y-or-n-p)
 
