@@ -1,5 +1,27 @@
 ;; -*- lexical-binding: t -*-
 
+(use-package on-parens
+  :commands (;; motion
+             on-parens-forward-sexp
+             on-parens-forward-sexp-end
+             on-parens-backward-sexp
+             on-parens-backward-sexp-end
+             on-parens-up-sexp
+             on-parens-up-sexp-end
+             on-parens-down-sexp
+             on-parens-down-sexp-end
+             on-parens-forward-sexp-in-supersexp
+             on-parens-backward-sexp-in-supersexp
+             ;; editing
+             on-parens-forward-slurp
+             on-parens-forward-barf
+             on-parens-backward-slurp
+             on-parens-backward-barf
+             on-parens-splice
+             on-parens-split-supersexp
+             on-parens-join-neighbor-sexp
+             on-parens-kill-sexp))
+
 (use-package smartparens
   :init
   (smartparens-global-mode +1)
