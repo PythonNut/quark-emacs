@@ -156,4 +156,12 @@
               :override
               #'nadvice/evil-quickscope-update-overlays-bidirectional))
 
+(use-package evil-lion
+  :commands (evil-lion-left evil-lion-right)
+  :init
+  (define-key evil-normal-state-map (kbd "gl") 'evil-lion-left)
+  (define-key evil-visual-state-map (kbd "gl") 'evil-lion-left)
+  (define-key evil-normal-state-map (kbd "gL") 'evil-lion-right)
+  (define-key evil-visual-state-map (kbd "gL") 'evil-lion-right))
+
 (provide 'config-evil-modules)
