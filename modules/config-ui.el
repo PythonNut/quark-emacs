@@ -140,7 +140,9 @@
   (setq iflipb-ignore-buffers (list (rx line-start " ")
                                     (rx line-start "*helm")
                                     (rx line-start "*Compile")
-                                    (rx line-start "*Quail"))
+                                    (rx line-start "*Quail")
+                                    (rx line-start "*magit-process")
+                                    (rx line-start "*magit-diff"))
         iflipb-wrap-around 't)
 
   (defun nadvice/iflipb-first-iflipb-buffer-switch-command ())
