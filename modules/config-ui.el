@@ -27,10 +27,12 @@
   (with-demoted-errors "Load error: %s"
     (require 'hydra)))
 
-(defhydra my/smart-isearch-chord-hydra
-  (:timeout key-chord-one-key-delay
-            :pre (setq hydra-is-helpful nil)
-            :post (setq hydra-is-helpful t))
+(defhydra my/smart-isearch-chord-hydra (:timeout
+                                        key-chord-one-key-delay
+                                        :pre
+                                        (setq hydra-is-helpful nil)
+                                        :post
+                                        (setq hydra-is-helpful t))
   ("j" isearch-exit-chord-worker)
   ("k" isearch-exit-chord-worker))
 
@@ -132,6 +134,17 @@
       (delete-window))
     (display-buffer-pop-up-frame buffer nil)))
 
+(defhydra my/window-resize-hydra ()
+  ("{" (call-interactively #'shrink-window-horizontally) "shrink ↔")
+  ("}" (call-interactively #'enlarge-window-horizontally) "enlarge ↔")
+  ("^" (call-interactively #'enlarge-window) "enlarge ↕")
+  ("-" (call-interactively #'shrink-window-if-larger-than-buffer) "shrink ↕"))
+
+(global-set-key (kbd "C-x {") #'my/window-resize-hydra/lambda-{)
+(global-set-key (kbd "C-x }") #'my/window-resize-hydra/lambda-})
+(global-set-key (kbd "C-x ^") #'my/window-resize-hydra/lambda-^)
+(global-set-key (kbd "C-x -") #'my/window-resize-hydra/lambda--)
+
 ;;; ====================================
 ;;; iflib - switch buffers alt-tab style
 ;;; ====================================
@@ -156,11 +169,11 @@
                         :post
                         (setq hydra-is-helpful t))
   ("<C-tab>"
-   (call-interactively #'iflipb-next-buffer))		
+   (call-interactively #'iflipb-next-buffer))
   ("TAB"
-   (call-interactively #'iflipb-next-buffer))		
-  ("<C-S-iso-lefttab>"		
-   (call-interactively #'iflipb-previous-buffer))		
+   (call-interactively #'iflipb-next-buffer))
+  ("<C-S-iso-lefttab>"
+   (call-interactively #'iflipb-previous-buffer))
   ("<backtab>"
    (call-interactively #'iflipb-previous-buffer)))
 
