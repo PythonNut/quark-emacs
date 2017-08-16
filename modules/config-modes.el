@@ -1475,7 +1475,12 @@
     :defer-install t
     :commands (magic-latex-buffer)
     :config
-    (setq magic-latex-enable-block-align nil))
+    (setq magic-latex-enable-block-align nil)
+
+    (set-face-attribute 'ml/llarge nil :height 1.25)
+    (set-face-attribute 'ml/xlarge nil :height 1.3)
+    (set-face-attribute 'ml/huge nil :height 1.35)
+    (set-face-attribute 'ml/hhuge nil :height 1.4))
 
   (use-package company-auctex
     :recipe (company-auctex :type git
