@@ -28,19 +28,19 @@ If optional arg DO-NOT-MOVE is non-nil, then don't actually
 move the yanking point; just return the Nth kill forward."
   (el-patch-add (require 'dash))
   (let ((interprogram-paste (and (= n 0)
-				 interprogram-paste-function
+                                 interprogram-paste-function
                                  (funcall interprogram-paste-function))))
     (if interprogram-paste
-	(progn
-	  ;; Disable the interprogram cut function when we add the new
-	  ;; text to the kill ring, so Emacs doesn't try to own the
-	  ;; selection, with identical text.
-	  (let ((interprogram-cut-function nil))
+        (progn
+          ;; Disable the interprogram cut function when we add the new
+          ;; text to the kill ring, so Emacs doesn't try to own the
+          ;; selection, with identical text.
+          (let ((interprogram-cut-function nil))
 	    (if (listp interprogram-paste)
                 (mapc 'kill-new (nreverse interprogram-paste))
 	      (kill-new interprogram-paste)))
-	  (car kill-ring)
-          (el-patch-add (setq kill-ring-yank-index 0)))
+          (el-patch-add (setq kill-ring-yank-index 0))
+	  (car kill-ring))
       (or kill-ring (error "Kill ring is empty"))
       (el-patch-add
         ;; Put the head of kill-ring back where we had
