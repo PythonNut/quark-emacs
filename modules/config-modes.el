@@ -371,7 +371,39 @@
             (lambda ()
               (setq mode-name "sh")
               (if (string-match-p (rx ".zsh" line-end) buffer-file-name)
-                  (sh-set-shell "zsh")))))
+                  (sh-set-shell "zsh"))))
+
+  (defun my/sh-smart-newline (&optional arg interactive)
+    (interactive "*P\np")
+    (newline arg interactive)
+    (when (looking-at (rx (or "done"
+                              "esac"
+                              "fi")))
+      (save-excursion
+        (newline)
+        (indent-according-to-mode))
+      (indent-according-to-mode)))
+
+  (define-key sh-mode-map (kbd "<remap> <newline>") #'my/sh-smart-newline)
+
+  (sp-with-modes '(sh-mode)
+    (sp-local-pair "do" "done"
+                   :when '(("SPC" "RET" "<evil-ret>"))
+                   :unless '(sp-in-string-p sp-in-comment-p)
+                   :actions '(insert navigate)
+                   :suffix "")
+
+    (sp-local-pair "case" "esac"
+                   :when '(("SPC" "RET" "<evil-ret>"))
+                   :unless '(sp-in-string-p sp-in-comment-p)
+                   :actions '(insert navigate)
+                   :suffix "")
+
+    (sp-local-pair "if" "fi"
+                   :when '(("SPC" "RET" "<evil-ret>"))
+                   :unless '(sp-in-string-p sp-in-comment-p)
+                   :actions '(insert navigate)
+                   :suffix "")))
 
 (use-package fish-mode
   :defer-install t
