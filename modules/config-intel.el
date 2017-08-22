@@ -245,25 +245,57 @@
 ;;; ==================================
 ;;; VLF intelligently edit large files
 ;;; ==================================
-(require 'config-package)
+
+(defun buffer-binary-p (&optional buffer)
+  "Return whether BUFFER or the current buffer is binary.
+
+A binary buffer is defined as containing at least one null byte.
+
+Returns either nil, or the position of the first null byte."
+  (with-current-buffer (or buffer (current-buffer))
+    (save-excursion
+      (goto-char (point-min))
+      (search-forward (string ?\x00) 4096 t 1))))
+
+(defun my/hexl-if-binary ()
+  "If `fundamental-mode' is active, and the current buffer
+is binary, activate `hexl-mode'."
+  (when (and (eq major-mode 'fundamental-mode)
+             (buffer-binary-p))
+    (hexl-mode)
+    (message "Detected binary file. Switched to text mode.")))
+
+(add-hook 'find-file-hooks 'my/hexl-if-binary)
 
 (use-package vlf
   :defer-install t
   :commands (vlf))
 
 (defun nadvice/abort-if-file-too-large (_old-fun &rest args)
-  (cl-destructuring-bind (size _op-type _filename) args
+  (cl-destructuring-bind (size op-type filename) args
     (when (and size
                (not (zerop size))
                large-file-warning-threshold
                (< large-file-warning-threshold size))
-      (unless (package-installed-p 'vlf)
-        (save-window-excursion
-          (package-install 'vlf)))
-      (advice-remove 'abort-if-file-too-large
-                     #'nadvice/abort-if-file-too-large)
-      (require 'vlf-setup)
-      (apply #'abort-if-file-too-large args))))
+      (let ((char nil))
+        (while (not (memq (setq char
+                                (read-event
+                                 (propertize
+                                  (format
+                                   "File %s is large (%s): \
+%s normally (o), %s with vlf (v) or abort (a)"
+                                   (if filename
+                                       (file-name-nondirectory filename)
+                                     "")
+                                   (file-size-human-readable size)
+                                   op-type op-type)
+                                  'face 'minibuffer-prompt)))
+                          '(?o ?O ?v ?V ?a ?A))))
+        (cond ((memq char '(?v ?V))
+               (vlf filename)
+               (error ""))
+              ((memq char '(?a ?A))
+               (error "Aborted")))))))
 
 (advice-add 'abort-if-file-too-large :around #'nadvice/abort-if-file-too-large)
 
@@ -276,6 +308,7 @@
   (adaptive-wrap-prefix-mode -1)
   (setq-local global-hl-line-mode nil)
   (setq-local column-number-mode nil)
+  (my/hexl-if-binary)
   (message "Use C-c C-v → VLF"))
 
 (add-hook 'vlf-mode-hook #'my/vlf-hook)
