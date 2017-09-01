@@ -1503,6 +1503,8 @@
                           ("$" "int")
                           ("=" "implies")))
 
+  (require 'smartparens-latex)
+
   (use-package magic-latex-buffer
     :defer-install t
     :commands (magic-latex-buffer)
