@@ -1501,7 +1501,8 @@
         LaTeX-math-list '(("\'" "dif")
                           ("\"" "Dif")
                           ("$" "int")
-                          ("=" "implies")))
+                          ("=" "implies")
+                          ("!" "neq")))
 
   (require 'smartparens-latex)
 
