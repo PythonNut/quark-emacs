@@ -1732,8 +1732,13 @@
   (defun LaTeX-environment-or-macro-or-self-insert (arg)
     "TeX-insert-macro and LaTeX-environment merged into one command"
     (interactive "*P")
-    (if (string= (LaTeX-current-environment)
-                 "tikzpicture")
+    (if (string-match-p (rx bol
+                            (or "tikzpicture"
+                                "circuitikz"
+                                "minted"
+                                "verbatim")
+                            eol)
+                        (LaTeX-current-environment))
         (self-insert-command arg)
       (LaTeX-environment-or-macro arg)))
 
