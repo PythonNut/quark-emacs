@@ -35,6 +35,7 @@
   (setq helm-mode-fuzzy-match t
         helm-completion-in-region-fuzzy-match t))
 
+(setq helm-recentf-fuzzy-match t)
 (use-package helm-files
   :ensure nil
   :config
@@ -62,10 +63,6 @@
         helm-ff-newfile-prompt-p nil
         helm-ff-skip-boring-files t
         helm-recentf-fuzzy-match t
-
-        helm-source-recentf (helm-make-source "Recentf"
-                                'helm-recentf-source
-                              :fuzzy-match helm-recentf-fuzzy-match)
 
         helm-boring-file-regexp-list (append helm-boring-file-regexp-list
                                              (list (rx ".synctex.gz" line-end)
@@ -96,21 +93,12 @@
                                              (rx "*Compile")
                                              (rx "*Quail"))))
 
+(setq helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match t)
 (use-package helm-semantic
   :ensure nil
   :config
-  (setq helm-semantic-fuzzy-match t
-        helm-source-semantic (helm-make-source "Semantic Tags"
-                                 'helm-semantic-source
-                               :fuzzy-match helm-semantic-fuzzy-match)))
-
-(use-package helm-imenu
-  :ensure nil
-  :config
-  (setq helm-imenu-fuzzy-match t
-        helm-source-imenu (helm-make-source "Imenu"
-                              'helm-imenu-source
-                            :fuzzy-match helm-imenu-fuzzy-match)))
+  (setq helm-semantic-fuzzy-match t))
 
 (use-package helm-command
   :ensure nil
@@ -218,11 +206,14 @@
 (defun my/helm-interfile-omni (&rest _args)
   (interactive)
   (require 'helm-files)
+  (require 'helm-for-files)
+  (require 'helm-find)
   (require 'helm-ring)
   (require 'helm-misc)
   (require 'projectile)
   (require 'helm-ag)
   (require 'recentf)
+  (require 'dired)
 
   (when helm-turn-on-recentf (recentf-mode 1))
 
