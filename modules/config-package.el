@@ -73,12 +73,13 @@ second, floating-point values are rounded down to the nearest integer.)"
         (require (pop idle-require-symbols)))
       (my/sit-for 0.1))))
 
-(defun nadvice/straight-use-package-ensure-function (old-fun &rest args)
-  (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
-    (apply old-fun args)))
+(with-eval-after-load 'use-package
+  (defun nadvice/straight-use-package-ensure-function (old-fun &rest args)
+    (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
+      (apply old-fun args)))
 
-(advice-add 'straight-use-package-ensure-function :around
-            #'nadvice/straight-use-package-ensure-function)
+  (advice-add 'straight-use-package-ensure-function :around
+              #'nadvice/straight-use-package-ensure-function))
 
 (straight-use-package '(use-package
                          :type git
