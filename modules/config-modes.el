@@ -1659,9 +1659,11 @@
   (advice-add 'TeX-source-correlate-sync-source :after
               #'nadvice/TeX-source-correlate-sync-source)
 
-  (defun nadvice/LaTeX-math-insert (old-fun &rest args)
+  (defun nadvice/LaTeX-math-insert (old-fun string dollar)
     (let ((TeX-insert-braces nil))
-      (apply old-fun args)))
+      (if (texmathp)
+          (funcall old-fun string dollar)
+        (funcall old-fun string (not dollar)))))
 
   (advice-add 'LaTeX-math-insert :around #'nadvice/LaTeX-math-insert)
 
