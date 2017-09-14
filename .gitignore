@@ -44,7 +44,7 @@ flycheck_*
 
 
 /data/anaconda-mode
-/irony
+/data/irony
 
 
 # package cache
