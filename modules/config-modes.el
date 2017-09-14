@@ -1502,7 +1502,8 @@
                           ("\"" "Dif")
                           ("$" "int")
                           ("=" "implies")
-                          ("!" "neq")))
+                          ("!" "neq"))
+        TeX-auto-global (locate-user-emacs-file "data/auctex"))
 
   (require 'smartparens-latex)
 
