@@ -411,10 +411,24 @@
 
 (global-set-key (kbd "C-x C-r") #'rename-current-buffer-file)
 
+(defun split-window-below-cycle ()
+  (interactive)
+  (with-selected-window (split-window-below)
+    (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
+               (lambda () t)))
+      (call-interactively #'iflipb-next-buffer))))
+
+(defun split-window-right-cycle ()
+  (interactive)
+  (with-selected-window (split-window-right)
+    (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
+               (lambda () t)))
+      (call-interactively #'iflipb-next-buffer))))
+
 (global-set-key (kbd "C-0") #'delete-window)
 (global-set-key (kbd "C-1") #'delete-other-windows)
-(global-set-key (kbd "C-2") #'split-window-below)
-(global-set-key (kbd "C-3") #'split-window-right)
+(global-set-key (kbd "C-2") #'split-window-below-cycle)
+(global-set-key (kbd "C-3") #'split-window-right-cycle)
 (global-set-key (kbd "C-4") #'find-file-other-window)
 (global-set-key (kbd "C-5") #'make-frame-command)
 (global-set-key (kbd "M-j") #'evil-join)
