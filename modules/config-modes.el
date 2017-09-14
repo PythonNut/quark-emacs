@@ -1238,7 +1238,7 @@
   (require 's)
   (let* ((dir (file-name-directory (or buffer-file-name
                                        ;; dired
-                                       dired-directory
+                                       (bound-and-true-p dired-directory)
                                        ;; use HOME
                                        "~/")))
          (popup-buffer (get-buffer "*Popup Shell*"))
@@ -1270,7 +1270,7 @@
               (setq popup-buffer (get-buffer "*Popup Shell*")))
             t)))
 
-    (select-window (split-window-below))
+    (select-window (split-window-sensibly))
     (switch-to-buffer popup-buffer)
     (unless new-buffer
       (comint-send-string nil (concat "cd " dir "; clear\n")))))
