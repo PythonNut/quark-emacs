@@ -11,6 +11,8 @@
   (add-hook 'prog-mode-hook #'semantic-mode)
 
   :config
+  (setq semanticdb-default-save-directory
+        (locate-user-emacs-file "data/semanticdb"))
   (global-semanticdb-minor-mode +1)
   (global-semantic-idle-scheduler-mode +1)
   (global-semantic-idle-summary-mode +1)

@@ -17,7 +17,7 @@
 /data/.session
 
 # semantic parser cache
-/semanticdb
+/data/semanticdb
 
 
 # emacs browser cookies
