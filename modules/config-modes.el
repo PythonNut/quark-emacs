@@ -1506,6 +1506,10 @@
                           ("!" "neq"))
         TeX-auto-global (locate-user-emacs-file "data/auctex"))
 
+  (with-eval-after-load 'texmathp
+    (add-to-list 'texmathp-tex-commands-default '("tableau" env-on))
+    (texmathp-compile))
+
   (require 'smartparens-latex)
 
   (use-package magic-latex-buffer
