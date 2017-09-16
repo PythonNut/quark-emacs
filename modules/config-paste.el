@@ -125,45 +125,29 @@ move the yanking point; just return the Nth kill forward."
 (advice-add 'cua-cut-region :around #'nadvice/cua-cut-region)
 
 ;; cua-yank a line if cut as a line
-(defun nadvice/cua-paste (old-fun raw-prefix &optional string-in)
+(defun nadvice/cua-paste (old-fun raw-prefix)
   ;; figure out what yank would do normally
-  (let ((string-to-yank (or string-in
-                            (current-kill
-                             (cond ((listp raw-prefix) 0)
-                                   ((eq raw-prefix '-) -1)
-                                   (t (1- raw-prefix))) t)))
+  (let ((string-to-yank (current-kill
+                         (cond ((listp raw-prefix) 0)
+                               ((eq raw-prefix '-) -1)
+                               (t (1- raw-prefix))) t))
         (saved-column (current-column)))
 
     ;; check for whole-line prop in yanked text
     (if (get-text-property 0 'whole-line-or-region string-to-yank)
-        (let ((beg (line-beginning-position)))
-          ;; goto beg of line and yank
-          (beginning-of-line)
-          (if string-in
-              (insert string-in)
-            (call-interactively old-fun raw-prefix))
-
-          ;; a whole-line killed from end of file may not have a
-          ;; trailing newline -- add one, in these cases
-          (when (not (string-match-p "\n$" string-to-yank))
-            (insert "\n")
-            (forward-line -1))
-
-          ;; restore state of being....
-          (move-to-column saved-column)
-          (remove-text-properties beg (1+ beg) '(whole-line-or-region nil)))
+        (save-excursion
+          (end-of-line)
+          (insert "\n")
+          (let ((beg (line-beginning-position)))
+            (insert (string-remove-suffix "\n" string-to-yank))
+            (remove-text-properties beg (1+ beg) '(whole-line-or-region nil))))
 
       ;; no whole-line-or-region mark
-      (if string-in
-          (progn
-            (when (and delete-selection-mode mark-active)
-              (delete-active-region))
-            (insert string-in))
-        (if (eq (car (get-text-property 0 'yank-handler
-                                        string-to-yank))
-                'evil-yank-line-handler)
-            (evil-paste-before raw-prefix)
-          (call-interactively old-fun raw-prefix))))))
+      (if (eq (car (get-text-property 0 'yank-handler
+                                      string-to-yank))
+              'evil-yank-line-handler)
+          (evil-paste-after raw-prefix)
+        (funcall old-fun raw-prefix)))))
 
 (advice-add 'cua-paste :around #'nadvice/cua-paste)
 
