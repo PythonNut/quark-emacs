@@ -1904,7 +1904,9 @@ outer indentation in case of a commented line.  The symbols
     "Convert the TeX macro around point into a YASnippet snippet"
     (let ((beg (TeX-find-macro-start))
           (end (TeX-find-macro-end)))
-      (when (and beg end)
+      (when (and beg
+                 end
+                 (looking-at "}"))
         (yas-expand-snippet (replace-regexp-in-string "{}" "{${}}" (substring-no-properties (buffer-substring beg end)))
                             beg
                             end))))
