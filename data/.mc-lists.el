@@ -16,10 +16,14 @@
         c-indent-line-or-region
         cua-cut-region
         cua-paste
+        easy-kill
         end-of-visual-line-or-end
         evil-cycle-spacing
         evil-delete-backward-char-and-join
         evil-delete-backward-word-smart
+        evil-forward-char
+        evil-next-line
+        evil-previous-line
         indent-for-tab-command
         sp-backward-sexp
         sp-backward-unwrap-sexp
