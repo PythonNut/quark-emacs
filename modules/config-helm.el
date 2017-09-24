@@ -396,4 +396,8 @@
             (completing-read prompt comp-func nil nil nil
                              'helm-gtags--completing-history tagname)))))))
 
+(use-package helm-systemd
+  :defer-install t
+  :commands (helm-systemd))
+
 (provide 'config-helm)
