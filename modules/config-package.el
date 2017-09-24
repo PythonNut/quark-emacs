@@ -86,6 +86,8 @@ second, floating-point values are rounded down to the nearest integer.)"
                          :host github
                          :repo "PythonNut/use-package"))
 
+(require 'use-package)
+
 (autoload 'use-package-install-deferred-package "use-package"
   "Install a package whose installation has been deferred.
 NAME should be a symbol naming a package (actually, a feature).
