@@ -2270,4 +2270,21 @@ outer indentation in case of a commented line.  The symbols
   :commands (ahk-mode)
   :mode (("\\.ahk\\'" . ahk-mode)))
 
+(use-package floobits
+  :defer-install t
+  :commands (floobits-debug
+             floobits-summon
+             floobits-follow-mode-toggle
+             floobits-follow-user
+             floobits-leave-workspace
+             floobits-complete-signup
+             floobits-share-dir-public
+             floobits-share-dir-private
+             floobits-join-workspace
+             floobits-workspace-settings
+             floobits-remove-from-workspace
+             floobits-open-workspace-in-browser
+             floobits-clear-highlights
+             floobits-add-to-workspace))
+
 (provide 'config-modes)
