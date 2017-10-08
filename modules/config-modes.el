@@ -1237,45 +1237,43 @@
   "Toggle a shell popup buffer with the current file's directory as cwd."
   (interactive)
   (require 's)
-  (let* ((dir (file-name-directory (or buffer-file-name
-                                       ;; dired
-                                       (bound-and-true-p dired-directory)
-                                       ;; use HOME
-                                       "~/")))
-         (popup-buffer (get-buffer "*Popup Shell*"))
-         (new-buffer
-          (unless (buffer-live-p popup-buffer)
-            (save-window-excursion
-              (ansi-term
-               (or explicit-shell-file-name
-                   (when (and buffer-file-name
-                              (file-remote-p buffer-file-name))
-                     (with-parsed-tramp-file-name buffer-file-name parsed
-                       (let* ((login-shell
-                               (s-trim
-                                (substring-no-properties
-                                 (shell-command-to-string
-                                  (format
-                                   "getent passwd \"%s\" | cut -f7 -d:"
-                                   (shell-quote-argument parsed-user))))))
-                              (login-shell-fullpath (tramp-make-tramp-file-name
-                                                     parsed-method
-                                                     parsed-user
-                                                     parsed-host
-                                                     login-shell)))
-                         (when (file-exists-p login-shell-fullpath)
-                           login-shell-fullpath))))
-                   (getenv "ESHELL")
-                   (getenv "SHELL")
-                   "/bin/sh")
-               "*Popup Shell*")
-              (setq popup-buffer (get-buffer "*Popup Shell*")))
-            t)))
-
+  (require 'tramp)
+  (let* ((dir (if (derived-mode-p 'dired-mode)
+                  (dired-current-directory)
+                (file-name-directory (or buffer-file-name "~/"))))
+         (shell (or explicit-shell-file-name
+                    (when (and buffer-file-name
+                               (file-remote-p buffer-file-name))
+                      (with-parsed-tramp-file-name buffer-file-name parsed
+                        (let* ((login-shell
+                                (s-trim
+                                 (substring-no-properties
+                                  (shell-command-to-string
+                                   (format
+                                    "getent passwd \"%s\" | cut -f7 -d:"
+                                    (shell-quote-argument parsed-user))))))
+                               (login-shell-fullpath (tramp-make-tramp-file-name
+                                                      parsed-method
+                                                      parsed-user
+                                                      parsed-host
+                                                      login-shell)))
+                          (when (file-exists-p login-shell-fullpath)
+                            login-shell-fullpath))))
+                    (getenv "ESHELL")
+                    (getenv "SHELL")
+                    "/bin/sh"))
+         (popup-buffer (get-buffer "**Popup Shell**"))
+         (new-buffer (unless (buffer-live-p popup-buffer)
+                       (save-window-excursion
+                         (ansi-term shell "*Popup Shell*")
+                         (setq popup-buffer (get-buffer "**Popup Shell**")))
+                       t)))
+    (with-current-buffer popup-buffer
+      (comint-send-string nil (concat "cd "
+                                      (shell-quote-argument dir)
+                                      ";clear\n")))
     (select-window (split-window-sensibly))
-    (switch-to-buffer popup-buffer)
-    (unless new-buffer
-      (comint-send-string nil (concat "cd " dir "; clear\n")))))
+    (switch-to-buffer popup-buffer)))
 
 (global-set-key (kbd "<f12>") #'my/popup-ansi-term)
 
