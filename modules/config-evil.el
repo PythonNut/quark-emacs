@@ -195,7 +195,7 @@
                     (line-beginning-position))
                    (point)
                    'exclusive
-                   nil)))
+                   ?_)))
 
   (global-set-key (kbd "<C-backspace>") #'evil-delete-backward-word-smart)
   (define-key evil-insert-state-map (kbd "C-t") #'transpose-chars)
