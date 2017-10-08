@@ -1248,7 +1248,8 @@
             (save-window-excursion
               (ansi-term
                (or explicit-shell-file-name
-                   (when (file-remote-p buffer-file-name)
+                   (when (and buffer-file-name
+                              (file-remote-p buffer-file-name))
                      (with-parsed-tramp-file-name buffer-file-name parsed
                        (let* ((login-shell
                                (s-trim
