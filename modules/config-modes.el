@@ -1076,6 +1076,9 @@
 (use-package term
   :ensure nil
   :config
+  (require 'with-editor)
+  (add-hook 'term-exec-hook 'with-editor-export-editor)
+
   (defun nadvice/term-sentinel (old-fun &rest args)
     (cl-destructuring-bind (proc _msg) args
       (if (memq (process-status proc) '(signal exit))
