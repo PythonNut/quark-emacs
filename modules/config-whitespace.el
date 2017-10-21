@@ -101,7 +101,8 @@
   (when (and
          (featurep 'smie)
          (not (eq smie-grammar 'unset)))
-    (smie-config-guess)))
+    (let ((smie-config--buffer-local nil))
+      (smie-config-guess))))
 
 (add-hook 'after-change-major-mode-hook #'my/smie-auto-guess)
 
