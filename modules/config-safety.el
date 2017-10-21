@@ -128,11 +128,11 @@ when `auto-save-mode' is invoked manually.")
               (save-some-buffers t))))
 
 (use-package autorevert
-             :diminish auto-revert-mode
-             :config
-             (setq global-auto-revert-non-file-buffers t
-                   auto-revert-remote-files t
-                   auto-revert-verbose nil))
+  :diminish auto-revert-mode
+  :config
+  (setq global-auto-revert-non-file-buffers t
+        auto-revert-remote-files t
+        auto-revert-verbose nil))
 
 (defun my/auto-revert-onetime-setup ()
   (global-auto-revert-mode +1)
@@ -141,8 +141,10 @@ when `auto-save-mode' is invoked manually.")
 
 (add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
 
-;; (package-deferred-install 'backup-walker
-;;     :autoload-names '('backup-walker-start)
-;;     (evil-set-initial-state 'backup-walker-mode 'motion))
+(use-package backup-walker
+  :defer-install t
+  :commands (backup-walker-start)
+  :config
+  (evil-set-initial-state 'backup-walker-mode 'motion))
 
 (provide 'config-safety)
