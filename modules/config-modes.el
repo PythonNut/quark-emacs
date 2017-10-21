@@ -1544,7 +1544,8 @@
     :defer-install t
     :commands (magic-latex-buffer)
     :config
-    (setq magic-latex-enable-block-align nil)
+    (setq magic-latex-enable-block-align nil
+          magic-latex-enable-inline-image nil)
 
     (set-face-attribute 'ml/llarge nil :height 1.25)
     (set-face-attribute 'ml/xlarge nil :height 1.3)
