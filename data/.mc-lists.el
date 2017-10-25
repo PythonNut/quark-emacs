@@ -14,6 +14,7 @@
         c-electric-semi&comma
         c-electric-star
         c-indent-line-or-region
+        cua-copy-region
         cua-cut-region
         cua-paste
         easy-kill
