@@ -1445,8 +1445,8 @@
              company-math-symbols-latex
              company-math-symbols-unicode))
 
-(use-package auctex
-  :defer-install t
+(use-package tex
+  :recipe auctex
   :commands (bib-cite-minor-mode
              turn-on-bib-cite
              ConTeXt-mode
@@ -1487,14 +1487,14 @@
          ("\\.dtx\\'" . doctex-mode))
 
   :init
+  (el-patch-feature tex auctex)
+
   (advice-add 'tex-mode :override #'TeX-tex-mode)
   (advice-add 'plain-tex-mode :override #'TeX-plain-tex-mode)
   (advice-add 'texinfo-mode :override #'TeX-texinfo-mode)
   (advice-add 'latex-mode :override #'TeX-latex-mode)
-  (advice-add 'doctex-mode :override #'TeX-doctex-mode))
+  (advice-add 'doctex-mode :override #'TeX-doctex-mode)
 
-(use-package tex
-  :ensure nil
   :config
   (setq TeX-auto-save t
         TeX-save-query nil
