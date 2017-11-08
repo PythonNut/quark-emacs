@@ -1774,6 +1774,7 @@
     (if (string-match-p (rx bol
                             (or "tikzpicture"
                                 "circuitikz"
+                                "lstlisting"
                                 "minted"
                                 "verbatim")
                             eol)
