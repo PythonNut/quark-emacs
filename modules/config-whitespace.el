@@ -57,7 +57,7 @@
 
 (use-package aggressive-indent
   :config
-  (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇶" " *→")))
+  (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇒" " *→")))
 
 (use-package auto-indent-mode
              :config
