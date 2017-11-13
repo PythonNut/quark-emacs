@@ -130,5 +130,6 @@ these values are used to call `use-package-ensure-function'.")
 
 (use-package hydra)
 (use-package s)
+(use-package restart-emacs)
 
 (provide 'config-package)

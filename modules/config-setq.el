@@ -53,53 +53,6 @@
 
 (defalias 'yes-or-no-p #'y-or-n-p)
 
-(defun my/restart-emacs-engine (&rest args)
-  "Restart Emacs.
-ARGS are passed as command line arguments to the new process."
-  (let ((command-args (mapconcat (lambda (x) (format "%s" x))
-                                 args
-                                 " ")))
-    ;; This hook nonsense to ensures that this is run as late as possible.
-    (add-hook 'kill-emacs-hook
-              (lambda ()
-                (if (daemonp)
-                    (call-process "sh" nil nil nil "-c"
-                                  (format "%a --daemon %s &"
-                                          invocation-name
-                                          command-args))
-                  (if (display-graphic-p)
-                      (call-process "sh" nil nil nil "-c"
-                                    (format "%s %s &"
-                                            invocation-name
-                                            command-args))
-                    (suspend-emacs (format "(%s %s -nw < `tty`) & fg; fg"
-                                           invocation-name
-                                           command-args)))))
-              t)
-    (save-buffers-kill-emacs)))
-
-(defun restart-emacs (&optional arg)
-  "Restart Emacs.
-With a string ARG, pass those flags to the new process.
-With a C-u or positive prefix arg, save the Emacs state across the restart.
-With a C-- prefix arg, pass --debug-init
-With a negative prefix arg, save the state and pass --debug-init
-Otherwise, restart normally.
-"
-  (interactive "P")
-  (cond
-   ((stringp arg)
-    (my/restart-emacs-engine arg))
-   ((or (consp arg) (and (numberp arg) (> arg 0)))
-    (desktop-save-in-desktop-dir)
-    (my/restart-emacs-engine "--eval '(desktop-read)'"))
-   ((eq '- arg)
-    (my/restart-emacs-engine "--debug-init"))
-   ((and (numberp arg) (< arg 0))
-    (my/restart-emacs-engine "--eval '(desktop-read)' --debug-init"))
-   (t
-    (my/restart-emacs-engine))))
-
 (defun byte-recompile-config (&optional arg)
   (interactive "p")
   "Recompile this Emacs configuration.
