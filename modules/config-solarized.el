@@ -37,7 +37,7 @@
                           :foreground nil
                           :background "grey20"
                           :inherit nil))
-  (load-theme 'solarized-dark)
+  (load-theme 'solarized-dark t)
   (set-face-background 'fringe "#022F3A")
   (set-face-background 'mode-line-inactive "#073642"))
 
