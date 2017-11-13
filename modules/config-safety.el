@@ -5,10 +5,12 @@
   "Directory in which to store auto-save files for non-file buffers,
 when `auto-save-mode' is invoked manually.")
 
-(setq backup-directory-alist `((,(rx (zero-or-more not-newline))
-                                . ,(locate-user-emacs-file "data/backups/")))
-      auto-save-file-name-transforms `((,(rx (zero-or-more not-newline))
-                                        ,(locate-user-emacs-file "data/autosave/") t)))
+(setq backup-directory-alist
+      `((,(rx (zero-or-more not-newline))
+         . ,(expand-file-name (locate-user-emacs-file "data/backups/"))))
+      auto-save-file-name-transforms
+      `((,(rx (zero-or-more not-newline))
+         ,(expand-file-name (locate-user-emacs-file "data/autosave/")) t)))
 
 ;; Use a unified directory for buffers that don't visit files
 (defun nadvice/auto-save-mode (old-fun &rest args)
