@@ -70,3 +70,5 @@ flycheck_*
 /personal
 
 /data/auctex
+
+/eshell
