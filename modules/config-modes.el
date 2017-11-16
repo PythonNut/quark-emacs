@@ -1508,6 +1508,9 @@
                           ("!" "neq"))
         TeX-auto-global (locate-user-emacs-file "data/auctex"))
 
+  (add-to-list 'safe-local-variable-values
+               '(TeX-command-extra-options . "-shell-escape"))
+
   (with-eval-after-load 'texmathp
     (add-to-list 'texmathp-tex-commands-default '("tableau" env-on))
     (texmathp-compile))
