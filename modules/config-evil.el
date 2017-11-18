@@ -8,10 +8,7 @@
     (key-chord-mode +1))
   
   :config
-  (cl-letf (((symbol-function #'message)
-             (lambda (&rest args)
-               (when args
-                 (apply #'format args)))))
+  (let ((inhibit-message t))
     (key-chord-mode +1)))
 
 (use-package evil

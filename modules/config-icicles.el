@@ -25,18 +25,12 @@
            (called-interactively-p 'any))
       (unwind-protect
           (progn
-            (cl-letf (((symbol-function #'message)
-                       (lambda (&rest args)
-                         (when args
-                           (apply #'format args))))
+            (cl-letf ((inhibit-message t)
                       ((symbol-function #'set-face-attribute)
                        (lambda (&rest _args))))
               (icicle-mode +1))
             (apply old-func args))
-        (cl-letf (((symbol-function #'message)
-                   (lambda (&rest args)
-                     (when args
-                       (apply #'format args))))
+        (cl-letf ((inhibit-message t)
                   ((symbol-function #'set-face-attribute)
                    (lambda (&rest _args))))
           (icicle-mode -1)))
@@ -44,10 +38,7 @@
 
 (defun my/autoload-icicle-helper ()
   (cl-letf (((symbol-function #'eval-after-load) (lambda (&rest _args)))
-            ((symbol-function #'message)
-             (lambda (&rest args)
-               (when args
-                 (apply #'format args)))))
+            (inhibit-message t))
     (require 'icicles)))
 
 (eval-and-compile

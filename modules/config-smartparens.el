@@ -49,10 +49,7 @@
               (sp-local-pair major-mode "'" nil :actions nil)))
 
   (defun my/sp-on-delimiter-p ()
-    (ignore-errors (cl-letf (((symbol-function #'message)
-                              (lambda (&rest args)
-                                (when args
-                                  (apply #'format args)))))
+    (ignore-errors (let ((inhibit-message t))
                      (save-excursion
                        (when (or (evil-normal-state-p)
                                  (evil-motion-state-p)
