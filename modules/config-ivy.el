@@ -13,11 +13,29 @@
       ;; recursive minibuffers
       enable-recursive-minibuffers t)
 
-(defun minibuffer-onetime-setup ()
-  (minibuffer-depth-indicate-mode t)
-  (remove-hook 'minibuffer-setup-hook #'minibuffer-onetime-setup))
+(use-package mb-depth
+  :ensure nil
+  :commands (minibuffer-depth-setup)
+  :init
+  (el-patch-feature mb-depth)
+  (el-patch-define-minor-mode minibuffer-depth-indicate-mode
+    "Toggle Minibuffer Depth Indication mode.
+With a prefix argument ARG, enable Minibuffer Depth Indication
+mode if ARG is positive, and disable it otherwise.  If called
+from Lisp, enable the mode if ARG is omitted or nil.
 
-(add-hook 'minibuffer-setup-hook #'minibuffer-onetime-setup)
+Minibuffer Depth Indication mode is a global minor mode.  When
+enabled, any recursive use of the minibuffer will show the
+recursion depth in the minibuffer prompt.  This is only useful if
+`enable-recursive-minibuffers' is non-nil."
+    :global t
+    :group 'minibuffer
+    (if minibuffer-depth-indicate-mode
+        ;; Enable the mode
+        (add-hook 'minibuffer-setup-hook 'minibuffer-depth-setup)
+      ;; Disable the mode
+      (remove-hook 'minibuffer-setup-hook 'minibuffer-depth-setup)))
+  (minibuffer-depth-indicate-mode +1))
 
 ;; hl-line-mode breaks minibuffer in TTY
 (add-hook 'minibuffer-setup-hook
