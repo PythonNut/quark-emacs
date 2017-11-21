@@ -35,19 +35,44 @@
   (setq helm-mode-fuzzy-match t
         helm-completion-in-region-fuzzy-match t))
 
+(use-package exec-path-from-shell)
+
 (setq helm-recentf-fuzzy-match t)
 (use-package helm-files
   :ensure nil
   :config
+  (let ((fasd-env-cache))
+    (defun my/fasd-compute-directory (target)
+      (require 's)
+      (require 'exec-path-from-shell)
+      (s-trim
+       (let* ((exec-path-from-shell-arguments
+               (remove "-l" exec-path-from-shell-arguments))
+              ;; hack to get around skipping shell config on dumb terminals
+              (process-environment (cons "TERM=xterm" process-environment))
+              (env (or fasd-env-cache
+                       (setq fasd-env-cache
+                             (exec-path-from-shell-getenvs
+                              (list "PATH" "_FASD_DATA" "_FASD_FUZZY")))))
+              (exec-path (parse-colon-path (cdr (assoc "PATH" env)))))
+         (add-to-list 'process-environment
+                      (format "_FASD_DATA=%s" (cdr (assoc "_FASD_DATA" env))))
+         (add-to-list 'process-environment
+                      (format "_FASD_FUZZY=%s" (cdr (assoc "_FASD_FUZZY" env))))
+         (with-output-to-string
+           (with-current-buffer
+               standard-output
+             (apply #'process-file
+                    (executable-find "fasd")
+                    nil t nil "-ld1"
+                    (s-split " " target))))))))
+
   (defun my/helm-find-files-slash (arg)
     (interactive "p")
     (eval-and-compile (require 's))
-    (if (and (looking-back "~\\([a-zA-Z0-9]+\\)" (- (point) 10))
-             (executable-find "fasd"))
+    (if (looking-back "~\\([a-zA-Z0-9 ]+\\)" (- (point) 10))
         (let* ((target (match-string 1))
-               (result (s-trim
-                        (shell-command-to-string
-                         (format "fasd -ld1 \"%s\"" target)))))
+               (result (my/fasd-compute-directory target)))
           (if (string-empty-p result)
               (self-insert-command arg)
             (beginning-of-line)
