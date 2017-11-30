@@ -37,6 +37,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        TeX-command-master
         evil-mouse-drag-region
         evil-normal-state
         handle-select-window
