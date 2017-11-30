@@ -105,12 +105,24 @@
             evil-ex-history))))
 
 (use-package recentf
+  :commands (recentf-track-opened-file
+             recentf-track-closed-file
+             recentf-save-list)
   :init
-  (defun my/recentf-onetime-setup ()
-    (recentf-mode +1)
-    (remove-hook 'find-file-hook #'my/recentf-onetime-setup))
+  (el-patch-feature recentf)
+  (el-patch-defconst recentf-used-hooks
+    '(
+      (find-file-hook       recentf-track-opened-file)
+      (write-file-functions recentf-track-opened-file)
+      (kill-buffer-hook     recentf-track-closed-file)
+      (kill-emacs-hook      recentf-save-list)
+      )
+    "Hooks used by recentf.")
 
-  (add-hook 'find-file-hook #'my/recentf-onetime-setup)
+  (defun my/recentf-onetime-setup ()
+    (dolist (hook recentf-used-hooks) (apply #'add-hook hook)))
+
+  (add-hook 'emacs-startup-hook #'my/recentf-onetime-setup)
 
   :config
   (setq recentf-save-file (locate-user-emacs-file "data/.recentf")
@@ -121,6 +133,10 @@
                                   (concat (rx line-start)
                                           (expand-file-name
                                            (locate-user-emacs-file "elpa")))))
+
+  ;; TODO: Yeah so this is actually a horrifying hack.
+  (dolist (hook recentf-used-hooks) (apply #'remove-hook hook))
+  (recentf-mode +1)
 
   (defun nadvice/recentf-quiet (old-fun &rest args)
     (let ((inhibit-message t))
