@@ -368,4 +368,13 @@ is binary, activate `hexl-mode'."
              dumb-jump-go
              dumb-jump-mode))
 
+
+;;; ===============================
+;;; ix simple pastebin-like service
+;;; ===============================
+
+(use-package ix
+  :defer-install t
+  :commands (ix ix-delete ix-browse))
+
 (provide 'config-intel)
