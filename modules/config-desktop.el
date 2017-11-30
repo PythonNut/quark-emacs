@@ -138,6 +138,24 @@
   (dolist (hook recentf-used-hooks) (apply #'remove-hook hook))
   (recentf-mode +1)
 
+  (let ((recentf-autosave-timer nil))
+    (defun nadvice/recentf-autosave (&rest _args)
+      (when (timerp recentf-autosave-timer)
+        (cancel-timer recentf-autosave-timer))
+      (setq recentf-autosave-timer
+            (run-with-idle-timer
+             3 nil
+             (lambda ()
+               ;; TODO: Yeah so this is actually another horrifying hack.
+               (let ((inhibit-message t)
+                     (write-file-functions
+                      (remove 'recentf-track-opened-file
+                              write-file-functions)))
+                 (recentf-save-list)))))))
+
+  (advice-add 'recentf-track-opened-file :after
+              #'nadvice/recentf-autosave)
+
   (defun nadvice/recentf-quiet (old-fun &rest args)
     (let ((inhibit-message t))
       (apply old-fun args)))
