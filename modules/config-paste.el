@@ -101,15 +101,18 @@ move the yanking point; just return the Nth kill forward."
   :commands (whole-line-or-region-call-with-region
              whole-line-or-region-call-with-prefix))
 
-
-(setq kill-do-not-save-duplicates t
-      cua-paste-pop-rotate-temporarily t
-      cua-enable-cua-keys t
-      cua-virtual-rectangle-edges t
-      cua-auto-tabify-rectangles nil
-      cua-rectangle-mark-key (kbd "C-x SPC"))
-
-(cua-mode +1)
+(use-package cua-base
+  :ensure nil
+  :init
+  (setq kill-do-not-save-duplicates t
+        cua-paste-pop-rotate-temporarily t
+        cua-enable-cua-keys t
+        cua-virtual-rectangle-edges t
+        cua-auto-tabify-rectangles nil
+        cua-rectangle-mark-key (kbd "C-x SPC"))
+  (cua-mode +1)
+  :config
+  (evil-define-key 'normal cua-global-keymap (kbd "C-v") nil))
 
 ;; cua-cut the line if no region
 (defun nadvice/cua-cut-region (old-fun &optional prefix)
