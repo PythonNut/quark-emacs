@@ -168,12 +168,6 @@
                        ("||\n[i]" "RET")
                        ("| " "SPC")))))
 
-  (use-package srefactor
-    :defer-install t
-    :commands (srefactor-refactor-at-point)
-    :config
-    (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
-
   (define-key c-mode-map (kbd "C-c o") #'ff-find-other-file)
   (define-key c++-mode-map (kbd "C-c o") #'ff-find-other-file)
 

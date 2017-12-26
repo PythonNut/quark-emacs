@@ -35,6 +35,12 @@
               :around
               #'nadvice/semantic-idle-summary-idle-function))
 
+(use-package srefactor
+  :defer-install t
+  :commands (srefactor-refactor-at-point)
+  :config
+  (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
+
 (use-package abbrev
   :ensure nil
   :config

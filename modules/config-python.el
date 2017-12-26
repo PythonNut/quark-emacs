@@ -11,6 +11,8 @@
               (semantic-idle-summary-mode -1)
               (setq mode-name "Py")))
 
+  (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
+
   (use-package company-anaconda
     :defer-install t
     :commands (company-anaconda))
