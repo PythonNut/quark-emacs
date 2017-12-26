@@ -9,7 +9,8 @@
 ;; =============================================
 
 (setq straight-recipe-overrides '((nil . ((straight :type git :host github :repo "raxod502/straight.el" :branch "develop" :files ("straight.el")))))
-      straight-check-for-modifications 'live)
+      straight-check-for-modifications 'live
+      straight-use-package-version 'ensure)
 
 (let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
       (bootstrap-version 2))
