@@ -158,10 +158,10 @@
                                     (rx line-start "*magit-diff"))
         iflipb-wrap-around t)
 
-  (defun nadvice/iflipb-first-iflipb-buffer-switch-command ())
+  (defun nadvice/iflipb-first-iflipb-buffer-switch-command (_ret) nil)
 
   (advice-add #'iflipb-first-iflipb-buffer-switch-command
-              :override
+              :filter-return
               #'nadvice/iflipb-first-iflipb-buffer-switch-command))
 
 (defhydra iflipb-hydra (:pre
