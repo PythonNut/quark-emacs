@@ -269,4 +269,8 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
              git-timemachine
              git-timemachine-switch-branch))
 
+(use-package git-undo
+  :defer-install t
+  :commands (git-undo))
+
 (provide 'config-vcs)
