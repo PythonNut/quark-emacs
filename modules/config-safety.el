@@ -92,14 +92,6 @@ when `auto-save-mode' is invoked manually.")
   (my/save-buffer-maybe))
 
 (advice-add 'switch-to-buffer :before #'nadvice/save-buffer-maybe)
-(advice-add 'other-window     :before #'nadvice/save-buffer-maybe)
-
-(use-package windmove
-             :config
-             (advice-add 'windmove-up    :before #'nadvice/save-buffer-maybe)
-             (advice-add 'windmove-down  :before #'nadvice/save-buffer-maybe)
-             (advice-add 'windmove-left  :before #'nadvice/save-buffer-maybe)
-             (advice-add 'windmove-right :before #'nadvice/save-buffer-maybe))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups
