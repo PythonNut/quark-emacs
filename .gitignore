@@ -72,3 +72,6 @@ flycheck_*
 /data/auctex
 
 /eshell
+
+/data/authinfo.gpg
+/data/magithub

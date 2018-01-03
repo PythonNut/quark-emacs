@@ -1,5 +1,10 @@
 ;; -*- lexical-binding: t -*-
 
+(use-package auth-source
+  :ensure nil
+  :config
+  (add-to-list 'auth-sources (locate-user-emacs-file "data/authinfo.gpg")))
+
 (use-package vc-git
   :ensure nil
   :config
@@ -115,6 +120,12 @@
   (define-key git-rebase-mode-map "j" #'next-line)
   (define-key git-rebase-mode-map "k" #'previous-line)
   (define-key git-rebase-mode-map "K" #'git-rebase-kill-line))
+
+(use-package magithub
+  :after magit
+  :config
+  (setq magithub-dir (locate-user-emacs-file "data/magithub"))
+  (magithub-feature-autoinject t))
 
 (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
   "
