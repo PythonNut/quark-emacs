@@ -7,7 +7,13 @@
 ;; Setup straight.el
 ;; =============================================
 
-(setq straight-recipe-overrides '((nil . ((straight :type git :host github :repo "raxod502/straight.el" :branch "develop" :files ("straight.el")))))
+(setq straight-recipe-overrides
+      '((nil . ((straight
+                 :type git
+                 :host github
+                 :repo "raxod502/straight.el"
+                 :branch "develop"
+                 :files ("straight.el")))))
       straight-check-for-modifications 'live
       straight-use-package-version 'ensure
       straight-use-package-by-default t)
