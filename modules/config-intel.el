@@ -392,13 +392,19 @@ is binary, activate `hexl-mode'."
              dumb-jump-go
              dumb-jump-mode))
 
+;;; =====================================
+;;; webpaste simple pastebin-like service
+;;; =====================================
 
-;;; ===============================
-;;; ix simple pastebin-like service
-;;; ===============================
-
-(use-package ix
+(use-package webpaste
   :defer-install t
-  :commands (ix ix-delete ix-browse))
+  :commands (webpaste-paste-buffer
+             webpaste-paste-region)
+  :config
+  (setq webpaste-provider-priority '("ptpb.pw"
+                                     "ix.io"
+                                     "dpaste.com"
+                                     "dpaste.de"
+                                     "gist.github.com")))
 
 (provide 'config-intel)
