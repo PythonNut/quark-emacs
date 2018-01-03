@@ -1,18 +1,18 @@
 ;; -*- lexical-binding: t -*-
 
-;; the equivalent of a global mode, but does not
-;; turn on for odd non-programming modes
-(defun my/maybe-enable-rainbow-delimiters ()
-  (when (display-graphic-p)
-    (rainbow-delimiters-mode +1)))
-
-(unless (bound-and-true-p my/slow-device)
-  (add-hook 'prog-mode-hook #'my/maybe-enable-rainbow-delimiters)
-  (add-hook 'text-mode-hook #'my/maybe-enable-rainbow-delimiters))
-
 (use-package rainbow-delimiters
-  :config
+  :init
+  ;; the equivalent of a global mode, but does not
+  ;; turn on for odd non-programming modes
+  (defun my/maybe-enable-rainbow-delimiters ()
+    (when (display-graphic-p)
+      (rainbow-delimiters-mode +1)))
 
+  (unless (bound-and-true-p my/slow-device)
+    (add-hook 'prog-mode-hook #'my/maybe-enable-rainbow-delimiters)
+    (add-hook 'text-mode-hook #'my/maybe-enable-rainbow-delimiters))
+
+  :config
   (defvar-local my/rainbow-delimiters-switch nil
     "t if rainbow-delimiters are currently punched")
   (defvar-local my/rainbow-delimiters-face-cookies nil
