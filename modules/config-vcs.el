@@ -273,4 +273,10 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
   :defer-install t
   :commands (git-undo))
 
+(use-package git-link
+  :defer-install t
+  :commands (git-link
+             git-link-commit
+             git-link-homepage))
+
 (provide 'config-vcs)
