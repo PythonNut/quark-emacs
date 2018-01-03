@@ -299,9 +299,13 @@
       (when (and beg
                  end
                  (looking-at "}"))
-        (yas-expand-snippet (replace-regexp-in-string "{}" "{${}}" (substring-no-properties (buffer-substring beg end)))
-                            beg
-                            end))))
+        (yas-expand-snippet
+         (replace-regexp-in-string
+          "{}"
+          "{${}}"
+          (substring-no-properties (buffer-substring beg end)))
+         beg
+         end))))
 
   (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro)
 
