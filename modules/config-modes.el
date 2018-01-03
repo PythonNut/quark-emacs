@@ -35,24 +35,6 @@
   (setq auto-compile-display-buffer nil
         auto-compile-mode-line-counter t))
 
-(use-package eldoc
-  :ensure nil
-  :diminish eldoc-mode
-  :config
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'flycheck)))
-
-  (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
-    (and (apply old-fun args)
-         (not (and (my/sp-on-delimiter-p)
-                   (not (minibufferp))))
-         (not (and (bound-and-true-p flycheck-mode)
-                   (flycheck-overlay-errors-at (point))))))
-
-  (advice-add 'eldoc-display-message-no-interference-p :around
-              #'nadvice/eldoc-display-message-no-interference-p))
-
 (use-package lisp-mode
   :ensure nil
   :config
