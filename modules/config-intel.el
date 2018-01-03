@@ -275,12 +275,11 @@
   (my/yatemplate-fill-alist))
 
 
-
 ;;; ==================================
 ;;; VLF intelligently edit large files
 ;;; ==================================
 
-(defun buffer-binary-p (&optional buffer)
+(defun my/buffer-binary-p (&optional buffer)
   "Return whether BUFFER or the current buffer is binary.
 
 A binary buffer is defined as containing at least one null byte.
@@ -295,7 +294,7 @@ Returns either nil, or the position of the first null byte."
   "If `fundamental-mode' is active, and the current buffer
 is binary, activate `hexl-mode'."
   (when (and (eq major-mode 'fundamental-mode)
-             (buffer-binary-p))
+             (my/buffer-binary-p))
     (hexl-mode)
     (message "Detected binary file. Switched to text mode.")))
 
