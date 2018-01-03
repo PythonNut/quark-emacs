@@ -503,4 +503,13 @@ split."
                    (with-selected-window window
                      (split-window-below)))))))))
 
+;; =========================================================
+;; digit-groups - make large unbroken numbers easier to read
+;; =========================================================
+
+(use-package digit-groups
+  :defer-install t
+  :commands (digit-groups-global-mode
+             digit-groups-mode))
+
 (provide 'config-ui)
