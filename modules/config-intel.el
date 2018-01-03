@@ -302,49 +302,50 @@ is binary, activate `hexl-mode'."
 
 (use-package vlf
   :defer-install t
-  :commands (vlf))
-
-(defun nadvice/abort-if-file-too-large (_old-fun &rest args)
-  (cl-destructuring-bind (size op-type filename) args
-    (when (and size
-               (not (zerop size))
-               large-file-warning-threshold
-               (< large-file-warning-threshold size))
-      (let ((char nil))
-        (while (not (memq (setq char
-                                (read-event
-                                 (propertize
-                                  (format
-                                   "File %s is large (%s): \
+  :commands (vlf)
+  :init
+  (defun nadvice/abort-if-file-too-large (_old-fun &rest args)
+    (cl-destructuring-bind (size op-type filename) args
+      (when (and size
+                 (not (zerop size))
+                 large-file-warning-threshold
+                 (< large-file-warning-threshold size))
+        (let ((char nil))
+          (while (not (memq (setq char
+                                  (read-event
+                                   (propertize
+                                    (format
+                                     "File %s is large (%s): \
 %s normally (o), %s with vlf (v) or abort (a)"
-                                   (if filename
-                                       (file-name-nondirectory filename)
-                                     "")
-                                   (file-size-human-readable size)
-                                   op-type op-type)
-                                  'face 'minibuffer-prompt)))
-                          '(?o ?O ?v ?V ?a ?A))))
-        (cond ((memq char '(?v ?V))
-               (vlf filename)
-               (error ""))
-              ((memq char '(?a ?A))
-               (error "Aborted")))))))
+                                     (if filename
+                                         (file-name-nondirectory filename)
+                                       "")
+                                     (file-size-human-readable size)
+                                     op-type op-type)
+                                    'face 'minibuffer-prompt)))
+                            '(?o ?O ?v ?V ?a ?A))))
+          (cond ((memq char '(?v ?V))
+                 (vlf filename)
+                 (error ""))
+                ((memq char '(?a ?A))
+                 (error "Aborted")))))))
 
-(advice-add 'abort-if-file-too-large :around #'nadvice/abort-if-file-too-large)
+  (advice-add 'abort-if-file-too-large :around #'nadvice/abort-if-file-too-large)
 
-(defun my/vlf-hook ()
-  (setq bidi-display-reordering nil)
-  (flyspell-mode -1)
-  (flycheck-mode -1)
-  (ws-butler-mode -1)
-  (visual-line-mode -1)
-  (adaptive-wrap-prefix-mode -1)
-  (setq-local global-hl-line-mode nil)
-  (setq-local column-number-mode nil)
-  (my/hexl-if-binary)
-  (message "Use C-c C-v → VLF"))
+  :config
+  (defun my/vlf-hook ()
+    (setq bidi-display-reordering nil)
+    (flyspell-mode -1)
+    (flycheck-mode -1)
+    (ws-butler-mode -1)
+    (visual-line-mode -1)
+    (adaptive-wrap-prefix-mode -1)
+    (setq-local global-hl-line-mode nil)
+    (setq-local column-number-mode nil)
+    (my/hexl-if-binary)
+    (message "Use C-c C-v → VLF"))
 
-(add-hook 'vlf-mode-hook #'my/vlf-hook)
+  (add-hook 'vlf-mode-hook #'my/vlf-hook))
 
 ;;; =================================
 ;;; Emacs fasd - find files from fasd
@@ -371,6 +372,7 @@ is binary, activate `hexl-mode'."
 ;;; =================================================
 
 (use-package dumb-jump
+  :defer-install t
   :init
   (defun my/jump-to-definition-dwim ()
     (interactive)
@@ -380,7 +382,6 @@ is binary, activate `hexl-mode'."
         (helm-gtags-dwim)
       (dumb-jump-go)))
 
-  :defer-install t
   :commands (dumb-jump-back
              dumb-jump-quick-look
              dumb-jump-go-other-window
