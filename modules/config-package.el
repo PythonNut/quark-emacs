@@ -9,7 +9,8 @@
 
 (setq straight-recipe-overrides '((nil . ((straight :type git :host github :repo "raxod502/straight.el" :branch "develop" :files ("straight.el")))))
       straight-check-for-modifications 'live
-      straight-use-package-version 'ensure)
+      straight-use-package-version 'ensure
+      straight-use-package-by-default t)
 
 (let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
       (bootstrap-version 2))
@@ -75,19 +76,66 @@ second, floating-point values are rounded down to the nearest integer.)"
       (my/sit-for 0.1))))
 
 (with-eval-after-load 'use-package
+  )
+
+(straight-use-package '(use-package
+                         :type git
+                         :host github
+                         :repo "raxod502/use-package"))
+
+(straight-use-package '(el-patch
+                        :type git
+                        :host github
+                        :repo "raxod502/el-patch"
+                        :branch "develop"))
+
+(eval-when-compile (require 'el-patch))
+(defvar el-patch--patches (make-hash-table))
+
+(with-eval-after-load 'use-package
+  (setq use-package-always-ensure t
+        use-package-always-defer t)
+
   (defun nadvice/straight-use-package-ensure-function (old-fun &rest args)
     (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
       (apply old-fun args)))
 
   (advice-add 'straight-use-package-ensure-function :around
-              #'nadvice/straight-use-package-ensure-function))
+              #'nadvice/straight-use-package-ensure-function)
 
-(straight-use-package '(use-package
-                         :type git
-                         :host github
-                         :repo "PythonNut/use-package"))
-
-(require 'use-package)
+  (el-patch-defun use-package-handler/:ensure (name keyword ensure rest state)
+    (let* ((body (use-package-process-keywords name rest
+                   ;; Here we are conditionally updating the marker
+                   ;; value for deferred installation; this will be
+                   ;; checked later by `:config'. For more information
+                   ;; see `use-package-handler/:defer-install'.
+                   (if (eq (plist-get state :defer-install)
+                           :defer-install)
+                       (plist-put state :defer-install :ensure)
+                     state))))
+      ;; We want to avoid installing packages when the `use-package'
+      ;; macro is being macro-expanded by elisp completion (see
+      ;; `lisp--local-variables'), but still do install packages when
+      ;; byte-compiling to avoid requiring `package' at runtime.
+      (cond
+       ((plist-get state :defer-install)
+        (push
+         `(puthash ',name '(,ensure . ,state)
+                   use-package--deferred-packages)
+         body)
+        (push `(,use-package-pre-ensure-function
+                ',name ',ensure ',state)
+              body))
+       (el-patch-remove
+         ((bound-and-true-p byte-compile-current-file)
+          ;; Eval when byte-compiling,
+          (funcall use-package-ensure-function
+                   name ensure state :byte-compile)))
+       ;;  or else wait until runtime.
+       (t (push `(,use-package-ensure-function
+                  ',name ',ensure ',state :ensure)
+                body)))
+      body)))
 
 (autoload 'use-package-install-deferred-package "use-package"
   "Install a package whose installation has been deferred.
@@ -105,13 +153,6 @@ determined by the return value of `use-package-ensure-function'.)
 If the package is installed, its entry is removed from
 `use-package--deferred-packages'. If the package has no entry in
 `use-package--deferred-packages', do nothing and return t.")
-
-(setq use-package-always-ensure t
-      use-package-always-defer t)
-(use-package el-patch
-  :recipe (el-patch :type git :host github :repo "raxod502/el-patch" :branch "develop")
-  :init
-  (eval-when-compile (require 'el-patch)))
 
 (el-patch-defvar use-package--deferred-packages (make-hash-table)
   "Hash mapping packages to data about their installation.
