@@ -1,6 +1,5 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
-(require 'package)
 (eval-when-compile
   (require 'config-setq))
 
