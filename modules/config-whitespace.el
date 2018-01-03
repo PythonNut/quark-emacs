@@ -8,14 +8,13 @@
       line-move-visual t)
 
 (use-package adaptive-wrap
-	     :ensure t
-	     
-             :config
-             (eval-when-compile
-               (with-demoted-errors "Load error: %s"
-                 (require 'adaptive-wrap)))
+  :ensure t
+  :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'adaptive-wrap)))
 
-             (setq-default adaptive-wrap-extra-indent 2))
+  (setq-default adaptive-wrap-extra-indent 2))
 
 (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
 (add-hook 'visual-line-mode-hook
