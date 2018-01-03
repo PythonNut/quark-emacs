@@ -7,8 +7,6 @@
 (require 'config-smartparens)
 (require 'config-rainbow-delimiters)
 
-(require 'config-hydras)
-
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil
       mouse-wheel-follow-mouse t
