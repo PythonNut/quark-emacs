@@ -120,8 +120,6 @@
              js2-imenu-extras-mode
              js2-imenu-extras-setup
              js2-jsx-mode)
-  :mode (("\\.js\\'" . js2-mode)
-         ("\\.jsx\\'" . js2-jsx-mode))
   :interpreter ("node" . js2-mode)
   :config
   (use-package js2-refactor
@@ -150,6 +148,12 @@
   (add-hook 'js2-mode-hook #'js2-refactor-mode)
   (add-hook 'js2-mode-hook (lambda ()
                              (setq mode-name "JS"))))
+
+(use-package rjsx-mode
+  :defer-install t
+  :commands (rjsx-mode)
+  :mode (("\\.jsx\\'" . rjsx-mode)
+         ("\\.js\\'" . rjsx-mode)))
 
 
 (use-package json-mode
