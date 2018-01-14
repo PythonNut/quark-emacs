@@ -50,7 +50,7 @@
          ("\\.dtx\\'" . doctex-mode))
 
   :init
-  (el-patch-feature tex auctex)
+  (el-patch-feature tex)
 
   (advice-add 'tex-mode :override #'TeX-tex-mode)
   (advice-add 'plain-tex-mode :override #'TeX-plain-tex-mode)
