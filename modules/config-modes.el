@@ -1370,12 +1370,6 @@
   :commands (gap-mode)
   :mode ("\\.\\(g\\(?:ap\\|[di]\\)?\\)\\'" . gap-mode))
 
-(use-package perl6-mode
-  :defer-install t
-  :commands (perl6-mode)
-  :mode ("\\.p[lm]?6\\'" . perl6-mode)
-  :interpreter ("perl6" . perl6-mode))
-
 (use-package fstar-mode
   :defer-install t
   :commands (fstar-mode)
