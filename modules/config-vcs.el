@@ -129,8 +129,10 @@
 
 (use-package magithub
   :after magit
-  :config
+  :init
+  ;; Magithub is not well-behaved, so this needs to be set early
   (setq magithub-dir (locate-user-emacs-file "data/magithub"))
+  :config
   (magithub-feature-autoinject t))
 
 (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
