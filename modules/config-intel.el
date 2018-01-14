@@ -38,7 +38,10 @@
                 #'semanticdb-file-directory-exists-p))
 
   (setq semanticdb-default-save-directory
-        (locate-user-emacs-file "data/semanticdb"))
+        (locate-user-emacs-file "data/semanticdb")
+        srecode-map-save-file
+        (locate-user-emacs-file "data/srecode-map.el"))
+
   (global-semanticdb-minor-mode +1)
   (global-semantic-idle-scheduler-mode +1)
   (global-semantic-idle-summary-mode +1)

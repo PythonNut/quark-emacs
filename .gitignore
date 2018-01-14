@@ -19,6 +19,7 @@
 
 # semantic parser cache
 /data/semanticdb
+/data/srecode-map.el
 
 
 # emacs browser cookies
