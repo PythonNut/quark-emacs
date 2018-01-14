@@ -27,6 +27,11 @@
 (use-package magit
   :init (defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'magit)
+      (require 'el-patch)))
+
   ;; Don't use graphical password prompt in terminal
   (unless (display-graphic-p)
     (setenv "SSH_ASKPASS" "magit-askpass"))
@@ -101,17 +106,18 @@
   (defun nadvice/magit-revert-buffers (&rest _args)
     (run-with-timer 1 nil #'message ""))
 
-  (defun nadvice/magit-process-username-prompt (process string)
-    "Hide usernames in magit as well"
+  (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers)
+
+  (el-patch-defun magit-process-username-prompt (process string)
+    "Forward username prompts to the user."
     (--when-let (magit-process-match-prompt
                  magit-process-username-prompt-regexps string)
       (process-send-string
        process (magit-process-kill-on-abort process
-                 (concat (read-passwd it nil (user-login-name)) "\n")))))
-
-  (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers)
-  (advice-add 'magit-process-username-prompt :override
-              #'nadvice/magit-process-username-prompt))
+                 (concat (el-patch-swap
+                           (read-string it nil nil (user-login-name))
+                           (read-passwd it nil (user-login-name)))
+                         "\n"))))))
 
 (with-eval-after-load 'git-rebase
   (eval-when-compile
