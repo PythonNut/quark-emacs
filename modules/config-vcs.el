@@ -133,6 +133,8 @@
   ;; Magithub is not well-behaved, so this needs to be set early
   (setq magithub-dir (locate-user-emacs-file "data/magithub"))
   :config
+  (evil-set-initial-state 'magithub-dash-mode 'motion)
+  (evil-set-initial-state 'magithub-issue-view-mode 'motion)
   (magithub-feature-autoinject t))
 
 (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
