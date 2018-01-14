@@ -50,15 +50,52 @@ recursion depth in the minibuffer prompt.  This is only useful if
   (global-set-key (kbd "C-M-r") #'flx-isearch-backward))
 
 (use-package historian
-  :config
-  (setq historian-save-file (locate-user-emacs-file "data/.historian")))
+  :init
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
+
+  (autoload #'historian--nadvice/completing-read "historian")
+  (setq historian-save-file (locate-user-emacs-file "data/.historian"))
+
+  (el-patch-feature historian)
+
+  (el-patch-defun historian-load ()
+    (interactive)
+    (setq historian--history-table
+          (if (file-exists-p historian-save-file)
+              (with-temp-buffer
+                (insert-file-contents historian-save-file)
+                (read (current-buffer)))
+            (make-hash-table))))
+
+  (el-patch-define-minor-mode historian-mode
+    "historian minor mode"
+    :init-value nil
+    :group 'historian
+    :global t
+    (if historian-mode
+        (progn
+          (historian-load)
+          (advice-add 'completing-read :filter-return
+                      #'historian--nadvice/completing-read)
+          (add-hook 'kill-emacs-hook #'historian-save))
+
+      (historian-save)
+      (advice-remove 'completing-read #'historian--nadvice/completing-read)
+      (remove-hook 'kill-emacs-hook #'historian-save))))
 
 (use-package ivy-historian)
 
 (use-package ivy
   :init
-  ;; shamelessly stolen from the el-patch docs
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
 
+  (global-set-key (kbd "C-x b") #'ivy-switch-buffer)
+
+  ;; shamelessly stolen from the el-patch docs
   (el-patch-feature ivy)
 
   (el-patch-defvar ivy-mode-map
@@ -139,7 +176,14 @@ Minibuffer bindings:
   (my/ivy-setup-faces)
   (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
-(with-eval-after-load 'counsel
+(use-package counsel
+  :init
+  (global-set-key (kbd "M-x") #'counsel-M-x)
+  (global-set-key (kbd "C-h f") #'counsel-describe-function)
+  (global-set-key (kbd "C-h v") #'counsel-describe-variable)
+  (global-set-key (kbd "C-x f") #'counsel-find-file)
+  (global-set-key (kbd "C-S-y") #'counsel-yank-pop)
+  :config
   (eval-when-compile
     (require 'counsel))
 
@@ -207,14 +251,6 @@ Minibuffer bindings:
       (require 'smex)))
 
   (setq smex-save-file (locate-user-emacs-file ".smex-items")))
-
-(global-set-key (kbd "M-x") #'counsel-M-x)
-(global-set-key (kbd "C-x b") #'ivy-switch-buffer)
-(global-set-key (kbd "C-h f") #'counsel-describe-function)
-(global-set-key (kbd "C-h v") #'counsel-describe-variable)
-(global-set-key (kbd "C-x f") #'counsel-find-file)
-
-(global-set-key (kbd "C-S-y") #'counsel-yank-pop)
 
 ;; let M-' intelligently resume whatever completion we were working on
 (let ((my/last-used-completion-system))
