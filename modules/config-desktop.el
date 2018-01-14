@@ -25,6 +25,24 @@
         (push elem result)))
     (nreverse result)))
 
+(use-package x-win
+  :ensure nil
+  :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'x-win)
+      (require 'el-patch)))
+
+  (el-patch-defun emacs-session-filename (session-id)
+    "Construct a filename to save the session in based on SESSION-ID.
+Return a filename in `user-emacs-directory', unless the session file
+already exists in the home directory."
+    (let ((basename (concat "session." session-id)))
+      (el-patch-swap
+        (locate-user-emacs-file basename
+                                (concat ".emacs-" basename))
+        (expand-file-name basename (locate-user-emacs-file "data"))))))
+
 (use-package session
   :init
   (add-hook 'after-init-hook #'session-initialize)

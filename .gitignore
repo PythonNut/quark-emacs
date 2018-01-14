@@ -15,6 +15,7 @@
 /data/.recentf
 
 /data/.session
+/data/session*
 
 # semantic parser cache
 /data/semanticdb
