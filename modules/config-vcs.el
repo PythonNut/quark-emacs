@@ -137,6 +137,11 @@
   (evil-set-initial-state 'magithub-issue-view-mode 'motion)
   (magithub-feature-autoinject t))
 
+(use-package magit-svn
+  :after magit
+  :config
+  (add-hook 'magit-mode-hook 'magit-svn-mode))
+
 (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
   "
 _p_ ← → _n_ Keep _a_ll _b_ase _m_ine _o_ther | _C_ombine _E_diff _R_efine _r_esolve
