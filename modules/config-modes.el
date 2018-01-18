@@ -290,6 +290,14 @@
 ;; Haskell =====================================================================
 ;; =============================================================================
 
+(use-package intero
+  :defer-install t
+  :commands (intero-mode
+             intero-mode-whitelis
+             intero-mode-blacklist
+             intero-global-mode
+             intero-highlight-uses-mode))
+
 (use-package haskell
   :recipe haskell-mode
   :defer-install t
@@ -399,6 +407,11 @@
                 ("runhaskell" . haskell-mode))
   :init
   (add-to-list 'completion-ignored-extensions ".hi"))
+
+(use-package haskell-mode
+  :ensure nil
+  :config
+  (add-hook 'haskell-mode-hook #'intero-mode))
 
 ;; =============================================================================
 ;; Web Development =============================================================
