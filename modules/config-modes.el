@@ -298,6 +298,18 @@
              intero-global-mode
              intero-highlight-uses-mode))
 
+(use-package hindent
+  :defer-install t
+  :commands (hindent-mode
+             hindent-reformat-decl
+             hindent-reformat-buffer
+             hindent-reformat-decl-or-fill
+             hindent-reformat-region)
+  :config
+  (unless (executable-find "hindent")
+    (when (file-exists-p (expand-file-name "~/.local/bin/hindent"))
+      (setq hindent-process-path (expand-file-name "~/.local/bin/hindent")))))
+
 (use-package haskell
   :recipe haskell-mode
   :defer-install t
@@ -411,7 +423,8 @@
 (use-package haskell-mode
   :ensure nil
   :config
-  (add-hook 'haskell-mode-hook #'intero-mode))
+  (add-hook 'haskell-mode-hook #'intero-mode)
+  (add-hook 'haskell-mode-hook #'hindent-mode))
 
 ;; =============================================================================
 ;; Web Development =============================================================
