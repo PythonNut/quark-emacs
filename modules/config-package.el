@@ -81,9 +81,6 @@ second, floating-point values are rounded down to the nearest integer.)"
         (require (pop idle-require-symbols)))
       (my/sit-for 0.1))))
 
-(with-eval-after-load 'use-package
-  )
-
 (straight-use-package '(use-package
                          :type git
                          :host github
