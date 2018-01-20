@@ -1293,7 +1293,11 @@
 (use-package rust-mode
   :defer-install t
   :commands (rust-mode)
-  :mode (("\\.rs\\'" . rust-mode)))
+  :mode (("\\.rs\\'" . rust-mode))
+  :config
+  (use-package flycheck-rust
+    :commands (flycehck-rust-setup))
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package lua-mode
   :defer-install t
