@@ -54,7 +54,8 @@
                irony-completion-at-point
                irony-completion-at-point-async)
     :config
-    (setq irony-user-dir (locate-user-emacs-file "data/irony"))
+    (setq irony-user-dir (locate-user-emacs-file "data/irony")
+          irony-server-install-prefix irony-user-dir)
     (flycheck-irony-setup)
     (add-hook 'irony-mode-hook 'irony-eldoc)
     (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
