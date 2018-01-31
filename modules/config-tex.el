@@ -68,7 +68,8 @@
                           ("\"" "Dif")
                           ("$" "int")
                           ("=" "implies")
-                          ("!" "neq"))
+                          ("!" "neq")
+                          ("o" "circ"))
         TeX-auto-global (locate-user-emacs-file "data/auctex"))
 
   (add-to-list 'safe-local-variable-values
