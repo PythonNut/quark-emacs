@@ -5,6 +5,11 @@
   :config
   (add-to-list 'auth-sources (locate-user-emacs-file "data/authinfo.gpg")))
 
+(use-package vc-hooks
+  :ensure nil
+  :config
+  (setq vc-follow-symlinks t))
+
 (use-package vc-git
   :ensure nil
   :config
