@@ -113,6 +113,16 @@
 
   (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers)
 
+  ;; If there is only one stash, operate on it immediately
+  (el-patch-defun magit-read-stash (prompt)
+    (let ((stashes (magit-list-stashes)))
+      (el-patch-wrap 2 1
+        (if (> (length stashes) 1)
+            (magit-completing-read prompt stashes nil t nil nil
+                                   (magit-stash-at-point)
+                                   (car stashes))
+          (car stashes)))))
+
   (el-patch-defun magit-process-username-prompt (process string)
     "Forward username prompts to the user."
     (--when-let (magit-process-match-prompt
