@@ -144,7 +144,6 @@
                              (irony-mode +1)
                              (eldoc-mode +1)
                              (irony-eldoc +1)
-                             (auto-indent-mode -1)
                              (aggressive-indent-mode +1)
                              (helm-gtags-mode +1)
                              (semantic-idle-summary-mode -1))))))

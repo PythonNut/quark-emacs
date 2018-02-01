@@ -48,7 +48,6 @@
               (setq mode-name (if (display-graphic-p) "λ" "EL"))
 
               (eldoc-mode +1)
-              (auto-indent-mode -1)
               (aggressive-indent-mode +1)
               (add-hook 'before-save-hook
                         #'my/auto-compile-onetime-setup nil t)))
@@ -281,10 +280,7 @@
   :config
   (use-package evil
     :config
-    (evil-set-initial-state 'inferior-julia-mode 'insert))
-
-  (add-hook 'inferior-julia-mode-hook (lambda ()
-                                        (auto-indent-mode -1))))
+    (evil-set-initial-state 'inferior-julia-mode 'insert)))
 
 ;; =============================================================================
 ;; Haskell =====================================================================
@@ -725,9 +721,7 @@
   :config
   (use-package evil
     :config
-    (evil-set-initial-state 'geiser-repl-mode 'emacs))
-  (add-hook 'geiser-repl-mode-hook (lambda ()
-                                     (auto-indent-mode -1))))
+    (evil-set-initial-state 'geiser-repl-mode 'emacs)))
 
 (use-package hy-mode
   :defer-install t
