@@ -96,17 +96,13 @@
               (`visual  '("#268bd2" "#eee8d5"))
               (`replace '("#dc322f" "#eee8d5"))
               (_        '("grey70"  "black"))))
-
-        (mapc #'face-remap-remove-relative my/evil-mode-line-face-cookies)
+        (when my/evil-mode-line-face-cookies
+          (face-remap-remove-relative my/evil-mode-line-face-cookies))
         (setq my/evil-mode-line-face-cookies
-              (list (face-remap-add-relative
-                     'mode-line
-                     `((:foreground ,fg-color :background ,bg-color)
-                       mode-line))
-                    (face-remap-add-relative
-                     'mode-line-buffer-id
-                     `((:foreground ,fg-color)
-                       mode-line-buffer-id)))))))
+              (face-remap-add-relative
+               'mode-line
+               `((:foreground ,fg-color :background ,bg-color)
+                 mode-line))))))
 
   ;; Change modeline color by Evil state
   (advice-add 'evil-generate-mode-line-tag

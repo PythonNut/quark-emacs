@@ -17,7 +17,8 @@
                                 :underline nil
                                 :box nil
                                 :overline nil)
-
+            (set-face-attribute 'mode-line-buffer-id nil
+                                :foreground nil)
             (if (display-graphic-p)
                 (set-face-attribute 'vertical-border nil
                                     :foreground nil
