@@ -1,7 +1,6 @@
 ;; -*- lexical-binding: t -*-
 
 (require 'evil)
-(require 'hydra)
 
 (evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'special-mode 'motion)
