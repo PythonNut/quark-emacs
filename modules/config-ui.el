@@ -158,7 +158,7 @@
 
   (defun nadvice/iflipb-first-iflipb-buffer-switch-command (_ret) nil)
 
-  (advice-add #'iflipb-first-iflipb-buffer-switch-command
+  (advice-add 'iflipb-first-iflipb-buffer-switch-command
               :filter-return
               #'nadvice/iflipb-first-iflipb-buffer-switch-command))
 
