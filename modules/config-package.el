@@ -94,6 +94,36 @@ second, floating-point values are rounded down to the nearest integer.)"
 (eval-when-compile (require 'el-patch))
 (defvar el-patch--patches (make-hash-table))
 
+(with-eval-after-load 'el-patch
+  (el-patch-defun el-patch--classify-definition-type (type)
+    "Classifies a definition TYPE as a `function' or `variable'.
+TYPE is a symbol `defun', `defmacro', etc."
+    (pcase type
+      ((or 'defun 'defmacro 'defsubst 'define-minor-mode
+           (el-patch-add 'evil-define-command
+                         'evil-define-motion
+                         'evil-define-text-object
+                         'evil-define-operator))
+       'function)
+      ((or 'defvar 'defconst 'defcustom)
+       'variable)
+      (_ (error "Unexpected definition type %S" type))))
+
+  ;; See https://github.com/raxod502/el-patch/issues/13
+  (defun nadvice/el-patch--compute-load-history-items (old-fun definition)
+    (cl-destructuring-bind (type name . body) definition
+      (pcase type
+        ((or 'evil-define-command
+             'evil-define-motion
+             'evil-define-text-object
+             'evil-define-operator)
+         (list (cons 'defun name)))
+        (_ (funcall old-fun definition)))))
+
+  (advice-add 'el-patch--compute-load-history-items
+              :around
+              #'nadvice/el-patch--compute-load-history-items))
+
 (with-eval-after-load 'use-package
   (setq use-package-always-ensure t
         use-package-always-defer t)

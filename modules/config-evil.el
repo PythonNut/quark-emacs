@@ -232,4 +232,28 @@
   (require 'config-evil-modules)
   (require 'config-evil-textobjects))
 
+(defmacro el-patch-evil-define-command (&rest args)
+  "Patch an evil command. The ARGS are the same as for `evil-define-command'."
+  (declare (doc-string 3)
+           (indent defun))
+  `(el-patch--definition ,(cons #'evil-define-command args)))
+
+(defmacro el-patch-evil-define-motion (&rest args)
+  "Patch an evil motion. The ARGS are the same as for `evil-define-motion'."
+  (declare (doc-string 3)
+           (indent defun))
+  `(el-patch--definition ,(cons #'evil-define-motion args)))
+
+(defmacro el-patch-evil-define-text-object (&rest args)
+  "Patch an evil text object. The ARGS are the same as for `evil-define-text-object'."
+  (declare (doc-string 3)
+           (indent defun))
+  `(el-patch--definition ,(cons #'evil-define-text-object args)))
+
+(defmacro el-patch-evil-define-operator (&rest args)
+  "Patch an evil operator. The ARGS are the same as for `evil-define-operator'."
+  (declare (doc-string 3)
+           (indent defun))
+  `(el-patch--definition ,(cons #'evil-define-operator args)))
+
 (provide 'config-evil)
