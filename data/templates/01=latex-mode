@@ -3,13 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{verbatim}
-
-\usepackage[inline]{asymptote}
-
-\usepackage{color} % colors and color names
-
-% character encodings
+\usepackage{color}
 \usepackage[utf8]{inputenc}
 
 \begin{document}
