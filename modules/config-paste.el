@@ -2,7 +2,9 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'cua-base)))
+    (require 'cua-base)
+    (require 'el-patch)
+    (require 'config-evil)))
 
 ;; Bring most recently yank-popped entry to the front of the kill-ring
 
@@ -36,16 +38,16 @@ move the yanking point; just return the Nth kill forward."
           ;; text to the kill ring, so Emacs doesn't try to own the
           ;; selection, with identical text.
           (let ((interprogram-cut-function nil))
-	    (if (listp interprogram-paste)
+            (if (listp interprogram-paste)
                 (mapc 'kill-new (nreverse interprogram-paste))
-	      (kill-new interprogram-paste)))
+              (kill-new interprogram-paste)))
           (el-patch-add (setq kill-ring-yank-index 0))
-	  (car kill-ring))
+          (car kill-ring))
       (or kill-ring (error "Kill ring is empty"))
       (el-patch-add
         ;; Put the head of kill-ring back where we had
         ;; previously found it, and fetch the next element
-        (if (eq 0 n)
+        (if (or (eq 0 n) (eq this-command 'evil-visual-paste))
             (setq kill-ring-yank-index 0)
           (setq kill-ring
                 (-insert-at kill-ring-yank-index
@@ -376,5 +378,60 @@ move the yanking point; just return the Nth kill forward."
     (push-mark (point-max) nil t)
     (goto-char (point-min))
     (cua-cut-region nil)))
+
+(el-patch-evil-define-command evil-visual-paste (count &optional register)
+  "Paste over Visual selection."
+  :suppress-operator t
+  (interactive "P<x>")
+  ;; evil-visual-paste is typically called from evil-paste-before or
+  ;; evil-paste-after, but we have to mark that the paste was from
+  ;; visual state
+  (setq this-command 'evil-visual-paste)
+  (el-patch-let (($paste (if paste-eob
+                             (evil-paste-after count register)
+                           (evil-paste-before count register))))
+    (let* ((text (if register
+                     (evil-get-register register)
+                   (current-kill 0)))
+           (yank-handler (car-safe (get-text-property
+                                    0 'yank-handler text)))
+           new-kill
+           paste-eob)
+      (evil-with-undo
+        (let* (el-patch-swap
+                ((kill-ring (list (current-kill 0)))
+                 (kill-ring-yank-pointer kill-ring))
+                ((kill-ring kill-ring)
+                 (kill-ring-yank-pointer kill-ring-yank-pointer)
+                 (kill-ring-yank-index kill-ring-yank-index)))
+          (when (evil-visual-state-p)
+            (evil-visual-rotate 'upper-left)
+            ;; if we replace the last buffer line that does not end in a
+            ;; newline, we use `evil-paste-after' because `evil-delete'
+            ;; will move point to the line above
+            (when (and (= evil-visual-end (point-max))
+                       (/= (char-before (point-max)) ?\n))
+              (setq paste-eob t))
+            (evil-delete evil-visual-beginning evil-visual-end
+                         (evil-visual-type))
+            (when (and (eq yank-handler #'evil-yank-line-handler)
+                       (not (eq (evil-visual-type) 'line))
+                       (not (= evil-visual-end (point-max))))
+              (insert "\n"))
+            (evil-normal-state)
+            (setq new-kill (current-kill 0))
+            (current-kill 1))
+          (el-patch-remove $paste))
+        (el-patch-add $paste)
+        (when evil-kill-on-visual-paste
+          (kill-new new-kill))
+        ;; mark the last paste as visual-paste
+        (setq evil-last-paste
+              (list (nth 0 evil-last-paste)
+                    (nth 1 evil-last-paste)
+                    (nth 2 evil-last-paste)
+                    (nth 3 evil-last-paste)
+                    (nth 4 evil-last-paste)
+                    t))))))
 
 (provide 'config-paste)
