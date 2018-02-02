@@ -394,6 +394,11 @@ the syntax class ')'."
   (define-key evil-normal-state-map "gs" #'my/smart-smartparens-tools)))
 
 (use-package paren
+  :init
+  (add-hook 'minibuffer-setup-hook (lambda ()
+                                     (show-smartparens-mode -1)
+                                     (show-paren-mode +1)))
+
   :config
   (defun nadvice/show-paren-mode (old-fun &rest args)
     ;; http://emacs.stackexchange.com/questions/12532/buffer-local-idle-timer
@@ -414,10 +419,6 @@ the syntax class ')'."
                       timer)))))
       (apply old-fun args)))
 
-  (advice-add 'show-paren-mode :around #'nadvice/show-paren-mode)
-
-  (add-hook 'minibuffer-setup-hook (lambda ()
-                                     (show-smartparens-mode -1)
-                                     (show-paren-mode +1))))
+  (advice-add 'show-paren-mode :around #'nadvice/show-paren-mode))
 
 (provide 'config-smartparens)
