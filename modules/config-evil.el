@@ -6,10 +6,19 @@
     (interactive)
     (key-chord-mode -1)
     (key-chord-mode +1))
-  
-  :config
-  (let ((inhibit-message t))
-    (key-chord-mode +1)))
+
+  (require 'key-chord)
+  (defun nadvice/key-chord-mode (old-fun &rest args)
+    (if (called-interactively-p 'any)
+        (apply old-fun args)
+      (cl-letf* (((symbol-function #'message)
+                  (lambda (&rest args)
+                    (when args
+                      (apply #'format args)))))
+        (apply old-fun args))))
+
+  (advice-add 'key-chord-mode :around #'nadvice/key-chord-mode)
+  (key-chord-mode +1))
 
 (use-package evil
   :init (evil-mode +1)
