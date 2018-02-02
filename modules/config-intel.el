@@ -267,13 +267,13 @@
 (use-package autoinsert
   :ensure nil
   :init
-  (add-hook 'after-change-major-mode-hook
-            (lambda ()
-              (when (= (point-min) (point-max))
-                (auto-insert))))
+  (defun my/maybe-auto-insert ()
+    (when (= (point-min) (point-max))
+      (auto-insert)))
 
+  (add-hook 'after-change-major-mode-hook #'my/maybe-auto-insert)
   :config
-  (use-package yasnippet :demand t)
+  (require 'yasnippet)
   (setq auto-insert-alist nil)
   (my/yatemplate-fill-alist))
 
