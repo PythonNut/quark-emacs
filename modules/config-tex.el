@@ -72,6 +72,22 @@
                           ("o" "circ"))
         TeX-auto-global (locate-user-emacs-file "data/auctex"))
 
+  (defun my/LaTeX-format-name ()
+    (save-excursion
+      (goto-char (point-min))
+      (if (looking-at "%&\\(.*\\)$")
+          (substring-no-properties (match-string 1))
+        "myformat")))
+
+  (setcar (cdr (assoc "LaTeX" TeX-command-list)) "%`%l%(mode) %t")
+  (add-to-list 'TeX-expand-list '("%fmt" my/LaTeX-format-name))
+  (add-to-list 'TeX-command-list
+               '("mylatexformat"
+                 "%(PDF)%(latex) -ini -jobname=%fmt '&%(PDF)latex' mylatexformat.ltx %t"
+                 TeX-run-TeX t
+                 (latex-mode)
+                 :help "Run mylatexformat"))
+
   (add-to-list 'safe-local-variable-values
                '(TeX-command-extra-options . "-shell-escape"))
 
