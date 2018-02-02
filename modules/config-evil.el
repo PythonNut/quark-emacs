@@ -128,8 +128,11 @@
   (define-key evil-normal-state-map "U" #'undo-tree-visualize)
 
   (use-package hydra
-    :demand t
-    :config
+    :init
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'hydra)))
+
     (defhydra evil-window-hydra ()
       "switch window"
       ("h" evil-window-left-smart "left")

@@ -3,7 +3,11 @@
 
 ;;; === Evil motion section ===
 (use-package hydra
-  :config
+  :init
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'hydra)))
+
   (defhydra evil-visual-line-hydra
     (:pre (setq hydra-is-helpful nil)
           :post (setq hydra-is-helpful t))

@@ -59,8 +59,7 @@ second, floating-point values are rounded down to the nearest integer.)"
                                evil-snipe
                                avy
                                ace-jump-helm-line
-                               multiple-cursors
-                               hydra)
+                               multiple-cursors)
   "Symbols which need to be autoloaded.")
 
 (defvar idle-require-timer (run-with-idle-timer 0.1 t 'idle-require-load-next))
@@ -173,7 +172,10 @@ Each value is a cons, with the car being the the value passed to
 `use-package-install-deferred-package' for information about how
 these values are used to call `use-package-ensure-function'.")
 
-(use-package hydra)
+(use-package hydra
+  :init
+  (autoload 'hydra-default-pre "hydra"))
+
 (use-package s)
 (use-package restart-emacs)
 
