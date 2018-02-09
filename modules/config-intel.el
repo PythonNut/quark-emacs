@@ -2,26 +2,6 @@
 (require 'cl-lib)
 (require 'config-tramp)
 
-(use-package eldoc
-  :ensure nil
-  :diminish eldoc-mode
-  :config
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'flycheck)))
-
-  (setq eldoc-idle-delay 0.1)
-  (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
-    (and (apply old-fun args)
-         (not (and (my/sp-on-delimiter-p)
-                   (not (minibufferp))))
-         (not (and (bound-and-true-p flycheck-mode)
-                   (flycheck-overlay-errors-at (point))))))
-
-  (advice-add 'eldoc-display-message-no-interference-p :around
-              #'nadvice/eldoc-display-message-no-interference-p))
-
-
 (use-package semantic
   :ensure nil
   :init
@@ -140,6 +120,25 @@
        (t (user-error "No Flycheck errors")))))
 
   (define-key flycheck-mode-map (kbd "C-!") #'flycheck-goto-nearest-error))
+
+(use-package eldoc
+  :ensure nil
+  :diminish eldoc-mode
+  :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'flycheck)))
+
+  (setq eldoc-idle-delay 0.1)
+  (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
+    (and (apply old-fun args)
+         (not (and (my/sp-on-delimiter-p)
+                   (not (minibufferp))))
+         (not (and (bound-and-true-p flycheck-mode)
+                   (flycheck-overlay-errors-at (point))))))
+
+  (advice-add 'eldoc-display-message-no-interference-p :around
+              #'nadvice/eldoc-display-message-no-interference-p))
 
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
