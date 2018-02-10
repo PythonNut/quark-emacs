@@ -72,6 +72,8 @@
                           ("o" "circ"))
         TeX-auto-global (locate-user-emacs-file "data/auctex"))
 
+  (define-key TeX-mode-map "$" #'self-insert-command)
+
   (defun my/LaTeX-format-name ()
     (save-excursion
       (goto-char (point-min))
@@ -372,6 +374,10 @@
   (define-key TeX-mode-map (kbd ";") #'LaTeX-environment-or-macro-or-self-insert))
 
 (with-eval-after-load 'latex
+  (define-key LaTeX-mode-map "(" #'self-insert-command)
+  (define-key LaTeX-mode-map "[" #'self-insert-command)
+  (define-key LaTeX-mode-map "{" #'self-insert-command)
+
   (el-patch-defun LaTeX-indent-calculate (&optional force-type)
     "Return the indentation of a line of LaTeX source.
 FORCE-TYPE can be used to force the calculation of an inner or
