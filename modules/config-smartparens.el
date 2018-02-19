@@ -27,6 +27,10 @@
   (smartparens-global-mode +1)
 
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
+
   (setq sp-cancel-autoskip-on-backward-movement nil)
 
   (defun my/sp-pair-function (id action context)
@@ -66,40 +70,48 @@
                                    (sp-get (sp-get-sexp t) :end))
                            nil))))))
 
-  (defun nadvice/sp-show--pair-function (&rest _args)
-    "If the matching paren is offscreen, show the matching line in the
-echo area. Has no effect if the character before point is not of
-the syntax class ')'."
-    (let ((matching-sexp (my/sp-on-delimiter-p)))
-      (when (and matching-sexp
-                 (not (minibufferp))
-                 (get-buffer-window)
-                 (save-excursion
-                   (or (< (progn (move-to-window-line -1) (line-end-position))
-                          (cdr matching-sexp))
-                       (> (progn (move-to-window-line 0) (point))
-                          (car matching-sexp)))))
-
-        (cl-destructuring-bind (current-line matching-line text)
-            (cons (line-number-at-pos (point))
-                  (save-excursion
-                    (goto-char (car matching-sexp))
-                    (let ((line (thing-at-point 'line)))
-                      (when (string-match (rx line-start (one-or-more whitespace))
-                                          line)
-                        (setq line (replace-match "" t t line)))
-                      (when (string-match (rx (one-or-more whitespace) line-end)
-                                          line)
-                        (setq line (replace-match "" t t line)))
-                      (list (line-number-at-pos (point))
-                            line))))
-          (message "Matches %s (%d %s)" text
-                   (abs (- current-line matching-line))
-                   (if (> matching-line current-line)
-                       "below"
-                     "above"))))))
-
-  (advice-add 'sp-show--pair-function :after #'nadvice/sp-show--pair-function)
+  (el-patch-defun sp-show--pair-echo-match (start end olen clen)
+    "Print the line of the matching paren in the echo area if not
+visible on screen. Needs to be called after the show-pair overlay
+has been created."
+    (let ((match-positions (list start end olen clen)))
+      (when (not (and (equal sp-show-pair-previous-match-positions match-positions)
+                      (equal sp-show-pair-previous-point (point))))
+        (setq sp-show-pair-previous-match-positions match-positions)
+        (setq sp-show-pair-previous-point (point))
+        (let* ((visible-start (pos-visible-in-window-p start))
+               (visible-end (pos-visible-in-window-p end))
+               (where (cond
+                       ((not visible-start) start)
+                       ((not visible-end) end)))
+               (el-patch-add (start-point (point))))
+          (when where
+            (save-excursion
+              (let* ((from (progn (goto-char where) (beginning-of-line) (point)))
+                     (to (progn (end-of-line) (point)))
+                     (line (buffer-substring from to))
+                     (message-log-max)) ;; don't log in messages
+                ;; Add smartparens overlay for opening parens
+                (let* ((i1 (- start from))
+                       (i2 (+ i1 olen)))
+                  (when (and (< i1 (length line)) (>= i2 0))
+                    (add-face-text-property (max i1 0) (min i2 (length line))
+                                            'sp-show-pair-match-face nil line)))
+                ;; Add smartparens overlay for closing parens
+                (let* ((i1 (- end from 1))
+                       (i2 (+ i1 clen)))
+                  (when (and (< i1 (length line)) (>= i2 0))
+                    (add-face-text-property (max i1 0) (min i2 (length line))
+                                            'sp-show-pair-match-face nil line)))
+                ;; echo line of match
+                (el-patch-swap
+                  (message "Matches: %s" (string-trim line))
+                  (let ((current-line (line-number-at-pos start-point))
+                        (matching-line (line-number-at-pos)))
+                    (message "Matches %s%d: %s"
+                             (if (> matching-line current-line) "↓" "↑")
+                             (abs (- current-line matching-line))
+                             (string-trim line)))))))))))
 
   (show-smartparens-global-mode +1)
 
