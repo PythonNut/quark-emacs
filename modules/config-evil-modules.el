@@ -2,7 +2,6 @@
 
 (require 'evil)
 
-(evil-set-initial-state 'diff-mode 'motion)
 (evil-set-initial-state 'special-mode 'motion)
 (evil-set-initial-state 'backups-mode 'insert)
 (evil-set-initial-state 'erc-mode 'emacs)
