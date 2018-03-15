@@ -16,7 +16,8 @@
                  :files ("straight.el")))))
       straight-check-for-modifications 'live
       straight-use-package-version 'ensure
-      straight-use-package-by-default t)
+      straight-use-package-by-default t
+      straight-vc-git-auto-fast-forward t)
 
 (let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
       (bootstrap-version 2))
