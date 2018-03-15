@@ -143,7 +143,6 @@
   (define-key git-rebase-mode-map "K" #'git-rebase-kill-line))
 
 (use-package magithub
-  :after magit
   :init
   ;; Magithub is not well-behaved, so this needs to be set early
   (setq magithub-dir (locate-user-emacs-file "data/magithub"))
