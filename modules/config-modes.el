@@ -1140,6 +1140,8 @@
   (setq org-src-fontify-natively t
         org-startup-with-inline-images t)
 
+  (add-hook 'org-mode-hook #'org-indent-mode)
+
   (defvar ob-language-file-alist
     (list '(ob-sage . ob-sagemath))
     "An alist that resolves discrepancies between language names and file names in org-babel")
