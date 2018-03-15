@@ -278,6 +278,12 @@
              inferior-julia
              run-julia)
   :config
+  (use-package flycheck-julia
+    :after flycheck
+    :commands (flycehck-julia-setup)
+    :config
+    (flycheck-julia-setup))
+
   (use-package evil
     :config
     (evil-set-initial-state 'inferior-julia-mode 'insert)))
