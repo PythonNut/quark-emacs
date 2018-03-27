@@ -185,6 +185,11 @@
   :mode ("\\.zsh\\'" . sh-mode)
   :ensure nil
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'sh-script)
+      (require 'el-patch)))
+
   (add-hook 'sh-mode-hook
             (lambda ()
               (setq mode-name "sh")
@@ -221,7 +226,49 @@
                    :when '(("SPC" "RET" "<evil-ret>"))
                    :unless '(sp-in-string-p sp-in-comment-p)
                    :actions '(insert navigate)
-                   :suffix "")))
+                   :suffix ""))
+
+  (el-patch-defun sh-syntax-propertize-function (start end)
+    (goto-char start)
+    (sh-syntax-propertize-here-doc end)
+    (funcall
+     (syntax-propertize-rules
+      (sh-here-doc-open-re
+       (2 (sh-font-lock-open-heredoc
+           (match-beginning 0) (match-string 1) (match-beginning 2))))
+      ("\\s|" (0 (prog1 nil (sh-syntax-propertize-here-doc end))))
+      ;; A `#' begins a comment when it is unquoted and at the
+      ;; beginning of a word.  In the shell, words are separated by
+      ;; metacharacters.  The list of special chars is taken from
+      ;; the single-unix spec of the shell command language (under
+      ;; `quoting') but with `$' removed.
+      (el-patch-swap
+        ("\\(?:[^|&;<>()`\\\"' \t\n]\\|\\${\\)\\(#+\\)" (1 "_"))
+        ("\\(?:[^|&;<>(`\\\"' \t\n]\\|\\${\\)\\(#+\\)" (1 "_")))
+      ;; In addition, `#' at the beginning of closed parentheses
+      ;; does not start a comment if the parentheses are not isolated
+      ;; by metacharacters, excluding [()].
+      ;; (e.g. `foo(#q/)' and `(#b)foo' in zsh)
+      (el-patch-add
+        ("[^|&;<>(`\\\"' \t\n](\\(#+\\)" (1 "_"))
+        ("(\\(#\\)[^)]+?)[^|&;<>)`\\\"' \t\n]" (1 "_")))
+      ;; In a '...' the backslash is not escaping.
+      ("\\(\\\\\\)'" (1 (sh-font-lock-backslash-quote)))
+      ;; Make sure $@ and $? are correctly recognized as sexps.
+      ("\\$\\([?@]\\)" (1 "_"))
+      ;; Distinguish the special close-paren in `case'.
+      (")" (0 (sh-font-lock-paren (match-beginning 0))))
+      ;; Highlight (possibly nested) subshells inside "" quoted
+      ;; regions correctly.
+      ("\"\\(?:\\(?:[^\\\"]\\|\\\\.\\)*?\\)??\\(\\$(\\|`\\)"
+       (1 (ignore
+           (if (nth 8 (save-excursion (syntax-ppss (match-beginning 0))))
+               (goto-char (1+ (match-beginning 0)))
+             ;; Save excursion because we want to also apply other
+             ;; syntax-propertize rules within the affected region.
+             (save-excursion
+               (sh-font-lock-quoted-subshell end)))))))
+     (point) end)))
 
 (use-package fish-mode
   :defer-install t
