@@ -381,6 +381,8 @@
   (define-key TeX-mode-map (kbd ";") #'LaTeX-environment-or-macro-or-self-insert))
 
 (with-eval-after-load 'latex
+  (setq TeX-electric-math (cons "\\\(" "\\\)"))
+
   (define-key LaTeX-mode-map "(" #'self-insert-command)
   (define-key LaTeX-mode-map "[" #'self-insert-command)
   (define-key LaTeX-mode-map "{" #'self-insert-command)
