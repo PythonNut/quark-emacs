@@ -257,6 +257,13 @@
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
 
+  (use-package auctex-latexmk
+    :commands (auctex-latexmk-setup)
+    :init
+    (auctex-latexmk-setup)
+    :config
+    (setq auctex-latexmk-inherit-TeX-PDF-mode t))
+
   (defun nadvice/TeX-command-master (old-fun arg)
     (interactive "P")
     (if (called-interactively-p 'any)
@@ -265,7 +272,7 @@
           (cl-letf* (((symbol-function #'TeX-command-query)
                       (lambda (name)
                         (TeX-command-default name)
-                        (car-safe (TeX-assoc "LaTeX" TeX-command-list)))))
+                        (car-safe (TeX-assoc "LatexMk" TeX-command-list)))))
             (call-interactively old-fun)))
       (apply old-fun args)))
 
@@ -328,22 +335,22 @@
 
   (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro)
 
-  (defvar my/TeX-environment-or-macro-default "align*")
+  (defvar my/LaTeX-environment-or-macro-default "align*")
   (defun LaTeX-environment-or-macro (arg)
     "TeX-insert-macro and LaTeX-environment merged into one command"
     (interactive "*P")
     (let* ((symbol-list (TeX-symbol-list-filtered))
            (thing (completing-read
                    (concat "Thing: (default "
-                           my/TeX-environment-or-macro-default
+                           my/LaTeX-environment-or-macro-default
                            ") ")
                    (append (LaTeX-environment-list-filtered)
                            symbol-list)
                    nil nil nil
                    'LaTeX-environment-and-macro-history
-                   my/TeX-environment-or-macro-default)))
+                   my/LaTeX-environment-or-macro-default)))
 
-      (setq my/TeX-environment-or-macro-default thing)
+      (setq my/LaTeX-environment-or-macro-default thing)
       (if (not (assoc thing symbol-list))
           (let ((entry (assoc thing (LaTeX-environment-list))))
             (when (interactive-p)
