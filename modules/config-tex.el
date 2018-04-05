@@ -335,6 +335,17 @@
 
   (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro)
 
+  (defun my/LaTeX-verbatimish-p ()
+    (or (LaTeX-verbatim-p)
+        (string-match-p (rx bol
+                            (or "tikzpicture"
+                                "circuitikz"
+                                "lstlisting"
+                                "minted"
+                                "verbatim")
+                            eol)
+                        (LaTeX-current-environment))))
+
   (defvar my/LaTeX-environment-or-macro-default "align*")
   (defun LaTeX-environment-or-macro (arg)
     "TeX-insert-macro and LaTeX-environment merged into one command"
@@ -364,21 +375,9 @@
         (TeX-parse-macro thing (cdr-safe (assoc thing (TeX-symbol-list))))
         (run-hooks 'TeX-after-insert-macro-hook))))
 
-  (defun LaTeX-environment-or-macro-or-self-insert (arg)
-    "TeX-insert-macro and LaTeX-environment merged into one command"
-    (interactive "*P")
-    (if (string-match-p (rx bol
-                            (or "tikzpicture"
-                                "circuitikz"
-                                "lstlisting"
-                                "minted"
-                                "verbatim")
-                            eol)
-                        (LaTeX-current-environment))
-        (self-insert-command arg)
-      (LaTeX-environment-or-macro arg)))
-
-  (define-key TeX-mode-map (kbd ";") #'LaTeX-environment-or-macro-or-self-insert))
+  (define-key TeX-mode-map (kbd ";")
+    `(menu-item "" LaTeX-environment-or-macro
+                :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd)))))
 
 (with-eval-after-load 'latex
   (setq TeX-electric-math (cons "\\\(" "\\\)"))
