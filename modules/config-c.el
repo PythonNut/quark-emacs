@@ -53,6 +53,14 @@
                irony-cdb-libclang
                irony-completion-at-point
                irony-completion-at-point-async)
+    :init
+    (add-to-list 'safe-local-variable-values
+                 '(irony-additional-clang-options . ("-std=c++11")))
+    (add-to-list 'safe-local-variable-values
+                 '(irony-additional-clang-options . ("-std=c++14")))
+    (add-to-list 'safe-local-variable-values
+                 '(irony-additional-clang-options . ("-std=c++17")))
+
     :config
     (setq irony-user-dir (locate-user-emacs-file "data/irony")
           irony-server-install-prefix irony-user-dir)
