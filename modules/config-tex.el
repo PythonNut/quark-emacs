@@ -387,6 +387,27 @@
   (define-key LaTeX-mode-map "[" #'self-insert-command)
   (define-key LaTeX-mode-map "{" #'self-insert-command)
 
+  (defun TeX-math-chord ()
+    (interactive)
+    (if (texmathp)
+        (while (texmathp) (sp-up-sexp))
+      (TeX-insert-dollar)))
+
+  (defun TeX-math-chord-spaced ()
+    (interactive)
+    (if (texmathp)
+        (progn
+          (while (texmathp) (sp-up-sexp))
+          (unless (looking-at "[[:space:]]\\|[[:punct:]]")
+            (insert " ")))
+      (unless (or (bolp)
+                  (looking-back "[[:space:]]\\|[[:punct:]]" 1))
+        (insert " "))
+      (TeX-insert-dollar)))
+
+  (key-chord-define TeX-mode-map (kbd "fj") #'TeX-math-chord)
+  (key-chord-define TeX-mode-map (kbd "SPC SPC") #'TeX-math-chord-spaced)
+
   (el-patch-defun LaTeX-indent-calculate (&optional force-type)
     "Return the indentation of a line of LaTeX source.
 FORCE-TYPE can be used to force the calculation of an inner or
