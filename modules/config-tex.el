@@ -333,7 +333,14 @@
          beg
          end))))
 
-  (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro)
+  (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro))
+
+(with-eval-after-load 'latex
+  (setq TeX-electric-math (cons "\\\(" "\\\)"))
+
+  (define-key LaTeX-mode-map "(" #'self-insert-command)
+  (define-key LaTeX-mode-map "[" #'self-insert-command)
+  (define-key LaTeX-mode-map "{" #'self-insert-command)
 
   (defun my/LaTeX-verbatimish-p ()
     (or (LaTeX-verbatim-p)
@@ -345,6 +352,31 @@
                                 "verbatim")
                             eol)
                         (LaTeX-current-environment))))
+
+  (defun TeX-math-chord ()
+    (interactive)
+    (if (texmathp)
+        (while (texmathp) (sp-up-sexp))
+      (TeX-insert-dollar)))
+
+  (defun TeX-math-chord-spaced ()
+    (interactive)
+    (if (texmathp)
+        (progn
+          (while (texmathp) (sp-up-sexp))
+          (unless (looking-at "[[:space:]]\\|[[:punct:]]")
+            (insert " ")))
+      (unless (or (bolp)
+                  (looking-back "[[:space:]]\\|[[:punct:]]" 1))
+        (insert " "))
+      (TeX-insert-dollar)))
+
+  (key-chord-define TeX-mode-map (kbd "fj")
+                    `(menu-item "" TeX-math-chord
+                                :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd))))
+  (key-chord-define TeX-mode-map (kbd "SPC SPC")
+                    `(menu-item "" TeX-math-chord-spaced
+                                :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd))))
 
   (defvar my/LaTeX-environment-or-macro-default "align*")
   (defun LaTeX-environment-or-macro (arg)
@@ -377,35 +409,7 @@
 
   (define-key TeX-mode-map (kbd ";")
     `(menu-item "" LaTeX-environment-or-macro
-                :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd)))))
-
-(with-eval-after-load 'latex
-  (setq TeX-electric-math (cons "\\\(" "\\\)"))
-
-  (define-key LaTeX-mode-map "(" #'self-insert-command)
-  (define-key LaTeX-mode-map "[" #'self-insert-command)
-  (define-key LaTeX-mode-map "{" #'self-insert-command)
-
-  (defun TeX-math-chord ()
-    (interactive)
-    (if (texmathp)
-        (while (texmathp) (sp-up-sexp))
-      (TeX-insert-dollar)))
-
-  (defun TeX-math-chord-spaced ()
-    (interactive)
-    (if (texmathp)
-        (progn
-          (while (texmathp) (sp-up-sexp))
-          (unless (looking-at "[[:space:]]\\|[[:punct:]]")
-            (insert " ")))
-      (unless (or (bolp)
-                  (looking-back "[[:space:]]\\|[[:punct:]]" 1))
-        (insert " "))
-      (TeX-insert-dollar)))
-
-  (key-chord-define TeX-mode-map (kbd "fj") #'TeX-math-chord)
-  (key-chord-define TeX-mode-map (kbd "SPC SPC") #'TeX-math-chord-spaced)
+                :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd))))
 
   (el-patch-defun LaTeX-indent-calculate (&optional force-type)
     "Return the indentation of a line of LaTeX source.
