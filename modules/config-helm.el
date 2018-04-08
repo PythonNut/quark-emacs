@@ -232,13 +232,29 @@
 
 (use-package helm-locate
   :ensure nil
+  :init
+  (el-patch-feature helm-locate)
+
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
+
   (setq helm-locate-fuzzy-match t
-        helm-source-locate
-        (helm-make-source "Locate" 'helm-locate-source
-          :pattern-transformer 'helm-locate-pattern-transformer
-          :candidate-number-limit 1000)
-        helm-locate-command "locate %s -r %s -e -l 100"))
+        helm-locate-command "locate %s -r %s -e -l 100")
+
+  (el-patch-defvar helm-source-locate
+    (helm-make-source "Locate" 'helm-locate-source
+      :pattern-transformer 'helm-locate-pattern-transformer
+      ;; :match-part is only used here to tell helm which part
+      ;; of candidate to highlight.
+      :match-part (lambda (candidate)
+                    (if (or (string-match-p " -b\\'" helm-pattern)
+                            (and helm-locate-fuzzy-match
+                                 (not (string-match "\\s-" helm-pattern))))
+                        (helm-basename candidate)
+                      candidate))
+      (el-patch-add :candidate-number-limit 1000))))
 
 (use-package helm-ag
   :init
