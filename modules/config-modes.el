@@ -1354,7 +1354,10 @@
              run-lua
              lua-start-process)
   :mode ("\\.lua$" . lua-mode)
-  :interpreter ("lua" . lua-mode))
+  :interpreter ("lua" . lua-mode)
+  :config
+  (use-package company-lua
+    :commands (company-lua)))
 
 (use-package vimrc-mode
   :defer-install t

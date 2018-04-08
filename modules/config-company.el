@@ -39,6 +39,7 @@
           ('java-mode-hook       '(company-eclim))
           ('nxml-mode-hook       '(company-nxml))
           ('html-mode-hook       '(company-web-html))
+          ('lua-mode-hook        '(company-lua))
           ('web-mode-hook        '(company-web-html))
           ('scheme-mode-hook     '(geiser-company-backend))
           ('texinfo-mode-hook    '(company-semantic))
