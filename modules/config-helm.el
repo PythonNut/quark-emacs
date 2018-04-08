@@ -131,7 +131,14 @@
   (setq helm-M-x-fuzzy-match t))
 
 (use-package helm-projectile
+  :init
+  (el-patch-feature helm-projectile)
+
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
+
   (setq helm-projectile-fuzzy-match t)
 
   (defvar my/helm-non-projectile-buffers-list-cache nil)
@@ -191,7 +198,37 @@
       :mode-line helm-read-file-name-mode-line-string
       :action helm-projectile-file-actions
       :persistent-action #'helm-ff-kill-or-find-buffer-fname)
-    "Helm source definition for recent files not in current project."))
+    "Helm source definition for recent files not in current project.")
+
+  (el-patch-defvar helm-source-projectile-files-list
+    (helm-build-sync-source "Projectile files"
+      :candidates (lambda ()
+                    (add-hook 'helm-update-hook #'helm-projectile--move-to-real)
+                    (with-helm-current-buffer
+                      (cl-loop with root = (projectile-project-root)
+                               with file-at-root = (file-relative-name (expand-file-name helm-pattern root))
+                               for display in (projectile-current-project-files)
+                               collect (cons display (expand-file-name display root)) into files
+                               finally return
+                               (el-patch-swap
+                                 (if (or (string-empty-p helm-pattern)
+                                         (assoc helm-pattern files))
+                                     files
+                                   (cl-pairlis (list (helm-ff-prefix-filename helm-pattern nil t)
+                                                     (helm-ff-prefix-filename file-at-root nil t))
+                                               (list (expand-file-name helm-pattern)
+                                                     (expand-file-name helm-pattern root))
+                                               files))
+                                 files))))
+      :fuzzy-match helm-projectile-fuzzy-match
+      :keymap helm-projectile-find-file-map
+      :help-message 'helm-ff-help-message
+      :mode-line helm-read-file-name-mode-line-string
+      :action helm-projectile-file-actions
+      :persistent-action #'helm-projectile-file-persistent-action
+      :persistent-help "Preview file"
+      :volatile t)
+    "Helm source definition for Projectile files."))
 
 (use-package helm-locate
   :ensure nil
