@@ -74,6 +74,9 @@
 
   (define-key TeX-mode-map "$" #'self-insert-command)
 
+  (when (executable-find "zathura")
+    (setf (cadr (assoc 'output-pdf TeX-view-program-selection)) "Zathura"))
+
   (defun my/LaTeX-format-name ()
     (save-excursion
       (goto-char (point-min))
