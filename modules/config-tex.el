@@ -356,23 +356,44 @@
                             eol)
                         (LaTeX-current-environment))))
 
+  (defun my/TeX-escape-from-math (&optional space)
+    (let ((why (progn (texmathp)
+                      (car texmathp-why))))
+      (cond ((string-match-p (rx (or "$" "\\(")) why)
+             (while (texmathp) (sp-up-sexp))
+             (when space
+               (unless (looking-at (rx (or space punct)))
+                 (insert " "))))
+
+            ((string= why "\\[")
+             (while (texmathp) (sp-up-sexp))
+             (when space
+               (unless (looking-at (rx (or space punct)))
+                 (newline-and-indent))))
+
+            ((string-match-p (rx alpha) why)
+             (while (texmathp) (LaTeX-find-matching-end))
+             (when space
+               (unless (looking-at (rx (or space punct)))
+                 (newline-and-indent)))))))
+
   (defun TeX-math-chord ()
     (interactive)
     (if (texmathp)
-        (while (texmathp) (sp-up-sexp))
+        (my/TeX-escape-from-math)
       (TeX-insert-dollar)))
 
   (defun TeX-math-chord-spaced ()
     (interactive)
     (if (texmathp)
-        (progn
-          (while (texmathp) (sp-up-sexp))
-          (unless (looking-at "[[:space:]]\\|[[:punct:]]")
-            (insert " ")))
-      (unless (or (bolp)
-                  (looking-back "[[:space:]]\\|[[:punct:]]" 1))
-        (insert " "))
-      (TeX-insert-dollar)))
+        (my/TeX-escape-from-math t)
+      (if (string-match-p (rx bol (zero-or-more space) "\n") (thing-at-point 'line))
+          (let ((TeX-electric-math (cons "\\[" "\\]")))
+            (TeX-insert-dollar))
+        (unless (or (bolp)
+                    (looking-back (rx (or space punct)) 1))
+          (insert " "))
+        (TeX-insert-dollar))))
 
   (key-chord-define TeX-mode-map (kbd "fj")
                     `(menu-item "" TeX-math-chord
