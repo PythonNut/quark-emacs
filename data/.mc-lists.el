@@ -10,9 +10,11 @@
         TeX-insert-sub-or-superscript
         TeX-newline
         back-to-indentation-visual-or-beginning
+        c-electric-colon
         c-electric-lt-gt
         c-electric-paren
         c-electric-semi&comma
+        c-electric-slash
         c-electric-star
         c-indent-line-or-region
         cua-copy-region
@@ -29,8 +31,10 @@
         evil-next-visual-line
         evil-previous-line
         evil-previous-visual-line
+        haskell-indentation-common-electric-command
         indent-for-tab-command
         julia-latexsub-or-indent
+        ps-mode-backward-delete-char
         sp-backward-sexp
         sp-backward-unwrap-sexp
         sp-down-sexp
