@@ -30,6 +30,7 @@
         evil-previous-line
         evil-previous-visual-line
         indent-for-tab-command
+        julia-latexsub-or-indent
         sp-backward-sexp
         sp-backward-unwrap-sexp
         sp-down-sexp
