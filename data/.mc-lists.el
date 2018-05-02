@@ -35,6 +35,7 @@
         indent-for-tab-command
         julia-latexsub-or-indent
         ps-mode-backward-delete-char
+        julia-latexsub-or-indent
         sp-backward-sexp
         sp-backward-unwrap-sexp
         sp-down-sexp
