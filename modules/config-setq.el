@@ -51,6 +51,10 @@
 (prefer-coding-system 'utf-8)
 (define-coding-system-alias 'UTF-8 'utf-8)
 
+(when (featurep 'ns)
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'super))
+
 (defalias 'yes-or-no-p #'y-or-n-p)
 
 (defun byte-recompile-config (&optional arg)
@@ -115,7 +119,7 @@ files with (apparently) up to date bytecodes."
 ;; set major mode for new buffers based on file rules
 (setq-default major-mode (lambda ()
                            (if buffer-file-name
-                              (fundamental-mode)
+                               (fundamental-mode)
                              (let ((buffer-file-name (buffer-name)))
                                (set-auto-mode)))))
 
