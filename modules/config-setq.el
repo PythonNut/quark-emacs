@@ -51,9 +51,11 @@
 (prefer-coding-system 'utf-8)
 (define-coding-system-alias 'UTF-8 'utf-8)
 
-(when (featurep 'ns)
+(when (memq window-system '(mac ns))
   (setq mac-command-modifier 'meta
-        mac-option-modifier 'super))
+        mac-option-modifier 'super)
+  (add-to-list 'default-frame-alist '(ns-appearance . dark))
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
 (defalias 'yes-or-no-p #'y-or-n-p)
 
