@@ -202,6 +202,21 @@ these values are used to call `use-package-ensure-function'.")
   (autoload 'hydra-default-pre "hydra"))
 
 (use-package s)
-(use-package restart-emacs)
+(use-package restart-emacs
+  :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'restart-emacs)))
+  (el-patch-feature restart-emacs)
+  (el-patch-defun restart-emacs--guess-startup-directory-using-lsof ()
+    "Get the startup directory of the current Emacs session using the `lsof' program."
+    (when (executable-find "lsof")
+      (let* ((el-patch-add (default-directory "/"))
+             (lsof-op (shell-command-to-string (format "lsof -d cwd -a -Fn -p %d"
+                                                       (emacs-pid))))
+             (raw-cwd (car (last (split-string lsof-op "\n" t))))
+             (cwd (substring raw-cwd 1)))
+        (when (< 0 (length cwd))
+          cwd)))))
 
 (provide 'config-package)
