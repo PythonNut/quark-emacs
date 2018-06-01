@@ -327,54 +327,17 @@
 ;; column numbers too
 (column-number-mode +1)
 
-(use-package linum
-  :ensure nil
-  :init
-  (defun linum-cycle ()
-    (interactive)
-    (if (bound-and-true-p global-linum-mode)
-        (if (eq linum-format 'dynamic)
-            (global-linum-mode -1)
-          (setq linum-format 'dynamic))
-      (progn
-        (global-linum-mode +1)
-        (setq linum-format 'linum-relative))))
+(defun linum-cycle ()
+  (interactive)
+  (cond ((not display-line-numbers)
+         (setq display-line-numbers 'relative))
+        ((equal display-line-numbers 'relative)
+         (setq display-line-numbers t))
+        ((equal display-line-numbers t)
+         (setq display-line-numbers nil))))
 
-  (global-set-key (kbd "C-c L") #'linum-cycle)
-  (global-set-key (kbd "C-c C-l") #'linum-cycle)
-  :config
-  (setq linum-delay t)
-
-  (set-face-background 'linum nil)
-
-  (use-package linum-relative
-    :commands (linum-relative)
-    :config
-    (setq linum-relative-current-symbol ""
-          linum-relative-format "%3s ")
-
-    (set-face-attribute 'linum-relative-current-face nil
-                        :weight 'extra-bold
-                        :foreground nil
-                        :background nil
-                        :inherit '(hl-line default))
-
-    ;; truncate current line to three digits
-    (defun nadvice/linum-relative (line-number)
-      (let* ((diff1 (abs (- line-number linum-relative-last-pos)))
-             (diff (if (< diff1 0)
-                       diff1
-                     (+ diff1 linum-relative-plusp-offset)))
-             (current-p (= diff linum-relative-plusp-offset))
-             (current-symbol (if (and linum-relative-current-symbol current-p)
-                                 (if (string= "" linum-relative-current-symbol)
-                                     (number-to-string (% line-number 1000))
-                                   linum-relative-current-symbol)
-                               (number-to-string diff)))
-             (face (if current-p 'linum-relative-current-face 'linum)))
-        (propertize (format linum-relative-format current-symbol) 'face face)))
-
-    (advice-add 'linum-relative :override #'nadvice/linum-relative)))
+(global-set-key (kbd "C-c L") #'linum-cycle)
+(global-set-key (kbd "C-c C-l") #'linum-cycle)
 
 (use-package which-key
   :init (which-key-mode +1)
