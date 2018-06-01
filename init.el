@@ -17,6 +17,8 @@
 
   (cl-letf* (;; In fact, never GC during initialization to save time.
              (gc-cons-threshold most-positive-fixnum)
+             (file-name-handler-alist nil)
+             (load-source-file-function nil)
 
              ;; Also override load to hide  superfluous loading messages
              (old-load (symbol-function #'load))
