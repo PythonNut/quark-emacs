@@ -57,30 +57,6 @@
       (error (with-temp-file custom-file)))
 
     (require 'config-setq)
-
-    ;; Automatic repair system attempts to recompile potentially
-    ;; broken bytecode if the init does not complete, and offers to
-    ;; do more extreme things if the init cannot be saved.
-    (unless debug-on-error
-      (defun my/automatic-repair ()
-        (message "Init did not complete! Attempting automatic repairs.")
-        (sit-for 1)
-        (if (save-window-excursion
-              (not (prog1
-                       (byte-recompile-config t)
-                     (delete-file (locate-user-emacs-file
-                                   "data/package-cache.el")))))
-            (when (my/y-or-n-p-optional
-                   "Automatic repair succeed. Press \"y\" to restart.")
-              (restart-emacs))
-          (when (my/y-or-n-p-optional
-                 "Automatic repair may have failed. Press \"y\" to try emergency rebuild.")
-            (emergency-fix-config))))
-
-      ;; This hook will be removed if the init completes successfully.
-      ;; (add-hook 'emacs-startup-hook #'my/automatic-repair)
-      )
-
     (message "[=              ] package")
     (require 'config-package)
     (message "[==             ] desktop")
@@ -109,8 +85,4 @@
     (require 'config-modes)
     (message "[===============] solarized")
     (require 'config-solarized)
-    (message "[===============] done")
-
-    ;; No need to run the init repair system.
-    ;; (remove-hook 'emacs-startup-hook #'my/automatic-repair)
-    ))
+    (message "[===============] done")))

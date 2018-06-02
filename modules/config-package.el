@@ -88,6 +88,7 @@ second, floating-point values are rounded down to the nearest integer.)"
                         :branch "develop"))
 
 (eval-when-compile (require 'el-patch))
+(setq el-patch-use-aggressive-defvar t)
 (defvar el-patch--patches (make-hash-table))
 
 (with-eval-after-load 'el-patch
