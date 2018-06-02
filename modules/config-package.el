@@ -106,20 +106,25 @@ TYPE is a symbol `defun', `defmacro', etc."
        'variable)
       (_ (error "Unexpected definition type %S" type))))
 
-  ;; See https://github.com/raxod502/el-patch/issues/13
-  (defun nadvice/el-patch--compute-load-history-items (old-fun definition)
+  (el-patch-defun el-patch--compute-load-history-items (definition)
+    "Determine the items that DEFINITION will add to the `load-history'.
+Return a list of those items. Beware, uses heuristics."
     (cl-destructuring-bind (type name . body) definition
       (pcase type
-        ((or 'evil-define-command
-             'evil-define-motion
-             'evil-define-text-object
-             'evil-define-operator)
+        ((or 'defun 'defmacro 'defsubst
+             (el-patch-add 'evil-define-command
+                           'evil-define-motion
+                           'evil-define-text-object
+                           'evil-define-operator))
          (list (cons 'defun name)))
-        (_ (funcall old-fun definition)))))
-
-  (advice-add 'el-patch--compute-load-history-items
-              :around
-              #'nadvice/el-patch--compute-load-history-items))
+        ((or 'defvar 'defconst 'defcustom)
+         (list name))
+        ((quote define-minor-mode)
+         (list (cons 'defun name)
+               (or (when-let ((rest (member :variable body)))
+                     (cadr rest))
+                   name)))
+        (_ (error "Unexpected definition type %S" type))))))
 
 (with-eval-after-load 'use-package
   (setq use-package-always-ensure t
