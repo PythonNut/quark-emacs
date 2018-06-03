@@ -14,8 +14,6 @@
       (load (locate-user-emacs-file "init-minimal")))
 
   (require 'cl-lib)
-  ;; Modern machines don't need to run GC for every 8MB allocated.
-  (setq gc-cons-threshold 20000000)
 
   (cl-letf* (;; In fact, never GC during initialization to save time.
              (gc-cons-threshold most-positive-fixnum)
