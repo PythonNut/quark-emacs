@@ -49,9 +49,9 @@
           ('go-mode-hook         '(company-go)))))))
 
 (use-package company
-	     :init
+  :init
   (global-company-mode +1)
-             :config
+  :config
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
   (company-flx-mode +1)
 
@@ -72,7 +72,8 @@
 
   (defun company-complete-common-or-complete-full ()
     (interactive)
-    (when (or (not yas-minor-mode)
+    (when (or (not (boundp 'yas-minor-mode))
+              (not yas-minor-mode)
               (not (let ((yas-fallback-behavior 'return-nil))
                      (yas-expand))))
       (when (company-manual-begin)
