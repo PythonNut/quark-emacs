@@ -1275,25 +1275,35 @@
          ("\\.html.erb$" . poly-html+erb-mode)
          ("\\.slim$" . poly-slim-mode))
 
-    :commands (poly-markdown-mode
-                      poly-noweb+r-mode
-                      poly-noweb+r-mode
-                      poly-markdown+r-mode
-                      poly-rapport-mode
-                      poly-html+r-mode
-                      poly-brew+r-mode
-                      poly-r+c++-mode
-                      poly-c++r-mode
-                      poly-javascript+erb-mode
-                      poly-coffee+erb-mode
-                      poly-html+erb-mode
-                      poly-slim-mode)
-    :config
-    (require 'poly-R)
-    (require 'poly-erb)
-    (require 'poly-markdown)
-    (require 'poly-noweb)
-    (require 'poly-slim))
+  :commands (poly-markdown-mode
+             poly-noweb+r-mode
+             poly-noweb+r-mode
+             poly-markdown+r-mode
+             poly-rapport-mode
+             poly-html+r-mode
+             poly-brew+r-mode
+             poly-r+c++-mode
+             poly-c++r-mode
+             poly-javascript+erb-mode
+             poly-coffee+erb-mode
+             poly-html+erb-mode
+             poly-slim-mode)
+  :config
+  (require 'poly-R)
+  (require 'poly-erb)
+  (require 'poly-markdown)
+  (require 'poly-noweb)
+  (require 'poly-slim))
+
+;; =============================================================================
+;; help-mode ===================================================================
+;; =============================================================================
+(use-package help
+  :ensure nil
+  :config
+  (setq help-window-select t)
+  (define-key help-mode-map "J" #'forward-button)
+  (define-key help-mode-map "K" #'backward-button))
 
 
 ;; =============================================================================
