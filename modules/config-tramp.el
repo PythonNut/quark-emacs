@@ -37,20 +37,6 @@
        (with-parsed-tramp-file-name file-name parsed
          (string= "root" (substring-no-properties parsed-user)))))
 
-(defun my/file-name-first-existing-parent (file-path)
-  (catch 'found-existing-directory
-    (let ((temp-path (file-name-directory file-path)))
-      (while t
-        (if (file-exists-p temp-path)
-            (throw 'found-existing-directory
-                   temp-path)
-          ;; strip one directory off the path
-          (setq temp-path
-                (directory-file-name
-                 (file-name-directory (if (file-name-absolute-p temp-path)
-                                          temp-path
-                                        (expand-file-name temp-path))))))))))
-
 (defun my/make-root-file-name (file-name)
   (require 'tramp)
   (let ((sudo (let ((default-directory

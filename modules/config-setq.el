@@ -190,4 +190,38 @@ response as a no."
     (define-key query-replace-map [t] 'skip)
     (y-or-n-p prompt)))
 
+(defun my/file-name-first-existing-parent (file-path)
+  (catch 'found-existing-directory
+    (let ((temp-path (file-name-directory file-path)))
+      (while t
+        (if (file-exists-p temp-path)
+            (throw 'found-existing-directory
+                   temp-path)
+          ;; strip one directory off the path
+          (setq temp-path
+                (directory-file-name
+                 (file-name-directory (if (file-name-absolute-p temp-path)
+                                          temp-path
+                                        (expand-file-name temp-path))))))))))
+
+(defun my/slow-fs (dir)
+  (or (file-remote-p dir)
+      (when (or (string= system-type "darwin")
+                (string= system-type "gnu/linux"))
+        (let* ((dir (my/file-name-first-existing-parent
+                     (expand-file-name dir)))
+               (fs-flag (if (string= system-type "darwin") "-T" "-t"))
+               (slow-file-systems (list "osxfuse"))
+               (args (append
+                      (cl-loop for fs in slow-file-systems
+                               collect fs-flag
+                               collect fs)
+                      (list dir)))
+               (df-result
+                (with-output-to-string
+                  (with-current-buffer
+                      standard-output
+                    (apply #'call-process "df" nil t nil args)))))
+          (not (string-empty-p df-result))))))
+
 (provide 'config-setq)
