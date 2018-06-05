@@ -25,7 +25,8 @@
 (unless (bound-and-true-p my/slow-device)
   (add-hook 'find-file-hook
             (lambda ()
-              (when (display-graphic-p)
+              (when (and (display-graphic-p)
+                         (not (my/slow-fs buffer-file-name)))
                 (diff-hl-mode +1)
                 (diff-hl-update)))))
 
