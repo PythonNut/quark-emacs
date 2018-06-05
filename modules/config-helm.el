@@ -297,8 +297,7 @@
 
   (let ((helm-sources-using-default-as-input)
         (projectile-root (ignore-errors (projectile-project-p)))
-        (file-remote (and buffer-file-name
-                          (file-remote-p default-directory))))
+        (slow-fs (my/slow-fs default-directory)))
     (helm :sources
           (append
            ;; projectile explodes when not in project
@@ -312,7 +311,7 @@
                (append
                 '(helm-source-projectile-recentf-list
                   helm-source-non-projectile-recentf-list)
-                (unless file-remote
+                (unless slow-fs
                   '(helm-source-projectile-files-list)))
              '(helm-source-recentf))
 
@@ -321,7 +320,7 @@
              helm-source-find-files)
 
            ;; disable expensve helm sources when using TRAMP
-           (unless file-remote
+           (unless slow-fs
              (append
               ;; code search
               (if (and projectile-root
