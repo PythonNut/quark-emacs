@@ -159,6 +159,8 @@
     ("<C-S-iso-lefttab>"
      (call-interactively #'iflipb-previous-buffer))
     ("<backtab>"
+     (call-interactively #'iflipb-previous-buffer))
+    ("<C-S-tab>"
      (call-interactively #'iflipb-previous-buffer)))
 
   (defun iflipb-next-buffer-smart ()
@@ -181,9 +183,11 @@
 
   (global-set-key (kbd "<C-tab>") #'iflipb-next-buffer-smart)
   (global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer-smart)
+  (global-set-key (kbd "<C-S-tab>") #'iflipb-previous-buffer-smart)
 
   (global-set-key (kbd "C-c TAB") #'iflipb-next-buffer-smart)
   (global-set-key (kbd "C-c <backtab>") #'iflipb-previous-buffer-smart)
+  (global-set-key (kbd "C-c <C-S-tab>") #'iflipb-previous-buffer-smart)
 
   :config
   (setq iflipb-ignore-buffers (list (rx line-start " ")
