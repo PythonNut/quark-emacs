@@ -324,4 +324,8 @@ already exists in the home directory."
 
   (advice-add 'server-start :around #'nadvice/server-mode))
 
+(use-package atomic-chrome
+  :commands (atomic-chrome-start-server
+             atomic-chrome-stop-server))
+
 (provide 'config-desktop)
