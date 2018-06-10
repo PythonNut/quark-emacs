@@ -129,10 +129,10 @@
     (with-demoted-errors "Load error: %s"
       (require 'flycheck)))
 
-  (setq eldoc-idle-delay 0.1)
+  (setq eldoc-idle-delay 0.2)
   (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
     (and (apply old-fun args)
-         (not (and (my/sp-on-delimiter-p)
+         (not (and (bound-and-true-p sp-show-pair-overlays)
                    (not (minibufferp))))
          (not (and (bound-and-true-p flycheck-mode)
                    (flycheck-overlay-errors-at (point))))))

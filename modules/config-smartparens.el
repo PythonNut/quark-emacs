@@ -52,24 +52,6 @@
             (lambda ()
               (sp-local-pair major-mode "'" nil :actions nil)))
 
-  (defun my/sp-on-delimiter-p ()
-    (ignore-errors (let ((inhibit-message t))
-                     (save-excursion
-                       (when (or (evil-normal-state-p)
-                                 (evil-motion-state-p)
-                                 (evil-operator-state-p))
-                         (let ((evil-cross-lines nil))
-                           (evil-forward-char)))
-                       (if (and (sp-get (sp-get-sexp nil) :beg)
-                                (= (point) (sp-get (sp-get-sexp nil) :beg)))
-                           (cons (sp-get (sp-get-sexp nil) :beg)
-                                 (sp-get (sp-get-sexp nil) :end))
-                         (if (and (sp-get (sp-get-sexp t) :end)
-                                  (= (point) (sp-get (sp-get-sexp t) :end)))
-                             (cons (sp-get (sp-get-sexp t) :beg)
-                                   (sp-get (sp-get-sexp t) :end))
-                           nil))))))
-
   (el-patch-defun sp-show--pair-echo-match (start end olen clen)
     "Print the line of the matching paren in the echo area if not
 visible on screen. Needs to be called after the show-pair overlay
@@ -376,34 +358,34 @@ has been created."
 [_U_] ↰↱ [_u_]  [_K_] ←  kill  → [_k_]  [_<_] ← barf  → [_._]   [_s_] split
 [_b_] ←→ [_f_]  [_p_] ←  next  → [_n_]  [_>_] ← slurp → [_,_]   [_j_] join
 [_D_] ↲↳ [_d_]  [_W_] ← unwrap → [_w_]  [_a_] ← emit  → [_e_]   [_t_] trans"
-  ("f" evil-sp-forward-sexp)
-  ("b" evil-sp-backward-sexp)
-  ("d" evil-sp-down-sexp)
-  ("D" evil-sp-backward-down-sexp)
-  ("u" evil-sp-up-sexp)
-  ("U" evil-sp-backward-up-sexp)
-  ("n" evil-sp-next-sexp)
-  ("p" evil-sp-previous-sexp)
-  ("k" on-parens-kill-sexp)
-  ("K" sp-backward-kill-sexp)
-  ("w" sp-unwrap-sexp)
-  ("W" sp-backward-unwrap-sexp)
-  ("s" on-parens-split-supersexp)
-  ("j" sp-join-sexp)
-  ("a" sp-absorb-sexp)
-  ("e" sp-emit-sexp)
-  ("t" sp-transpose-sexp)
-  ("," evil-sp-forward-slurp-sexp)
-  ("." evil-sp-forward-barf-sexp)
-  ("<" evil-sp-backward-barf-sexp)
-  (">" evil-sp-backward-slurp-sexp))
+      ("f" evil-sp-forward-sexp)
+      ("b" evil-sp-backward-sexp)
+      ("d" evil-sp-down-sexp)
+      ("D" evil-sp-backward-down-sexp)
+      ("u" evil-sp-up-sexp)
+      ("U" evil-sp-backward-up-sexp)
+      ("n" evil-sp-next-sexp)
+      ("p" evil-sp-previous-sexp)
+      ("k" on-parens-kill-sexp)
+      ("K" sp-backward-kill-sexp)
+      ("w" sp-unwrap-sexp)
+      ("W" sp-backward-unwrap-sexp)
+      ("s" on-parens-split-supersexp)
+      ("j" sp-join-sexp)
+      ("a" sp-absorb-sexp)
+      ("e" sp-emit-sexp)
+      ("t" sp-transpose-sexp)
+      ("," evil-sp-forward-slurp-sexp)
+      ("." evil-sp-forward-barf-sexp)
+      ("<" evil-sp-backward-barf-sexp)
+      (">" evil-sp-backward-slurp-sexp))
 
-  ;; evil normal mode bindings
-  (with-no-warnings
-    (evil-define-motion my/smart-smartparens-tools ()
-      (hydra/smartparens-tools/body)))
+    ;; evil normal mode bindings
+    (with-no-warnings
+      (evil-define-motion my/smart-smartparens-tools ()
+        (hydra/smartparens-tools/body)))
 
-  (define-key evil-normal-state-map "gs" #'my/smart-smartparens-tools)))
+    (define-key evil-normal-state-map "gs" #'my/smart-smartparens-tools)))
 
 (use-package paren
   :init
