@@ -326,6 +326,9 @@ already exists in the home directory."
 
 (use-package atomic-chrome
   :commands (atomic-chrome-start-server
-             atomic-chrome-stop-server))
+             atomic-chrome-stop-server)
+  :init
+  (when (display-graphic-p)
+    (idle-job-add-function #'atomic-chrome-start-server)))
 
 (provide 'config-desktop)
