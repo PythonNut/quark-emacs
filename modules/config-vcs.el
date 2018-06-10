@@ -8,7 +8,14 @@
 (use-package vc-hooks
   :ensure nil
   :config
-  (setq vc-follow-symlinks t))
+  (setq vc-follow-symlinks t)
+
+  (defun my/maybe/vc-refresh-state ()
+    (unless (my/slow-fs default-directory t)
+      (vc-refresh-state)))
+
+  (remove-hook 'find-file-hook #'vc-refresh-state)
+  (add-hook 'find-file-hook #'my/maybe/vc-refresh-state))
 
 (use-package vc-git
   :ensure nil
@@ -130,7 +137,8 @@
     (--when-let (magit-process-match-prompt
                  magit-process-username-prompt-regexps string)
       (process-send-string
-       process (magit-process-kill-on-abort process
+       process (magit-process-kill-on-abort
+                   process
                  (concat (el-patch-swap
                            (read-string it nil nil (user-login-name))
                            (read-passwd it nil (user-login-name)))
