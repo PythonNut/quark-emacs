@@ -192,7 +192,7 @@ response as a no."
 
 (defun my/file-name-first-existing-parent (file-path)
   (catch 'found-existing-directory
-    (let ((temp-path (file-name-directory file-path)))
+    (let ((temp-path file-path))
       (while t
         (if (file-exists-p temp-path)
             (throw 'found-existing-directory
@@ -204,14 +204,17 @@ response as a no."
                                           temp-path
                                         (expand-file-name temp-path))))))))))
 
-(defun my/slow-fs (dir)
+(defun my/slow-fs (dir &optional exclude-remote)
   (or (file-remote-p dir)
       (when (or (string= system-type "darwin")
                 (string= system-type "gnu/linux"))
-        (let* ((dir (my/file-name-first-existing-parent
+        (let* ((mac-p (string= system-type "darwin"))
+               (dir (my/file-name-first-existing-parent
                      (expand-file-name dir)))
-               (fs-flag (if (string= system-type "darwin") "-T" "-t"))
-               (slow-file-systems (list "osxfuse"))
+               (fs-flag (if mac-p "-T" "-t"))
+               (slow-file-systems (if mac-p
+                                      (list "osxfuse")
+                                    (list "fuse.sshfs")))
                (args (append
                       (cl-loop for fs in slow-file-systems
                                collect fs-flag
@@ -221,7 +224,7 @@ response as a no."
                 (with-output-to-string
                   (with-current-buffer
                       standard-output
-                    (apply #'call-process "df" nil t nil args)))))
+                    (apply #'call-process "df" nil '(t nil) nil args)))))
           (not (string-empty-p df-result))))))
 
 (provide 'config-setq)
