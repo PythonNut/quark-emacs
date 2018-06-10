@@ -44,24 +44,15 @@ second, floating-point values are rounded down to the nearest integer.)"
         ;; This is to avoid nasty "<t> is undefined" errors.
         (push read unread-command-events)))))
 
-(defvar idle-require-symbols '(helm-files
-                               helm-ring
-                               helm-projectile
-                               helm-semantic
-                               counsel
-                               which-key
-                               evil-snipe
-                               avy
-                               ace-jump-helm-line
-                               multiple-cursors)
+(defvar idle-jobs nil
   "Symbols which need to be autoloaded.")
 
-(defvar idle-require-timer (run-with-idle-timer 0.1 t 'idle-require-load-next))
+(defvar idle-job-timer (run-with-idle-timer 0.1 t 'idle-job-run-next))
 
-(defun idle-require-load-next ()
+(defun idle-job-run-next ()
   "Load symbols from `idle-require-symbols' until input occurs."
   (let (symbol)
-    (while (and idle-require-symbols
+    (while (and idle-jobs
                 (not (input-pending-p)))
       (cl-letf* ((old-load (symbol-function #'load))
                  ((symbol-function #'load)
@@ -71,8 +62,27 @@ second, floating-point values are rounded down to the nearest integer.)"
                            noerror
                            (not (eq debug-on-error 'startup))
                            args))))
-        (require (pop idle-require-symbols)))
+        (funcall (pop idle-jobs)))
       (my/sit-for 0.1))))
+
+(defun idle-job-add-require (sym)
+  (push (lambda ()
+          (require sym))
+        idle-jobs))
+
+(defun idle-job-add-function (sym)
+  (push sym idle-jobs))
+
+(idle-job-add-require 'helm-files)
+(idle-job-add-require 'helm-ring)
+(idle-job-add-require 'helm-projectile)
+(idle-job-add-require 'helm-semantic)
+(idle-job-add-require 'counsel)
+(idle-job-add-require 'which-key)
+(idle-job-add-require 'evil-snipe)
+(idle-job-add-require 'avy)
+(idle-job-add-require 'ace-jump-helm-line)
+(idle-job-add-require 'multiple-cursors)
 
 (straight-use-package '(use-package
                          :type git
