@@ -16,19 +16,20 @@
   (setq vc-git-diff-switches '("--histogram")))
 
 (use-package diff-hl
+  :init
+  (defun my/maybe-diff-hl-mode ()
+    (when (and (display-graphic-p)
+               (not (my/slow-fs buffer-file-name)))
+      (diff-hl-mode +1)
+      (diff-hl-update)))
+
+  (add-hook 'find-file-hook #'my/maybe-diff-hl-mode)
+
   :config
   (setq diff-hl-draw-borders nil)
   (diff-hl-flydiff-mode +1)
   ;; Automatically refresh when magit state changes
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
-
-(unless (bound-and-true-p my/slow-device)
-  (add-hook 'find-file-hook
-            (lambda ()
-              (when (and (display-graphic-p)
-                         (not (my/slow-fs buffer-file-name)))
-                (diff-hl-mode +1)
-                (diff-hl-update)))))
 
 (use-package magit
   :init (defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
