@@ -102,6 +102,8 @@
       (require 'el-patch)
       (require 'evil-easymotion)))
 
+  (el-patch-feature evil-easymotion)
+
   (el-patch-defvar evilem-map (make-sparse-keymap)
     "Keymap used for the default bindings")
 
