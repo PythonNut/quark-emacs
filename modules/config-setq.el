@@ -190,9 +190,11 @@ response as a no."
     (define-key query-replace-map [t] 'skip)
     (y-or-n-p prompt)))
 
-(defun my/file-name-first-existing-parent (file-path)
+(defun my/file-name-first-existing-parent (file-path &optional include-self)
   (catch 'found-existing-directory
-    (let ((temp-path file-path))
+    (let ((temp-path (if include-self
+                         file-path
+                       (file-name-directory file-path))))
       (while t
         (if (file-exists-p temp-path)
             (throw 'found-existing-directory
@@ -210,7 +212,8 @@ response as a no."
                 (string= system-type "gnu/linux"))
         (let* ((mac-p (string= system-type "darwin"))
                (dir (my/file-name-first-existing-parent
-                     (expand-file-name dir)))
+                     (expand-file-name dir)
+                     t))
                (fs-flag (if mac-p "-T" "-t"))
                (slow-file-systems (if mac-p
                                       (list "osxfuse")
