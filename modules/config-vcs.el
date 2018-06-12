@@ -198,7 +198,6 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
     (smerge-mode +1)))
 
 (add-hook 'find-file-hook #'my/maybe-enable-smerge)
-(add-hook 'magit-revert-buffer-hook #'my/maybe-enable-smerge)
 (add-hook 'after-revert-hook #'my/maybe-enable-smerge)
 
 (with-eval-after-load 'projectile
