@@ -166,39 +166,158 @@
   :config
   (add-hook 'magit-mode-hook 'magit-svn-mode))
 
-(defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
-  "
+(use-package smerge-mode
+  :ensure nil
+  :init
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'hydra)))
+
+  (autoload #'smerge-remove-props "smerge-mode" nil nil)
+  (autoload #'smerge-match-conflict "smerge-mode" nil nil)
+
+  (el-patch-feature smerge-mode)
+
+  (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
+    "
 _p_ ← → _n_ Keep _a_ll _b_ase _m_ine _o_ther | _C_ombine _E_diff _R_efine _r_esolve
 Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 "
-  ("C" smerge-combine-with-next)
-  ("E" smerge-ediff)
-  ("R" smerge-refine)
-  ("r" smerge-resolve)
+    ("C" smerge-combine-with-next)
+    ("E" smerge-ediff)
+    ("R" smerge-refine)
+    ("r" smerge-resolve)
 
-  ("RET" smerge-keep-current :color red)
-  ("a" smerge-keep-all :color red)
-  ("b" smerge-keep-base :color red)
-  ("m" smerge-keep-mine :color red)
-  ("o" smerge-keep-other :color red)
+    ("RET" smerge-keep-current :color red)
+    ("a" smerge-keep-all :color red)
+    ("b" smerge-keep-base :color red)
+    ("m" smerge-keep-mine :color red)
+    ("o" smerge-keep-other :color red)
 
-  ("n" smerge-next :color red)
-  ("p" smerge-prev :color red)
+    ("n" smerge-next :color red)
+    ("p" smerge-prev :color red)
 
-  ("=<" smerge-diff-base-mine)
-  ("==" smerge-diff-mine-other)
-  ("=>" smerge-diff-base-other))
+    ("=<" smerge-diff-base-mine)
+    ("==" smerge-diff-mine-other)
+    ("=>" smerge-diff-base-other))
 
-(with-eval-after-load 'smerge-mode
-  (diminish 'smerge-mode)
-  (define-key smerge-mode-map smerge-command-prefix #'hydra/smerge-tools/body))
+  (el-patch-defcustom smerge-command-prefix "\C-c^"
+    "Prefix for `smerge-mode' commands."
+    :type '(choice (const :tag "ESC"   "\e")
+		   (const :tag "C-c ^" "\C-c^" )
+		   (const :tag "none"  "")
+		   string))
 
-(defun my/maybe-enable-smerge ()
-  (when (vc-backend buffer-file-name)
-    (smerge-mode +1)))
+  (el-patch-defconst smerge-font-lock-keywords
+    '((smerge-find-conflict
+       (1 smerge-upper-face prepend t)
+       (2 smerge-base-face prepend t)
+       (3 smerge-lower-face prepend t)
+       ;; FIXME: `keep' doesn't work right with syntactic fontification.
+       (0 smerge-markers-face keep)
+       (4 nil t t)
+       (5 nil t t)))
+    "Font lock patterns for `smerge-mode'.")
 
-(add-hook 'find-file-hook #'my/maybe-enable-smerge)
-(add-hook 'after-revert-hook #'my/maybe-enable-smerge)
+  ;; TODO: This isn't exactly correct, but the map is defined using a
+  ;; macro that el-patch doesn't understand.
+  (defvar smerge-mode-map (make-sparse-keymap))
+  (define-key smerge-mode-map smerge-command-prefix #'hydra/smerge-tools/body)
+
+  (el-patch-defconst smerge-begin-re "^<<<<<<< \\(.*\\)\n")
+  (el-patch-defconst smerge-end-re "^>>>>>>> \\(.*\\)\n")
+  (el-patch-defconst smerge-base-re "^||||||| \\(.*\\)\n")
+  (el-patch-defconst smerge-lower-re "^=======\n")
+  (el-patch-defconst smerge-parsep-re
+    (concat smerge-begin-re "\\|" smerge-end-re "\\|"
+            smerge-base-re "\\|" smerge-lower-re "\\|"))
+
+  (el-patch-defun smerge-conflict-overlay (pos)
+    "Return the conflict overlay at POS if any."
+    (let ((ols (overlays-at pos))
+          conflict)
+      (dolist (ol ols)
+        (if (and (eq (overlay-get ol 'smerge) 'conflict)
+                 (> (overlay-end ol) pos))
+            (setq conflict ol)))
+      conflict))
+
+  (el-patch-defun smerge-find-conflict (&optional limit)
+    "Find and match a conflict region.  Intended as a font-lock MATCHER.
+The submatches are the same as in `smerge-match-conflict'.
+Returns non-nil if a match is found between point and LIMIT.
+Point is moved to the end of the conflict."
+    (let ((found nil)
+          (pos (point))
+          conflict)
+      ;; First check to see if point is already inside a conflict, using
+      ;; the conflict overlays.
+      (while (and (not found) (setq conflict (smerge-conflict-overlay pos)))
+        ;; Check the overlay's validity and kill it if it's out of date.
+        (condition-case nil
+            (progn
+              (goto-char (overlay-start conflict))
+              (smerge-match-conflict)
+              (goto-char (match-end 0))
+              (if (<= (point) pos)
+                  (error "Matching backward!")
+                (setq found t)))
+          (error (smerge-remove-props
+                  (overlay-start conflict) (overlay-end conflict))
+                 (goto-char pos))))
+      ;; If we're not already inside a conflict, look for the next conflict
+      ;; and add/update its overlay.
+      (while (and (not found) (re-search-forward smerge-begin-re limit t))
+        (condition-case nil
+            (progn
+              (smerge-match-conflict)
+              (goto-char (match-end 0))
+              (let ((conflict (smerge-conflict-overlay (1- (point)))))
+                (if conflict
+                    ;; Update its location, just in case it got messed up.
+                    (move-overlay conflict (match-beginning 0) (match-end 0))
+                  (setq conflict (make-overlay (match-beginning 0) (match-end 0)
+                                               nil 'front-advance nil))
+                  (overlay-put conflict 'evaporate t)
+                  (overlay-put conflict 'smerge 'conflict)
+                  (let ((props smerge-text-properties))
+                    (while props
+                      (overlay-put conflict (pop props) (pop props))))))
+              (setq found t))
+          (error nil)))
+      found))
+
+  (el-patch-define-minor-mode smerge-mode
+    "Minor mode to simplify editing output from the diff3 program.
+With a prefix argument ARG, enable the mode if ARG is positive,
+and disable it otherwise.  If called from Lisp, enable the mode
+if ARG is omitted or nil.
+\\{smerge-mode-map}"
+    :group 'smerge :lighter (el-patch-swap " SMerge" nil)
+    (when (and (boundp 'font-lock-mode) font-lock-mode)
+      (save-excursion
+        (if smerge-mode
+	    (font-lock-add-keywords nil smerge-font-lock-keywords 'append)
+	  (font-lock-remove-keywords nil smerge-font-lock-keywords))
+        (goto-char (point-min))
+        (while (smerge-find-conflict)
+	  (save-excursion
+	    (font-lock-fontify-region (match-beginning 0) (match-end 0) nil)))))
+    (if (string-match (regexp-quote smerge-parsep-re) paragraph-separate)
+        (unless smerge-mode
+          (set (make-local-variable 'paragraph-separate)
+               (replace-match "" t t paragraph-separate)))
+      (when smerge-mode
+        (set (make-local-variable 'paragraph-separate)
+             (concat smerge-parsep-re paragraph-separate))))
+    (unless smerge-mode
+      (smerge-remove-props (point-min) (point-max))))
+
+
+  (add-hook 'find-file-hook #'smerge-mode)
+
+  :config
+  (diminish 'smerge-mode))
 
 (with-eval-after-load 'projectile
   (setq projectile-known-projects-file
