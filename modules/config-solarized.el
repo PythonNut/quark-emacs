@@ -2,10 +2,13 @@
 
 (use-package solarized-theme)
 
-(defun nadvice/load-theme (&rest _args)
+(defun nadvice/load-theme (old-fun &rest args)
+  ;; TODO: This is probably a horrible hack
+  (mapc #'disable-theme custom-enabled-themes)
+  (apply old-fun args)
   (run-hooks 'load-theme-hook))
 
-(advice-add 'load-theme :after #'nadvice/load-theme)
+(advice-add 'load-theme :around #'nadvice/load-theme)
 
 (add-hook 'load-theme-hook
           (lambda ()
