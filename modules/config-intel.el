@@ -8,15 +8,15 @@
   ;; enable semantic code LALR(1) parser
   (add-hook 'prog-mode-hook #'semantic-mode)
 
-  :config
   (with-eval-after-load 'semantic/db-file
-    (defun my/semanticdb-file-directory-exists-p (old-fun &rest args)
+    (defun nadvice/semanticdb-file-directory-exists-p (old-fun &rest args)
       (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
         (apply old-fun args)))
 
     (advice-add 'semanticdb-file-directory-exists-p :around
-                #'semanticdb-file-directory-exists-p))
+                #'nadvice/semanticdb-file-directory-exists-p))
 
+  :config
   (setq semanticdb-default-save-directory
         (locate-user-emacs-file "data/semanticdb")
         srecode-map-save-file
