@@ -51,13 +51,14 @@
   (define-key undo-tree-visualizer-mode-map
     (kbd "l") #'undo-tree-visualize-switch-branch-right)
 
+  (setq undo-tree-history-directory-alist
+        `((,(rx (zero-or-more anything))
+           . ,(expand-file-name (locate-user-emacs-file "data/undo-backups/")))))
+
   ;; compress undo with xz
   (when (executable-find "xz")
-    (defun nadvice/undo-tree-make-history-save-file-name (_ret)
-      (let ((auto-save-file-name-transforms
-             `((,(rx (zero-or-more not-newline))
-                ,(locate-user-emacs-file "data/undo-backups") t))))
-        (concat (make-auto-save-file-name) ".undo.xz")))
+    (defun nadvice/undo-tree-make-history-save-file-name (ret)
+      (concat ret ".undo.xz"))
 
     (defun nadvice/undo-tree-load-history (old-fun &rest args)
       (let ((jka-compr-verbose))
