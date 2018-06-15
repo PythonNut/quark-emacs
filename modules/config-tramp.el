@@ -35,7 +35,8 @@
   (and (featurep 'tramp)
        (tramp-tramp-file-p file-name)
        (with-parsed-tramp-file-name file-name parsed
-         (string= "root" (substring-no-properties parsed-user)))))
+         (when parsed-user
+           (string= "root" (substring-no-properties parsed-user))))))
 
 (defun my/make-root-file-name (file-name)
   (require 'tramp)
