@@ -460,15 +460,27 @@ split."
                            (split-window-right)))))
       (or (el-patch-swap $vertical $horizontal)
           (el-patch-swap $horizontal $vertical)
-          (and (eq window (frame-root-window (window-frame window)))
-               (not (window-minibuffer-p window))
-               ;; If WINDOW is the only window on its frame and is not the
-               ;; minibuffer window, try to split it vertically disregarding
-               ;; the value of `split-height-threshold'.
-               (let ((split-height-threshold 0))
-                 (when (window-splittable-p window)
-                   (with-selected-window window
-                     (split-window-below)))))))))
+          (and
+           ;; If WINDOW is the only usable window on its frame (it is
+           ;; the only one or, not being the only one, all the other
+           ;; ones are dedicated) and is not the minibuffer window, try
+           ;; to split it vertically disregarding the value of
+           ;; `split-height-threshold'.
+           (let ((frame (window-frame window)))
+             (or
+              (eq window (frame-root-window frame))
+              (catch 'done
+                (walk-window-tree (lambda (w)
+                                    (unless (or (eq w window)
+                                                (window-dedicated-p w))
+                                      (throw 'done nil)))
+                                  frame)
+                t)))
+	   (not (window-minibuffer-p window))
+	   (let ((split-height-threshold 0))
+	     (when (window-splittable-p window)
+	       (with-selected-window window
+	         (split-window-below)))))))))
 
 ;; =========================================================
 ;; digit-groups - make large unbroken numbers easier to read
