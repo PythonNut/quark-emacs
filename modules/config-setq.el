@@ -105,13 +105,6 @@ files with (apparently) up to date bytecodes."
 (delete-selection-mode +1)
 (global-hl-line-mode +1)
 
-;; Lazily load auto-compression-mode
-(defun my/auto-compression-onetime-setup ()
-  (auto-compression-mode +1)
-  (remove-hook 'find-file-hook #'my/auto-compression-onetime-setup))
-
-(add-hook 'find-file-hook #'my/auto-compression-onetime-setup)
-
 ;; encryption mode
 (setq epa-file-name-regexp (rx (or ".gpg" ".asc") line-end))
 
