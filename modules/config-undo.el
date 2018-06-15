@@ -79,6 +79,12 @@
     (apply old-fun args))
 
   (advice-add 'undo-list-transfer-to-tree :around
-              #'nadvice/undo-tree-ignore-text-properties))
+              #'nadvice/undo-tree-ignore-text-properties)
+
+  (defun nadvice/undo-tree-load-history (old-fun &rest args)
+    (let ((inhibit-message t))
+      (apply old-fun args)))
+
+  (advice-add 'undo-tree-load-history :around #'nadvice/undo-tree-load-history))
 
 (provide 'config-undo)
