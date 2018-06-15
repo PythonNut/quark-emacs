@@ -202,32 +202,42 @@
 
   (el-patch-defvar helm-source-projectile-files-list
     (helm-build-sync-source "Projectile files"
+      :before-init-hook (lambda ()
+                          (add-hook 'helm-after-update-hook #'helm-projectile--move-to-real)
+                          (add-hook 'helm-cleanup-hook #'helm-projectile--remove-move-to-real))
       :candidates (lambda ()
-                    (add-hook 'helm-update-hook #'helm-projectile--move-to-real)
-                    (with-helm-current-buffer
-                      (cl-loop with root = (projectile-project-root)
-                               with file-at-root = (file-relative-name (expand-file-name helm-pattern root))
-                               for display in (projectile-current-project-files)
-                               collect (cons display (expand-file-name display root)) into files
-                               finally return
-                               (el-patch-swap
-                                 (if (or (string-empty-p helm-pattern)
-                                         (assoc helm-pattern files))
-                                     files
-                                   (cl-pairlis (list (helm-ff-prefix-filename helm-pattern nil t)
-                                                     (helm-ff-prefix-filename file-at-root nil t))
-                                               (list (expand-file-name helm-pattern)
-                                                     (expand-file-name helm-pattern root))
-                                               files))
-                                 files))))
+                    (when (projectile-project-p)
+                      (with-helm-current-buffer
+                        (cl-loop with root = (projectile-project-root)
+                                 for display in (projectile-current-project-files)
+                                 collect (cons display (expand-file-name display root))))))
+      :filtered-candidate-transformer
+      (lambda (files _source)
+        (with-helm-current-buffer
+          (let* ((root (projectile-project-root))
+                 (file-at-root (file-relative-name (expand-file-name helm-pattern root))))
+            (if (or (string-empty-p helm-pattern)
+                    (assoc helm-pattern files))
+                files
+              (el-patch-swap
+                (if (equal helm-pattern file-at-root)
+                    (cl-acons (helm-ff-prefix-filename helm-pattern nil t)
+                              (expand-file-name helm-pattern)
+                              files)
+                  (cl-pairlis (list (helm-ff-prefix-filename helm-pattern nil t)
+                                    (helm-ff-prefix-filename file-at-root nil t))
+                              (list (expand-file-name helm-pattern)
+                                    (expand-file-name helm-pattern root))
+                              files))
+                files)))))
+      (el-patch-add :candidate-number-limit 100)
       :fuzzy-match helm-projectile-fuzzy-match
       :keymap helm-projectile-find-file-map
       :help-message 'helm-ff-help-message
       :mode-line helm-read-file-name-mode-line-string
       :action helm-projectile-file-actions
       :persistent-action #'helm-projectile-file-persistent-action
-      :persistent-help "Preview file"
-      :volatile t)
+      :persistent-help "Preview file")
     "Helm source definition for Projectile files."))
 
 (use-package helm-locate
