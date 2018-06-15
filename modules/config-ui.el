@@ -195,7 +195,8 @@
                                     (rx line-start "*Compile")
                                     (rx line-start "*Quail")
                                     (rx line-start "magit-process")
-                                    (rx line-start "magit-diff"))
+                                    (rx line-start "magit-diff")
+                                    (rx line-start "*tramp"))
         iflipb-wrap-around t)
 
   (defun nadvice/iflipb-first-iflipb-buffer-switch-command (&rest _args) nil)
