@@ -8,7 +8,12 @@
 
   (evil-set-initial-state 'undo-tree-visualizer-mode 'motion)
 
-  (diminish 'undo-tree-mode)
+  (setq undo-tree-mode-lighter nil
+        undo-tree-auto-save-history t
+        undo-tree-history-directory-alist
+        `((,(rx (zero-or-more anything))
+           . ,(expand-file-name (locate-user-emacs-file "data/undo-backups/")))))
+
   (defalias 'redo #'undo-tree-redo)
   (defalias 'undo #'undo-tree-undo)
 
@@ -24,7 +29,6 @@
   (define-key evil-visual-state-map "u" #'undo-tree-undo)
 
   (global-set-key (kbd "M-_") #'undo-tree-redo)
-  (setq undo-tree-auto-save-history t)
 
   ;; visual line wrapping breaks the
   (add-hook 'undo-tree-visualizer-mode-hook
@@ -50,10 +54,6 @@
     (kbd "h") #'undo-tree-visualize-switch-branch-left)
   (define-key undo-tree-visualizer-mode-map
     (kbd "l") #'undo-tree-visualize-switch-branch-right)
-
-  (setq undo-tree-history-directory-alist
-        `((,(rx (zero-or-more anything))
-           . ,(expand-file-name (locate-user-emacs-file "data/undo-backups/")))))
 
   ;; compress undo with xz
   (when (executable-find "xz")
