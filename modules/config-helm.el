@@ -313,11 +313,8 @@
                   helm-source-non-projectile-recentf-list)
                 (unless slow-fs
                   '(helm-source-projectile-files-list)))
-             '(helm-source-recentf))
-
-           '(;; files
-             helm-source-files-in-current-dir
-             helm-source-find-files)
+             '(helm-source-recentf
+               helm-source-files-in-current-dir))
 
            ;; disable expensve helm sources when using TRAMP
            (unless slow-fs
