@@ -56,7 +56,9 @@
           (tramp-make-tramp-file-name
            (if sudo "sudo" "su")
            "root"
+           nil
            parsed-host
+           nil
            parsed-localname
            (let ((tramp-postfix-host-format "|")
                  (tramp-prefix-format))
@@ -68,7 +70,9 @@
                   "ssh"
                 parsed-method)
               parsed-user
+              parsed-domain
               parsed-host
+              parsed-port
               ""
               parsed-hop))))
       (concat (if sudo "/sudo::" "/su::")
