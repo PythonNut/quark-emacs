@@ -329,6 +329,17 @@ already exists in the home directory."
              atomic-chrome-stop-server)
   :init
   (when (display-graphic-p)
-    (idle-job-add-function #'atomic-chrome-start-server)))
+    (idle-job-add-function #'atomic-chrome-start-server))
+
+  :config
+  (defun my/atomic-chrome-focus-browser ()
+    (cond ((memq window-system '(mac ns))
+           (let ((srv (websocket-server-conn (atomic-chrome-get-websocket (current-buffer)))))
+             (cond ((eq srv (bound-and-true-p atomic-chrome-server-ghost-text))
+                    (call-process "open" nil nil nil "-a" "Firefox"))
+                   ((eq srv (bound-and-true-p atomic-chrome-server-atomic-chrome))
+                    (call-process "open" nil nil nil "-a" "Google Chrome")))))))
+
+  (add-hook 'atomic-chrome-edit-done-hook #'my/atomic-chrome-focus-browser))
 
 (provide 'config-desktop)
