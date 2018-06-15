@@ -109,7 +109,7 @@
   (advice-add 'helm-ff-filter-candidate-one-by-one :around
               #'nadvice/helm-ff-filter-candidate-one-by-one))
 
-(use-package elm-buffers
+(use-package helm-buffers
   :ensure nil
   :config
   (setq helm-buffers-fuzzy-matching t
