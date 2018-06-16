@@ -333,12 +333,20 @@ already exists in the home directory."
 
   :config
   (defun my/atomic-chrome-focus-browser ()
-    (cond ((memq window-system '(mac ns))
-           (let ((srv (websocket-server-conn (atomic-chrome-get-websocket (current-buffer)))))
-             (cond ((eq srv (bound-and-true-p atomic-chrome-server-ghost-text))
+    (let ((srv (websocket-server-conn
+                (atomic-chrome-get-websocket (current-buffer))))
+          (srv-ghost (bound-and-true-p atomic-chrome-server-ghost-text))
+          (srv-atomic (bound-and-true-p atomic-chrome-server-atomic-chrome)))
+      (cond ((memq window-system '(mac ns))
+             (cond ((eq srv srv-ghost)
                     (call-process "open" nil nil nil "-a" "Firefox"))
-                   ((eq srv (bound-and-true-p atomic-chrome-server-atomic-chrome))
-                    (call-process "open" nil nil nil "-a" "Google Chrome")))))))
+                   ((eq srv srv-atomic)
+                    (call-process "open" nil nil nil "-a" "Google Chrome"))))
+            ((and (eq window-system 'x) (executable-find "wmctrl"))
+             (cond ((eq srv srv-ghost)
+                    (call-process "wmctrl" nil nil nil "-a" "Firefox"))
+                   ((eq srv srv-atomic)
+                    (call-process "wmctrl" nil nil nil "-a" "Google Chrome")))))))
 
   (add-hook 'atomic-chrome-edit-done-hook #'my/atomic-chrome-focus-browser))
 
