@@ -108,6 +108,10 @@ recursion depth in the minibuffer prompt.  This is only useful if
       map)
     "Keymap for `ivy-mode'.")
 
+  (el-patch-defcustom ivy-do-completion-in-region t
+    "When non-nil `ivy-mode' will set `completion-in-region-function'."
+    :type 'boolean)
+
   (el-patch-define-minor-mode ivy-mode
     "Toggle Ivy mode on or off.
 Turn Ivy mode on if ARG is positive, off otherwise.
@@ -126,10 +130,8 @@ Minibuffer bindings:
     (if ivy-mode
         (progn
           (setq completing-read-function 'ivy-completing-read)
-          ;; effectively, ivy-do-completion-in-region = 2
-          (el-patch-splice 2
-            (when ivy-do-completion-in-region
-              (setq completion-in-region-function 'ivy-completion-in-region))))
+          (when ivy-do-completion-in-region
+            (setq completion-in-region-function 'ivy-completion-in-region)))
       (setq completing-read-function 'completing-read-default)
       (setq completion-in-region-function 'completion--in-region)))
 
