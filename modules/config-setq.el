@@ -200,27 +200,29 @@ response as a no."
                                         (expand-file-name temp-path))))))))))
 
 (defun my/slow-fs (dir &optional exclude-remote)
-  (or (file-remote-p dir)
-      (when (or (string= system-type "darwin")
-                (string= system-type "gnu/linux"))
-        (let* ((mac-p (string= system-type "darwin"))
-               (dir (my/file-name-first-existing-parent
-                     (expand-file-name dir)
-                     t))
-               (fs-flag (if mac-p "-T" "-t"))
-               (slow-file-systems (if mac-p
-                                      (list "osxfuse")
-                                    (list "fuse.sshfs")))
-               (args (append
-                      (cl-loop for fs in slow-file-systems
-                               collect fs-flag
-                               collect fs)
-                      (list dir)))
-               (df-result
-                (with-output-to-string
-                  (with-current-buffer
-                      standard-output
-                    (apply #'call-process "df" nil '(t nil) nil args)))))
-          (not (string-empty-p df-result))))))
+  (cond ((and (file-remote-p dir) (not exclude-remote))
+         t)
+        ((string= system-type "darwin")
+         (let* ((mac-p (string= system-type "darwin"))
+                (dir (my/file-name-first-existing-parent
+                      (expand-file-name dir)
+                      t))
+                (args (append
+                       (cl-loop for fs in '("osxfuse")
+                                collect "-T"
+                                collect fs)
+                       (list dir))))
+           (with-temp-buffer
+             (apply #'call-process "df" nil '(t nil) nil args)
+             (/= (point) (point-min)))))
+        ((string= system-type "gnu/linux")
+         (let* ((dir (my/file-name-first-existing-parent
+                      (expand-file-name dir)
+                      t))
+                (fs (with-output-to-string
+                      (with-current-buffer
+                          standard-output
+                        (call-process "stat" nil '(t nil) nil "-f" "-c" "%T" dir)))))
+           (member fs '("fuse.sshfs"))))))
 
 (provide 'config-setq)
