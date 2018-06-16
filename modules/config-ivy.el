@@ -38,9 +38,10 @@ recursion depth in the minibuffer prompt.  This is only useful if
   (minibuffer-depth-indicate-mode +1))
 
 ;; hl-line-mode breaks minibuffer in TTY
-(add-hook 'minibuffer-setup-hook
-          (lambda ()
-            (setq-local global-hl-line-mode nil)))
+(defun my/disable-hl-line-mode-in-minibuffer ()
+  (setq-local global-hl-line-mode nil))
+
+(add-hook 'minibuffer-setup-hook #'my/disable-hl-line-mode-in-minibuffer)
 
 (use-package flx-isearch
   :commands (flx-isearch-forward
