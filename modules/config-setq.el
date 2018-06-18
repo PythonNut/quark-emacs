@@ -202,9 +202,17 @@ response as a no."
 (defun my/slow-fs (dir &optional exclude-remote)
   (cond ((and (file-remote-p dir) (not exclude-remote))
          t)
-        ((string= system-type "darwin")
-         (let* ((mac-p (string= system-type "darwin"))
-                (dir (my/file-name-first-existing-parent
+        ((eq system-type 'gnu/linux)
+         (let* ((dir (my/file-name-first-existing-parent
+                      (expand-file-name dir)
+                      t))
+                (fs (with-output-to-string
+                      (with-current-buffer
+                          standard-output
+                        (call-process "stat" nil '(t nil) nil "-f" "-c" "%T" dir)))))
+           (member fs '("fuse.sshfs"))))
+        ((eq system-type 'darwin)
+         (let* ((dir (my/file-name-first-existing-parent
                       (expand-file-name dir)
                       t))
                 (args (append
@@ -214,15 +222,6 @@ response as a no."
                        (list dir))))
            (with-temp-buffer
              (apply #'call-process "df" nil '(t nil) nil args)
-             (/= (point) (point-min)))))
-        ((string= system-type "gnu/linux")
-         (let* ((dir (my/file-name-first-existing-parent
-                      (expand-file-name dir)
-                      t))
-                (fs (with-output-to-string
-                      (with-current-buffer
-                          standard-output
-                        (call-process "stat" nil '(t nil) nil "-f" "-c" "%T" dir)))))
-           (member fs '("fuse.sshfs"))))))
+             (/= (point) (point-min)))))))
 
 (provide 'config-setq)
