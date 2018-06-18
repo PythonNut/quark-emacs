@@ -159,22 +159,20 @@
             (executable-find "hunspell"))
     (add-hook 'text-mode-hook #'flyspell-mode)
     (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+
   :config
+  (define-key flyspell-mode-map (kbd "C-.") nil)
+  (define-key flyspell-mode-map (kbd "C-,") nil)
+
   (setq flyspell-issue-message-flag nil
         flyspell-issue-welcome-flag nil)
 
-  (add-hook 'flyspell-mode-hook
-            (lambda ()
-              (define-key flyspell-mode-map (kbd "C-.") nil)
-              (define-key flyspell-mode-map (kbd "C-,") nil)
-              (diminish 'flyspell-mode (if (display-graphic-p) " f̲" " f"))))
+  (diminish 'flyspell-mode)
 
-  (if (executable-find "hunspell")
-      (setq ispell-program-name "hunspell")
-    (when (executable-find "aspell")
-      (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
-
-
+  (cond ((executable-find "hunspell")
+         (setq ispell-program-name "hunspell"))
+        ((executable-find "aspell")
+         (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
 
 ;;; =============================================
 ;;; yasnippet -- extensible programmable snippets
