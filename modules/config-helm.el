@@ -250,8 +250,12 @@
     (with-demoted-errors "Load error: %s"
       (require 'el-patch)))
 
-  (setq helm-locate-fuzzy-match t
-        helm-locate-command "locate %s -r %s -e -l 100")
+  (cond ((eq system-type 'gnu/linux)
+         (setq helm-locate-fuzzy-match t
+               helm-locate-command "locate %s -r %s -e -l 100"))
+        ((eq system-type 'darwin)
+         (setq helm-locate-fuzzy-match nil
+               helm-locate-command "mdfind -name %s %s")))
 
   (el-patch-defvar helm-source-locate
     (helm-make-source "Locate" 'helm-locate-source
