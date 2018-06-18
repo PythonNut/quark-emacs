@@ -272,19 +272,17 @@
   (defvar my/ag-available nil)
 
   :config
-  (setq my/ag-available
-        (or (executable-find "rg")
-            (executable-find "ag")
-            (executable-find "ack")
-            (executable-find "ack-grep")))
-
-  (if (executable-find "rg")
-      (setq helm-ag-base-command "rg -Hn --color never --no-heading")
-    (unless (executable-find "ag")
-      (if (executable-find "ack")
-          (setq helm-ag-base-command "ack --nocolor --nogroup")
-        (when (executable-find "ack-grep")
-          (setq helm-ag-base-command "ack-grep --nocolor --nogroup"))))))
+  (cond ((executable-find "rg")
+         (setq helm-ag-base-command "rg -Hn --color never --no-heading"
+               my/ag-available t))
+        ((executable-find "ag")
+         (setq my/ag-available t))
+        ((executable-find "ack")
+         (setq helm-ag-base-command "ack --nocolor --nogroup"
+               my/ag-available t))
+        ((executable-find "ack-grep")
+         (setq helm-ag-base-command "ack-grep --nocolor --nogroup"
+               my/ag-available t))))
 
 (use-package helm-regexp
   :ensure nil
