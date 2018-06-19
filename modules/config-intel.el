@@ -151,6 +151,59 @@
 
   (advice-add 'ispell-init-process :around #'nadvice/ispell-init-process))
 
+(use-package flyspell-lazy
+  :init
+  (autoload #'flyspell-lazy-load "flyspell-lazy")
+
+  (el-patch-feature flyspell-lazy)
+
+  (el-patch-defmacro flyspell-lazy-called-interactively-p (&optional kind)
+    "A backward-compatible version of `called-interactively-p'.
+
+Optional KIND is as documented at `called-interactively-p'
+in GNU Emacs 24.1 or higher."
+    (cond
+     ((not (fboundp 'called-interactively-p))
+      '(interactive-p))
+     ((condition-case nil
+          (progn (called-interactively-p 'any) t)
+        (error nil))
+      `(called-interactively-p ,kind))
+     (t
+      '(called-interactively-p))))
+
+  (el-patch-define-minor-mode flyspell-lazy-mode
+    "Turn on flyspell-lazy-mode.
+
+Turning on flyspell-lazy-mode will set up hooks which
+change how `flyspell-mode' works, in every buffer for which
+flyspell is enabled.
+
+When called interactively with no prefix argument this command
+toggles the mode.  With a prefix argument, it enables the mode
+if the argument is positive and otherwise disables the mode.
+
+When called from Lisp, this command enables the mode if the
+argument is omitted or nil, and toggles the mode if the argument
+is 'toggle."
+    :group 'flyspell-lazy
+    :global t
+    (cond
+     (flyspell-lazy-mode
+      (add-hook 'flyspell-mode-hook 'flyspell-lazy-load t)
+      (when (and (flyspell-lazy-called-interactively-p 'interactive)
+                 (not flyspell-lazy-less-feedback))
+        (message "flyspell-lazy mode enabled")))
+     (t
+      (flyspell-lazy-unload 'global)
+      (when (and (flyspell-lazy-called-interactively-p 'interactive)
+                 (not flyspell-lazy-less-feedback))
+        (message "flyspell-lazy mode disabled")))))
+
+  (flyspell-lazy-mode +1)
+  :config
+  (setq flyspell-lazy-idle-seconds 1))
+
 (use-package flyspell
   :ensure nil
   :init
