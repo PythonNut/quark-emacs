@@ -181,7 +181,7 @@ where it was when you previously visited the same file."
   (add-hook 'emacs-startup-hook #'my/recentf-onetime-setup)
 
   :config
-  (setq recentf-save-file (locate-user-emacs-file "data/.recentf")
+  (setq recentf-save-file (locate-user-emacs-file "data/recentf")
         recentf-max-saved-items 1000
         recentf-max-menu-items 50
         recentf-auto-cleanup 30)
