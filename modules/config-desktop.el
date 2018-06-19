@@ -43,49 +43,125 @@ already exists in the home directory."
                                 (concat ".emacs-" basename))
         (expand-file-name basename (locate-user-emacs-file "data"))))))
 
-(use-package session
+(use-package savehist
+  :ensure nil
   :init
-  (add-hook 'after-init-hook #'session-initialize)
+  (autoload 'savehist-minibuffer-hook "savehist")
+  (autoload 'savehist-autosave "savehist")
+  (autoload 'savehist-uninstall "savehist")
+
+  (el-patch-feature savehist)
+
+  (el-patch-defcustom savehist-file
+    (el-patch-swap (locate-user-emacs-file "history" ".emacs-history")
+                   (locate-user-emacs-file "data/savehist"))
+    "File name where minibuffer history is saved to and loaded from.
+The minibuffer history is a series of Lisp expressions loaded
+automatically when Savehist mode is turned on.  See `savehist-mode'
+for more details.
+
+If you want your minibuffer history shared between Emacs and XEmacs,
+customize this value and make sure that `savehist-coding-system' is
+set to a coding system that exists in both emacsen."
+    :type 'file
+    :group 'savehist)
+
+  (el-patch-defcustom savehist-autosave-interval
+    (* (el-patch-swap 5 2) 60)
+    "The interval between autosaves of minibuffer history.
+If set to nil, disables timer-based autosaving."
+    :type '(choice (const :tag "Disabled" nil)
+                   (integer :tag "Seconds"))
+    :group 'savehist)
+
+  (el-patch-defcustom savehist-additional-variables
+    (el-patch-swap ()
+                   '(kill-ring
+                     file-name-history
+                     file-name-mode-alist
+                     search-ring
+                     regexp-search-ring))
+    "List of additional variables to save.
+Each element is a symbol whose value will be persisted across Emacs
+sessions that use Savehist.  The contents of variables should be
+printable with the Lisp printer.  You don't need to add minibuffer
+history variables to this list, all minibuffer histories will be
+saved automatically as long as `savehist-save-minibuffer-history' is
+non-nil.
+
+User options should be saved with the Customize interface.  This
+list is useful for saving automatically updated variables that are not
+minibuffer histories, such as `compile-command' or `kill-ring'."
+    :type '(repeat variable)
+    :group 'savehist)
+
+
+  (el-patch-defvar savehist-timer nil)
+  (el-patch-defvar savehist-loaded nil
+    "Whether the history has already been loaded.
+This prevents toggling Savehist mode from destroying existing
+minibuffer history.")
+
+  (el-patch-defun savehist-install ()
+    "Hook Savehist into Emacs.
+Normally invoked by calling `savehist-mode' to set the minor mode.
+Installs `savehist-autosave' in `kill-emacs-hook' and on a timer.
+To undo this, call `savehist-uninstall'."
+    (add-hook 'minibuffer-setup-hook 'savehist-minibuffer-hook)
+    (add-hook 'kill-emacs-hook 'savehist-autosave)
+    ;; Install an invocation of savehist-autosave on a timer.  This
+    ;; should not cause noticeable delays for users -- savehist-autosave
+    ;; executes in under 5 ms on my system.
+    (when (and savehist-autosave-interval
+	       (null savehist-timer))
+      (setq savehist-timer
+	    (if (featurep 'xemacs)
+	        (start-itimer
+	         "savehist" 'savehist-autosave savehist-autosave-interval
+	         savehist-autosave-interval)
+	      (run-with-timer savehist-autosave-interval
+			      savehist-autosave-interval 'savehist-autosave)))))
+
+  (el-patch-define-minor-mode savehist-mode
+    "Toggle saving of minibuffer history (Savehist mode).
+With a prefix argument ARG, enable Savehist mode if ARG is
+positive, and disable it otherwise.  If called from Lisp, enable
+the mode if ARG is omitted or nil.
+
+When Savehist mode is enabled, minibuffer history is saved
+periodically and when exiting Emacs.  When Savehist mode is
+enabled for the first time in an Emacs session, it loads the
+previous minibuffer history from `savehist-file'.
+
+This mode should normally be turned on from your Emacs init file.
+Calling it at any other time replaces your current minibuffer
+histories, which is probably undesirable."
+    :global t
+    (if (not savehist-mode)
+        (savehist-uninstall)
+      (when (and (not savehist-loaded)
+	         (file-exists-p savehist-file))
+        (condition-case errvar
+	    (progn
+	      ;; Don't set coding-system-for-read -- we rely on the
+	      ;; coding cookie to convey that information.  That way, if
+	      ;; the user changes the value of savehist-coding-system,
+	      ;; we can still correctly load the old file.
+	      (load savehist-file nil (not (called-interactively-p 'interactive)))
+	      (setq savehist-loaded t))
+	  (error
+	   ;; Don't install the mode if reading failed.  Doing so would
+	   ;; effectively destroy the user's data at the next save.
+	   (setq savehist-mode nil)
+	   (savehist-uninstall)
+	   (signal (car errvar) (cdr errvar)))))
+      (savehist-install)))
+
+  (savehist-mode +1)
   (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 
   :config
-  (setq session-save-file (locate-user-emacs-file "data/.session")
-        session-globals-max-string 16384
-        session-registers-max-string 16384
-        session-globals-max-size 1024
-        session-jump-undo-remember 7
-        session-jump-undo-threshold 60
-        session-name-disable-regexp (eval-when-compile
-                                      (rx (or (and line-start "/tmp")
-                                              (and "COMMIT_EDITMSG" line-end))))
-
-        session-globals-include '((kill-ring 400)
-                                  (session-file-alist 200 t)
-                                  (file-name-history 400)
-                                  (file-name-mode-alist 400 t)
-                                  search-ring
-                                  regexp-search-ring)
-
-        session-initialize '(session keys))
-
-  (defun nadvice/session-save-session/quiet (old-fun &rest args)
-    (if (called-interactively-p 'any)
-        (apply old-fun args)
-      (cl-letf* ((old-wr (symbol-function #'write-region))
-                 ((symbol-function #'y-or-n-p) (lambda (&rest _args) t))
-                 ((symbol-function #'write-region)
-                  (lambda (start end filename
-                                 &optional append _visit &rest args)
-                    (apply old-wr
-                           start
-                           end
-                           filename
-                           append
-                           0
-                           args))))
-        (apply old-fun args))))
-
-  (defun nadvice/session-save-session/file-name-mode-alist (&rest _args)
+  (defun my/session-prepare/file-mode-alist ()
     (setq file-name-mode-alist
           (nreverse
            (let ((res)
@@ -93,20 +169,7 @@ already exists in the home directory."
              (dotimes (_ (min history-length (length orig)) res)
                (push (pop orig) res))))))
 
-  (defun nadvice/session-initialize-quiet (old-fun &rest args)
-    (let ((inhibit-message t))
-      (apply old-fun args)))
-  (run-with-idle-timer 10 t #'session-save-session)
-
-  (advice-add 'session-save-session :around
-              #'nadvice/session-save-session/quiet)
-  (advice-add 'session-save-session :before
-              #'nadvice/session-save-session/file-name-mode-alist)
-  (advice-add 'session-save-session :before #'my/unpropertize-session)
-  (advice-add 'session-initialize :around #'nadvice/session-initialize-quiet)
-
-  ;; text properties severely bloat the history so delete them
-  (defun my/unpropertize-session (&rest _args)
+  (defun my/session-prepare/unpropertize ()
     (mapc (lambda (lst)
             (with-demoted-errors "Error: %s"
               (when (boundp lst)
@@ -118,7 +181,10 @@ already exists in the home directory."
             file-name-history
             read-expression-history
             extended-command-history
-            evil-ex-history))))
+            evil-ex-history)))
+
+  (add-hook 'savehist-save-hook #'my/session-prepare/file-mode-alist)
+  (add-hook 'savehist-save-hook #'my/session-prepare/unpropertize))
 
 (use-package saveplace
   :ensure nil
@@ -127,6 +193,8 @@ already exists in the home directory."
   (autoload 'save-place-dired-hook "saveplace")
   (autoload 'save-place-kill-emacs-hook "saveplace")
   (autoload 'save-place-to-alist "saveplace")
+
+  (el-patch-feature saveplace)
 
   (el-patch-defun save-place--setup-hooks (add)
     (cond
