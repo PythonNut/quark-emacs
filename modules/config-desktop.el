@@ -66,9 +66,7 @@ already exists in the home directory."
                                   search-ring
                                   regexp-search-ring)
 
-        session-initialize '(session
-                             places
-                             keys))
+        session-initialize '(session keys))
 
   (defun nadvice/session-save-session/quiet (old-fun &rest args)
     (if (called-interactively-p 'any)
@@ -121,6 +119,46 @@ already exists in the home directory."
             read-expression-history
             extended-command-history
             evil-ex-history))))
+
+(use-package saveplace
+  :ensure nil
+  :init
+  (autoload 'save-place-find-file-hook "saveplace")
+  (autoload 'save-place-dired-hook "saveplace")
+  (autoload 'save-place-kill-emacs-hook "saveplace")
+  (autoload 'save-place-to-alist "saveplace")
+
+  (el-patch-defun save-place--setup-hooks (add)
+    (cond
+     (add
+      (add-hook 'find-file-hook #'save-place-find-file-hook t)
+      (add-hook 'dired-initial-position-hook #'save-place-dired-hook)
+      (unless noninteractive
+        (add-hook 'kill-emacs-hook #'save-place-kill-emacs-hook))
+      (add-hook 'kill-buffer-hook #'save-place-to-alist))
+     (t
+      ;; We should remove the hooks, but only if save-place-mode
+      ;; is nil everywhere.  Is it worth the trouble, tho?
+      ;; (unless (or (default-value 'save-place-mode)
+      ;;             (cl-some <save-place-local-mode-p> (buffer-list)))
+      ;;   (remove-hook 'find-file-hook #'save-place-find-file-hook)
+      ;;   (remove-hook 'dired-initial-position-hook #'save-place-dired-hook)
+      ;;   (remove-hook 'kill-emacs-hook #'save-place-kill-emacs-hook)
+      ;;   (remove-hook 'kill-buffer-hook #'save-place-to-alist))
+      )))
+
+  (el-patch-define-minor-mode save-place-mode
+    "Non-nil means automatically save place in each file.
+This means when you visit a file, point goes to the last place
+where it was when you previously visited the same file."
+    :global t
+    :group 'save-place
+    (save-place--setup-hooks save-place-mode))
+
+  (save-place-mode +1)
+
+  :config
+  (setq save-place-file (locate-user-emacs-file "data/places")))
 
 (use-package recentf
   :commands (recentf-track-opened-file
