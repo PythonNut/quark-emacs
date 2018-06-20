@@ -161,6 +161,10 @@ histories, which is probably undesirable."
   (setq auto-mode-alist (append auto-mode-alist file-name-mode-alist))
 
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'cl-lib)))
+
   (defun my/session-prepare/file-mode-alist ()
     (setq file-name-mode-alist
           (nreverse
@@ -169,22 +173,27 @@ histories, which is probably undesirable."
              (dotimes (_ (min history-length (length orig)) res)
                (push (pop orig) res))))))
 
-  (defun my/session-prepare/unpropertize ()
-    (mapc (lambda (lst)
-            (with-demoted-errors "Error: %s"
-              (when (boundp lst)
-                (set lst (mapcar #'substring-no-properties (eval lst))))))
-          '(kill-ring
-            minibuffer-history
-            helm-grep-history
-            helm-ff-history
-            file-name-history
-            read-expression-history
-            extended-command-history
-            evil-ex-history)))
-
   (add-hook 'savehist-save-hook #'my/session-prepare/file-mode-alist)
-  (add-hook 'savehist-save-hook #'my/session-prepare/unpropertize))
+
+  (defun nadvice/savehist-save/unpropertize (old-fun &rest args)
+    (let ((vars (append savehist-minibuffer-history-variables
+                        savehist-additional-variables)))
+      (cl-progv vars
+          (mapcar (lambda (sym)
+                    (if (boundp sym)
+                        (let ((value (symbol-value sym)))
+                          (if (and value
+                                   (listp value)
+                                   (stringp (car value)))
+                              (mapcar #'substring-no-properties
+                                      value)
+                            value))
+                      nil))
+                  vars)
+        (apply old-fun args))))
+
+  (advice-add 'savehist-save :around
+              #'nadvice/savehist-save/unpropertize))
 
 (use-package saveplace
   :ensure nil
