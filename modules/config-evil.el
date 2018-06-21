@@ -216,19 +216,6 @@
   (global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
   (global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing)
 
-  (with-eval-after-load 'session
-    (defun my/evil--jumps-savehist-load ()
-      (let ((ring (make-ring evil-jumps-max-length)))
-        (cl-loop for jump in (reverse evil-jumps-history)
-                 do (ring-insert ring jump))
-        (setf (evil-jumps-struct-ring (evil--jumps-get-current)) ring)))
-    (add-hook 'session-after-load-save-file-hook #'my/evil--jumps-savehist-load)
-    (defun nadvice/session-save-session/evil--jumps (&rest _args)
-      (evil--jumps-savehist-sync))
-    (advice-add 'session-save-session :before
-                #'nadvice/session-save-session/evil--jumps)
-    (add-to-list 'session-globals-include 'evil-jumps-history))
-
   (require 'config-evil-modules)
   (require 'config-evil-textobjects))
 
