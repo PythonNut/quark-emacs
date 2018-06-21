@@ -119,11 +119,15 @@ when `auto-save-mode' is invoked manually.")
               (save-some-buffers t))))
 
 (use-package autorevert
-  :diminish auto-revert-mode
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'autorevert)))
+
   (setq global-auto-revert-non-file-buffers t
         auto-revert-remote-files t
-        auto-revert-verbose nil))
+        auto-revert-verbose nil
+        auto-revert-mode-text nil))
 
 (defun my/auto-revert-onetime-setup ()
   (global-auto-revert-mode +1)
