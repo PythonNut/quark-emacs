@@ -17,10 +17,8 @@
   (setq-default adaptive-wrap-extra-indent 2))
 
 (add-hook 'visual-line-mode-hook #'adaptive-wrap-prefix-mode)
-(add-hook 'visual-line-mode-hook
-          (lambda ()
-            (diminish 'visual-line-mode)))
 
+(diminish 'visual-line-mode)
 (global-visual-line-mode +1)
 
 ;; always ensure UTF-8
