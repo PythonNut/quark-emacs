@@ -11,7 +11,7 @@
   (setq vc-follow-symlinks t)
 
   (defun my/maybe/vc-refresh-state ()
-    (unless (my/slow-fs default-directory t)
+    (unless (my/slow-fs default-directory)
       (vc-refresh-state)))
 
   (remove-hook 'find-file-hook #'vc-refresh-state)
