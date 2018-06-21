@@ -28,7 +28,7 @@
 
   (defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
     (unless (and (bound-and-true-p flycheck-mode)
-                 (flycheck-overlay-at (point)))
+                 (flycheck-overlays-at (point)))
       (apply old-fun args)))
 
   (advice-add 'semantic-idle-summary-idle-function
