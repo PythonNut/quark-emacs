@@ -53,7 +53,8 @@
 
 (when (memq window-system '(mac ns))
   (setq mac-command-modifier 'meta
-        mac-option-modifier 'super)
+        mac-option-modifier 'super
+        mac-right-option-modifier nil)
   (add-to-list 'default-frame-alist '(ns-appearance . dark))
   (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
