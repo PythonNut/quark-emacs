@@ -58,11 +58,11 @@
       (with-demoted-errors "Load error: %s"
         (require 'key-chord)
         (require 'evil)))
-    (key-chord-define evil-insert-state-map "jk" #'avy-goto-char-timer)
+    (key-chord-define evil-insert-state-map "jk" #'avy-goto-char)
     (key-chord-define evil-insert-state-map "jw" #'evil-avy-goto-word-1)
     (key-chord-define evil-insert-state-map "jl" #'evil-avy-goto-line)
 
-    (key-chord-define evil-emacs-state-map "jk" #'avy-goto-char-timer)
+    (key-chord-define evil-emacs-state-map "jk" #'avy-goto-char)
     (key-chord-define evil-emacs-state-map "jw" #'evil-avy-goto-word-1)
     (key-chord-define evil-emacs-state-map "jl" #'evil-avy-goto-line)))
 
