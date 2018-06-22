@@ -1,56 +1,55 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
 
-(use-package company-flx)
-
-(defun my/company-onetime-setup ()
-  (require 'company)
-  (run-hooks 'load-theme-hook)
-  (remove-hook 'first-change-hook #'my/company-onetime-setup))
-
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (add-hook 'first-change-hook #'my/company-onetime-setup)))
-
-(eval-and-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'config-setq))
-
-  (cl-macrolet
-      ((company-define-specific-modes
-        (mode backend)
-        `(progn
-           (add-hook ,mode
-                     (lambda ()
-                       (require 'company)
-                       (let ((old-backends company-backends))
-                         (set (make-local-variable 'company-backends)
-                              (cons (append
-                                     ,backend
-                                     (cdar old-backends))
-                                    (cdr old-backends)))))))))
-
-    (with-no-warnings
-      (my/generate-calls
-          'company-define-specific-modes
-        '(('arduino-mode-hook    '(company-irony))
-          ('cmake-mode-hook      '(company-cmake))
-          ('css-mode-hook        '(company-css))
-          ('java-mode-hook       '(company-eclim))
-          ('nxml-mode-hook       '(company-nxml))
-          ('html-mode-hook       '(company-web-html))
-          ('lua-mode-hook        '(company-lua))
-          ('web-mode-hook        '(company-web-html))
-          ('scheme-mode-hook     '(geiser-company-backend))
-          ('texinfo-mode-hook    '(company-semantic))
-          ('python-mode-hook     '(company-anaconda))
-          ('text-mode-hook       '(company-ispell))
-          ('livescript-mode-hook '(company-tide))
-          ('go-mode-hook         '(company-go)))))))
-
 (use-package company
   :init
-  (global-company-mode +1)
+  (use-package company-flx)
+
+  (defun my/company-onetime-setup ()
+    (when (get-buffer-window)
+      (global-company-mode +1)
+      (run-hooks 'load-theme-hook)
+      (remove-hook 'first-change-hook #'my/company-onetime-setup)))
+
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (add-hook 'first-change-hook #'my/company-onetime-setup)))
+
+  (eval-and-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'config-setq))
+    (cl-macrolet
+        ((company-define-specific-modes
+          (mode backend)
+          `(progn
+             (add-hook ,mode
+                       (lambda ()
+                         (require 'company)
+                         (let ((old-backends company-backends))
+                           (set (make-local-variable 'company-backends)
+                                (cons (append
+                                       ,backend
+                                       (cdar old-backends))
+                                      (cdr old-backends)))))))))
+
+      (with-no-warnings
+        (my/generate-calls
+            'company-define-specific-modes
+          '(('arduino-mode-hook    '(company-irony))
+            ('cmake-mode-hook      '(company-cmake))
+            ('css-mode-hook        '(company-css))
+            ('java-mode-hook       '(company-eclim))
+            ('nxml-mode-hook       '(company-nxml))
+            ('html-mode-hook       '(company-web-html))
+            ('lua-mode-hook        '(company-lua))
+            ('web-mode-hook        '(company-web-html))
+            ('scheme-mode-hook     '(geiser-company-backend))
+            ('texinfo-mode-hook    '(company-semantic))
+            ('python-mode-hook     '(company-anaconda))
+            ('text-mode-hook       '(company-ispell))
+            ('livescript-mode-hook '(company-tide))
+            ('go-mode-hook         '(company-go)))))))
+
   :config
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))
   (company-flx-mode +1)
