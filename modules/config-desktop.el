@@ -201,9 +201,62 @@ histories, which is probably undesirable."
   (autoload 'save-place-find-file-hook "saveplace")
   (autoload 'save-place-dired-hook "saveplace")
   (autoload 'save-place-kill-emacs-hook "saveplace")
-  (autoload 'save-place-to-alist "saveplace")
+  (autoload 'load-save-place-alist-from-file "saveplace")
 
   (el-patch-feature saveplace)
+
+  (el-patch-defcustom save-place-ignore-files-regexp
+    "\\(?:COMMIT_EDITMSG\\|hg-editor-[[:alnum:]]+\\.txt\\|svn-commit\\.tmp\\|bzr_log\\.[[:alnum:]]+\\)$"
+    "Regexp matching files for which no position should be recorded.
+Useful for temporary file such as commit message files that are
+automatically created by the VCS.  If set to nil, this feature is
+disabled, i.e., the position is recorded for all files."
+    :version "24.1"
+    :type 'regexp)
+
+  (el-patch-defvar save-place-loaded nil
+    "Non-nil means that the `save-place-file' has been loaded.")
+
+  (el-patch-defun save-place-to-alist ()
+    ;; put filename and point in a cons box and then cons that onto the
+    ;; front of the save-place-alist, if save-place is non-nil.
+    ;; Otherwise, just delete that file from the alist.
+    ;; first check to make sure alist has been loaded in from the master
+    ;; file.  If not, do so, then feel free to modify the alist.  It
+    ;; will be saved again when Emacs is killed.
+    (el-patch-remove (or save-place-loaded (load-save-place-alist-from-file)))
+    (let* ((directory (and (derived-mode-p 'dired-mode)
+                           (boundp 'dired-subdir-alist)
+                           dired-subdir-alist
+                           (dired-current-directory)))
+           (item (or buffer-file-name
+                     (and directory
+                          (expand-file-name (if (consp directory)
+                                                (car directory)
+                                              directory))))))
+      (when (and item
+                 (or (not save-place-ignore-files-regexp)
+                     (not (string-match save-place-ignore-files-regexp
+                                        item))))
+        (el-patch-add (or save-place-loaded (load-save-place-alist-from-file)))
+        (let ((cell (assoc item save-place-alist))
+              (position (cond ((eq major-mode 'hexl-mode)
+                               (with-no-warnings
+                                 (1+ (hexl-current-address))))
+                              ((and (derived-mode-p 'dired-mode) directory)
+                               (let ((filename (dired-get-filename nil t)))
+                                 (if filename
+                                     `((dired-filename . ,filename))
+                                   (point))))
+                              (t (point)))))
+          (if cell
+              (setq save-place-alist (delq cell save-place-alist)))
+          (if (and save-place
+                   (not (and (integerp position)
+                             (= position 1)))) ;; Optimize out the degenerate case.
+              (setq save-place-alist
+                    (cons (cons item position)
+                          save-place-alist)))))))
 
   (el-patch-defun save-place--setup-hooks (add)
     (cond
