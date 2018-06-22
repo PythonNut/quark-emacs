@@ -221,4 +221,19 @@ these values are used to call `use-package-ensure-function'.")
 (use-package s)
 (use-package restart-emacs)
 
+(use-package exec-path-from-shell
+  :config
+  (setq exec-path-from-shell-check-startup-files nil
+        exec-path-from-shell-arguments
+        (delete "-i" exec-path-from-shell-arguments))
+
+  :init
+  (when (memq window-system '(mac ns))
+    (setq exec-path
+          (or (eval-when-compile
+                (require 'cl-lib)
+                (exec-path-from-shell-initialize)
+                (cl-remove-duplicates exec-path :test #'string=))
+              exec-path))))
+
 (provide 'config-package)

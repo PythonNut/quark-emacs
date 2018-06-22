@@ -35,8 +35,6 @@
   (setq helm-mode-fuzzy-match t
         helm-completion-in-region-fuzzy-match t))
 
-(use-package exec-path-from-shell)
-
 (setq helm-recentf-fuzzy-match t)
 (use-package helm-files
   :ensure nil
