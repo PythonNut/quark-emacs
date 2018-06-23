@@ -478,6 +478,9 @@ where it was when you previously visited the same file."
     (require 'server)
     (add-hook 'emacs-startup-hook #'send-all-files-to-server))
 
+  (when (display-graphic-p)
+    (idle-job-add-function #'server-start))
+
   :config
   (defun nadvice/server-mode (old-fun &rest args)
     (catch 'done
