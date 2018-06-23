@@ -16,7 +16,8 @@
   (require 'cl-lib)
 
   (cl-letf* (;; In fact, never GC during initialization to save time.
-             (gc-cons-threshold most-positive-fixnum)
+             (gc-cons-threshold 402653184)
+             (gc-cons-percentage 0.6)
              (file-name-handler-alist nil)
              (load-source-file-function nil)
 
