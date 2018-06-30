@@ -100,39 +100,22 @@ second, floating-point values are rounded down to the nearest integer.)"
 (defvar el-patch--patches (make-hash-table))
 
 (with-eval-after-load 'el-patch
-  (el-patch-defun el-patch--classify-definition-type (type)
-    "Classifies a definition TYPE as a `function' or `variable'.
-TYPE is a symbol `defun', `defmacro', etc."
-    (pcase type
-      ((or 'defun 'defmacro 'defsubst 'define-minor-mode
-           (el-patch-add 'evil-define-command
-                         'evil-define-motion
-                         'evil-define-text-object
-                         'evil-define-operator))
-       'function)
-      ((or 'defvar 'defconst 'defcustom)
-       'variable)
-      (_ (error "Unexpected definition type %S" type))))
-
-  (el-patch-defun el-patch--compute-load-history-items (definition)
-    "Determine the items that DEFINITION will add to the `load-history'.
-Return a list of those items. Beware, uses heuristics."
-    (cl-destructuring-bind (type name . body) definition
-      (pcase type
-        ((or 'defun 'defmacro 'defsubst
-             (el-patch-add 'evil-define-command
-                           'evil-define-motion
-                           'evil-define-text-object
-                           'evil-define-operator))
-         (list (cons 'defun name)))
-        ((or 'defvar 'defconst 'defcustom)
-         (list name))
-        ((quote define-minor-mode)
-         (list (cons 'defun name)
-               (or (when-let ((rest (member :variable body)))
-                     (cadr rest))
-                   name)))
-        (_ (error "Unexpected definition type %S" type))))))
+  (el-patch-deftype evil-define-command
+    :classify el-patch-classify-function
+    :declare ((doc-string 3)
+              (indent defun)))
+  (el-patch-deftype evil-define-motion
+    :classify el-patch-classify-function
+    :declare ((doc-string 3)
+              (indent defun)))
+  (el-patch-deftype evil-define-text-object
+    :classify el-patch-classify-function
+    :declare ((doc-string 3)
+              (indent defun)))
+  (el-patch-deftype evil-define-operator
+    :classify el-patch-classify-function
+    :declare ((doc-string 3)
+              (indent defun))))
 
 (el-patch-feature use-package)
 
