@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
@@ -121,9 +122,11 @@ extra indent = 2
 (global-visual-line-mode +1)
 
 ;; always ensure UTF-8
-(defun cleanup-buffer-safe ()
-  (interactive)
-  (set-buffer-file-coding-system 'utf-8))
+(add-hook
+ 'before-save-hook
+ (my/defun-as-value cleanup-buffer-safe ()
+   (interactive)
+   (set-buffer-file-coding-system 'utf-8)))
 
 (defun cleanup-buffer-unsafe ()
   (interactive)
@@ -131,38 +134,37 @@ extra indent = 2
   (delete-trailing-whitespace)
   (set-buffer-file-coding-system 'utf-8))
 
-(add-hook 'before-save-hook #'cleanup-buffer-safe)
-
 (use-package ws-butler
   :diminish (ws-butler-mode ." β"))
 
 ;; autoload ws-butler on file open
-(defun my/ws-butler-onetime-setup ()
-  (ws-butler-global-mode +1)
-  (remove-hook 'find-file-hook #'my/ws-butler-onetime-setup))
-
-(add-hook 'find-file-hook #'my/ws-butler-onetime-setup)
+(add-hook
+ 'find-file-hook
+ (my/defun-as-value my/ws-butler-onetime-setup ()
+   (ws-butler-global-mode +1)
+   (remove-hook 'find-file-hook #'my/ws-butler-onetime-setup)))
 
 (use-package dtrt-indent
   :init (add-hook 'find-file-hook #'dtrt-indent-mode))
 
 ;; ws-butler also loads highlight-changes-mode
-(add-hook 'highlight-changes-mode-hook
-          (lambda ()
-            (diminish 'highlight-changes-mode)))
+(add-hook
+ 'highlight-changes-mode-hook
+ (my/defun-as-value my/diminish-highlight-changes-mode ()
+   (diminish 'highlight-changes-mode)))
 
 (use-package aggressive-indent
   :config
   (diminish 'aggressive-indent-mode (if (display-graphic-p) " ⇒" " *→")))
 
-(defun my/smie-auto-guess ()
-  (when (and
-         (featurep 'smie)
-         (not (eq smie-grammar 'unset)))
-    (let ((smie-config--buffer-local nil))
-      (smie-config-guess))))
-
-(add-hook 'after-change-major-mode-hook #'my/smie-auto-guess)
+(add-hook
+ 'after-change-major-mode-hook
+ (my/defun-as-value my/smie-auto-guess ()
+   (when (and
+          (featurep 'smie)
+          (not (eq smie-grammar 'unset)))
+     (let ((smie-config--buffer-local nil))
+       (smie-config-guess)))))
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"

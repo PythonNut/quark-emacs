@@ -1,7 +1,8 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
 (eval-when-compile
-  (require 'config-setq))
+  (require 'config-setq)
+  (require 'config-macros))
 
 ;; =============================================
 ;; Setup straight.el
@@ -141,12 +142,11 @@ Return a list of those items. Beware, uses heuristics."
   (setq use-package-always-ensure t
         use-package-always-defer t)
 
-  (defun nadvice/straight-use-package-ensure-function (old-fun &rest args)
-    (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
-      (apply old-fun args)))
-
-  (advice-add 'straight-use-package-ensure-function :around
-              #'nadvice/straight-use-package-ensure-function)
+  (advice-add
+   'straight-use-package-ensure-function :around
+   (my/defun-as-value nadvice/straight-use-package-ensure-function (old-fun &rest args)
+     (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
+       (apply old-fun args))))
 
   (el-patch-defun use-package-handler/:ensure (name keyword ensure rest state)
     (let* ((body (use-package-process-keywords name rest

@@ -1,3 +1,5 @@
+(eval-when-compile (require 'config-macros))
+
 ;; =============================================================================
 ;; Python ======================================================================
 ;; =============================================================================
@@ -148,15 +150,16 @@
 
   (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view)
 
-  (defun nadvice/run-sage (old-fun &optional arg)
-    (interactive "P")
-    (if (called-interactively-p 'any)
-        (cond
-         ((consp arg)
-          (call-interactively old-fun))
-         (t
-          (funcall old-fun "sage"))))
-    (funcall old-fun arg))
-  (advice-add 'run-sage :around #'nadvice/run-sage))
+  (advice-add
+   'run-sage :around
+   (my/defun-as-value nadvice/run-sage (old-fun &optional arg)
+     (interactive "P")
+     (if (called-interactively-p 'any)
+         (cond
+          ((consp arg)
+           (call-interactively old-fun))
+          (t
+           (funcall old-fun "sage"))))
+     (funcall old-fun arg))))
 
 (provide 'config-python)

@@ -1,3 +1,5 @@
+(eval-when-compile (require 'config-macros))
+
 ;; =============================================================================
 ;; C-like ======================================================================
 ;; =============================================================================
@@ -19,18 +21,17 @@
   :config
   (setq c-default-style "k&r")
 
-  (defun nadvice/c-indent-new-comment-line (&rest _args)
-    (when (and
-           (looking-at (rx (zero-or-more (not-char ?\n)) "*/"))
-           (not (looking-at (rx (zero-or-more (not-char ?\n)) "/*"))))
-      (save-excursion
-        (re-search-forward (rx "*/") (line-end-position))
-        (forward-char -2)
-        (newline)
-        (indent-according-to-mode))))
-
-  (advice-add 'c-indent-new-comment-line :after
-              #'nadvice/c-indent-new-comment-line)
+  (advice-add
+   'c-indent-new-comment-line :after
+   (my/defun-as-value nadvice/c-indent-new-comment-line (&rest _args)
+     (when (and
+            (looking-at (rx (zero-or-more (not-char ?\n)) "*/"))
+            (not (looking-at (rx (zero-or-more (not-char ?\n)) "/*"))))
+       (save-excursion
+         (re-search-forward (rx "*/") (line-end-position))
+         (forward-char -2)
+         (newline)
+         (indent-according-to-mode)))))
 
   (use-package irony-eldoc
     :defer-install t
@@ -75,31 +76,29 @@
     :config
     (setq company-irony-ignore-case t)
 
-    (defun nadvice/company-irony--filter-candidates (prefix candidates)
-      (let ((regex (concat "\\`"
-                           (mapconcat
-                            (lambda (x)
-                              (setq x (string x))
-                              (concat "[^" x "]*" (regexp-quote x)))
-                            prefix
-                            "")))
-            (case-fold-search company-irony-ignore-case))
-        (cl-loop for candidate in candidates
-                 when (string-match-p regex (car candidate))
-                 collect (propertize (car candidate) 'company-irony candidate))))
-
     (use-package company-irony
       :defer-install t
       :config
-      (advice-add 'company-irony--filter-candidates :override
-                  #'nadvice/company-irony--filter-candidates))
+      (advice-add
+       'company-irony--filter-candidates :override
+       (my/defun-as-value nadvice/company-irony--filter-candidates (prefix candidates)
+         (let ((regex (concat "\\`"
+                              (mapconcat
+                               (lambda (x)
+                                 (setq x (string x))
+                                 (concat "[^" x "]*" (regexp-quote x)))
+                               prefix
+                               "")))
+               (case-fold-search company-irony-ignore-case))
+           (cl-loop for candidate in candidates
+                    when (string-match-p regex (car candidate))
+                    collect (propertize (car candidate) 'company-irony candidate))))))
 
-    (defun nadvice/irony-completion-post-complete (old-fun &rest args)
-      (unless (irony-eldoc--which-funcall)
-        (apply old-fun args)))
-
-    (advice-add 'irony-completion-post-complete :around
-                #'nadvice/irony-completion-post-complete))
+    (advice-add
+     'irony-completion-post-complete :around
+     (my/defun-as-value nadvice/irony-completion-post-complete (old-fun &rest args)
+       (unless (irony-eldoc--which-funcall)
+         (apply old-fun args)))))
 
   (use-package company-irony-c-headers
     :defer-install t

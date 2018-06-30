@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
@@ -80,38 +81,38 @@
   (interactive)
   (find-alternate-file (my/make-root-file-name buffer-file-name)))
 
-(defun my/edit-file-as-root-maybe ()
-  "Find file as root if necessary."
-  (when (and buffer-file-name
-             (not (file-writable-p buffer-file-name))
-             (not (string= user-login-name
-                           (nth 3 (file-attributes buffer-file-name 'string))))
-             (not (my/root-file-name-p buffer-file-name)))
-    (setq buffer-read-only nil)
-    (add-hook 'first-change-hook #'root-save-mode nil t)
-    (run-with-idle-timer
-     0.5 nil
-     (lambda ()
-       (message "Modifications will require root permissions to save.")))))
-
-(add-hook 'find-file-hook #'my/edit-file-as-root-maybe)
+(add-hook
+ 'find-file-hook
+ (my/defun-as-value my/edit-file-as-root-maybe ()
+   "Find file as root if necessary."
+   (when (and buffer-file-name
+              (not (file-writable-p buffer-file-name))
+              (not (string= user-login-name
+                            (nth 3 (file-attributes buffer-file-name 'string))))
+              (not (my/root-file-name-p buffer-file-name)))
+     (setq buffer-read-only nil)
+     (add-hook 'first-change-hook #'root-save-mode nil t)
+     (run-with-idle-timer
+      0.5 nil
+      (lambda ()
+        (message "Modifications will require root permissions to save."))))))
 
 ;; also fallback to root if file cannot be read
-(defun nadvice/find-file-noselect-1 (old-fun buf filename &rest args)
-  (condition-case err
-      (apply old-fun buf filename args)
-    (file-error
-     (if (and (not (my/root-file-name-p filename))
-              (y-or-n-p "File is not readable. Open with root? "))
-         (let ((filename (my/make-root-file-name (file-truename filename))))
-           (apply #'find-file-noselect-1
-                  (or (get-file-buffer filename)
-                      (create-file-buffer filename))
-                  filename
-                  args))
-       (signal (car err) (cdr err))))))
-
-(advice-add 'find-file-noselect-1 :around #'nadvice/find-file-noselect-1)
+(advice-add
+ 'find-file-noselect-1 :around
+ (my/defun-as-value nadvice/find-file-noselect-1 (old-fun buf filename &rest args)
+   (condition-case err
+       (apply old-fun buf filename args)
+     (file-error
+      (if (and (not (my/root-file-name-p filename))
+               (y-or-n-p "File is not readable. Open with root? "))
+          (let ((filename (my/make-root-file-name (file-truename filename))))
+            (apply #'find-file-noselect-1
+                   (or (get-file-buffer filename)
+                       (create-file-buffer filename))
+                   filename
+                   args))
+        (signal (car err) (cdr err)))))))
 
 (defun nadvice/make-directory/auto-root (old-fun &rest args)
   (cl-letf*
@@ -137,16 +138,15 @@
   (advice-add 'helm-find-file-or-marked :around
               #'nadvice/make-directory/auto-root))
 
-(defun nadvice/semantic-find-file-noselect (old-fun &rest args)
-  (cl-letf* ((old-aff (symbol-function #'after-find-file))
-             ((symbol-function #'after-find-file)
-              (lambda (&rest args)
-                (let ((find-file-hook))
-                  (apply old-aff args)))))
-    (apply old-fun args)))
-
-(advice-add 'semantic-find-file-noselect :around
-            #'nadvice/semantic-find-file-noselect)
+(advice-add
+ 'semantic-find-file-noselect :around
+ (my/defun-as-value nadvice/semantic-find-file-noselect (old-fun &rest args)
+   (cl-letf* ((old-aff (symbol-function #'after-find-file))
+              ((symbol-function #'after-find-file)
+               (lambda (&rest args)
+                 (let ((find-file-hook))
+                   (apply old-aff args)))))
+     (apply old-fun args))))
 
 (defvar root-save-mode-lighter
   (list " " (propertize "root" 'face 'tty-menu-selected-face))
@@ -165,16 +165,16 @@
       (set-visited-file-name (my/make-root-file-name buffer-file-name) t t))
     (remove-hook 'before-save-hook #'root-save-mode/before-save t)))
 
-(defun nadvice/find-file-noselect (old-fun &rest args)
-  (cl-letf* ((old-fwp (symbol-function #'file-writable-p))
-             ((symbol-function #'file-writable-p)
-              (lambda (&rest iargs)
-                (or (member 'root-save-mode first-change-hook)
-                    (bound-and-true-p root-save-mode)
-                    (apply old-fwp iargs)))))
-    (apply old-fun args)))
-
-(advice-add 'find-file-noselect :around #'nadvice/find-file-noselect)
+(advice-add
+ 'find-file-noselect :around
+ (my/defun-as-value nadvice/find-file-noselect (old-fun &rest args)
+   (cl-letf* ((old-fwp (symbol-function #'file-writable-p))
+              ((symbol-function #'file-writable-p)
+               (lambda (&rest iargs)
+                 (or (member 'root-save-mode first-change-hook)
+                     (bound-and-true-p root-save-mode)
+                     (apply old-fwp iargs)))))
+     (apply old-fun args))))
 
 (define-minor-mode root-save-mode
   "Automatically save buffer as root"

@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
@@ -80,24 +81,26 @@ move the yanking point; just return the Nth kill forward."
 
 (use-package xclip
   :config
-  (defun nadvice/xclip-set-selection (old-fun &rest args)
-    (let ((default-directory "/"))
-      (apply old-fun args)))
+  (advice-add
+   'xclip-set-selection :around
+   (my/defun-as-value nadvice/xclip-set-selection (old-fun &rest args)
+     (let ((default-directory "/"))
+       (apply old-fun args))))
 
-  (defun nadvice/xclip-selection-value (old-fun &rest args)
-    (let ((default-directory "/"))
-      (unless (string-match-p "^Error: Can't open display: .*\n$"
-                              (shell-command-to-string "xclip -o > /dev/null"))
-        (apply old-fun args))))
-
-  (advice-add 'xclip-set-selection :around #'nadvice/xclip-set-selection)
-  (advice-add 'xclip-selection-value :around #'nadvice/xclip-selection-value))
+  (advice-add
+   'xclip-selection-value :around
+   (my/defun-as-value nadvice/xclip-selection-value (old-fun &rest args)
+     (let ((default-directory "/"))
+       (unless (string-match-p "^Error: Can't open display: .*\n$"
+                               (shell-command-to-string "xclip -o > /dev/null"))
+         (apply old-fun args))))))
 
 (use-package bracketed-paste
   :config
-  (add-hook 'bracketed-paste--pasting-mode-hook
-            (lambda ()
-              (smartparens-mode -1))))
+  (add-hook
+   'bracketed-paste--pasting-mode-hook
+   (my/defun-as-value my/disable-smartparens-during-bracketed-paste ()
+     (smartparens-mode -1))))
 
 (use-package whole-line-or-region
   :commands (whole-line-or-region-call-with-region
@@ -117,44 +120,44 @@ move the yanking point; just return the Nth kill forward."
   (evil-define-key 'normal cua-global-keymap (kbd "C-v") nil))
 
 ;; cua-cut the line if no region
-(defun nadvice/cua-cut-region (old-fun &optional prefix)
-  (interactive "*p")
-  (whole-line-or-region-call-with-region
-   (lambda (_beg _end &optional _prefix)
-     (interactive "rP")
-     (call-interactively
-      old-fun
-      current-prefix-arg))
-   prefix t t prefix))
-
-(advice-add 'cua-cut-region :around #'nadvice/cua-cut-region)
+(advice-add
+ 'cua-cut-region :around
+ (my/defun-as-value nadvice/cua-cut-region (old-fun &optional prefix)
+   (interactive "*p")
+   (whole-line-or-region-call-with-region
+    (lambda (_beg _end &optional _prefix)
+      (interactive "rP")
+      (call-interactively
+       old-fun
+       current-prefix-arg))
+    prefix t t prefix)))
 
 ;; cua-yank a line if cut as a line
-(defun nadvice/cua-paste (old-fun raw-prefix)
-  ;; figure out what yank would do normally
-  (let ((string-to-yank (current-kill
-                         (cond ((listp raw-prefix) 0)
-                               ((eq raw-prefix '-) -1)
-                               (t (1- raw-prefix))) t))
-        (saved-column (current-column)))
+(advice-add
+ 'cua-paste :around
+ (my/defun-as-value nadvice/cua-paste (old-fun raw-prefix)
+   ;; figure out what yank would do normally
+   (let ((string-to-yank (current-kill
+                          (cond ((listp raw-prefix) 0)
+                                ((eq raw-prefix '-) -1)
+                                (t (1- raw-prefix))) t))
+         (saved-column (current-column)))
 
-    ;; check for whole-line prop in yanked text
-    (if (get-text-property 0 'whole-line-or-region string-to-yank)
-        (save-excursion
-          (end-of-line)
-          (insert "\n")
-          (let ((beg (line-beginning-position)))
-            (insert (string-remove-suffix "\n" string-to-yank))
-            (remove-text-properties beg (1+ beg) '(whole-line-or-region nil))))
+     ;; check for whole-line prop in yanked text
+     (if (get-text-property 0 'whole-line-or-region string-to-yank)
+         (save-excursion
+           (end-of-line)
+           (insert "\n")
+           (let ((beg (line-beginning-position)))
+             (insert (string-remove-suffix "\n" string-to-yank))
+             (remove-text-properties beg (1+ beg) '(whole-line-or-region nil))))
 
-      ;; no whole-line-or-region mark
-      (if (eq (car (get-text-property 0 'yank-handler
-                                      string-to-yank))
-              'evil-yank-line-handler)
-          (evil-paste-after raw-prefix)
-        (funcall old-fun raw-prefix)))))
-
-(advice-add 'cua-paste :around #'nadvice/cua-paste)
+       ;; no whole-line-or-region mark
+       (if (eq (car (get-text-property 0 'yank-handler
+                                       string-to-yank))
+               'evil-yank-line-handler)
+           (evil-paste-after raw-prefix)
+         (funcall old-fun raw-prefix))))))
 
 (defun easy-kill-on-my-line (_n)
   "Get current line, but mark as a whole line for whole-line-or-region"
@@ -309,26 +312,27 @@ move the yanking point; just return the Nth kill forward."
 
 
   ;; unify evil-paste with cua rectangles
-  (defun nadvice/evil-paste-after (old-fun &rest args)
-    (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
-              (car (get-text-property 0 'yank-handler (car kill-ring))))
-            'rectangle--insert-for-yank)
-        (evil-with-state 'normal
-          (call-interactively #'evil-append)
-          (call-interactively #'cua-paste))
-      (apply old-fun args)))
+  (advice-add
+   'evil-paste-after :around
+   (my/defun-as-value nadvice/evil-paste-after (old-fun &rest args)
+     (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
+               (car (get-text-property 0 'yank-handler (car kill-ring))))
+             'rectangle--insert-for-yank)
+         (evil-with-state 'normal
+           (call-interactively #'evil-append)
+           (call-interactively #'cua-paste))
+       (apply old-fun args))))
 
-  (defun nadvice/evil-paste-before (old-fun &rest args)
-    (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
-              (car (get-text-property 0 'yank-handler (car kill-ring))))
-            'rectangle--insert-for-yank)
-        (evil-with-state 'normal
-          (call-interactively #'evil-insert)
-          (call-interactively #'cua-paste))
-      (apply old-fun args)))
-
-  (advice-add 'evil-paste-after  :around #'nadvice/evil-paste-after)
-  (advice-add 'evil-paste-before :around #'nadvice/evil-paste-before)
+  (advice-add
+   'evil-paste-before :around
+   (my/defun-as-value nadvice/evil-paste-before (old-fun &rest args)
+     (if (eq (with-demoted-errors "Failed to check text properties for paste. %s"
+               (car (get-text-property 0 'yank-handler (car kill-ring))))
+             'rectangle--insert-for-yank)
+         (evil-with-state 'normal
+           (call-interactively #'evil-insert)
+           (call-interactively #'cua-paste))
+       (apply old-fun args))))
 
   (define-key evil-insert-state-map (kbd "C-w") nil)
 
@@ -356,12 +360,12 @@ move the yanking point; just return the Nth kill forward."
   ;; ensure cua-mode doesn't interfere with evil visual state
   (let ((my/cua-mode-was-on))
     (add-hook 'evil-visual-state-entry-hook
-              (lambda ()
+              (my/defun-as-value my/entering-visual-state-disable-cua ()
                 (setq my/cua-mode-was-on cua-mode)
                 (when cua-mode
                   (cua-mode -1))))
     (add-hook 'evil-visual-state-exit-hook
-              (lambda ()
+              (my/defun-as-value my/leaving-visual-state-enable-cua ()
                 (when my/cua-mode-was-on
                   (cua-mode +1))))))
 

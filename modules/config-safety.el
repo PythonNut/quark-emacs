@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (defvar my/unnamed-autosave-location
   (locate-user-emacs-file "data/unnamed-autosave")
@@ -13,69 +14,68 @@ when `auto-save-mode' is invoked manually.")
          ,(expand-file-name (locate-user-emacs-file "data/autosave/")) t)))
 
 ;; Use a unified directory for buffers that don't visit files
-(defun nadvice/auto-save-mode (old-fun &rest args)
-  "Use a standard location for auto-save files for non-file buffers"
-  (if buffer-file-name
-      (apply old-fun args)
-    (let ((default-directory my/unnamed-autosave-location))
-      (unless (file-directory-p default-directory)
-        (mkdir default-directory))
-      (apply old-fun args))))
-
-(advice-add 'auto-save-mode :around #'nadvice/auto-save-mode)
-
-(defun nadvice/recover-this-file (old-fun &rest args)
-  "Restore BUFFER (or current buffer if omitted) from the autosave archive."
-  (interactive)
-  (if buffer-file-name
-      (apply old-fun args)
-    (let* ((base-file-name
-            (cl-letf* ((default-directory my/unnamed-autosave-location)
-                       ((symbol-function #'make-temp-file) (lambda (arg &rest _args) arg)))
-              (make-auto-save-file-name)))
-           (file-name-list
-            (cl-sort (mapcar
-                      (lambda (file)
-                        (cons file
-                              (nth 5 (file-attributes file))))
-                      (file-expand-wildcards (concat base-file-name "*")))
-                     #'>
-                     :key (lambda (file)
-                            (float-time (cdr file)))))
-           (file (if (and (boundp 'my/last-restored-buffer)
-                          (ignore-errors
-                            (string= (car my/last-restored-buffer)
-                                     (buffer-name))))
-                     (catch 'found-autosave
-                       (dolist (file file-name-list)
-                         (cl-destructuring-bind
-                             (_file-name . modification-time) file
+(advice-add
+ 'auto-save-mode :around
+ (my/defun-as-value nadvice/auto-save-mode (old-fun &rest args)
+   "Use a standard location for auto-save files for non-file buffers"
+   (if buffer-file-name
+       (apply old-fun args)
+     (let ((default-directory my/unnamed-autosave-location))
+       (unless (file-directory-p default-directory)
+         (mkdir default-directory))
+       (apply old-fun args)))))
 
 
-                         (when (< (float-time modification-time)
-                                  (cdr my/last-restored-buffer))
-                           (setcdr my/last-restored-buffer
-                                   (float-time modification-time))
-                           (throw 'found-autosave file))))
-                     (setq my/last-restored-buffer nil)
-                     (user-error "No older autosave... Wrapping around."))
-                 (defvar my/last-restored-buffer)
-                 (setq my/last-restored-buffer
-                       (cons (buffer-name)
-                             (float-time (cdar file-name-list))))
-                 (car file-name-list))))
-    (cl-destructuring-bind (file-name . modification-time) file
-      (widen)
-      (erase-buffer)
-      (goto-char (point-min))
-      (insert-file-contents file-name)
-      (message "File: %s (%s)"
-               (replace-regexp-in-string (regexp-quote base-file-name)
-                                         ""
-                                         file-name)
-               (format-time-string "%r %D" modification-time))))))
-
-(advice-add 'recover-this-file :around #'nadvice/recover-this-file)
+(advice-add
+ 'recover-this-file :around
+ (my/defun-as-value nadvice/recover-this-file (old-fun &rest args)
+   "Restore BUFFER (or current buffer if omitted) from the autosave archive."
+   (interactive)
+   (if buffer-file-name
+       (apply old-fun args)
+     (let* ((base-file-name
+             (cl-letf* ((default-directory my/unnamed-autosave-location)
+                        ((symbol-function #'make-temp-file) (lambda (arg &rest _args) arg)))
+               (make-auto-save-file-name)))
+            (file-name-list
+             (cl-sort (mapcar
+                       (lambda (file)
+                         (cons file
+                               (nth 5 (file-attributes file))))
+                       (file-expand-wildcards (concat base-file-name "*")))
+                      #'>
+                      :key (lambda (file)
+                             (float-time (cdr file)))))
+            (file (if (and (boundp 'my/last-restored-buffer)
+                           (ignore-errors
+                             (string= (car my/last-restored-buffer)
+                                      (buffer-name))))
+                      (catch 'found-autosave
+                        (dolist (file file-name-list)
+                          (cl-destructuring-bind
+                              (_file-name . modification-time) file
+                            (when (< (float-time modification-time)
+                                     (cdr my/last-restored-buffer))
+                              (setcdr my/last-restored-buffer
+                                      (float-time modification-time))
+                              (throw 'found-autosave file))))
+                        (setq my/last-restored-buffer nil)
+                        (user-error "No older autosave... Wrapping around."))
+                    (defvar my/last-restored-buffer)
+                    (setq my/last-restored-buffer
+                          (cons (buffer-name)
+                                (float-time (cdar file-name-list))))
+                    (car file-name-list))))
+       (cl-destructuring-bind (file-name . modification-time) file
+         (widen)
+         (erase-buffer)
+         (goto-char (point-min))
+         (insert-file-contents file-name)
+         (message "File: %s (%s)"
+                  (replace-regexp-in-string (regexp-quote base-file-name)
+                                            ""
+                                            file-name)
+                  (format-time-string "%r %D" modification-time)))))))
 
 (defun my/save-buffer-maybe ()
   (when (and buffer-file-name
@@ -88,10 +88,10 @@ when `auto-save-mode' is invoked manually.")
 
 ;; automatically save buffers associated with files on buffer switch
 ;; and on windows switch
-(defun nadvice/save-buffer-maybe (&rest _args)
-  (my/save-buffer-maybe))
-
-(advice-add 'switch-to-buffer :before #'nadvice/save-buffer-maybe)
+(advice-add
+ 'switch-to-buffer :before
+ (my/defun-as-value nadvice/save-buffer-maybe (&rest _args)
+   (my/save-buffer-maybe)))
 
 ;; save backups too
 (setq version-control t ;; Use version numbers for backups
@@ -107,16 +107,17 @@ when `auto-save-mode' is invoked manually.")
 
 (setq-default auto-save-default t)
 
-(defun my/force-backup-of-buffer ()
-  (setq buffer-backed-up nil))
-
-(add-hook 'before-save-hook #'my/force-backup-of-buffer)
+(add-hook
+ 'before-save-hook
+ (my/defun-as-value my/force-backup-of-buffer ()
+   (setq buffer-backed-up nil)))
 
 ;; save buffers on blur
-(add-hook 'focus-out-hook
-          (lambda ()
-            (let ((inhibit-message t))
-              (save-some-buffers t))))
+(add-hook
+ 'focus-out-hook
+ (my/defun-as-value my/save-buffers-on-focus-out ()
+   (let ((inhibit-message t))
+     (save-some-buffers t))))
 
 (use-package autorevert
   :config
@@ -129,12 +130,14 @@ when `auto-save-mode' is invoked manually.")
         auto-revert-verbose nil
         auto-revert-mode-text nil))
 
-(defun my/auto-revert-onetime-setup ()
-  (global-auto-revert-mode +1)
-  (remove-hook 'find-file-hook
-               #'my/auto-revert-onetime-setup))
 
-(add-hook 'find-file-hook #'my/auto-revert-onetime-setup)
+
+(add-hook
+ 'find-file-hook
+ (my/defun-as-value my/auto-revert-onetime-setup ()
+   (global-auto-revert-mode +1)
+   (remove-hook 'find-file-hook
+                #'my/auto-revert-onetime-setup)))
 
 (use-package backup-walker
   :defer-install t

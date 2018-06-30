@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (use-package auth-source
   :ensure nil
@@ -10,12 +11,12 @@
   :config
   (setq vc-follow-symlinks t)
 
-  (defun my/maybe/vc-refresh-state ()
-    (unless (my/slow-fs default-directory)
-      (vc-refresh-state)))
-
   (remove-hook 'find-file-hook #'vc-refresh-state)
-  (add-hook 'find-file-hook #'my/maybe/vc-refresh-state))
+  (add-hook
+   'find-file-hook
+   (my/defun-as-value my/maybe/vc-refresh-state ()
+     (unless (my/slow-fs default-directory)
+       (vc-refresh-state)))))
 
 (use-package vc-git
   :ensure nil
@@ -24,13 +25,13 @@
 
 (use-package diff-hl
   :init
-  (defun my/maybe-diff-hl-mode ()
-    (when (and (display-graphic-p)
-               (not (my/slow-fs buffer-file-name)))
-      (diff-hl-mode +1)
-      (diff-hl-update)))
-
-  (add-hook 'find-file-hook #'my/maybe-diff-hl-mode)
+  (add-hook
+   'find-file-hook
+   (my/defun-as-value my/maybe-diff-hl-mode ()
+     (when (and (display-graphic-p)
+                (not (my/slow-fs buffer-file-name)))
+       (diff-hl-mode +1)
+       (diff-hl-update))))
 
   :config
   (setq diff-hl-draw-borders nil)
@@ -117,10 +118,10 @@
 
   (add-hook 'with-editor-mode-hook #'evil-insert-state)
 
-  (defun nadvice/magit-revert-buffers (&rest _args)
-    (run-with-timer 1 nil #'message ""))
-
-  (advice-add 'magit-revert-buffers :after #'nadvice/magit-revert-buffers)
+  (advice-add
+   'magit-revert-buffers :after
+   (my/defun-as-value nadvice/magit-revert-buffers (&rest _args)
+     (run-with-timer 1 nil #'message "")))
 
   ;; If there is only one stash, operate on it immediately
   (el-patch-defun magit-read-stash (prompt)
@@ -412,9 +413,10 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
 
   (defvar ediff-saved-window-configuration)
 
-  (add-hook 'ediff-before-setup-hook
-            (lambda ()
-              (setq ediff-saved-window-configuration (current-window-configuration))))
+  (add-hook
+   'ediff-before-setup-hook
+   (my/defun-as-value my/ediff-save-window-config ()
+     (setq ediff-saved-window-configuration (current-window-configuration))))
 
   (let ((restore-window-configuration
          (lambda ()
@@ -422,11 +424,11 @@ Tests   _P_ test-project    _t_ toggle implementation←→test"
     (add-hook 'ediff-quit-hook restore-window-configuration 'append)
     (add-hook 'ediff-suspend-hook restore-window-configuration 'append))
 
-  (defun nadvice/ediff-setup-keymap (&rest _args)
-    (define-key ediff-mode-map "j" #'ediff-next-difference)
-    (define-key ediff-mode-map "k" #'ediff-previous-difference))
-
-  (advice-add 'ediff-setup-keymap :after #'nadvice/ediff-setup-keymap)
+  (advice-add
+   'ediff-setup-keymap :after
+   (my/defun-as-value nadvice/ediff-setup-keymap (&rest _args)
+     (define-key ediff-mode-map "j" #'ediff-next-difference)
+     (define-key ediff-mode-map "k" #'ediff-previous-difference)))
 
   ;; don't start another frame
   (setq ediff-window-setup-function #'ediff-setup-windows-plain))

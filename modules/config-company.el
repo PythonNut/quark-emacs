@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 (require 'cl-lib)
 
 (use-package company
@@ -11,9 +12,10 @@
       (run-hooks 'load-theme-hook)
       (remove-hook 'first-change-hook #'my/company-onetime-setup)))
 
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (add-hook 'first-change-hook #'my/company-onetime-setup)))
+  (add-hook
+   'emacs-startup-hook
+   (my/defun-as-value my/setup-company-onetime-setup ()
+     (add-hook 'first-change-hook #'my/company-onetime-setup)))
 
   (eval-and-compile
     (with-demoted-errors "Load error: %s"
@@ -110,44 +112,45 @@
   (define-key company-active-map (kbd "<up>") #'company-select-above)
   (define-key company-active-map (kbd "<down>") #'company-select-below)
 
-  (defun my/company-setup-tooltip-faces  ()
-    (set-face-attribute 'company-tooltip-common-selection nil
-                        :background "#839496"
-                        :foreground (if (< (display-color-cells) 256)
-                                        "black"
-                                      nil)
-                        :underline nil
-                        :inherit 'region)
+  (add-hook
+   'load-theme-hook
+   (my/defun-as-value my/company-setup-tooltip-faces  ()
+     (set-face-attribute 'company-tooltip-common-selection nil
+                         :background "#839496"
+                         :foreground (if (< (display-color-cells) 256)
+                                         "black"
+                                       nil)
+                         :underline nil
+                         :inherit 'region)
 
-    (set-face-attribute 'company-tooltip-selection nil
-                        :background "#586e75"
-                        :foreground nil
-                        :inherit 'region)
+     (set-face-attribute 'company-tooltip-selection nil
+                         :background "#586e75"
+                         :foreground nil
+                         :inherit 'region)
 
-    (set-face-attribute 'company-tooltip-common nil
-                        :background nil
-                        :underline nil
-                        :inherit 'company-tooltip
-                        :foreground "#586e75")
+     (set-face-attribute 'company-tooltip-common nil
+                         :background nil
+                         :underline nil
+                         :inherit 'company-tooltip
+                         :foreground "#586e75")
 
-    (set-face-attribute 'company-tooltip-annotation nil
-                        :foreground nil
-                        :background nil
-                        :inherit 'company-tooltip)
+     (set-face-attribute 'company-tooltip-annotation nil
+                         :foreground nil
+                         :background nil
+                         :inherit 'company-tooltip)
 
-    (set-face-attribute 'company-tooltip nil
-                        :foreground nil
-                        :inherit 'default))
-
-  (add-hook 'load-theme-hook #'my/company-setup-tooltip-faces))
+     (set-face-attribute 'company-tooltip nil
+                         :foreground nil
+                         :inherit 'default))))
 
 (with-eval-after-load 'company-template
-  (defun my/company-setup-template-faces ()
-    (set-face-attribute 'company-template-field nil
-                        :foreground nil
-                        :background nil
-                        :inherit 'region))
-  (add-hook 'load-theme-hook #'my/company-setup-template-faces))
+  (add-hook
+   'load-theme-hook
+   (my/defun-as-value my/company-setup-template-faces ()
+     (set-face-attribute 'company-template-field nil
+                         :foreground nil
+                         :background nil
+                         :inherit 'region))))
 
 (with-eval-after-load 'company-dabbrev-code
   (eval-when-compile

@@ -1,4 +1,6 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
+
 (require 'cl-lib)
 
 (require 'config-avy-easymotion)
@@ -118,9 +120,10 @@
       (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
   ;; directional frame movement too
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
+  (add-hook
+   'emacs-startup-hook
+   (my/defun-as-value my/setup-framemove-onetime-setup ()
+     (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
 
   :config
   (setq framemove-hook-into-windmove t))
@@ -201,11 +204,9 @@
                                     (rx line-start "*" (zero-or-more anything) "output*"))
         iflipb-wrap-around t)
 
-  (defun nadvice/iflipb-first-iflipb-buffer-switch-command (&rest _args) nil)
-
-  (advice-add 'iflipb-first-iflipb-buffer-switch-command
-              :override
-              #'nadvice/iflipb-first-iflipb-buffer-switch-command))
+  (advice-add
+   'iflipb-first-iflipb-buffer-switch-command :override
+   (my/defun-as-value nadvice/iflipb-first-iflipb-buffer-switch-command (&rest _args) nil)))
 
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
@@ -216,9 +217,10 @@
   (defun my/vhl-onetime-setup ()
     (remove-hook 'first-change-hook #'my/vhl-onetime-setup))
 
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
+  (add-hook
+   'emacs-startup-hook
+   (my/defun-as-value my/setup-vhl-onetime-setup ()
+     (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
   :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -260,14 +262,14 @@
                       :inverse-video nil
                       :foreground nil)
 
-  (defun nadvice/whitespace-trailing-regexp (limit)
-    "Match all trailing spaces. This overloads the definition in whitespace.el."
-    (let ((status t))
-      (while (unless (re-search-forward whitespace-trailing-regexp limit t)
-               (setq status nil)))          ;; end of buffer
-      status))
-  (advice-add 'whitespace-trailing-regexp :override
-              #'nadvice/whitespace-trailing-regexp))
+  (advice-add
+   'whitespace-trailing-regexp :override
+   (my/defun-as-value nadvice/whitespace-trailing-regexp (limit)
+     "Match all trailing spaces. This overloads the definition in whitespace.el."
+     (let ((status t))
+       (while (unless (re-search-forward whitespace-trailing-regexp limit t)
+                (setq status nil)))          ;; end of buffer
+       status))))
 
 ;; ============
 ;; Line numbers

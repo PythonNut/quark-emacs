@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (require 'evil)
 
@@ -144,16 +145,14 @@
     (set-face-attribute 'evil-quickscope-second-face nil
                         :inherit nil))
 
-  (defun nadvice/evil-quickscope-update-overlays-bidirectional ()
-    "Update overlays in both directions from point."
-    (evil-quickscope-remove-overlays)
-    (when (memq evil-state '(normal motion))
-      (evil-quickscope-apply-overlays-forward)
-      (evil-quickscope-apply-overlays-backward)))
-
-  (advice-add 'evil-quickscope-update-overlays-bidirectional
-              :override
-              #'nadvice/evil-quickscope-update-overlays-bidirectional))
+  (advice-add
+   'evil-quickscope-update-overlays-bidirectional :override
+   (my/defun-as-value nadvice/evil-quickscope-update-overlays-bidirectional ()
+     "Update overlays in both directions from point."
+     (evil-quickscope-remove-overlays)
+     (when (memq evil-state '(normal motion))
+       (evil-quickscope-apply-overlays-forward)
+       (evil-quickscope-apply-overlays-backward)))))
 
 (use-package evil-lion
   :commands (evil-lion-left evil-lion-right)

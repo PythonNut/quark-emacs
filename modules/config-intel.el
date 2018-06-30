@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 (require 'cl-lib)
 (require 'config-tramp)
 
@@ -9,12 +10,11 @@
   (add-hook 'prog-mode-hook #'semantic-mode)
 
   (with-eval-after-load 'semantic/db-file
-    (defun nadvice/semanticdb-file-directory-exists-p (old-fun &rest args)
-      (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
-        (apply old-fun args)))
-
-    (advice-add 'semanticdb-file-directory-exists-p :around
-                #'nadvice/semanticdb-file-directory-exists-p))
+    (advice-add
+     'semanticdb-file-directory-exists-p :around
+     (my/defun-as-value nadvice/semanticdb-file-directory-exists-p (old-fun &rest args)
+       (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
+         (apply old-fun args)))))
 
   :config
   (setq semanticdb-default-save-directory
@@ -26,14 +26,12 @@
   (global-semantic-idle-scheduler-mode +1)
   (global-semantic-idle-summary-mode +1)
 
-  (defun nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
-    (unless (and (bound-and-true-p flycheck-mode)
-                 (flycheck-overlays-at (point)))
-      (apply old-fun args)))
-
-  (advice-add 'semantic-idle-summary-idle-function
-              :around
-              #'nadvice/semantic-idle-summary-idle-function))
+  (advice-add
+   'semantic-idle-summary-idle-function :around
+   (my/defun-as-value nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
+     (unless (and (bound-and-true-p flycheck-mode)
+                  (flycheck-overlays-at (point)))
+       (apply old-fun args)))))
 
 (use-package srefactor
   :defer-install t
@@ -83,26 +81,25 @@
   ;; please don't give me emacs-lisp stylistic advice
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
-  (defun nadvice/flycheck-mode-line-status-text (&optional status)
-    (let ((text (pcase (or status flycheck-last-status-change)
-                  (`not-checked "")
-                  (`no-checker "-")
-                  (`running "*")
-                  (`errored "!")
-                  (`finished
-                   (if flycheck-current-errors
-                       (let ((error-counts (flycheck-count-errors
-                                            flycheck-current-errors)))
-                         (format "%s/%s"
-                                 (or (cdr (assq 'error error-counts)) "")
-                                 (or (cdr (assq 'warning error-counts)) "")))
-                     ""))
-                  (`interrupted "-")
-                  (`suspicious "?"))))
-      (concat (if (display-graphic-p) " ✓" " Γ") text)))
-
-  (advice-add 'flycheck-mode-line-status-text :override
-              #'nadvice/flycheck-mode-line-status-text)
+  (advice-add
+   'flycheck-mode-line-status-text :override
+   (my/defun-as-value nadvice/flycheck-mode-line-status-text (&optional status)
+     (let ((text (pcase (or status flycheck-last-status-change)
+                   (`not-checked "")
+                   (`no-checker "-")
+                   (`running "*")
+                   (`errored "!")
+                   (`finished
+                    (if flycheck-current-errors
+                        (let ((error-counts (flycheck-count-errors
+                                             flycheck-current-errors)))
+                          (format "%s/%s"
+                                  (or (cdr (assq 'error error-counts)) "")
+                                  (or (cdr (assq 'warning error-counts)) "")))
+                      ""))
+                   (`interrupted "-")
+                   (`suspicious "?"))))
+       (concat (if (display-graphic-p) " ✓" " Γ") text))))
 
   (defun flycheck-goto-nearest-error ()
     (interactive)
@@ -129,15 +126,15 @@
       (require 'flycheck)))
 
   (setq eldoc-idle-delay 0.2)
-  (defun nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
-    (and (apply old-fun args)
-         (not (and (bound-and-true-p sp-show-pair-overlays)
-                   (not (minibufferp))))
-         (not (and (bound-and-true-p flycheck-mode)
-                   (flycheck-overlay-errors-at (point))))))
 
-  (advice-add 'eldoc-display-message-no-interference-p :around
-              #'nadvice/eldoc-display-message-no-interference-p))
+  (advice-add
+   'eldoc-display-message-no-interference-p :around
+   (my/defun-as-value nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
+     (and (apply old-fun args)
+          (not (and (bound-and-true-p sp-show-pair-overlays)
+                    (not (minibufferp))))
+          (not (and (bound-and-true-p flycheck-mode)
+                    (flycheck-overlay-errors-at (point))))))))
 
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
@@ -145,11 +142,11 @@
 (use-package ispell
   :ensure nil
   :config
-  (defun nadvice/ispell-init-process (old-fun &rest args)
-    (let ((inhibit-message t))
-      (apply old-fun args)))
-
-  (advice-add 'ispell-init-process :around #'nadvice/ispell-init-process))
+  (advice-add
+   'ispell-init-process :around
+   (my/defun-as-value nadvice/ispell-init-process (old-fun &rest args)
+     (let ((inhibit-message t))
+       (apply old-fun args)))))
 
 (use-package flyspell-lazy
   :init
@@ -241,29 +238,21 @@ is 'toggle."
     (yas-global-mode +1)
     (remove-hook 'first-change-hook #'my/yasnippet-onetime-setup))
 
-  (add-hook 'emacs-startup-hook
-            (lambda ()
-              (add-hook 'first-change-hook #'my/yasnippet-onetime-setup)))
-
-  (defun my/ivy-yasnippet (_prompt choices &optional display-fn)
-    "Use ivy to select a snippet. Put this into `yas-prompt-functions.'"
-    (if (require 'ivy nil t)
-        (let* ((disp-fn (or display-fn 'identity))
-               (cands (mapcar (lambda (x) (cons (funcall disp-fn x) x)) choices))
-               (result (ivy-read "Snippet: " (mapcar #'car cands))))
-          (if (null result)
-              (signal 'quit "user quit!")
-            (cdr (assoc result cands))))
-      nil))
+  (add-hook
+   'emacs-startup-hook
+   (my/defun-as-value my/setup-yasnippet-onetime-setup ()
+     (add-hook 'first-change-hook #'my/yasnippet-onetime-setup)))
 
   :config
   (set-face-attribute 'yas-field-highlight-face nil
                       :foreground nil
                       :background nil
                       :inherit 'region)
-  (add-hook 'yas-global-mode-hook
-            (lambda ()
-              (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
+
+  (add-hook
+   'yas-global-mode-hook
+   (my/defun-as-value my/diminish-yas-minor-mode ()
+     (diminish 'yas-minor-mode (if (display-graphic-p) " ¥" " Y"))))
 
   (setq yas-snippet-dirs (list (locate-user-emacs-file "data/snippets"))
         yas-key-syntaxes (remove "w" yas-key-syntaxes)
@@ -281,7 +270,18 @@ is 'toggle."
 
   (yas-reload-all)
 
-  (add-to-list 'yas-prompt-functions #'my/ivy-yasnippet)
+  (add-to-list
+   'yas-prompt-functions
+   (my/defun-as-value my/ivy-yasnippet (_prompt choices &optional display-fn)
+     "Use ivy to select a snippet. Put this into `yas-prompt-functions.'"
+     (if (require 'ivy nil t)
+         (let* ((disp-fn (or display-fn 'identity))
+                (cands (mapcar (lambda (x) (cons (funcall disp-fn x) x)) choices))
+                (result (ivy-read "Snippet: " (mapcar #'car cands))))
+           (if (null result)
+               (signal 'quit "user quit!")
+             (cdr (assoc result cands))))
+       nil)))
 
   ;; also use yasnippets for new file templates
   (defvar my/yas-template-dir (locate-user-emacs-file "data/templates"))
@@ -313,11 +313,12 @@ is 'toggle."
 (use-package autoinsert
   :ensure nil
   :init
-  (defun my/maybe-auto-insert ()
-    (when (= (point-min) (point-max))
-      (auto-insert)))
+  (add-hook
+   'after-change-major-mode-hook
+   (my/defun-as-value my/maybe-auto-insert ()
+     (when (= (point-min) (point-max))
+       (auto-insert))))
 
-  (add-hook 'after-change-major-mode-hook #'my/maybe-auto-insert)
   :config
   (require 'yasnippet)
   (setq auto-insert-alist nil)
@@ -339,62 +340,62 @@ Returns either nil, or the position of the first null byte."
       (goto-char (point-min))
       (search-forward (string ?\x00) 4096 t 1))))
 
-(defun my/hexl-if-binary ()
-  "If `fundamental-mode' is active, and the current buffer
+(add-hook
+ 'find-file-hooks
+ (my/defun-as-value my/hexl-if-binary ()
+   "If `fundamental-mode' is active, and the current buffer
 is binary, activate `hexl-mode'."
-  (when (and (eq major-mode 'fundamental-mode)
-             (my/buffer-binary-p))
-    (hexl-mode)
-    (message "Detected binary file. Switched to text mode.")))
-
-(add-hook 'find-file-hooks 'my/hexl-if-binary)
+   (when (and (eq major-mode 'fundamental-mode)
+              (my/buffer-binary-p))
+     (hexl-mode)
+     (message "Detected binary file. Switched to text mode."))))
 
 (use-package vlf
   :defer-install t
   :commands (vlf)
   :init
-  (defun nadvice/abort-if-file-too-large (_old-fun &rest args)
-    (cl-destructuring-bind (size op-type filename) args
-      (when (and size
-                 (not (zerop size))
-                 large-file-warning-threshold
-                 (< large-file-warning-threshold size))
-        (let ((char nil))
-          (while (not (memq (setq char
-                                  (read-event
-                                   (propertize
-                                    (format
-                                     "File %s is large (%s): \
+  (advice-add
+   'abort-if-file-too-large :around
+   (my/defun-as-value nadvice/abort-if-file-too-large (_old-fun &rest args)
+     (cl-destructuring-bind (size op-type filename) args
+       (when (and size
+                  (not (zerop size))
+                  large-file-warning-threshold
+                  (< large-file-warning-threshold size))
+         (let ((char nil))
+           (while (not (memq (setq char
+                                   (read-event
+                                    (propertize
+                                     (format
+                                      "File %s is large (%s): \
 %s normally (o), %s with vlf (v) or abort (a)"
-                                     (if filename
-                                         (file-name-nondirectory filename)
-                                       "")
-                                     (file-size-human-readable size)
-                                     op-type op-type)
-                                    'face 'minibuffer-prompt)))
-                            '(?o ?O ?v ?V ?a ?A))))
-          (cond ((memq char '(?v ?V))
-                 (vlf filename)
-                 (error ""))
-                ((memq char '(?a ?A))
-                 (error "Aborted")))))))
-
-  (advice-add 'abort-if-file-too-large :around #'nadvice/abort-if-file-too-large)
+                                      (if filename
+                                          (file-name-nondirectory filename)
+                                        "")
+                                      (file-size-human-readable size)
+                                      op-type op-type)
+                                     'face 'minibuffer-prompt)))
+                             '(?o ?O ?v ?V ?a ?A))))
+           (cond ((memq char '(?v ?V))
+                  (vlf filename)
+                  (error ""))
+                 ((memq char '(?a ?A))
+                  (error "Aborted"))))))))
 
   :config
-  (defun my/vlf-hook ()
-    (setq bidi-display-reordering nil)
-    (flyspell-mode -1)
-    (flycheck-mode -1)
-    (ws-butler-mode -1)
-    (visual-line-mode -1)
-    (adaptive-wrap-prefix-mode -1)
-    (setq-local global-hl-line-mode nil)
-    (setq-local column-number-mode nil)
-    (my/hexl-if-binary)
-    (message "Use C-c C-v → VLF"))
-
-  (add-hook 'vlf-mode-hook #'my/vlf-hook))
+  (add-hook
+   'vlf-mode-hook
+   (my/defun-as-value my/vlf-hook ()
+     (setq bidi-display-reordering nil)
+     (flyspell-mode -1)
+     (flycheck-mode -1)
+     (ws-butler-mode -1)
+     (visual-line-mode -1)
+     (adaptive-wrap-prefix-mode -1)
+     (setq-local global-hl-line-mode nil)
+     (setq-local column-number-mode nil)
+     (my/hexl-if-binary)
+     (message "Use C-c C-v → VLF"))))
 
 ;;; =================================
 ;;; Emacs fasd - find files from fasd
@@ -406,15 +407,14 @@ is binary, activate `hexl-mode'."
   :config
   (setq fasd-enable-initial-prompt nil)
 
-  (defun nadvice/fasd-find-file (old-fun &rest args)
-    (require 'helm-mode)
-    ;; overriding the completion system in emacs-fasd is surprisingly tricky
-    (cl-letf (((symbol-function #'completing-read)
-               #'helm--completing-read-default))
-      (apply old-fun args)))
-
-  (advice-add 'fasd-find-file :around
-              #'nadvice/fasd-find-file))
+  (advice-add
+   'fasd-find-file :around
+   (my/defun-as-value nadvice/fasd-find-file (old-fun &rest args)
+     (require 'helm-mode)
+     ;; overriding the completion system in emacs-fasd is surprisingly tricky
+     (cl-letf (((symbol-function #'completing-read)
+                #'helm--completing-read-default))
+       (apply old-fun args)))))
 
 ;;; =================================================
 ;;; dumb-jump an unintelligent goto-definition system

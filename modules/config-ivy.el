@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (setq resize-mini-windows t
 
@@ -38,10 +39,10 @@ recursion depth in the minibuffer prompt.  This is only useful if
   (minibuffer-depth-indicate-mode +1))
 
 ;; hl-line-mode breaks minibuffer in TTY
-(defun my/disable-hl-line-mode-in-minibuffer ()
-  (setq-local global-hl-line-mode nil))
-
-(add-hook 'minibuffer-setup-hook #'my/disable-hl-line-mode-in-minibuffer)
+(add-hook
+ 'minibuffer-setup-hook
+ (my/defun-as-value my/disable-hl-line-mode-in-minibuffer ()
+   (setq-local global-hl-line-mode nil)))
 
 (use-package flx-isearch
   :commands (flx-isearch-forward
@@ -206,46 +207,46 @@ Minibuffer bindings:
   (define-key evil-insert-state-map (kbd "C-s") #'isearch-forward-regexp)
   (define-key evil-normal-state-map (kbd "SPC SPC") #'counsel-M-x))
 
-(defun isearch-region-dwim-helper ()
-  (when (region-active-p)
-    (let* ((beg (min (mark) (point)))
-           (end (+ (max (mark) (point)) (if (or (evil-normal-state-p)
-                                                (evil-visual-state-p)
-                                                (evil-motion-state-p)
-                                                (evil-operator-state-p))
-                                            1 0)))
-           (search-text (buffer-substring-no-properties beg end))
-           (symbol-bounds (bounds-of-thing-at-point 'symbol)))
-      (when (and search-text
-                 ;; Assume that multi-line regions should be extended,
-                 ;; not searched literally.
-                 (= (line-number-at-pos beg)
-                    (line-number-at-pos end)))
-        (deactivate-mark)
-        (setq isearch-regexp t
-              ;; If region is a subregion of the current symbol, then
-              ;; limit it to the contents of symbols in the current buffer
-              isearch-string (if (and (car symbol-bounds)
-                                      (>= beg (car symbol-bounds))
-                                      (<= end (cdr symbol-bounds)))
-                                 (concat (rx symbol-start)
-                                         ;; If the region matches the
-                                         ;; beginning or end of a symbol
-                                         ;; anchor it there.
-                                         (if (= beg (car symbol-bounds)) ""
-                                           (rx (zero-or-more (or (syntax _)
-                                                                 (syntax w)))))
-                                         (regexp-quote search-text)
-                                         (if (= end (cdr symbol-bounds)) ""
-                                           (rx (zero-or-more (or (syntax _)
-                                                                 (syntax w)))))
-                                         (rx symbol-end))
-                               (regexp-quote search-text))
-              isearch-message (mapconcat #'isearch-text-char-description
-                                         isearch-string
-                                         ""))))))
-
-(add-hook 'isearch-mode-hook #'isearch-region-dwim-helper)
+(add-hook
+ 'isearch-mode-hook
+ (my/defun-as-value isearch-region-dwim-helper ()
+   (when (region-active-p)
+     (let* ((beg (min (mark) (point)))
+            (end (+ (max (mark) (point)) (if (or (evil-normal-state-p)
+                                                 (evil-visual-state-p)
+                                                 (evil-motion-state-p)
+                                                 (evil-operator-state-p))
+                                             1 0)))
+            (search-text (buffer-substring-no-properties beg end))
+            (symbol-bounds (bounds-of-thing-at-point 'symbol)))
+       (when (and search-text
+                  ;; Assume that multi-line regions should be extended,
+                  ;; not searched literally.
+                  (= (line-number-at-pos beg)
+                     (line-number-at-pos end)))
+         (deactivate-mark)
+         (setq isearch-regexp t
+               ;; If region is a subregion of the current symbol, then
+               ;; limit it to the contents of symbols in the current buffer
+               isearch-string (if (and (car symbol-bounds)
+                                       (>= beg (car symbol-bounds))
+                                       (<= end (cdr symbol-bounds)))
+                                  (concat (rx symbol-start)
+                                          ;; If the region matches the
+                                          ;; beginning or end of a symbol
+                                          ;; anchor it there.
+                                          (if (= beg (car symbol-bounds)) ""
+                                            (rx (zero-or-more (or (syntax _)
+                                                                  (syntax w)))))
+                                          (regexp-quote search-text)
+                                          (if (= end (cdr symbol-bounds)) ""
+                                            (rx (zero-or-more (or (syntax _)
+                                                                  (syntax w)))))
+                                          (rx symbol-end))
+                                (regexp-quote search-text))
+               isearch-message (mapconcat #'isearch-text-char-description
+                                          isearch-string
+                                          "")))))))
 
 (use-package smex
   :config
@@ -258,14 +259,16 @@ Minibuffer bindings:
 ;; let M-' intelligently resume whatever completion we were working on
 (let ((my/last-used-completion-system))
   (with-eval-after-load 'ivy
-    (defun nadvice/ivy--minibuffer-setup (&rest _args)
-      (setq my/last-used-completion-system 'ivy))
-    (advice-add 'ivy--minibuffer-setup :after #'nadvice/ivy--minibuffer-setup))
+    (advice-add
+     'ivy--minibuffer-setup :after
+     (my/defun-as-value nadvice/ivy--minibuffer-setup (&rest _args)
+       (setq my/last-used-completion-system 'ivy))))
 
   (with-eval-after-load 'helm
-    (defun my/helm-last-used-hook ()
-      (setq my/last-used-completion-system 'helm))
-    (add-hook 'helm-minibuffer-set-up-hook #'my/helm-last-used-hook))
+    (add-hook
+     'helm-minibuffer-set-up-hook
+     (my/defun-as-value my/helm-last-used-hook ()
+       (setq my/last-used-completion-system 'helm))))
 
   (defun minibuffer-completion-resume ()
     (interactive)

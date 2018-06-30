@@ -1,3 +1,5 @@
+(eval-when-compile (require 'config-macros))
+
 ;; =============================================================================
 ;; TeX/LaTeX ===================================================================
 ;; =============================================================================
@@ -149,20 +151,21 @@
     :commands (company-auctex-symbols
                company-auctex-environments))
 
-  (add-hook 'TeX-mode-hook
-            (lambda ()
-              (let ((old-backends company-backends))
-                (set (make-local-variable 'company-backends)
-                     (append (list (append
-                                    '(company-auctex-macros
-                                      company-auctex-symbols
-                                      company-auctex-environments
-                                      company-latex-commands
-                                      company-math-symbols-latex
-                                      company-dabbrev)
-                                    (cdar old-backends)))
-                             '((company-ispell))
-                             (cdr old-backends))))))
+  (add-hook
+   'TeX-mode-hook
+   (my/defun-as-value my/setup-tex-mode-company-backends ()
+     (let ((old-backends company-backends))
+       (set (make-local-variable 'company-backends)
+            (append (list (append
+                           '(company-auctex-macros
+                             company-auctex-symbols
+                             company-auctex-environments
+                             company-latex-commands
+                             company-math-symbols-latex
+                             company-dabbrev)
+                           (cdar old-backends)))
+                    '((company-ispell))
+                    (cdr old-backends))))))
 
   (use-package evil
     :config
@@ -254,10 +257,12 @@
     (evil-set-initial-state 'TeX-error-overview-mode 'insert))
 
   (add-to-list 'sp-sexp-suffix (list 'latex-mode 'regexp ""))
-  (add-hook 'LaTeX-mode-hook (lambda ()
-                               (adaptive-wrap-prefix-mode -1)
-                               (when (display-graphic-p)
-                                 (magic-latex-buffer))))
+  (add-hook
+   'LaTeX-mode-hook
+   (my/defun-as-value my/setup-LaTeX-mode ()
+     (adaptive-wrap-prefix-mode -1)
+     (when (display-graphic-p)
+       (magic-latex-buffer))))
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
@@ -269,35 +274,34 @@
     :config
     (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
-  (defun nadvice/TeX-command-master (old-fun arg)
-    (interactive "P")
-    (if (called-interactively-p 'any)
-        (if (consp arg)
-            (call-interactively old-fun)
-          (cl-letf* (((symbol-function #'TeX-command-query)
-                      (lambda (name)
-                        (TeX-command-default name)
-                        (car-safe (TeX-assoc "LatexMk" TeX-command-list)))))
-            (call-interactively old-fun)))
-      (apply old-fun args)))
+  (advice-add
+   'TeX-command-master :around
+   (my/defun-as-value nadvice/TeX-command-master (old-fun arg)
+     (interactive "P")
+     (if (called-interactively-p 'any)
+         (if (consp arg)
+             (call-interactively old-fun)
+           (cl-letf* (((symbol-function #'TeX-command-query)
+                       (lambda (name)
+                         (TeX-command-default name)
+                         (car-safe (TeX-assoc "LatexMk" TeX-command-list)))))
+             (call-interactively old-fun)))
+       (apply old-fun args))))
 
-  (advice-add 'TeX-command-master :around #'nadvice/TeX-command-master)
+  (advice-add
+   'TeX-source-correlate-sync-source :after
+   (my/defun-as-value nadvice/TeX-source-correlate-sync-source (&rest args)
+     (recenter)
+     (require 'pulse)
+     (pulse-momentary-highlight-one-line (point))))
 
-  (defun nadvice/TeX-source-correlate-sync-source (&rest args)
-    (recenter)
-    (require 'pulse)
-    (pulse-momentary-highlight-one-line (point)))
-
-  (advice-add 'TeX-source-correlate-sync-source :after
-              #'nadvice/TeX-source-correlate-sync-source)
-
-  (defun nadvice/LaTeX-math-insert (old-fun string dollar)
-    (let ((TeX-insert-braces nil))
-      (if (texmathp)
-          (funcall old-fun string dollar)
-        (funcall old-fun string (not dollar)))))
-
-  (advice-add 'LaTeX-math-insert :around #'nadvice/LaTeX-math-insert)
+  (advice-add
+   'LaTeX-math-insert :around
+   (my/defun-as-value nadvice/LaTeX-math-insert (old-fun string dollar)
+     (let ((TeX-insert-braces nil))
+       (if (texmathp)
+           (funcall old-fun string dollar)
+         (funcall old-fun string (not dollar))))))
 
   (defun my/embrace-with-TeX-environment ()
     (let* ((input (read-string "Environment: "))
@@ -309,36 +313,36 @@
       (cons (format "\\begin{%s}%s" (or environment "") newline)
             (format "%s\\end{%s}" newline (or environment "")))))
 
-  (defun my/embrace-TeX-setup ()
-    (require 'embrace)
-    (embrace-add-pair ?= "\\verb|" "|")
-    (embrace-add-pair ?~ "\\texttt{" "}")
-    (embrace-add-pair ?/ "\\emph{" "}")
-    (embrace-add-pair ?* "\\textbf{" "}")
-    (embrace-add-pair ?$ "$" "$")
-    (embrace-add-pair ?\\ "\\[" "\\]")
-    (embrace-add-pair-regexp ?e "\\\\begin{[^\}]*?}" "\\\\end{[^\}]*?}"
-                             'my/embrace-with-TeX-environment
-                             (embrace-build-help "\\begin{env}" "\\end{env}")))
+  (add-hook
+   'LaTeX-mode-hook
+   (my/defun-as-value my/embrace-TeX-setup ()
+     (require 'embrace)
+     (embrace-add-pair ?= "\\verb|" "|")
+     (embrace-add-pair ?~ "\\texttt{" "}")
+     (embrace-add-pair ?/ "\\emph{" "}")
+     (embrace-add-pair ?* "\\textbf{" "}")
+     (embrace-add-pair ?$ "$" "$")
+     (embrace-add-pair ?\\ "\\[" "\\]")
+     (embrace-add-pair-regexp ?e "\\\\begin{[^\}]*?}" "\\\\end{[^\}]*?}"
+                              'my/embrace-with-TeX-environment
+                              (embrace-build-help "\\begin{env}" "\\end{env}"))))
 
-  (add-hook 'LaTeX-mode-hook #'my/embrace-TeX-setup)
-
-  (defun my/auto-yasnippet-TeX-macro ()
-    "Convert the TeX macro around point into a YASnippet snippet"
-    (let ((beg (TeX-find-macro-start))
-          (end (TeX-find-macro-end)))
-      (when (and beg
-                 end
-                 (looking-at "}"))
-        (yas-expand-snippet
-         (replace-regexp-in-string
-          "{}"
-          "{${}}"
-          (substring-no-properties (buffer-substring beg end)))
-         beg
-         end))))
-
-  (add-hook 'TeX-after-insert-macro-hook #'my/auto-yasnippet-TeX-macro))
+  (add-hook
+   'TeX-after-insert-macro-hook
+   (my/defun-as-value my/auto-yasnippet-TeX-macro ()
+     "Convert the TeX macro around point into a YASnippet snippet"
+     (let ((beg (TeX-find-macro-start))
+           (end (TeX-find-macro-end)))
+       (when (and beg
+                  end
+                  (looking-at "}"))
+         (yas-expand-snippet
+          (replace-regexp-in-string
+           "{}"
+           "{${}}"
+           (substring-no-properties (buffer-substring beg end)))
+          beg
+          end))))))
 
 (with-eval-after-load 'latex
   (setq TeX-electric-math (cons "\\\(" "\\\)"))

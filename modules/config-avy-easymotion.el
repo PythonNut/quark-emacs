@@ -1,22 +1,23 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (use-package avy
   :init
-  (defun nadvice/self-insert-command (old-fun &optional arg)
-    (interactive "P")
-    (cond
-     ;; `C-u a` jumps to `a`.
-     ((consp arg)
-      (avy-goto-char last-command-event))
+  (advice-add
+   'self-insert-command :around
+   (my/defun-as-value nadvice/self-insert-command (old-fun &optional arg)
+     (interactive "P")
+     (cond
+      ;; `C-u a` jumps to `a`.
+      ((consp arg)
+       (avy-goto-char last-command-event))
 
-     ;; `C-- a` jumps to `a` at the beginning of a (sub)word
-     ((eq '- arg)
-      (avy-goto-subword-1 last-command-event))
+      ;; `C-- a` jumps to `a` at the beginning of a (sub)word
+      ((eq '- arg)
+       (avy-goto-subword-1 last-command-event))
 
-     ((or (numberp arg) (not arg))
-      (funcall old-fun (or arg 1)))))
-
-  (advice-add 'self-insert-command :around #'nadvice/self-insert-command)
+      ((or (numberp arg) (not arg))
+       (funcall old-fun (or arg 1))))))
 
   (global-set-key (kbd "<remap> <goto-line>") #'evil-avy-goto-line)
   :config

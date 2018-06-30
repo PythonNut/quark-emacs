@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (use-package key-chord
   :init
@@ -8,16 +9,17 @@
     (key-chord-mode +1))
 
   (require 'key-chord)
-  (defun nadvice/key-chord-mode (old-fun &rest args)
-    (if (called-interactively-p 'any)
-        (apply old-fun args)
-      (cl-letf* (((symbol-function #'message)
-                  (lambda (&rest args)
-                    (when args
-                      (apply #'format args)))))
-        (apply old-fun args))))
 
-  (advice-add 'key-chord-mode :around #'nadvice/key-chord-mode)
+  (advice-add
+   'key-chord-mode :around
+   (my/defun-as-value nadvice/key-chord-mode (old-fun &rest args)
+     (if (called-interactively-p 'any)
+         (apply old-fun args)
+       (cl-letf* (((symbol-function #'message)
+                   (lambda (&rest args)
+                     (when args
+                       (apply #'format args)))))
+         (apply old-fun args)))))
   (key-chord-mode +1))
 
 (use-package evil

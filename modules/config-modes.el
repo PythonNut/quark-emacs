@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 (require 'cl-lib)
 (require 'config-package)
 (require 'config-tex)
@@ -43,14 +44,14 @@
     (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
     (sp-local-pair 'emacs-lisp-mode "`" nil :when '(sp-in-string-p)))
 
-  (add-hook 'emacs-lisp-mode-hook
-            (lambda ()
-              (setq mode-name (if (display-graphic-p) "λ" "EL"))
-
-              (eldoc-mode +1)
-              (aggressive-indent-mode +1)
-              (add-hook 'before-save-hook
-                        #'my/auto-compile-onetime-setup nil t)))
+  (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
+  (add-hook
+   'emacs-lisp-mode-hook
+   (my/defun-as-value my/setup-elisp-mode ()
+     (setq mode-name (if (display-graphic-p) "λ" "EL"))
+     (add-hook 'before-save-hook
+               #'my/auto-compile-onetime-setup nil t)))
 
   (define-key emacs-lisp-mode-map (kbd "C-c e") #'replace-last-sexp)
   (define-key emacs-lisp-mode-map (kbd "M-.") #'emacs-lisp-goto-definition)
@@ -158,8 +159,10 @@
   (setq js2-basic-offset 2)
 
   (add-hook 'js2-mode-hook #'js2-refactor-mode)
-  (add-hook 'js2-mode-hook (lambda ()
-                             (setq mode-name "JS"))))
+  (add-hook
+   'js2-mode-hook
+   (my/defun-as-value my/diminish-js2-mode ()
+     (setq mode-name "JS"))))
 
 (use-package rjsx-mode
   :defer-install t
@@ -190,11 +193,12 @@
       (require 'sh-script)
       (require 'el-patch)))
 
-  (add-hook 'sh-mode-hook
-            (lambda ()
-              (setq mode-name "sh")
-              (if (string-match-p (rx ".zsh" line-end) buffer-file-name)
-                  (sh-set-shell "zsh"))))
+  (add-hook
+   'sh-mode-hook
+   (my/defun-as-value my/sh-mode-detect-zsh ()
+     (setq mode-name "sh")
+     (if (string-match-p (rx ".zsh" line-end) buffer-file-name)
+         (sh-set-shell "zsh"))))
 
   (defun my/sh-smart-newline (&optional arg interactive)
     (interactive "*P\np")
@@ -925,17 +929,19 @@
       (require 'em-cmpl)
       (require 'company)))
 
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (setq-local company-idle-delay 0.1)
-              (my/eshell-onetime-setup)))
+  (add-hook
+   'eshell-mode-hook
+   (my/defun-as-value my/setup-eshell-onetime-setup ()
+     (setq-local company-idle-delay 0.1)
+     (my/eshell-onetime-setup)))
 
-  (add-hook 'eshell-directory-change-hook
-            (lambda ()
-              (setq company-idle-delay
-                    (if (file-remote-p default-directory)
-                        nil
-                      0.1))))
+  (add-hook
+   'eshell-directory-change-hook
+   (my/defun-as-value my/eshell-slow-company-when-remote ()
+     (setq company-idle-delay
+           (if (file-remote-p default-directory)
+               nil
+             0.1))))
 
   (setq eshell-cmpl-dir-ignore (rx line-start
                                    (or "." ".." "CVS" ".svn" ".git")

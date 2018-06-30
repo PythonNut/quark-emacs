@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 (require 'cl-lib)
 
 (setq history-length 100
@@ -6,16 +7,16 @@
 
 (defvar file-name-mode-alist nil)
 
-(defun my/register-file-name-mode-maybe ()
-  (when (and buffer-file-name
-             (not
-              (file-name-extension
-               buffer-file-name))
-             (not (eq major-mode 'fundamental-mode)))
-    (push (cons buffer-file-name major-mode) file-name-mode-alist)
-    (push (cons buffer-file-name major-mode) auto-mode-alist)))
-
-(add-hook 'after-change-major-mode-hook #'my/register-file-name-mode-maybe)
+(add-hook
+ 'after-change-major-mode-hook
+ (my/defun-as-value my/register-file-name-mode-maybe ()
+   (when (and buffer-file-name
+              (not
+               (file-name-extension
+                buffer-file-name))
+              (not (eq major-mode 'fundamental-mode)))
+     (push (cons buffer-file-name major-mode) file-name-mode-alist)
+     (push (cons buffer-file-name major-mode) auto-mode-alist))))
 
 (defun my/compress-alist (alist)
   "Remove shadowed keys from `alist'"
@@ -165,35 +166,36 @@ histories, which is probably undesirable."
     (with-demoted-errors "Load error: %s"
       (require 'cl-lib)))
 
-  (defun my/session-prepare/file-mode-alist ()
-    (setq file-name-mode-alist
-          (nreverse
-           (let ((res)
-                 (orig (my/compress-alist file-name-mode-alist)))
-             (dotimes (_ (min history-length (length orig)) res)
-               (push (pop orig) res))))))
+  (add-hook
+   'savehist-save-hook
+   (my/defun-as-value my/session-prepare/file-mode-alist ()
+     (setq file-name-mode-alist
+           (nreverse
+            (let ((res)
+                  (orig (my/compress-alist file-name-mode-alist)))
+              (dotimes (_ (min history-length (length orig)) res)
+                (push (pop orig) res)))))))
 
-  (add-hook 'savehist-save-hook #'my/session-prepare/file-mode-alist)
 
-  (defun nadvice/savehist-save/unpropertize (old-fun &rest args)
-    (let ((vars (append savehist-minibuffer-history-variables
-                        savehist-additional-variables)))
-      (cl-progv vars
-          (mapcar (lambda (sym)
-                    (if (boundp sym)
-                        (let ((value (symbol-value sym)))
-                          (if (and value
-                                   (listp value)
-                                   (stringp (car value)))
-                              (mapcar #'substring-no-properties
-                                      value)
-                            value))
-                      nil))
-                  vars)
-        (apply old-fun args))))
 
-  (advice-add 'savehist-save :around
-              #'nadvice/savehist-save/unpropertize))
+  (advice-add
+   'savehist-save :around
+   (my/defun-as-value nadvice/savehist-save/unpropertize (old-fun &rest args)
+     (let ((vars (append savehist-minibuffer-history-variables
+                         savehist-additional-variables)))
+       (cl-progv vars
+           (mapcar (lambda (sym)
+                     (if (boundp sym)
+                         (let ((value (symbol-value sym)))
+                           (if (and value
+                                    (listp value)
+                                    (stringp (car value)))
+                               (mapcar #'substring-no-properties
+                                       value)
+                             value))
+                       nil))
+                   vars)
+         (apply old-fun args))))))
 
 (use-package saveplace
   :ensure nil
@@ -305,10 +307,10 @@ where it was when you previously visited the same file."
       )
     "Hooks used by recentf.")
 
-  (defun my/recentf-onetime-setup ()
-    (dolist (hook recentf-used-hooks) (apply #'add-hook hook)))
-
-  (add-hook 'emacs-startup-hook #'my/recentf-onetime-setup)
+  (add-hook
+   'emacs-startup-hook
+   (my/defun-as-value my/recentf-onetime-setup ()
+     (dolist (hook recentf-used-hooks) (apply #'add-hook hook))))
 
   :config
   (setq recentf-save-file (locate-user-emacs-file "data/recentf")
@@ -412,20 +414,20 @@ where it was when you previously visited the same file."
         desktop-base-lock-name "emacs-desktop.lock")
 
   ;; don't let a dead emacs own the lockfile
-  (defun nadvice/desktop-owner (pid)
-    (when pid
-      (let* ((attributes (process-attributes pid))
-             (cmd (cdr (assoc 'comm attributes))))
-        (if (and cmd (string-prefix-p "emacs" cmd))
-            pid
-          nil))))
-
-  (defun nadvice/desktop-claim-lock (&optional dirname)
-    (write-region (number-to-string (emacs-pid)) nil
-                  (desktop-full-lock-name dirname) nil 1))
-
-  (advice-add 'desktop-owner :filter-return #'nadvice/desktop-owner)
-  (advice-add 'desktop-claim-lock :override #'nadvice/desktop-claim-lock))
+  (advice-add
+   'desktop-owner :filter-return
+   (my/defun-as-value nadvice/desktop-owner (pid)
+     (when pid
+       (let* ((attributes (process-attributes pid))
+              (cmd (cdr (assoc 'comm attributes))))
+         (if (and cmd (string-prefix-p "emacs" cmd))
+             pid
+           nil)))))
+  (advice-add
+   'desktop-claim-lock :override
+   (my/defun-as-value nadvice/desktop-claim-lock (&optional dirname)
+     (write-region (number-to-string (emacs-pid)) nil
+                   (desktop-full-lock-name dirname) nil 1))))
 
 (use-package server
   :ensure nil
@@ -503,22 +505,22 @@ where it was when you previously visited the same file."
     (idle-job-add-function #'atomic-chrome-start-server))
 
   :config
-  (defun my/atomic-chrome-focus-browser ()
-    (let ((srv (websocket-server-conn
-                (atomic-chrome-get-websocket (current-buffer))))
-          (srv-ghost (bound-and-true-p atomic-chrome-server-ghost-text))
-          (srv-atomic (bound-and-true-p atomic-chrome-server-atomic-chrome)))
-      (cond ((memq window-system '(mac ns))
-             (cond ((eq srv srv-ghost)
-                    (call-process "open" nil nil nil "-a" "Firefox"))
-                   ((eq srv srv-atomic)
-                    (call-process "open" nil nil nil "-a" "Google Chrome"))))
-            ((and (eq window-system 'x) (executable-find "wmctrl"))
-             (cond ((eq srv srv-ghost)
-                    (call-process "wmctrl" nil nil nil "-a" "Firefox"))
-                   ((eq srv srv-atomic)
-                    (call-process "wmctrl" nil nil nil "-a" "Google Chrome")))))))
-
-  (add-hook 'atomic-chrome-edit-done-hook #'my/atomic-chrome-focus-browser))
+  (add-hook
+   'atomic-chrome-edit-done-hook
+   (my/defun-as-value my/atomic-chrome-focus-browser ()
+     (let ((srv (websocket-server-conn
+                 (atomic-chrome-get-websocket (current-buffer))))
+           (srv-ghost (bound-and-true-p atomic-chrome-server-ghost-text))
+           (srv-atomic (bound-and-true-p atomic-chrome-server-atomic-chrome)))
+       (cond ((memq window-system '(mac ns))
+              (cond ((eq srv srv-ghost)
+                     (call-process "open" nil nil nil "-a" "Firefox"))
+                    ((eq srv srv-atomic)
+                     (call-process "open" nil nil nil "-a" "Google Chrome"))))
+             ((and (eq window-system 'x) (executable-find "wmctrl"))
+              (cond ((eq srv srv-ghost)
+                     (call-process "wmctrl" nil nil nil "-a" "Firefox"))
+                    ((eq srv srv-atomic)
+                     (call-process "wmctrl" nil nil nil "-a" "Google Chrome")))))))))
 
 (provide 'config-desktop)

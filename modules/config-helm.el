@@ -1,4 +1,6 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
+
 (use-package helm-flx
   :config
   (setq helm-flx-for-helm-locate t))
@@ -97,15 +99,14 @@
                                                    (rx ".zwc" line-end)
                                                    (rx "/.#"))))
 
-  (defun nadvice/helm-ff-filter-candidate-one-by-one (old-fun file)
-    (when (or (not (string-match-p (rx (or "." "..") line-end) file))
-              (string-match-p (rx ".")
-                              (helm-basename (or (bound-and-true-p helm-input)
-                                                 ""))))
-      (funcall old-fun file)))
-
-  (advice-add 'helm-ff-filter-candidate-one-by-one :around
-              #'nadvice/helm-ff-filter-candidate-one-by-one))
+  (advice-add
+   'helm-ff-filter-candidate-one-by-one :around
+   (my/defun-as-value nadvice/helm-ff-filter-candidate-one-by-one (old-fun file)
+     (when (or (not (string-match-p (rx (or "." "..") line-end) file))
+               (string-match-p (rx ".")
+                               (helm-basename (or (bound-and-true-p helm-input)
+                                                  ""))))
+       (funcall old-fun file)))))
 
 (use-package helm-buffers
   :ensure nil
@@ -405,14 +406,14 @@
 
 (use-package evil
   :config
-  (defun nadvice/evil-paste-pop (old-fun &rest args)
-    (if (memq last-command '(evil-paste-after
-                             evil-paste-before
-                             evil-visual-paste))
-        (apply old-fun args)
-      (call-interactively #'my/helm-interfile-omni)))
-
-  (advice-add 'evil-paste-pop :around #'nadvice/evil-paste-pop)
+  (advice-add
+   'evil-paste-pop :around
+   (my/defun-as-value nadvice/evil-paste-pop (old-fun &rest args)
+     (if (memq last-command '(evil-paste-after
+                              evil-paste-before
+                              evil-visual-paste))
+         (apply old-fun args)
+       (call-interactively #'my/helm-interfile-omni))))
 
   (define-key evil-insert-state-map (kbd "C-p") #'my/helm-interfile-omni)
   (define-key evil-motion-state-map (kbd "C-p") #'my/helm-interfile-omni))
