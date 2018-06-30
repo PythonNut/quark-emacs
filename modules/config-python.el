@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t -*-
 (eval-when-compile (require 'config-macros))
 
 ;; =============================================================================
