@@ -130,14 +130,9 @@ when `auto-save-mode' is invoked manually.")
         auto-revert-verbose nil
         auto-revert-mode-text nil))
 
-
-
-(add-hook
- 'find-file-hook
- (my/defun-as-value my/auto-revert-onetime-setup ()
-   (global-auto-revert-mode +1)
-   (remove-hook 'find-file-hook
-                #'my/auto-revert-onetime-setup)))
+(my/onetime-setup auto-revert
+  :hook 'find-file-hook
+  (global-auto-revert-mode +1))
 
 (use-package backup-walker
   :defer-install t

@@ -234,14 +234,10 @@ is 'toggle."
         yas-alias-to-yas/prefix-p nil
         yas-use-menu nil)
 
-  (defun my/yasnippet-onetime-setup ()
-    (yas-global-mode +1)
-    (remove-hook 'first-change-hook #'my/yasnippet-onetime-setup))
-
-  (add-hook
-   'emacs-startup-hook
-   (my/defun-as-value my/setup-yasnippet-onetime-setup ()
-     (add-hook 'first-change-hook #'my/yasnippet-onetime-setup)))
+  (my/onetime-setup yasnippet
+    :hook 'first-change-hook
+    :after-hook 'emacs-startup-hook
+    (yas-global-mode +1))
 
   :config
   (set-face-attribute 'yas-field-highlight-face nil

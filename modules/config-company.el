@@ -6,16 +6,12 @@
   :init
   (use-package company-flx)
 
-  (defun my/company-onetime-setup ()
-    (when (get-buffer-window)
-      (global-company-mode +1)
-      (run-hooks 'load-theme-hook)
-      (remove-hook 'first-change-hook #'my/company-onetime-setup)))
-
-  (add-hook
-   'emacs-startup-hook
-   (my/defun-as-value my/setup-company-onetime-setup ()
-     (add-hook 'first-change-hook #'my/company-onetime-setup)))
+  (my/onetime-setup company
+    :hook 'first-change-hook
+    :after-hook 'emacs-startup-hook
+    :condition (get-buffer-window)
+    (global-company-mode +1)
+    (run-hooks 'load-theme-hook))
 
   (eval-and-compile
     (cl-macrolet

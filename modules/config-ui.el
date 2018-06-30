@@ -114,16 +114,11 @@
 
 (use-package framemove
   :init
-  (defun my/framemove-onetime-setup (&optional frame)
+  (my/onetime-setup framemove
+    :hook 'before-make-frame-hook
+    :after-hook 'emacs-startup-hook
     (with-selected-frame (or frame (selected-frame))
-      (require 'framemove)
-      (remove-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
-
-  ;; directional frame movement too
-  (add-hook
-   'emacs-startup-hook
-   (my/defun-as-value my/setup-framemove-onetime-setup ()
-     (add-hook 'before-make-frame-hook #'my/framemove-onetime-setup)))
+      (require 'framemove)))
 
   :config
   (setq framemove-hook-into-windmove t))
@@ -214,13 +209,11 @@
 (use-package volatile-highlights
   :ensure t
   :init
-  (defun my/vhl-onetime-setup ()
-    (remove-hook 'first-change-hook #'my/vhl-onetime-setup))
+  (my/onetime-setup vhl
+    :hook 'first-change-hook
+    :after-hook 'emacs-startup-hook
+    (volatile-highlights-mode +1))
 
-  (add-hook
-   'emacs-startup-hook
-   (my/defun-as-value my/setup-vhl-onetime-setup ()
-     (add-hook 'first-change-hook #'my/vhl-onetime-setup)))
   :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -360,7 +353,7 @@
 ;; ==========================================
 ;; Window splitting that is actually sensible
 ;; ==========================================
-
+(eval-when-compile (require 'el-patch))
 (el-patch-defun split-window-sensibly (&optional window)
   "Split WINDOW in a way suitable for `display-buffer'.
 WINDOW defaults to the currently selected window.

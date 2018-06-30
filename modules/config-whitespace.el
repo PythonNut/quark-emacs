@@ -138,11 +138,9 @@ extra indent = 2
   :diminish (ws-butler-mode ." β"))
 
 ;; autoload ws-butler on file open
-(add-hook
- 'find-file-hook
- (my/defun-as-value my/ws-butler-onetime-setup ()
-   (ws-butler-global-mode +1)
-   (remove-hook 'find-file-hook #'my/ws-butler-onetime-setup)))
+(my/onetime-setup ws-butler
+  :hook 'find-file-hook
+  (ws-butler-global-mode +1))
 
 (use-package dtrt-indent
   :init (add-hook 'find-file-hook #'dtrt-indent-mode))
