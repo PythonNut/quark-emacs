@@ -8,8 +8,7 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
-    (require 'evil)
-    (require 'config-setq)))
+    (require 'evil)))
 
 ;; =============================================================================
 ;; Emacs Lisp ==================================================================

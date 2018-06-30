@@ -1,8 +1,6 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 (require 'cl-lib)
-(eval-when-compile
-  (require 'config-setq)
-  (require 'config-macros))
 
 ;; =============================================
 ;; Setup straight.el

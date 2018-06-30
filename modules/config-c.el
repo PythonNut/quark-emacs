@@ -117,9 +117,6 @@
     :config (flycheck-clang-analyzer-setup))
 
   (eval-and-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'config-setq))
-
     (cl-macrolet
         ((company-define-specific-modes
           (mode)

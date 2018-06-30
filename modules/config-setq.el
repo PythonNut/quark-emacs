@@ -119,17 +119,6 @@ files with (apparently) up to date bytecodes."
                              (let ((buffer-file-name (buffer-name)))
                                (set-auto-mode)))))
 
-;; basically, a mapcar for macros
-(defmacro my/generate-calls (operator arglists)
-  (declare (indent 1))
-  `(progn
-     ,@(mapcar (lambda (arglist) `(,(cadr operator) ,@arglist)) (cadr arglists))))
-
-(defmacro my/generate-calls-single (operator arglist)
-  (declare (indent 1))
-  `(progn
-     ,@(mapcar (lambda (arg) `(,(cadr operator) (,@arg))) (cadr arglist))))
-
 (defun really-kill-emacs ()
   "Like `kill-emacs', but ignores `kill-emacs-hook'."
   (interactive)
