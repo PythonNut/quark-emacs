@@ -29,13 +29,17 @@
                                                 "data/anaconda-mode"))
 
     (defun my/anaconda-eldoc-callback-fallback (docstring)
-      (setq docstring
-            (s-join " " (--map
-                         (s-collapse-whitespace
-                          (cdr (assoc 'docstring it)))
-                         docstring)))
-      (eldoc-message
-       (substring docstring 0 (min (frame-width) (length docstring)))))
+      (let ((docstring
+             (cond ((stringp docstring)
+                    docstring)
+                   ((arrayp docstring)
+                    (s-join " " (--map
+                                 (s-collapse-whitespace
+                                  (aref it 3))
+                                 docstring))))))
+        (when docstring
+          (eldoc-message
+           (substring docstring 0 (min (frame-width) (length docstring)))))))
 
     (defun my/anaconda-eldoc-callback (result)
       (if result
