@@ -5,6 +5,36 @@
 ;; Python ======================================================================
 ;; =============================================================================
 
+(with-eval-after-load 'pythonic
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'tramp)))
+
+  (let (my/pythonic-remote-host-cache)
+    (defun nadvice/pythonic-remote-host ()
+      "Get host of the connection to the remote python interpreter."
+      (unless my/pythonic-remote-host-cache
+        (setq my/pythonic-remote-host-cache (make-hash-table :test #'equal)))
+
+      (with-parsed-tramp-file-name default-directory parsed
+        (let ((hostname (replace-regexp-in-string "#.*\\'" "" parsed-host)))
+          (if (member parsed-method '("ssh"
+                                      "scp"
+                                      "scpx"
+                                      "sshx"
+                                      "rsync"))
+              (or (gethash hostname my/pythonic-remote-host-cache)
+                  (puthash hostname
+                           (with-temp-buffer
+                             (call-process "ssh" nil t nil "-G" hostname)
+                             (goto-char (point-min))
+                             (search-forward "\nhostname ")
+                             (buffer-substring-no-properties (point) (line-end-position)))
+                           my/pythonic-remote-host-cache))
+            hostname)))))
+
+  (advice-add 'pythonic-remote-host :override #'nadvice/pythonic-remote-host))
+
 (use-package python
   :ensure nil
   :config
