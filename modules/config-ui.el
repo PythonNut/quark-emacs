@@ -117,8 +117,7 @@
   (my/onetime-setup framemove
     :hook 'before-make-frame-hook
     :after-hook 'emacs-startup-hook
-    (with-selected-frame (or frame (selected-frame))
-      (require 'framemove)))
+    (require 'framemove))
 
   :config
   (setq framemove-hook-into-windmove t))
