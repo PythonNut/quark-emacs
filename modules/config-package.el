@@ -62,7 +62,8 @@ second, floating-point values are rounded down to the nearest integer.)"
                            noerror
                            (not (eq debug-on-error 'startup))
                            args))))
-        (funcall (pop idle-jobs)))
+        (with-demoted-errors "Idle job error: %s"
+          (funcall (pop idle-jobs))))
       (my/sit-for 0.1))))
 
 (defun idle-job-add-require (sym)
