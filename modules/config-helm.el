@@ -41,20 +41,18 @@
 (use-package helm-files
   :ensure nil
   :config
-  (let ((fasd-env-cache))
-    (defun my/fasd-compute-directory (target)
+  (let (fasd-env-cache)
+    (defun my/fasd-execute (&rest args)
       (require 's)
       (require 'exec-path-from-shell)
       (s-trim
-       (let* ((exec-path-from-shell-arguments
-               (remove "-l" exec-path-from-shell-arguments))
-              ;; hack to get around skipping shell config on dumb terminals
-              (process-environment (cons "TERM=xterm" process-environment))
-              (env (or fasd-env-cache
+       (let* ((env (or fasd-env-cache
                        (setq fasd-env-cache
                              (exec-path-from-shell-getenvs
                               (list "PATH" "_FASD_DATA" "_FASD_FUZZY")))))
-              (exec-path (parse-colon-path (cdr (assoc "PATH" env)))))
+              (exec-path (parse-colon-path (cdr (assoc "PATH" env))))
+              (fasd-path (executable-find "fasd")))
+         (cl-assert fasd-path nil "fasd not found!")
          (add-to-list 'process-environment
                       (format "_FASD_DATA=%s" (cdr (assoc "_FASD_DATA" env))))
          (add-to-list 'process-environment
@@ -62,17 +60,14 @@
          (with-output-to-string
            (with-current-buffer
                standard-output
-             (apply #'process-file
-                    (executable-find "fasd")
-                    nil t nil "-ld1"
-                    (s-split " " target))))))))
+             (apply #'process-file fasd-path nil t nil args)))))))
 
   (defun my/helm-find-files-slash (arg)
     (interactive "p")
     (eval-and-compile (require 's))
     (if (looking-back "~\\([a-zA-Z0-9 ]+\\)" (- (point) 10))
         (let* ((target (match-string 1))
-               (result (my/fasd-compute-directory target)))
+               (result (apply #'my/fasd-execute "-ld1" (s-split " " target))))
           (if (string-empty-p result)
               (self-insert-command arg)
             (beginning-of-line)

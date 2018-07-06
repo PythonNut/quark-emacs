@@ -206,9 +206,7 @@ these values are used to call `use-package-ensure-function'.")
 
 (use-package exec-path-from-shell
   :config
-  (setq exec-path-from-shell-check-startup-files nil
-        exec-path-from-shell-arguments
-        (delete "-i" exec-path-from-shell-arguments))
+  (setq exec-path-from-shell-check-startup-files nil)
 
   :init
   (when (memq window-system '(mac ns))
