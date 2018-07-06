@@ -452,4 +452,18 @@ is binary, activate `hexl-mode'."
                                      "dpaste.de"
                                      "gist.github.com")))
 
+;;; ============================================
+;;; open a file manager in the current directory
+;;; ============================================
+
+(defun run-file-manager ()
+  (interactive)
+  (require 'config-setq)
+  (when (file-remote-p default-directory)
+    (error "Opening file manager with remote directory not implemented!"))
+  (let ((dir (my/file-name-first-existing-parent
+              (expand-file-name default-directory))))
+    (cond ((executable-find "nautilus")
+           (call-process "nautilus" nil nil nil dir)))))
+
 (provide 'config-intel)
