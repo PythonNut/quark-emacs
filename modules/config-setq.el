@@ -214,4 +214,10 @@ response as a no."
              (apply #'call-process "df" nil '(t nil) nil args)
              (/= (point) (point-min)))))))
 
+(defun nadvice/read-passwd/isolate-kill-ring (old-fun &rest args)
+  (let ((kill-ring kill-ring))
+    (apply old-fun args)))
+
+(advice-add 'read-passwd :around #'nadvice/read-passwd/isolate-kill-ring)
+
 (provide 'config-setq)
