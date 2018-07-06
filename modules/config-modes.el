@@ -64,6 +64,12 @@
   :defer-install t
   :commands (suggest suggest-update))
 
+(use-package helpful
+  :init
+  (global-set-key (kbd "C-h f") #'helpful-callable)
+  (global-set-key (kbd "C-h k") #'helpful-key)
+  (global-set-key (kbd "C-h v") #'helpful-variable))
+
 ;; =============================================================================
 ;; C-like ======================================================================
 ;; =============================================================================

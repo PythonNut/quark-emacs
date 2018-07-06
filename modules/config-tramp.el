@@ -140,7 +140,7 @@
 
 (advice-add
  'semantic-find-file-noselect :around
- (my/defun-as-value nadvice/semantic-find-file-noselect (old-fun &rest args)
+ (my/defun-as-value nadvice/semantic-find-file-noselect/supress-find-file-hook (old-fun &rest args)
    (cl-letf* ((old-aff (symbol-function #'after-find-file))
               ((symbol-function #'after-find-file)
                (lambda (&rest args)
