@@ -326,7 +326,7 @@ if ARG is omitted or nil.
         projectile-cache-file
         (locate-user-emacs-file "data/.projectile.cache"))
 
-  (projectile-global-mode +1)
+  (projectile-mode +1)
 
   (setq projectile-completion-system 'ivy
         projectile-mode-line
