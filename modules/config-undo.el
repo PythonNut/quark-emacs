@@ -1,5 +1,5 @@
 ;; -*- lexical-binding: t -*-
-
+(eval-when-compile (require 'config-macros))
 
 (with-eval-after-load 'undo-tree
   (eval-when-compile
@@ -62,34 +62,41 @@
 
   ;; compress undo with xz
   (when (executable-find "xz")
-    (defun nadvice/undo-tree-make-history-save-file-name (ret)
-      (concat ret ".undo.xz"))
+    (advice-add
+     'undo-tree-make-history-save-file-name :filter-return
+     (my/defun-as-value nadvice/undo-tree-make-history-save-file-name (ret)
+       (concat ret ".undo.xz"))))
 
-    (defun nadvice/undo-tree-load-history (old-fun &rest args)
-      (let ((jka-compr-verbose))
-        (apply old-fun args)))
+  (advice-add
+   'undo-list-transfer-to-tree :around
+   (my/defun-as-value nadvice/undo-tree-ignore-text-properties (old-fun &rest args)
+     (dolist (item buffer-undo-list)
+       (and (consp item)
+            (stringp (car item))
+            (setcar item (substring-no-properties (car item)))))
+     (apply old-fun args)))
 
-    (advice-add 'undo-tree-make-history-save-file-name
-                :filter-return
-                #'nadvice/undo-tree-make-history-save-file-name)
-    (advice-add 'undo-tree-load-history
-                :around
-                #'nadvice/undo-tree-load-history))
+  (advice-add
+   'undo-tree-load-history :around
+   (my/defun-as-value nadvice/undo-tree-load-history/quiet (old-fun &rest args)
+     (let ((inhibit-message t)
+           (jka-compr-verbose))
+       (apply old-fun args))))
 
-  (defun nadvice/undo-tree-ignore-text-properties (old-fun &rest args)
-    (dolist (item buffer-undo-list)
-      (and (consp item)
-           (stringp (car item))
-           (setcar item (substring-no-properties (car item)))))
-    (apply old-fun args))
-
-  (advice-add 'undo-list-transfer-to-tree :around
-              #'nadvice/undo-tree-ignore-text-properties)
-
-  (defun nadvice/undo-tree-load-history (old-fun &rest args)
-    (let ((inhibit-message t))
-      (apply old-fun args)))
-
-  (advice-add 'undo-tree-load-history :around #'nadvice/undo-tree-load-history))
+  (advice-add
+   'undo-tree-save-history :around
+   (my/defun-as-value nadvice/undo-tree-save-history/quiet (old-fun &rest args)
+     (cl-letf* ((jka-compr-verbose nil)
+                (old-write-region (symbol-function #'write-region))
+                ((symbol-function #'write-region)
+                 (lambda (start end filename &optional append _visit &rest args)
+                   (apply old-write-region
+                          start
+                          end
+                          filename
+                          append
+                          0
+                          args))))
+       (apply old-fun args)))))
 
 (provide 'config-undo)
