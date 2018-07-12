@@ -401,6 +401,7 @@
 (global-set-key (kbd "M-:") #'helm-eval-expression)
 (global-set-key (kbd "C-:") #'pp-eval-expression)
 (global-set-key (kbd "M-p") #'my/helm-intrafile-omni)
+(global-set-key (kbd "C-=") #'my/helm-intrafile-omni)
 
 (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
