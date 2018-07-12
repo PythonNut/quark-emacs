@@ -287,6 +287,8 @@
   :config
   (helm-occur-init-source))
 
+(use-package helm-git-grep)
+
 (defun my/helm-interfile-omni (&rest _args)
   (interactive)
   (require 'helm-files)
@@ -322,14 +324,14 @@
              '(helm-source-recentf
                helm-source-files-in-current-dir))
 
-           ;; disable expensve helm sources when using TRAMP
+           ;; disable expensive helm sources when using TRAMP
            (unless slow-fs
              (append
               ;; code search
               (if (and projectile-root
                        (featurep 'vc-git)
                        (vc-git-responsible-p projectile-root)
-                       (require 'helm-git-grep nil t))
+                       (require 'helm-git-grep))
                   '(helm-source-git-grep)
                 (when my/ag-available
                   '(helm-source-do-ag)))
