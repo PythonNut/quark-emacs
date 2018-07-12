@@ -306,6 +306,9 @@
   (let ((helm-sources-using-default-as-input)
         (projectile-root (ignore-errors (projectile-project-p)))
         (slow-fs (my/slow-fs default-directory)))
+    (when projectile-root
+      (projectile-maybe-invalidate-cache nil))
+
     (helm :sources
           (append
            ;; projectile explodes when not in project
