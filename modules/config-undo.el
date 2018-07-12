@@ -61,11 +61,16 @@
     (kbd "l") #'undo-tree-visualize-switch-branch-right)
 
   ;; compress undo with xz
-  (when (executable-find "xz")
-    (advice-add
-     'undo-tree-make-history-save-file-name :filter-return
-     (my/defun-as-value nadvice/undo-tree-make-history-save-file-name (ret)
-       (concat ret ".undo.xz"))))
+  (cond ((executable-find "zstd")
+         (advice-add
+          'undo-tree-make-history-save-file-name :filter-return
+          (my/defun-as-value nadvice/undo-tree/lz4-compress (ret)
+            (concat ret ".zst"))))
+        ((executable-find "gzip")
+         (advice-add
+          'undo-tree-make-history-save-file-name :filter-return
+          (my/defun-as-value nadvice/undo-tree/xz-compress (ret)
+            (concat ret ".gz")))))
 
   (advice-add
    'undo-list-transfer-to-tree :around
