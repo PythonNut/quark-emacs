@@ -264,16 +264,18 @@
                       candidate))
       (el-patch-add :candidate-number-limit 1000))))
 
+(use-package helm-regexp
+  :ensure nil
+  :config
+  (helm-occur-init-source))
+
 (use-package helm-ag
   :init
   ;; adaptively fallback to ack and ack-grep
   (defvar my/ag-available nil)
 
   :config
-  (cond ((executable-find "rg")
-         (setq helm-ag-base-command "rg -Hn --color never --no-heading"
-               my/ag-available t))
-        ((executable-find "ag")
+  (cond ((executable-find "ag")
          (setq my/ag-available t))
         ((executable-find "ack")
          (setq helm-ag-base-command "ack --nocolor --nogroup"
@@ -282,12 +284,15 @@
          (setq helm-ag-base-command "ack-grep --nocolor --nogroup"
                my/ag-available t))))
 
-(use-package helm-regexp
-  :ensure nil
-  :config
-  (helm-occur-init-source))
-
 (use-package helm-git-grep)
+
+(use-package helm-rg
+  :init
+  (defvar my/rg-available nil)
+
+  :config
+  (when (executable-find "rg")
+    (setq my/rg-available t)))
 
 (defun my/helm-interfile-omni (&rest _args)
   (interactive)
@@ -297,60 +302,74 @@
   (require 'helm-ring)
   (require 'helm-misc)
   (require 'projectile)
-  (require 'helm-ag)
   (require 'recentf)
   (require 'dired)
+
+  (require 'helm-rg)
+  (unless my/rg-available
+    (require 'helm-ag))
 
   (when helm-turn-on-recentf (recentf-mode 1))
 
   (let ((helm-sources-using-default-as-input)
         (projectile-root (ignore-errors (projectile-project-p)))
-        (slow-fs (my/slow-fs default-directory)))
+        (slow-fs (my/slow-fs default-directory))
+        (helm-rg--current-dir
+         (helm-rg--interpret-starting-dir helm-rg-default-directory))
+        (helm-rg--glob-string helm-rg-default-glob-string)
+        (helm-rg--case-sensitivity helm-rg-default-case-sensitivity)
+        my/rg-used)
     (when projectile-root
       (projectile-maybe-invalidate-cache nil))
 
-    (helm :sources
-          (append
-           ;; projectile explodes when not in project
-           (if projectile-root
-               (when (require 'helm-projectile nil t)
-                 '(helm-source-projectile-buffers-list
-                   helm-source-non-projectile-buffers-list))
-             '(helm-source-buffers-list))
+    (unwind-protect
+        (helm :sources
+              (append
+               ;; projectile explodes when not in project
+               (if projectile-root
+                   (when (require 'helm-projectile nil t)
+                     '(helm-source-projectile-buffers-list
+                       helm-source-non-projectile-buffers-list))
+                 '(helm-source-buffers-list))
 
-           (if projectile-root
-               (append
-                '(helm-source-projectile-recentf-list
-                  helm-source-non-projectile-recentf-list)
-                (unless slow-fs
-                  '(helm-source-projectile-files-list)))
-             '(helm-source-recentf
-               helm-source-files-in-current-dir))
+               (if projectile-root
+                   (append
+                    '(helm-source-projectile-recentf-list
+                      helm-source-non-projectile-recentf-list)
+                    (unless slow-fs
+                      '(helm-source-projectile-files-list)))
+                 '(helm-source-recentf
+                   helm-source-files-in-current-dir))
 
-           ;; disable expensive helm sources when using TRAMP
-           (unless slow-fs
-             (append
-              ;; code search
-              (if (and projectile-root
-                       (featurep 'vc-git)
-                       (vc-git-responsible-p projectile-root)
-                       (require 'helm-git-grep))
-                  '(helm-source-git-grep)
-                (when my/ag-available
-                  '(helm-source-do-ag)))
+               ;; disable expensive helm sources when using TRAMP
+               (unless slow-fs
+                 (append
+                  ;; code search
+                  (if my/rg-available
+                      (progn
+                        (setq my/rg-used t)
+                        '(helm-rg-process-source))
+                    (if (and projectile-root
+                             (featurep 'vc-git)
+                             (vc-git-responsible-p projectile-root)
+                             (require 'helm-git-grep))
+                        '(helm-source-git-grep)
+                      (when my/ag-available
+                        '(helm-source-do-ag))))
 
-              ;; file location, of which projectile is a faster subset
-              (unless projectile-root
-                '(helm-source-findutils))
+                  ;; file location, of which projectile is a faster subset
+                  (unless projectile-root
+                    '(helm-source-findutils))
 
-              ;; '(helm-source-locate)
-              )))
+                  '(helm-source-locate))))
 
-          :fuzzy-match t
-          :prompt (if projectile-root
-                      (format "[%s] > " (projectile-project-name))
-                    "> ")
-          :buffer "*helm-omni*")))
+              :fuzzy-match t
+              :prompt (if projectile-root
+                          (format "[%s] > " (projectile-project-name))
+                        "> ")
+              :buffer "*helm-omni*")
+      (when my/rg-used
+        (helm-rg--unwind-cleanup)))))
 
 (defun my/helm-intrafile-omni (&rest _args)
   (interactive)
