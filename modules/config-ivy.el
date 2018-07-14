@@ -178,7 +178,8 @@ Minibuffer bindings:
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
         ivy-extra-directories nil
         ivy-count-format ""
-        ivy-flx-limit 2000)
+        ivy-flx-limit 2000
+        ivy-use-selectable-prompt t)
 
   (my/ivy-setup-faces)
   (add-hook 'load-theme-hook #'my/ivy-setup-faces))
