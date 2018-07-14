@@ -195,7 +195,8 @@
                                     (rx line-start "magit-diff")
                                     (rx line-start "*tramp")
                                     (rx line-start "*anaconda")
-                                    (rx line-start "*" (zero-or-more anything) "output*"))
+                                    (rx line-start "*" (zero-or-more anything) "output*")
+                                    (rx line-start "*straight-process*"))
         iflipb-wrap-around t)
 
   (advice-add
