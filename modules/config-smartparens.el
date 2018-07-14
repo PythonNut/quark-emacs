@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (use-package on-parens
   :commands (;; motion
