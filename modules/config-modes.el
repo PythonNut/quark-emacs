@@ -68,7 +68,10 @@
   :init
   (global-set-key (kbd "C-h f") #'helpful-callable)
   (global-set-key (kbd "C-h k") #'helpful-key)
-  (global-set-key (kbd "C-h v") #'helpful-variable))
+  (global-set-key (kbd "C-h v") #'helpful-variable)
+  :config
+  (define-key helpful-mode-map "J" #'forward-button)
+  (define-key helpful-mode-map "K" #'backward-button))
 
 ;; =============================================================================
 ;; C-like ======================================================================
