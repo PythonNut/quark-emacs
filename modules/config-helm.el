@@ -51,7 +51,8 @@
                              (exec-path-from-shell-getenvs
                               (list "PATH" "_FASD_DATA" "_FASD_FUZZY")))))
               (exec-path (parse-colon-path (cdr (assoc "PATH" env))))
-              (fasd-path (executable-find "fasd")))
+              (fasd-path (executable-find "fasd"))
+              (process-environment process-environment))
          (cl-assert fasd-path nil "fasd not found!")
          (add-to-list 'process-environment
                       (format "_FASD_DATA=%s" (cdr (assoc "_FASD_DATA" env))))
@@ -60,7 +61,48 @@
          (with-output-to-string
            (with-current-buffer
                standard-output
-             (apply #'process-file fasd-path nil t nil args)))))))
+             (apply #'process-file fasd-path nil t nil args))))))
+
+    (defun helm-fasd-init ()
+      (require 'exec-path-from-shell)
+      "Initialize async process for `helm-source-fasd'."
+      (let* ((env (or fasd-env-cache
+                      (setq fasd-env-cache
+                            (exec-path-from-shell-getenvs
+                             (list "PATH" "_FASD_DATA" "_FASD_FUZZY")))))
+             (exec-path (parse-colon-path (cdr (assoc "PATH" env))))
+             (fasd-path (executable-find "fasd"))
+             (process-environment process-environment)
+             (cmd (concat fasd-path " -R -l -d " (shell-quote-argument helm-pattern))))
+        (cl-assert fasd-path nil "fasd not found!")
+        (add-to-list 'process-environment
+                     (format "_FASD_DATA=%s" (cdr (assoc "_FASD_DATA" env))))
+        (add-to-list 'process-environment
+                     (format "_FASD_FUZZY=%s" (cdr (assoc "_FASD_FUZZY" env))))
+        (helm-log "Starting helm-fasd process")
+        (helm-log "Command line used was:\n\n%s"
+                  (concat ">>> " (propertize cmd 'face 'font-lock-comment-face) "\n\n"))
+        (prog1
+            (start-process
+             "fasd-process" helm-buffer
+             fasd-path "-R" "-l" "-d" helm-pattern)
+          (set-process-sentinel
+           (get-buffer-process helm-buffer)
+           #'(lambda (_process event)
+               (if (string= event "finished\n")
+                   (with-helm-window
+                     (setq mode-line-format
+                           '(" " mode-line-buffer-identification " "
+                             (:eval (format "L%s" (helm-candidate-number-at-point))) " "
+                             (:eval (propertize
+                                     (format "[fasd process finished - (%s results)]"
+                                             (max (1- (count-lines
+                                                       (point-min) (point-max)))
+                                                  0))
+                                     'face 'helm-locate-finish))))
+                     (force-mode-line-update))
+                 (helm-log "Error: Fasd %s"
+                           (replace-regexp-in-string "\n" "" event)))))))))
 
   (defun my/helm-find-files-slash (arg)
     (interactive "p")
@@ -78,6 +120,25 @@
         (helm-execute-persistent-action))))
 
   (define-key helm-find-files-map (kbd "/") #'my/helm-find-files-slash)
+
+  (defclass helm-fasd-source (helm-source-async helm-type-file)
+    ((candidates-process :initform 'helm-fasd-init)
+     (history :initform 'helm-file-name-history)
+     (keymap :initform helm-generic-files-map)
+     (help-message :initform helm-generic-file-help-message)
+     (candidate-number-limit :initform 9999)
+     (mode-line :initform helm-read-file-name-mode-line-string)))
+
+  (defvar helm-source-fasd (helm-make-source "fasd" 'helm-fasd-source))
+
+  (defun helm-fasd ()
+    "Helm source for fasd."
+    (interactive)
+    (require 'helm-mode)
+    (require 'helm-for-files)
+    (let ((helm-ff-transformer-show-only-basename nil))
+      (helm :sources 'helm-source-fasd
+            :buffer "*helm fasd*")))
 
   (setq helm-ff-transformer-show-only-basename nil
         helm-ff-newfile-prompt-p nil
