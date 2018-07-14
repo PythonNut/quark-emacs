@@ -48,6 +48,9 @@ recursion depth in the minibuffer prompt.  This is only useful if
   :commands (flx-isearch-forward
              flx-isearch-backward)
   :init
+  (define-key evil-normal-state-map (kbd "M-/") #'flx-isearch-forward)
+  (define-key evil-normal-state-map (kbd "M-?") #'flx-isearch-forward)
+
   (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
   (global-set-key (kbd "C-M-r") #'flx-isearch-backward))
 
