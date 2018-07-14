@@ -361,7 +361,8 @@
                   (unless projectile-root
                     '(helm-source-findutils))
 
-                  '(helm-source-locate))))
+                  ;; '(helm-source-locate)
+                  )))
 
               :fuzzy-match t
               :prompt (if projectile-root
