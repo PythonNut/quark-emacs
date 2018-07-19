@@ -71,7 +71,16 @@
   (global-set-key (kbd "C-h v") #'helpful-variable)
   :config
   (define-key helpful-mode-map "J" #'forward-button)
-  (define-key helpful-mode-map "K" #'backward-button))
+  (define-key helpful-mode-map "K" #'backward-button)
+
+  (el-patch-feature helpful)
+  (el-patch-defun helpful--read-symbol (prompt predicate)
+  (let ((sym-here (symbol-at-point)))
+    (read (completing-read prompt (el-patch-swap obarray
+                                                 #'help--symbol-completion-table)
+                           predicate t nil nil
+                           (when (funcall predicate sym-here)
+                             (symbol-name sym-here)))))))
 
 ;; =============================================================================
 ;; C-like ======================================================================
