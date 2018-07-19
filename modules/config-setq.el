@@ -220,4 +220,34 @@ response as a no."
 
 (advice-add 'read-passwd :around #'nadvice/read-passwd/isolate-kill-ring)
 
+(defun my/detect-shell (&optional dir)
+  (let* ((dir (or dir default-directory))
+         (full-shells
+          (cl-remove-duplicates
+           (cl-remove-if #'not
+                         (list (bound-and-true-p explicit-shell-file-name)
+                               (bound-and-true-p shell-file-name)
+                               (getenv "SHELL")))
+           :test #'string=))
+         (bare-shells
+          (cl-remove-duplicates
+           (cl-remove-if #'not
+                         (append (cl-mapcar #'file-name-base full-shells)
+                                 (list "bash"
+                                       "ksh"
+                                       "sh")))
+           :test #'string=)))
+    (if (tramp-tramp-file-p dir)
+        (with-parsed-tramp-file-name default-directory vec
+          (cl-some (lambda (shell)
+                     (substring-no-properties
+                      (tramp-find-executable
+                       vec shell (tramp-get-remote-path vec) t t)))
+                   bare-shells))
+      (or (cl-some (lambda (shell)
+                     (when (file-exists-p shell)
+                       shell))
+                   full-shells)
+          (cl-some #'executable-find bare-shells)))))
+
 (provide 'config-setq)

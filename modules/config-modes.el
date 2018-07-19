@@ -868,39 +868,7 @@
   (defun nadvice/ansi-term (&optional args)
     (interactive "P")
     (cl-destructuring-bind (&optional program new-buffer-name) args
-      (let ((default-shell
-              (cl-some
-               (if (tramp-tramp-file-p default-directory)
-                   (lambda (shell)
-                     (when shell
-                       (with-parsed-tramp-file-name
-                           buffer-file-name vec
-                         (substring-no-properties
-                          (tramp-find-executable
-                           vec
-                           (file-name-base shell)
-                           (tramp-get-remote-path vec)
-                           t t)))))
-                 (lambda (shell)
-                   (when (and shell
-                              (file-exists-p shell))
-                     shell)))
-               (append
-                (list (bound-and-true-p explicit-shell-file-name)
-                      (getenv "ESHELL")
-                      (getenv "SHELL"))
-                (when (tramp-tramp-file-p default-directory)
-                  (with-parsed-tramp-file-name
-                      buffer-file-name vec
-                    (or (tramp-find-executable
-                         vec "bash" (tramp-get-remote-path vec) t t)
-                        (tramp-find-executable
-                         vec "ksh" (tramp-get-remote-path vec) t t)
-                        (tramp-get-connection-property
-                         (tramp-get-connection-process vec) "remote-shell" nil)
-                        (tramp-get-method-parameter
-                         (tramp-file-name-method vec) 'tramp-remote-shell))))
-                (list "/bin/sh")))))
+      (let ((default-shell (my/detect-shell)))
         (if (stringp program)
             (list program new-buffer-name)
           (if (consp program)
