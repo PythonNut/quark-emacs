@@ -142,6 +142,9 @@
 (use-package ispell
   :ensure nil
   :config
+  (setq ispell-personal-dictionary
+        (expand-file-name "data/user-dict.en.pws" user-emacs-directory))
+
   (advice-add
    'ispell-init-process :around
    (my/defun-as-value nadvice/ispell-init-process (old-fun &rest args)
