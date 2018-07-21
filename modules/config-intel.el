@@ -230,6 +230,21 @@ is 'toggle."
         ((executable-find "aspell")
          (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
 
+(use-package flyspell-correct-ivy
+  :init
+  (autoload #'flyspell-correct-ivy "flyspell-correct-ivy"
+    "Run `ivy-read' for the given CANDIDATES.
+List of CANDIDATES is given by flyspell for the WORD.
+Return a selected word to use as a replacement or a tuple
+of (command, word) to be used by `flyspell-do-correct'."))
+
+(use-package flyspell-correct
+  :commands (flyspell-correct-previous-word-generic)
+  :init
+  (define-key flyspell-mode-map (kbd "C-M-i") #'flyspell-correct-previous-word-generic)
+  :config
+  (setq flyspell-correct-interface #'flyspell-correct-ivy))
+
 ;;; =============================================
 ;;; yasnippet -- extensible programmable snippets
 ;;; =============================================
