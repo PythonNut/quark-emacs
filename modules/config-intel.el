@@ -214,6 +214,8 @@ is 'toggle."
     (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
   :config
+  (setq flyspell-lazy-window-idle-seconds 10)
+
   (define-key flyspell-mode-map (kbd "C-.") nil)
   (define-key flyspell-mode-map (kbd "C-,") nil)
 
