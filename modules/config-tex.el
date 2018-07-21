@@ -12,9 +12,7 @@
              company-math-symbols-unicode))
 
 (use-package tex
-  :recipe (auctex :host github :repo "raxod502/auctex"
-                  :branch "fork/1"
-                  :files (:defaults (:exclude "doc/*.texi")))
+  :recipe auctex
   :commands (bib-cite-minor-mode
              turn-on-bib-cite
              ConTeXt-mode
