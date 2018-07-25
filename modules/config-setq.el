@@ -1,4 +1,5 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'config-macros))
 
 (setq ad-redefinition-action 'accept
       cursor-type 'box
@@ -221,6 +222,7 @@ response as a no."
 (advice-add 'read-passwd :around #'nadvice/read-passwd/isolate-kill-ring)
 
 (defun my/detect-shell (&optional dir)
+  (require 'tramp)
   (let* ((dir (or dir default-directory))
          (full-shells
           (cl-remove-duplicates
