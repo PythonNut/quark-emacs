@@ -9,7 +9,8 @@
 (setq straight-repository-branch "develop"
       straight-check-for-modifications 'live
       straight-use-package-version 'ensure
-      straight-use-package-by-default t)
+      straight-use-package-by-default t
+      straight-recipes-gnu-elpa-use-mirror t)
 
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
