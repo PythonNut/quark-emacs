@@ -1125,6 +1125,9 @@
 ;; =============================================================================
 
 (use-package yaml-mode
+  :recipe (yaml-mode :type git
+                     :host github
+                     :repo "PythonNut/yaml-mode")
   :defer-install t
   :commands (yaml-mode)
   :mode (("\\.e?ya?ml$" . yaml-mode)))
