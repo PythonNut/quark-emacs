@@ -320,77 +320,228 @@ if ARG is omitted or nil.
   :config
   (diminish 'smerge-mode))
 
-(with-eval-after-load 'projectile
+(use-package projectile
+  :init
+  (autoload #'projectile-find-file-hook-function "projectile"
+    "Called by `find-file-hook' when `projectile-mode' is on.
+
+The function does pretty much nothing when triggered on remote files
+as all the operations it normally performs are extremely slow over
+tramp.")
+
+  (autoload #'projectile-track-known-projects-find-file-hook "projectile"
+    "Function for caching projects with `find-file-hook'.")
+
+  (el-patch-feature projectile)
+  (defgroup projectile nil
+    "Manage and navigate projects easily."
+    :group 'tools
+    :group 'convenience
+    :link '(url-link :tag "Github" "https://github.com/bbatsov/projectile")
+    :link '(url-link :tag "Online Manual" "https://projectile.readthedocs.io/")
+    :link '(emacs-commentary-link :tag "Commentary" "projectile"))
+
+  (el-patch-defcustom projectile-keymap-prefix (kbd "C-c p")
+    "Projectile keymap prefix."
+    :group 'projectile
+    :type 'string)
+
+  (el-patch-defvar projectile-command-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "4 a") #'projectile-find-other-file-other-window)
+      (define-key map (kbd "4 b") #'projectile-switch-to-buffer-other-window)
+      (define-key map (kbd "4 C-o") #'projectile-display-buffer)
+      (define-key map (kbd "4 d") #'projectile-find-dir-other-window)
+      (define-key map (kbd "4 D") #'projectile-dired-other-window)
+      (define-key map (kbd "4 f") #'projectile-find-file-other-window)
+      (define-key map (kbd "4 g") #'projectile-find-file-dwim-other-window)
+      (define-key map (kbd "4 t") #'projectile-find-implementation-or-test-other-window)
+      (define-key map (kbd "5 a") #'projectile-find-other-file-other-frame)
+      (define-key map (kbd "5 b") #'projectile-switch-to-buffer-other-frame)
+      (define-key map (kbd "5 d") #'projectile-find-dir-other-frame)
+      (define-key map (kbd "5 D") #'projectile-dired-other-frame)
+      (define-key map (kbd "5 f") #'projectile-find-file-other-frame)
+      (define-key map (kbd "5 g") #'projectile-find-file-dwim-other-frame)
+      (define-key map (kbd "5 t") #'projectile-find-implementation-or-test-other-frame)
+      (define-key map (kbd "!") #'projectile-run-shell-command-in-root)
+      (define-key map (kbd "&") #'projectile-run-async-shell-command-in-root)
+      (define-key map (kbd "a") #'projectile-find-other-file)
+      (define-key map (kbd "b") #'projectile-switch-to-buffer)
+      (define-key map (kbd "C") #'projectile-configure-project)
+      (define-key map (kbd "c") #'projectile-compile-project)
+      (define-key map (kbd "d") #'projectile-find-dir)
+      (define-key map (kbd "D") #'projectile-dired)
+      (define-key map (kbd "e") #'projectile-recentf)
+      (define-key map (kbd "E") #'projectile-edit-dir-locals)
+      (define-key map (kbd "f") #'projectile-find-file)
+      (define-key map (kbd "g") #'projectile-find-file-dwim)
+      (define-key map (kbd "F") #'projectile-find-file-in-known-projects)
+      (define-key map (kbd "i") #'projectile-invalidate-cache)
+      (define-key map (kbd "I") #'projectile-ibuffer)
+      (define-key map (kbd "j") #'projectile-find-tag)
+      (define-key map (kbd "k") #'projectile-kill-buffers)
+      (define-key map (kbd "l") #'projectile-find-file-in-directory)
+      (define-key map (kbd "m") #'projectile-commander)
+      (define-key map (kbd "o") #'projectile-multi-occur)
+      (define-key map (kbd "p") #'projectile-switch-project)
+      (define-key map (kbd "q") #'projectile-switch-open-project)
+      (define-key map (kbd "P") #'projectile-test-project)
+      (define-key map (kbd "r") #'projectile-replace)
+      (define-key map (kbd "R") #'projectile-regenerate-tags)
+      (define-key map (kbd "s g") #'projectile-grep)
+      (define-key map (kbd "s r") #'projectile-ripgrep)
+      (define-key map (kbd "s s") #'projectile-ag)
+      (define-key map (kbd "S") #'projectile-save-project-buffers)
+      (define-key map (kbd "t") #'projectile-toggle-between-implementation-and-test)
+      (define-key map (kbd "T") #'projectile-find-test-file)
+      (define-key map (kbd "u") #'projectile-run-project)
+      (define-key map (kbd "v") #'projectile-vc)
+      (define-key map (kbd "V") #'projectile-browse-dirty-projects)
+      (define-key map (kbd "x e") #'projectile-run-eshell)
+      (define-key map (kbd "x t") #'projectile-run-term)
+      (define-key map (kbd "x s") #'projectile-run-shell)
+      (define-key map (kbd "z") #'projectile-cache-current-file)
+      (define-key map (kbd "ESC") #'projectile-project-buffers-other-buffer)
+      map)
+    "Keymap for Projectile commands after `projectile-keymap-prefix'.")
+  (fset 'projectile-command-map projectile-command-map)
+
+  (el-patch-defvar projectile-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map projectile-keymap-prefix 'projectile-command-map)
+      map)
+    "Keymap for Projectile mode.")
+
+  (el-patch-defcustom projectile-indexing-method (if (eq system-type 'windows-nt) 'native 'alien)
+    "Specifies the indexing method used by Projectile.
+
+There are two indexing methods - native and alien.
+
+The native method is implemented in Emacs Lisp (therefore it is
+native to Emacs).  Its advantage is that it is portable and will
+work everywhere that Emacs does.  Its disadvantage is that it is a
+bit slow (especially for large projects).  Generally it's a good
+idea to pair the native indexing method with caching.
+
+The alien indexing method uses external tools (e.g. git, find,
+etc) to speed up the indexing process.  The disadvantage of this
+method is that it's not well supported on Windows systems.
+
+By default alien indexing is the default on all operating
+systems, except Windows."
+    :group 'projectile
+    :type '(radio
+            (const :tag "Native" native)
+            (const :tag "Alien" alien)))
+
+  (el-patch-defcustom projectile-enable-caching (eq projectile-indexing-method 'native)
+    "When t enables project files caching.
+
+Project caching is automatically enabled by default if you're
+using the native indexing method."
+    :group 'projectile
+    :type 'boolean)
+
+  (el-patch-defadvice delete-file (before purge-from-projectile-cache (filename &optional trash))
+    (if (and projectile-enable-caching (projectile-project-p))
+        (let* ((project-root (projectile-project-root))
+               (true-filename (file-truename filename))
+               (relative-filename (file-relative-name true-filename project-root)))
+          (if (projectile-file-cached-p relative-filename project-root)
+              (projectile-purge-file-from-cache relative-filename)))))
+
+  (el-patch-defadvice compilation-find-file (around projectile-compilation-find-file)
+    "Try to find a buffer for FILENAME, if we cannot find it,
+fallback to the original function."
+    (let ((filename (ad-get-arg 1))
+          full-filename)
+      (ad-set-arg 1
+                  (or
+                   (if (file-exists-p (expand-file-name filename))
+                       filename)
+                   ;; Try to find the filename using projectile
+                   (and (projectile-project-p)
+                        (let ((root (projectile-project-root))
+                              (dirs (cons "" (projectile-current-project-dirs))))
+                          (when (setq full-filename
+                                      (car (cl-remove-if-not
+                                            #'file-exists-p
+                                            (mapcar
+                                             (lambda (f)
+                                               (expand-file-name
+                                                filename
+                                                (expand-file-name f root)))
+                                             dirs))))
+                            full-filename)))
+                   ;; Fall back to the old argument
+                   filename))
+      ad-do-it))
+
+  (el-patch-define-minor-mode projectile-mode
+    "Minor mode to assist project management and navigation.
+
+When called interactively, toggle `projectile-mode'.  With prefix
+ARG, enable `projectile-mode' if ARG is positive, otherwise disable
+it.
+
+When called from Lisp, enable `projectile-mode' if ARG is omitted,
+nil or positive.  If ARG is `toggle', toggle `projectile-mode'.
+Otherwise behave as if called interactively.
+
+\\{projectile-mode-map}"
+    :lighter projectile-mode-line
+    :keymap projectile-mode-map
+    :group 'projectile
+    :require 'projectile
+    :global t
+    (cond
+     (projectile-mode
+      (el-patch-remove
+        ;; initialize the projects cache if needed
+        (unless projectile-projects-cache
+          (setq projectile-projects-cache
+                (or (projectile-unserialize projectile-cache-file)
+                    (make-hash-table :test 'equal))))
+        (unless projectile-projects-cache-time
+          (setq projectile-projects-cache-time
+                (make-hash-table :test 'equal)))
+        ;; update the list of known projects
+        (projectile-cleanup-known-projects)
+        (projectile-discover-projects-in-search-path))
+
+      (add-hook 'find-file-hook 'projectile-find-file-hook-function)
+      (add-hook 'projectile-find-dir-hook #'projectile-track-known-projects-find-file-hook t)
+      (add-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook t t)
+      (ad-activate 'compilation-find-file)
+      (ad-activate 'delete-file))
+     (t
+      (remove-hook 'find-file-hook #'projectile-find-file-hook-function)
+      (remove-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook t)
+      (ad-deactivate 'compilation-find-file)
+      (ad-deactivate 'delete-file))))
+
+  :init
+  (projectile-mode +1)
+
+  :config
+  (advice-add
+   'projectile-cleanup-known-projects :around
+   (my/defun-as-value nadvice/projectile-cleanup-known-projects/silence (orig-func &rest args)
+     (let ((inhibit-message t))
+       (apply orig-func args))))
+
   (setq projectile-known-projects-file
         (locate-user-emacs-file "data/.projectile-bookmarks.eld")
         projectile-cache-file
-        (locate-user-emacs-file "data/.projectile.cache"))
-
-  (projectile-mode +1)
-
-  (setq projectile-completion-system 'ivy
+        (locate-user-emacs-file "data/.projectile.cache")
+        projectile-completion-system 'ivy
         projectile-mode-line
         '(:eval (format (if (display-graphic-p) " ↠" " /"))))
-  (define-key projectile-mode-map (kbd "C-c p") #'hydra/projectile-tools/body))
 
-(defhydra hydra/projectile-tools (global-map "C-c p"
-                                             :color blue :hint nil :idle 0.3)
-  "
-Find^^             Operate on project^^      Other window
-_f_ file           _c_ compile project       _O f_ file
-_d_ dir            _R_ regenerate tags       _O d_ dir
-_g_ file dwim      _S_ save project          _O g_ file dwim
-_a_ other file     ^!^ command in /          _O a_ other file
-_l_ file in dir    ^&^ async command in /    _O b_ switch buffer
-_T_ test file      _z_ cache current file    _O t_ implementation←→test
-_j_ tag            _i_ invalidate cache      _O C-o_ display buffer
+  ;; Enable the mode again now that we have all the supporting hooks
+  ;; and stuff defined.
+  (projectile-mode +1))
 
-Special^^       Buffers^^                    Search and replace
-_D_ dired       _b_ switch buffer            _o_ multi-occur
-_e_ recentf     _k_ kill buffers             _r_ replace
-_I_ ibuffer     _p_ switch project           _s g_ grep
-_v_ vc          _ESC_ project other buffer   _s s_ ag
-_m_ commander   _F_ file any project         _s a_ ack
-
-Tests   _P_ test-project    _t_ toggle implementation←→test"
-  ("O a" projectile-find-other-file-other-window)
-  ("O b" projectile-switch-to-buffer-other-window)
-  ("O C-o" projectile-display-buffer)
-  ("O d" projectile-find-dir-other-window)
-  ("O f" projectile-find-file-other-window)
-  ("O g" projectile-find-file-dwim-other-window)
-  ("O t" projectile-find-implementation-or-test-other-window)
-  ("!" projectile-run-shell-command-in-root)
-  ("&" projectile-run-async-shell-command-in-root)
-  ("a" projectile-find-other-file)
-  ("b" projectile-switch-to-buffer)
-  ("c" projectile-compile-project)
-  ("d" projectile-find-dir)
-  ("D" projectile-dired)
-  ("e" projectile-recentf)
-  ("f" projectile-find-file)
-  ("g" projectile-find-file-dwim)
-  ("F" projectile-find-file-in-known-projects)
-  ("i" projectile-invalidate-cache)
-  ("I" projectile-ibuffer)
-  ("j" projectile-find-tag)
-  ("k" projectile-kill-buffers)
-  ("l" projectile-find-file-in-directory)
-  ("m" projectile-commander)
-  ("o" projectile-multi-occur)
-  ("p" projectile-switch-project)
-  ("P" projectile-test-project)
-  ("r" projectile-replace)
-  ("R" projectile-regenerate-tags)
-  ("s a" helm-projectile-ack)
-  ("s g" projectile-grep)
-  ("s s" helm-projectile-ag)
-  ("S" projectile-save-project-buffers)
-  ("t" projectile-toggle-between-implementation-and-test)
-  ("T" projectile-find-test-file)
-  ("v" projectile-vc)
-  ("z" projectile-cache-current-file)
-  ("ESC" projectile-project-buffers-other-buffer))
 
 (use-package diff
   :ensure nil

@@ -1,4 +1,6 @@
 ;; -*- lexical-binding: t -*-
+(eval-when-compile (require 'cl-lib))
+
 (defmacro my/defun-as-value (name arglist &optional docstring &rest body)
   (declare (doc-string 3) (indent 2))
   `(progn
@@ -21,10 +23,7 @@
   (let ((func-name (intern (concat "my/"
                                    (symbol-name name)
                                    "-onetime-setup")))
-        (keyw)
-        (hook)
-        (condition)
-        (after-hook))
+        keyw hook condition after-hook)
     (unless (stringp docstring)
       (push docstring body)
       (setq docstring nil))
