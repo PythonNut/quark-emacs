@@ -600,4 +600,8 @@ Otherwise behave as if called interactively.
              git-link-commit
              git-link-homepage))
 
+(use-package deadgrep
+  :defer-install t
+  :commands (deadgrep))
+
 (provide 'config-vcs)
