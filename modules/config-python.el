@@ -133,10 +133,10 @@
     :defer-install t
     :commands (live-py-mode))
 
-  (use-package py-yapf
+  (use-package blacken
     :defer-install t
-    :commands (py-yapf-buffer
-               py-yapf-enable-on-save)))
+    :commands (blacken-buffer
+               blacken-mode)))
 
 (use-package django-html-mode
   :recipe django-mode
