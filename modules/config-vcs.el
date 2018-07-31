@@ -75,6 +75,8 @@
   (magit-change-popup-key 'magit-rebase-popup :action ?e ?r)
   (magit-change-popup-key 'magit-push-popup   :action ?p ?P)
 
+  (magit-define-popup-switch 'magit-pull-popup ?a "Autostash" "--autostash")
+
   (cl-macrolet
       ((magit-setup-section-k
         (mode &optional command)
