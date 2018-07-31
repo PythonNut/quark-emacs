@@ -36,45 +36,90 @@
          (when parsed-user
            (string= "root" (substring-no-properties parsed-user))))))
 
-(defun my/make-root-file-name (file-name)
+(defun my/tramp-get-method-parameter (method param)
+  (assoc param (assoc method tramp-methods)))
+
+(defun my/tramp-corresponding-inline-method (method)
+  (let* ((login-program
+          (my/tramp-get-method-parameter method 'tramp-login-program))
+         (login-args
+          (my/tramp-get-method-parameter method 'tramp-login-args))
+         (copy-program
+          (my/tramp-get-method-parameter method 'tramp-copy-program)))
+    (or
+     ;; If the method is already inline, it's already okay
+     (and login-program
+          (not copy-program)
+          method)
+
+     ;; If the method isn't inline, try calculating the corresponding
+     ;; inline method, by matching other properties.
+     (and copy-program
+          (cl-some
+           (lambda (test-method)
+             (when (and
+                    (equal login-args
+                           (my/tramp-get-method-parameter
+                            test-method
+                            'tramp-login-args))
+                    (equal login-program
+                           (my/tramp-get-method-parameter
+                            test-method
+                            'tramp-login-program))
+                    (not (my/tramp-get-method-parameter
+                          test-method
+                          'tramp-copy-program)))
+               test-method))
+           (mapcar #'car tramp-methods)))
+
+     ;; These methods are weird and need to be handled specially
+     (and (member method '("sftp" "fcp"))
+          "sshx"))))
+
+(defun my/make-root-file-name (file-name &optional user)
   (require 'tramp)
-  (let ((sudo (let ((default-directory
-                      (my/file-name-first-existing-parent file-name))
-                    (process-file-side-effects nil))
-                (with-demoted-errors "sudo check failed: %s"
-                  (or (= (process-file "sudo" nil nil nil "-n" "true") 0)
-                      ;; Detect if sudo can be run with a password
-                      (string-match-p
-                       (rx (or "askpass" "password"))
-                       (with-output-to-string
-                         (with-current-buffer standard-output
-                           (process-file "sudo" nil t nil "-vS")))))))))
-    (if (tramp-tramp-file-p file-name)
-        (with-parsed-tramp-file-name file-name parsed
-          (tramp-make-tramp-file-name
-           (if sudo "sudo" "su")
-           "root"
-           nil
-           parsed-host
-           nil
-           parsed-localname
-           (let ((tramp-postfix-host-format "|")
-                 (tramp-prefix-format))
-             (tramp-make-tramp-file-name
-              (if (member parsed-method '("scp"
-                                          "scpx"
-                                          "sshx"
-                                          "rsync"))
-                  "ssh"
-                parsed-method)
-              parsed-user
-              parsed-domain
-              parsed-host
-              parsed-port
-              ""
-              parsed-hop))))
-      (concat (if sudo "/sudo::" "/su::")
-              file-name))))
+  (let* ((target-user (or user "root"))
+         (abs-file-name (expand-file-name file-name))
+         (sudo (with-demoted-errors "sudo check failed: %s"
+                 (let ((default-directory
+                         (my/file-name-first-existing-parent abs-file-name))
+                       (process-file-side-effects nil))
+                   (or (= (process-file "sudo" nil nil nil "-n" "true") 0)
+                       ;; Detect if sudo can be run with a password
+                       (string-match-p
+                        (rx (or "askpass" "password"))
+                        (with-output-to-string
+                          (with-current-buffer standard-output
+                            (process-file "sudo" nil t nil "-vS")))))))))
+    (if (tramp-tramp-file-p abs-file-name)
+        (with-parsed-tramp-file-name abs-file-name parsed
+          (if (string= parsed-user target-user)
+              abs-file-name
+            (tramp-make-tramp-file-name
+             (if sudo "sudo" "su")
+             target-user
+             nil
+             parsed-host
+             nil
+             parsed-localname
+             (let ((tramp-postfix-host-format tramp-postfix-hop-format)
+                   (tramp-prefix-format))
+               (tramp-make-tramp-file-name
+                (my/tramp-corresponding-inline-method parsed-method)
+                parsed-user
+                parsed-domain
+                parsed-host
+                parsed-port
+                ""
+                parsed-hop)))))
+      (if (string= (user-login-name) user)
+          abs-file-name
+        (tramp-make-tramp-file-name (if sudo "sudo" "su")
+                                    target-user
+                                    nil
+                                    "localhost"
+                                    nil
+                                    abs-file-name)))))
 
 (defun edit-file-as-root ()
   "Find file as root"
