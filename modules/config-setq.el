@@ -216,6 +216,7 @@ response as a no."
              (apply #'call-process "df" nil '(t nil) nil args)
              (/= (point) (point-min)))))))
 
+
 (defun nadvice/read-passwd/isolate-kill-ring (old-fun &rest args)
   (let ((kill-ring kill-ring))
     (apply old-fun args)))
@@ -252,5 +253,11 @@ response as a no."
                        shell))
                    full-shells)
           (cl-some #'executable-find bare-shells)))))
+
+(advice-add
+ 'shell-command-to-string :around
+ (my/defun-as-value nadvice/shell-command-to-string (old-fun &rest args)
+   (let ((shell-file-name (my/detect-shell)))
+     (apply old-fun args))))
 
 (provide 'config-setq)
