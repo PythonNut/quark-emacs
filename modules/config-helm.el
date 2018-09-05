@@ -173,11 +173,14 @@
                                              (rx "*Compile")
                                              (rx "*Quail"))))
 
-(setq helm-semantic-fuzzy-match t
-      helm-imenu-fuzzy-match t)
+(use-package helm-imenu
+  :ensure nil
+  :init
+  (setq helm-imenu-fuzzy-match t))
+
 (use-package helm-semantic
   :ensure nil
-  :config
+  :init
   (setq helm-semantic-fuzzy-match t))
 
 (use-package helm-command
