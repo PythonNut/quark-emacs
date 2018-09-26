@@ -104,6 +104,12 @@
     (texmathp-compile))
 
   (require 'smartparens-latex)
+  (sp-with-modes '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
+    (sp-local-pair "\\[" "\\]"
+                   :unless '(sp-latex-point-after-backslash)
+                   :post-handlers
+                     '(:add
+                       ("||\n[i]" "RET"))))
 
   (el-patch-defun TeX-brace-count-line ()
     "Count number of open/closed braces."
