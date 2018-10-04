@@ -28,7 +28,6 @@
              embrace-org-mode-hook
              embrace-ruby-mode-hook)
   :init
-  (add-hook 'LaTeX-mode-hook 'embrace-LaTeX-mode-hook)
   (add-hook 'org-mode-hook 'embrace-org-mode-hook)
   (add-hook 'ruby-mode-hook 'embrace-ruby-mode-hook))
 

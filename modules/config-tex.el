@@ -324,7 +324,7 @@
      (require 'embrace)
      (embrace-add-pair ?= "\\verb|" "|")
      (embrace-add-pair ?~ "\\texttt{" "}")
-     (embrace-add-pair ?/ "\\emph{" "}")
+     (embrace-add-pair ?/ "\\(" "\\)")
      (embrace-add-pair ?* "\\textbf{" "}")
      (embrace-add-pair ?$ "$" "$")
      (embrace-add-pair ?\\ "\\[" "\\]")
