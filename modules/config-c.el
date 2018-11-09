@@ -34,77 +34,24 @@
          (newline)
          (indent-according-to-mode)))))
 
-  (use-package irony-eldoc
-    :defer-install t
-    :commands (irony-eldoc))
-
-  (use-package flycheck-irony
-    :defer-install t
-    :commands (flycheck-irony-setup))
-
-  (use-package irony
-    :defer-install t
-    :commands (irony-mode
-               irony-version
-               irony-server-kill
-               irony-cdb-autosetup-compile-options
-               irony-cdb-menu
-               irony-cdb-clang-complete
-               irony-cdb-json
-               irony-cdb-json-add-compile-commands-path
-               irony-cdb-libclang
-               irony-completion-at-point
-               irony-completion-at-point-async)
+  (use-package rtags
     :init
-    (add-to-list 'safe-local-variable-values
-                 '(irony-additional-clang-options . ("-std=c++11")))
-    (add-to-list 'safe-local-variable-values
-                 '(irony-additional-clang-options . ("-std=c++14")))
-    (add-to-list 'safe-local-variable-values
-                 '(irony-additional-clang-options . ("-std=c++17")))
+    (require 'rtags)
 
     :config
-    (setq irony-user-dir (locate-user-emacs-file "data/irony")
-          irony-server-install-prefix irony-user-dir)
-    (flycheck-irony-setup)
-    (add-hook 'irony-mode-hook 'irony-eldoc)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+    (setq rtags-completions-enabled t
+          rtags-autostart-diagnostics t
+          rtags-tramp-enabled t
+          rtags-rc-log-enabled t
+          rtags-enable-unsaved-reparsing t
+          rtags-use-multiple-cursors t)
 
-  (use-package company-irony
-    :defer-install t
-    :commands (company-irony
-               company-irony-setup-begin-commands)
-    :config
-    (setq company-irony-ignore-case t)
+    (rtags-set-periodic-reparse-timeout 5))
 
-    (use-package company-irony
-      :defer-install t
-      :config
-      (advice-add
-       'company-irony--filter-candidates :override
-       (my/defun-as-value nadvice/company-irony--filter-candidates (prefix candidates)
-         (let ((regex (concat "\\`"
-                              (mapconcat
-                               (lambda (x)
-                                 (setq x (string x))
-                                 (concat "[^" x "]*" (regexp-quote x)))
-                               prefix
-                               "")))
-               (case-fold-search company-irony-ignore-case))
-           (cl-loop for candidate in candidates
-                    when (string-match-p regex (car candidate))
-                    collect (propertize (car candidate) 'company-irony candidate))))))
-
-    (advice-add
-     'irony-completion-post-complete :around
-     (my/defun-as-value nadvice/irony-completion-post-complete (old-fun &rest args)
-       (unless (irony-eldoc--which-funcall)
-         (apply old-fun args)))))
-
-  (use-package company-irony-c-headers
-    :defer-install t
-    :defer-install t
-    :commands (company-irony-c-headers))
+  (use-package company-rtags)
+  (use-package flycheck-rtags)
+  (use-package helm-rtags)
+  (use-package ivy-rtags)
 
   (use-package clang-format
     :defer-install t
@@ -128,8 +75,10 @@
                          (require 'cl-lib)
                          (let ((old-backends company-backends))
                            (set (make-local-variable 'company-backends)
-                                '((company-irony-c-headers
-                                   company-irony
+                                '((
+                                   ;; company-irony-c-headers
+                                   ;; company-irony
+                                   company-rtags
                                    company-yasnippet
                                    company-files)
                                   (company-dabbrev-code)
@@ -141,14 +90,37 @@
             'objc-mode-hook
             'c-mode-hook)))))
 
+  (defun my/fontify-string (str mode)
+    "Return STR fontified according to MODE."
+    (with-temp-buffer
+      (insert str)
+      (delay-mode-hooks (funcall mode))
+      (font-lock-default-function mode)
+      (font-lock-default-fontify-region
+       (point-min) (point-max) nil)
+      (buffer-string)))
+
+  (defun my/rtags-eldoc-function ()
+    (let ((summary (rtags-get-summary-text)))
+      (and summary
+           (my/fontify-string
+            (replace-regexp-in-string
+             "{[^}]*$" ""
+             (mapconcat
+              (lambda (str) (if (= 0 (length str)) "//" (string-trim str)))
+              (split-string summary "\r?\n")
+              " "))
+            major-mode))))
+
   (cl-macrolet
       ((my/setup-cc-mode
         (mode hook)
         `(add-hook ,hook (lambda ()
                            (when (eq major-mode ,mode)
-                             (irony-mode +1)
+                             ;; (irony-mode +1)
+                             (setq-local eldoc-documentation-function #'my/rtags-eldoc-function)
                              (eldoc-mode +1)
-                             (irony-eldoc +1)
+                             ;; (irony-eldoc +1)
                              (aggressive-indent-mode +1)
                              (helm-gtags-mode +1)
                              (semantic-idle-summary-mode -1))))))
