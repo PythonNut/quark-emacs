@@ -153,6 +153,10 @@
 
 (use-package flyspell-lazy
   :init
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
+
   (autoload #'flyspell-lazy-load "flyspell-lazy")
 
   (el-patch-feature flyspell-lazy)
