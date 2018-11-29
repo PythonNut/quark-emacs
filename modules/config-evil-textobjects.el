@@ -255,4 +255,28 @@
 (define-key evil-operator-state-map (kbd "M-=") #'evil-count-words-region)
 (define-key evil-normal-state-map (kbd "M-=") #'evil-count-words-region)
 
+(use-package evil-textobj-syntax
+  :init
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)
+      (require 'evil-textobj-syntax)))
+
+  (el-patch-feature evil-textobj-syntax)
+
+  (el-patch-defcustom evil-textobj-syntax-i-key "h"
+    "Keys for evil-i-syntax"
+    :type 'string
+    :group 'evil-textobj-syntax)
+
+  (el-patch-defcustom evil-textobj-syntax-a-key "h"
+    "Keys for evil-a-syntax"
+    :type 'string
+    :group 'evil-textobj-syntax)
+
+  (define-key evil-outer-text-objects-map
+    evil-textobj-syntax-a-key #'evil-a-syntax)
+  (define-key evil-inner-text-objects-map
+    evil-textobj-syntax-i-key #'evil-i-syntax))
+
 (provide 'config-evil-textobjects)
