@@ -245,7 +245,7 @@ of (command, word) to be used by `flyspell-do-correct'."))
 (use-package flyspell-correct
   :commands (flyspell-correct-previous-word-generic)
   :init
-  (define-key flyspell-mode-map (kbd "C-M-i") #'flyspell-correct-previous-word-generic)
+  (define-key flyspell-mode-map (kbd "C-M-i") #'flyspell-correct-word-generic)
   :config
   (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
