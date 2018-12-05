@@ -398,13 +398,10 @@
     (interactive)
     (if (texmathp)
         (my/TeX-escape-from-math t)
-      (if (string-match-p (rx bol (zero-or-more space) "\n") (thing-at-point 'line))
-          (let ((TeX-electric-math (cons "\\[" "\\]")))
-            (TeX-insert-dollar))
-        (unless (or (bolp)
-                    (looking-back (rx (or space punct)) 1))
-          (insert " "))
-        (TeX-insert-dollar))))
+      (unless (or (bolp)
+                  (looking-back (rx (or space punct)) 1))
+        (insert " "))
+      (TeX-insert-dollar)))
 
   (key-chord-define TeX-mode-map (kbd "fj")
                     `(menu-item "" TeX-math-chord
