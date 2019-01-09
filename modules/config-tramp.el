@@ -37,6 +37,8 @@
     (with-demoted-errors "Load error: %s"
       (require 'el-patch)))
 
+  (el-patch-feature su)
+
   (el-patch-defcustom su-auto-make-directory t
     "Automatically become other users to create directories"
     :type 'boolean
