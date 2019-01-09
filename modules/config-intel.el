@@ -145,6 +145,11 @@
   (setq ispell-personal-dictionary
         (expand-file-name "data/user-dict.en.pws" user-emacs-directory))
 
+  (cond ((executable-find "aspell")
+         (add-to-list 'ispell-extra-args "--sug-mode=fast"))
+        ((executable-find "hunspell")
+         (setq ispell-program-name "hunspell")))
+
   (advice-add
    'ispell-init-process :around
    (my/defun-as-value nadvice/ispell-init-process (old-fun &rest args)
@@ -227,12 +232,7 @@ is 'toggle."
   (setq flyspell-issue-message-flag nil
         flyspell-issue-welcome-flag nil)
 
-  (diminish 'flyspell-mode)
-
-  (cond ((executable-find "hunspell")
-         (setq ispell-program-name "hunspell"))
-        ((executable-find "aspell")
-         (add-to-list 'ispell-extra-args "--sug-mode=ultra"))))
+  (diminish 'flyspell-mode))
 
 (use-package flyspell-correct-ivy
   :init
