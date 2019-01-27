@@ -65,7 +65,7 @@
     :group 'su)
 
   (autoload #'su--nadvice-make-directory-auto-root "su")
-  (autoload #'su--nadvice/find-file-noselect "su")
+  (autoload #'su--nadvice-find-file-noselect "su")
   (autoload #'su--nadvice-supress-find-file-hook "su")
   (autoload #'su--nadvice-find-file-noselect-1 "su")
 
@@ -88,7 +88,7 @@
           (when su-auto-write-file
             (add-hook 'find-file-hook #'su--edit-file-as-root-maybe)
             (advice-add 'find-file-noselect :around
-                        #'su--nadvice/find-file-noselect)
+                        #'su--nadvice-find-file-noselect)
 
             (when su-enable-semantic-integration
               (with-eval-after-load 'semantic/fw
@@ -105,7 +105,7 @@
       (advice-remove 'helm-find-file-or-marked
                      #'su--nadvice-make-directory-auto-root)
       (advice-remove 'find-file-noselect
-                     #'su--nadvice/find-file-noselect)
+                     #'su--nadvice-find-file-noselect)
       (advice-remove 'semantic-find-file-noselect
                      #'su--nadvice-supress-find-file-hook)
       (advice-remove 'find-file-noselect-1
