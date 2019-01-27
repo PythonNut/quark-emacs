@@ -508,19 +508,16 @@ where it was when you previously visited the same file."
   (add-hook
    'atomic-chrome-edit-done-hook
    (my/defun-as-value my/atomic-chrome-focus-browser ()
-     (let ((srv (websocket-server-conn
-                 (atomic-chrome-get-websocket (current-buffer))))
-           (srv-ghost (bound-and-true-p atomic-chrome-server-ghost-text))
-           (srv-atomic (bound-and-true-p atomic-chrome-server-atomic-chrome)))
+     (when-let* ((srv (websocket-server-conn
+                       (atomic-chrome-get-websocket (current-buffer))))
+                 (srv-ghost (bound-and-true-p atomic-chrome-server-ghost-text))
+                 (srv-atomic (bound-and-true-p atomic-chrome-server-atomic-chrome))
+                 (window-name (cond
+                               ((eq srv srv-ghost) "Firefox")
+                               ((eq srv srv-atomic) "Google Chrome"))))
        (cond ((memq window-system '(mac ns))
-              (cond ((eq srv srv-ghost)
-                     (call-process "open" nil nil nil "-a" "Firefox"))
-                    ((eq srv srv-atomic)
-                     (call-process "open" nil nil nil "-a" "Google Chrome"))))
+              (call-process "open" nil nil nil "-a" window-name))
              ((and (eq window-system 'x) (executable-find "wmctrl"))
-              (cond ((eq srv srv-ghost)
-                     (call-process "wmctrl" nil nil nil "-a" "Firefox"))
-                    ((eq srv srv-atomic)
-                     (call-process "wmctrl" nil nil nil "-a" "Google Chrome")))))))))
+              (call-process "wmctrl" nil nil nil "-a" window-name)))))))
 
 (provide 'config-desktop)
