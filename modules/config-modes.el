@@ -1050,6 +1050,10 @@
               string-end)
           . systemd-mode)))
 
+(use-package pacfiles-mode
+  :defer-install t
+  :commands (pacfiles pacfiles-start))
+
 (use-package gitattributes-mode
   :defer-install t
   :commands (gitattributes-mode)
