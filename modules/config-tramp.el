@@ -23,7 +23,7 @@
 
 (with-eval-after-load 'tramp
   (eval-when-compile (require 'tramp))
-  (setq tramp-backup-directory-alist `((,(rx (zero-or-more not-newline))
+  (setq tramp-backup-directory-alist `((,(rx (zero-or-more anything))
                                         . ,my/tramp-backup-directory))))
 
 ;; =================================

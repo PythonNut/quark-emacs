@@ -198,7 +198,7 @@ Minibuffer bindings:
   (setq counsel-find-file-ignore-regexp
         (eval-when-compile
           (rx line-start
-              (zero-or-more not-newline)
+              (zero-or-more anything)
               (or "~" ".elc" ".pyc" ".swp" ".zwc" ".zwc.old")
               line-end))))
 
