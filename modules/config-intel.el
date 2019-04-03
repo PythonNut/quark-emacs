@@ -471,8 +471,7 @@ is binary, activate `hexl-mode'."
   :commands (webpaste-paste-buffer
              webpaste-paste-region)
   :config
-  (setq webpaste-provider-priority '("ptpb.pw"
-                                     "ix.io"
+  (setq webpaste-provider-priority '("ix.io"
                                      "dpaste.com"
                                      "dpaste.de"
                                      "gist.github.com")))
