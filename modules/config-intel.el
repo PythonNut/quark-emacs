@@ -243,7 +243,7 @@ Return a selected word to use as a replacement or a tuple
 of (command, word) to be used by `flyspell-do-correct'."))
 
 (use-package flyspell-correct
-  :commands (flyspell-correct-previous-word-generic)
+  :commands (flyspell-correct-word-generic)
   :init
   (define-key flyspell-mode-map (kbd "C-M-i") #'flyspell-correct-word-generic)
   :config
