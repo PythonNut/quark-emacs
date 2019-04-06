@@ -140,4 +140,10 @@ when `auto-save-mode' is invoked manually.")
   :config
   (evil-set-initial-state 'backup-walker-mode 'motion))
 
+(use-package real-auto-save
+  :defer-install t
+  :commands (real-auto-save-mode)
+  :config
+  (setq real-auto-save-interval 1))
+
 (provide 'config-safety)
