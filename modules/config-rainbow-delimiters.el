@@ -61,25 +61,17 @@
     (mapc #'face-remap-remove-relative my/rainbow-delimiters-face-cookies)
     (setq my/rainbow-delimiters-switch nil))
 
-  (defun my/rainbow-delimiters-focus-on-maybe ()
+  (defun my/rainbow-delimiters-focus-toggle-maybe ()
     "Punch the rainbow-delimiters if the point is on a paren"
-    (when (or (looking-at (rx (any "[](){}")))
-              (and
-               (evil-insert-state-p)
-               (looking-back (rx (any "[](){}")) (1- (point)))))
-      (unless (or my/rainbow-delimiters-switch (minibufferp))
-        (my/rainbow-delimiters-focus-on))))
-
-  (defun my/rainbow-delimiters-focus-off-maybe ()
-    "Reset the rainbow-delimiters if the point is not on a paren"
-    (unless (or (looking-at (rx (any "[](){}")))
-                (and
-                 (evil-insert-state-p)
-                 (looking-back (rx (any "[](){}")) (1- (point)))))
+    (if (or (looking-at (rx (any "[](){}")))
+            (and
+             (evil-insert-state-p)
+             (looking-back (rx (any "[](){}")) (1- (point)))))
+        (unless (or my/rainbow-delimiters-switch (minibufferp))
+          (my/rainbow-delimiters-focus-on))
       (when my/rainbow-delimiters-switch
         (my/rainbow-delimiters-focus-off))))
 
-  (run-with-idle-timer 0.1 t 'my/rainbow-delimiters-focus-on-maybe)
-  (run-with-idle-timer 0.1 t 'my/rainbow-delimiters-focus-off-maybe))
+  (run-with-idle-timer 0.1 t 'my/rainbow-delimiters-focus-toggle-maybe))
 
 (provide 'config-rainbow-delimiters)
