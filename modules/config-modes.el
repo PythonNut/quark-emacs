@@ -913,12 +913,7 @@
       (evil-define-key 'insert eshell-mode-map (kbd "C-r") #'eshell-isearch-backward)))
 
   (add-hook
-   'eshell-mode-hook
-   (my/defun-as-value my/setup-eshell-setup ()
-     (setq-local company-idle-delay 0.1)))
-
-  (add-hook
-   'eshell-directory-change-hook
+   'eshell-before-prompt-hook
    (my/defun-as-value my/eshell-slow-company-when-remote ()
      (setq company-idle-delay
            (if (file-remote-p default-directory)
