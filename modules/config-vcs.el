@@ -155,15 +155,6 @@
   (define-key git-rebase-mode-map "k" #'previous-line)
   (define-key git-rebase-mode-map "K" #'git-rebase-kill-line))
 
-(use-package magithub
-  :init
-  ;; Magithub is not well-behaved, so this needs to be set early
-  (setq magithub-dir (locate-user-emacs-file "data/magithub"))
-  :config
-  (evil-set-initial-state 'magithub-dash-mode 'motion)
-  (evil-set-initial-state 'magithub-issue-view-mode 'motion)
-  (magithub-feature-autoinject t))
-
 (use-package magit-svn
   :after magit
   :config
