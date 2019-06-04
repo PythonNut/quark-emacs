@@ -164,8 +164,7 @@
     "A `hydra' enabled next-buffer"
     (interactive)
     (require 'iflipb)
-    (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
-               (lambda () t)))
+    (let ((my/iflipb-first t))
       (call-interactively #'iflipb-next-buffer))
     (iflipb-hydra/body))
 
@@ -173,8 +172,7 @@
     "A `hydra' enabled previous-buffer"
     (interactive)
     (require 'iflipb)
-    (cl-letf (((symbol-function #'iflipb-first-iflipb-buffer-switch-command)
-               (lambda () t)))
+    (let ((my/iflipb-first t))
       (call-interactively #'iflipb-previous-buffer))
     (iflipb-hydra/body))
 
@@ -199,9 +197,12 @@
                                     (rx line-start "*straight-process*"))
         iflipb-wrap-around t)
 
+  (defvar my/iflipb-first nil)
+
   (advice-add
    'iflipb-first-iflipb-buffer-switch-command :override
-   (my/defun-as-value nadvice/iflipb-first-iflipb-buffer-switch-command (&rest _args) nil)))
+   (my/defun-as-value nadvice/iflipb-first-iflipb-buffer-switch-command (&rest _args)
+     my/iflipb-first)))
 
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
