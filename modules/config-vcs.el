@@ -40,6 +40,10 @@
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (with-eval-after-load 'transient
+  (setq transient-levels-file (locate-user-emacs-file "data/transient/levels.el")
+        transient-history-file (locate-user-emacs-file "data/transient/history.el")
+        transient-values-file (locate-user-emacs-file "data/transient/values.el"))
+
   (transient-bind-q-to-quit))
 
 (use-package magit
