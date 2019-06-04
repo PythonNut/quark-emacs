@@ -39,6 +39,9 @@
   ;; Automatically refresh when magit state changes
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
+(with-eval-after-load 'transient
+  (transient-bind-q-to-quit))
+
 (use-package magit
   :init (defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
   :config
@@ -59,7 +62,6 @@
 
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
-  (evil-set-initial-state 'magit-popup-mode 'insert)
   (evil-set-initial-state 'magit-refs-mode 'insert)
   (evil-set-initial-state 'magit-stash-mode 'insert)
   (evil-set-initial-state 'magit-revision-mode 'motion)
@@ -70,12 +72,12 @@
   (define-key magit-refs-mode-map "j" #'next-line)
   (define-key magit-status-mode-map "j" #'next-line)
 
-  (magit-change-popup-key 'magit-fetch-popup  :action ?u ?f)
-  (magit-change-popup-key 'magit-pull-popup   :action ?u ?F)
-  (magit-change-popup-key 'magit-rebase-popup :action ?e ?r)
-  (magit-change-popup-key 'magit-push-popup   :action ?p ?P)
-
-  (magit-define-popup-switch 'magit-pull-popup ?a "Autostash" "--autostash")
+  (transient-suffix-put 'magit-fetch "u" :key "f")
+  (transient-suffix-put 'magit-pull "u" :key "F")
+  (transient-suffix-put 'magit-rebase "e" :key "r")
+  (transient-suffix-put 'magit-push "p" :key "P")
+  (transient-append-suffix 'magit-pull "m"
+    '("-a" "Autostash" "--autostash"))
 
   (cl-macrolet
       ((magit-setup-section-k
