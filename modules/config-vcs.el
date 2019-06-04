@@ -58,7 +58,8 @@
         magit-completing-read-function #'magit-ido-completing-read
         magit-log-format-graph-function #'magit-log-format-unicode-graph
         magit-completing-read-function 'ivy-completing-read
-        magit-diff-refine-hunk t)
+        magit-diff-refine-hunk t
+        magit-pull-or-fetch t)
 
   (evil-set-initial-state 'magit-status-mode 'insert)
   (evil-set-initial-state 'magit-log-mode 'insert)
