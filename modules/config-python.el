@@ -139,6 +139,8 @@
     (setq pipenv-projectile-after-switch-function
           #'pipenv-projectile-after-switch-extended))
 
+  (use-package conda)
+
   (use-package blacken
     :defer-install t
     :commands (blacken-buffer
