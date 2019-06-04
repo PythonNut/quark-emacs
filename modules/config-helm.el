@@ -328,11 +328,6 @@
                       candidate))
       (el-patch-add :candidate-number-limit 1000))))
 
-(use-package helm-regexp
-  :ensure nil
-  :config
-  (helm-occur-init-source))
-
 (use-package helm-ag
   :init
   ;; adaptively fallback to ack and ack-grep
