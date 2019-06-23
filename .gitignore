@@ -47,6 +47,8 @@ flycheck_*
 
 /data/anaconda-mode
 /data/irony
+/data/savehist
+/data/undo-backups
 
 
 # package cache
