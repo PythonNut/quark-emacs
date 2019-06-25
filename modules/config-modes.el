@@ -1532,7 +1532,12 @@
 
 (use-package lsp-mode
   ;; :hook (python-mode . lsp-deferred)
-  :commands (lsp-mode))
+  :commands (lsp-mode)
+  :config
+  (use-package lsp-ui
+    :commands lsp-ui-mode
+    :init
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
 
 (use-package company-lsp :commands company-lsp)
 
