@@ -355,7 +355,7 @@
 
     :init
     (require 'lsp-julia)
-    (add-hook 'julia-mode-hook #'lsp-mode))
+    (add-hook 'julia-mode-hook #'lsp-deferred))
 
   (use-package evil
     :config
