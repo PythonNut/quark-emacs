@@ -348,11 +348,14 @@
              inferior-julia
              run-julia)
   :config
-  (use-package flycheck-julia
-    :after flycheck
-    :commands (flycehck-julia-setup)
-    :config
-    (flycheck-julia-setup))
+  (use-package lsp-julia
+    :recipe (lsp-julia :type git
+                       :host github
+                       :repo "non-Jedi/lsp-julia")
+
+    :init
+    (require 'lsp-julia)
+    (add-hook 'julia-mode-hook #'lsp-mode))
 
   (use-package evil
     :config
@@ -1524,5 +1527,13 @@
              floobits-open-workspace-in-browser
              floobits-clear-highlights
              floobits-add-to-workspace))
+
+;;; LSP
+
+(use-package lsp-mode
+  ;; :hook (python-mode . lsp-deferred)
+  :commands (lsp-mode))
+
+(use-package company-lsp :commands company-lsp)
 
 (provide 'config-modes)

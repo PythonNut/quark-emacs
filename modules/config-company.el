@@ -35,6 +35,7 @@
             ('cmake-mode-hook      '(company-cmake))
             ('css-mode-hook        '(company-css))
             ('java-mode-hook       '(company-eclim))
+            ('java-mode-hook       '(company-lsp))
             ('nxml-mode-hook       '(company-nxml))
             ('html-mode-hook       '(company-web-html))
             ('lua-mode-hook        '(company-lua))
