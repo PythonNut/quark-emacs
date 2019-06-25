@@ -1534,6 +1534,8 @@
   ;; :hook (python-mode . lsp-deferred)
   :commands (lsp-mode)
   :config
+  (setq lsp-prefer-flymake nil)
+
   (use-package lsp-ui
     :commands lsp-ui-mode
     :init
