@@ -11,6 +11,28 @@
              company-math-symbols-latex
              company-math-symbols-unicode))
 
+(with-eval-after-load 'lsp-mode
+  ;; Copied from `lsp-clients--rust-window-progress' in `lsp-rust'.
+  (defun lsp-latex-window-progress (_workspace params)
+    "Progress report handling.
+PARAMS progress report notification data."
+    ;; Minimal implementation - we could show the progress as well.
+    (lsp-log (gethash "title" params)))
+
+  (lsp-register-client
+   (make-lsp-client :new-connection
+                    (lsp-stdio-connection
+                     (list "env" "PATH=/Library/TeX/texbin/" (expand-file-name (locate-user-emacs-file "data/lsp/texlab/target/debug/texlab"))))
+                    :major-modes '(tex-mode yatex-mode latex-mode)
+                    :server-id 'texlab
+                    :notification-handlers
+                    (lsp-ht
+                     ("window/progress"
+                      'lsp-latex-window-progress))))
+
+  (add-to-list 'lsp-language-id-configuration '(tex-mode . "tex"))
+  (add-to-list 'lsp-language-id-configuration '(latex-mode . "tex")))
+
 (use-package tex
   :recipe auctex
   :commands (bib-cite-minor-mode
@@ -168,12 +190,8 @@ command."
     (set-face-attribute 'ml/huge nil :height 1.35)
     (set-face-attribute 'ml/hhuge nil :height 1.4))
 
-  (use-package company-auctex
-    :recipe (company-auctex :type git
-                            :host github
-                            :repo "PythonNut/company-auctex")
-    :commands (company-auctex-symbols
-               company-auctex-environments))
+
+  (add-hook 'TeX-mode-hook #'lsp-deferred)
 
   (add-hook
    'TeX-mode-hook
@@ -181,11 +199,7 @@ command."
      (let ((old-backends company-backends))
        (set (make-local-variable 'company-backends)
             (append (list (append
-                           '(company-auctex-macros
-                             company-auctex-symbols
-                             company-auctex-environments
-                             company-latex-commands
-                             company-math-symbols-latex
+                           '(company-lsp
                              company-dabbrev)
                            (cdar old-backends)))
                     '((company-ispell))
