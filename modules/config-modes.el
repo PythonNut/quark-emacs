@@ -1351,7 +1351,19 @@
   :config
   (use-package flycheck-rust
     :commands (flycehck-rust-setup))
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+
+  (with-eval-after-load 'smartparens
+    (sp-with-modes
+        '(rust-mode)
+      (sp-local-pair "/*" "*/" :post-handlers
+                     '(:add
+                       ("* [i]|\n[i]" newline evil-ret)
+                       (" " c-context-line-break c-indent-new-comment-line)))
+      (sp-local-pair "{" nil :post-handlers
+                     '(:add
+                       ("||\n[i]" "RET")
+                       ("| " "SPC"))))))
 
 (use-package lua-mode
   :defer-install t
