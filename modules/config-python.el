@@ -46,53 +46,19 @@
 
   (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
 
-  (use-package company-anaconda
-    :defer-install t
-    :commands (company-anaconda))
+  (use-package lsp-python-ms
+    :init
+    (require 'lsp-python-ms)
+    (add-hook 'python-mode-hook #'lsp-deferred)
 
-  (use-package anaconda-mode
-    :defer-install t
-    :commands (anaconda-mode)
-    :diminish (anaconda-mode . " ✶")
     :config
-    (setq anaconda-mode-installation-directory (locate-user-emacs-file
-                                                "data/anaconda-mode"))
+    ;; when on arch, check if we can use the system ls
+    (setq lsp-python-ms-dir
+          (let ((system-ls "/usr/lib/microsoft-python-language-server/"))
+            (if (file-directory-p system-ls)
+                system-ls
+              (locate-user-emacs-file "data/mspyls")))))
 
-    (defun my/anaconda-eldoc-callback-fallback (docstring)
-      (let ((docstring
-             (cond ((stringp docstring)
-                    docstring)
-                   ((arrayp docstring)
-                    (s-join " " (--map
-                                 (s-collapse-whitespace
-                                  (aref it 3))
-                                 docstring))))))
-        (when docstring
-          (eldoc-message
-           (substring docstring 0 (min (frame-width) (length docstring)))))))
-
-    (defun my/anaconda-eldoc-callback (result)
-      (if result
-          (eldoc-message (anaconda-mode-eldoc-format result))
-        (anaconda-mode-call
-         "goto_definitions"
-         #'my/anaconda-eldoc-callback-fallback)))
-
-    ;; also show object docstrings
-    (defun nadvice/anaconda-mode-eldoc-function ()
-      (anaconda-mode-call "eldoc" #'my/anaconda-eldoc-callback)
-      nil)
-
-    (advice-add 'anaconda-mode-eldoc-function :override
-                #'nadvice/anaconda-mode-eldoc-function))
-
-  (use-package evil
-    :config
-    (evil-define-key 'normal python-mode-map "gd" #'anaconda-mode-goto))
-
-  (define-key python-mode-map (kbd "M-.") #'anaconda-mode-goto)
-  (add-hook 'python-mode-hook #'anaconda-eldoc-mode)
-  (add-hook 'python-mode-hook #'anaconda-mode)
   (add-hook 'python-mode-hook #'eldoc-mode)
 
   (use-package traad
