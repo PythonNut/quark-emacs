@@ -46,18 +46,26 @@
 
   (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
 
-  (use-package lsp-python-ms
-    :init
-    (require 'lsp-python-ms)
-    (add-hook 'python-mode-hook #'lsp-deferred)
+  ;; Use the Microsoft python ls if we can
+  (when (executable-find "dotnet")
+    (use-package lsp-python-ms
+      :init
+      (require 'lsp-python-ms)
+      (add-hook 'python-mode-hook #'lsp-deferred)
 
-    :config
-    ;; when on arch, check if we can use the system ls
-    (setq lsp-python-ms-dir
-          (let ((system-ls "/usr/lib/microsoft-python-language-server/"))
-            (if (file-directory-p system-ls)
-                system-ls
-              (locate-user-emacs-file "data/mspyls")))))
+      :config
+      ;; when on arch, check if we can use the system ls
+      (let ((system-ls "/usr/lib/microsoft-python-language-server/")
+            (system-ls-bin (executable-find "mspyls")))
+        (if (and (file-directory-p system-ls) system-ls-bin)
+            (setq lsp-python-ms-dir system-ls
+                  lsp-python-ms-executable system-ls-bin)
+          (setq lsp-python-ms-dir
+                (locate-user-emacs-file "data/mspyls")
+                lsp-python-ms-executable
+                (concat lsp-python-ms-dir
+                        "Microsoft.Python.LanguageServer"
+                        (and (eq system-type 'windows-nt) ".exe")))))))
 
   (add-hook 'python-mode-hook #'eldoc-mode)
 

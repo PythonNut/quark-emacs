@@ -42,7 +42,7 @@
             ('web-mode-hook        '(company-web-html))
             ('scheme-mode-hook     '(geiser-company-backend))
             ('texinfo-mode-hook    '(company-semantic))
-            ('python-mode-hook     '(company-anaconda))
+            ('python-mode-hook     '(company-lsp))
             ('text-mode-hook       '(company-ispell))
             ('livescript-mode-hook '(company-tide))
             ('go-mode-hook         '(company-go)))))))
