@@ -26,7 +26,9 @@
         evil-cycle-spacing
         evil-delete-backward-char-and-join
         evil-delete-backward-word-smart
+        evil-delete-whole-line
         evil-forward-char
+        evil-insert
         evil-next-line
         evil-next-visual-line
         evil-previous-line
@@ -34,8 +36,10 @@
         haskell-indentation-common-electric-command
         indent-for-tab-command
         julia-latexsub-or-indent
-        ps-mode-backward-delete-char
         julia-latexsub-or-indent
+        on-parens-forward-slurp
+        ps-mode-backward-delete-char
+        sh-assignment
         sp-backward-sexp
         sp-backward-unwrap-sexp
         sp-down-sexp
@@ -48,8 +52,10 @@
 (setq mc/cmds-to-run-once
       '(
         TeX-command-master
+        evil-goto-line
         evil-mouse-drag-region
         evil-normal-state
+        evil-window-middle
         handle-select-window
         hydra/projectile-tools/body
         ))
