@@ -213,6 +213,7 @@
   (my/onetime-setup vhl
     :hook 'first-change-hook
     :after-hook 'emacs-startup-hook
+    :condition (get-buffer-window)
     (volatile-highlights-mode +1))
 
   :config
@@ -233,9 +234,7 @@
                         'undo-tree-undo
                         'undo-tree-redo)
 
-  (vhl/install-extension 'my-undo-tree-highlights)
-
-  (volatile-highlights-mode +1))
+  (vhl/install-extension 'my-undo-tree-highlights))
 
 ;; ==================
 ;; Visible whitespace
