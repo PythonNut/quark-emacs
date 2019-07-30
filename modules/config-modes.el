@@ -81,6 +81,9 @@
                            predicate t nil nil
                            (when (funcall predicate sym-here)
                              (symbol-name sym-here)))))))
+(use-package macrostep
+  :defer-install t
+  :commands (macrostep-mode macrostep-expand))
 
 ;; =============================================================================
 ;; C-like ======================================================================
