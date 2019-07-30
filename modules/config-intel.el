@@ -3,6 +3,77 @@
 (require 'cl-lib)
 (require 'config-tramp)
 
+(define-minor-mode read-passwd-show-hash-mode :init-value t :global t)
+
+(el-patch-defun read-passwd (prompt &optional confirm default)
+  "Read a password, prompting with PROMPT, and return it.
+If optional CONFIRM is non-nil, read the password twice to make sure.
+Optional DEFAULT is a default password to use instead of empty input.
+
+This function echoes `.' for each character that the user types.
+You could let-bind `read-hide-char' to another hiding character, though.
+
+Once the caller uses the password, it can erase the password
+by doing (clear-string STRING)."
+  (if confirm
+      (let (success)
+        (while (not success)
+          (let ((first (read-passwd prompt nil default))
+                (second (read-passwd "Confirm password: " nil default)))
+            (if (equal first second)
+                (progn
+                  (and (arrayp second) (not (eq first second)) (clear-string second))
+                  (setq success first))
+              (and (arrayp first) (clear-string first))
+              (and (arrayp second) (clear-string second))
+              (message "Password not repeated accurately; please start over")
+              (sit-for 1))))
+        success)
+    ((el-patch-swap let let*)
+     ((el-patch-add ol)
+      (hide-chars-fun
+       (lambda (beg end _len)
+         (clear-this-command-keys)
+         (setq beg (min end (max (minibuffer-prompt-end)
+                                 beg)))
+         (move-overlay ol (point-max) (point-max))
+         (let ((len (- (point-max) (minibuffer-prompt-end)))
+               (hash (md5 (minibuffer-contents-no-properties))))
+           (overlay-put ol 'after-string
+                        (if (and (> len 10) read-passwd-show-hash-mode)
+                            (format "  [%d chars, #%s]"
+                                    len (substring hash 0 4)))))
+
+         (dotimes (i (- end beg))
+           (put-text-property (+ i beg) (+ 1 i beg)
+                              'display (string (or read-hide-char ?.))))))
+      minibuf)
+     (minibuffer-with-setup-hook
+         (lambda ()
+           (setq minibuf (current-buffer))
+           ;; Turn off electricity.
+           (setq-local post-self-insert-hook nil)
+           (setq-local buffer-undo-list t)
+           (setq-local select-active-regions nil)
+           (use-local-map read-passwd-map)
+           (setq-local inhibit-modification-hooks nil) ;bug#15501.
+	   (setq-local show-paren-mode nil)		;bug#16091.
+           (el-patch-add (setq ol (make-overlay (point-max) (point-max) nil t t)))
+           (add-hook 'after-change-functions hide-chars-fun nil 'local))
+       (unwind-protect
+           (let ((enable-recursive-minibuffers t)
+		 (read-hide-char (or read-hide-char ?.)))
+             (read-string prompt nil t default)) ; t = "no history"
+         (when (buffer-live-p minibuf)
+           (with-current-buffer minibuf
+             ;; Not sure why but it seems that there might be cases where the
+             ;; minibuffer is not always properly reset later on, so undo
+             ;; whatever we've done here (bug#11392).
+             (remove-hook 'after-change-functions hide-chars-fun 'local)
+             (kill-local-variable 'post-self-insert-hook)
+             ;; And of course, don't keep the sensitive data around.
+             (erase-buffer))))))))
+
 (use-package semantic
   :ensure nil
   :init
