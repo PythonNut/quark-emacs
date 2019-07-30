@@ -333,6 +333,7 @@ of (command, word) to be used by `flyspell-do-correct'."))
   (my/onetime-setup yasnippet
     :hook 'first-change-hook
     :after-hook 'emacs-startup-hook
+    :condition (get-buffer-window)
     (yas-global-mode +1))
 
   :config
