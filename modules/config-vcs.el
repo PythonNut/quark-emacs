@@ -154,6 +154,22 @@
                            (read-passwd it nil (user-login-name)))
                          "\n"))))))
 
+(use-package magit-diff
+  :ensure nil
+  :config
+  (defun magit-stage-smallest-hunk ()
+    (interactive)
+    (let ((prev nil))
+      (magit-diff-set-context
+       (lambda (cur)
+         (setq prev cur)
+         0))
+      (unwind-protect
+          (magit-apply)
+        (magit-diff-set-context (lambda (cur) prev)))))
+
+  (define-key magit-diff-mode-map (kbd "=") #'magit-stage-smallest-hunk))
+
 (with-eval-after-load 'git-rebase
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
