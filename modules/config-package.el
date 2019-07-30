@@ -70,7 +70,7 @@ second, floating-point values are rounded down to the nearest integer.)"
 
 (defun idle-job-add-require (sym)
   (push (lambda ()
-          (require sym))
+          (require sym nil t))
         idle-jobs))
 
 (defun idle-job-add-function (sym)
