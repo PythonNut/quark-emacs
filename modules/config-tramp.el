@@ -26,6 +26,20 @@
   (setq tramp-backup-directory-alist `((,(rx (zero-or-more anything))
                                         . ,my/tramp-backup-directory))))
 
+(with-eval-after-load 'tramp-sh
+  (eval-when-compile (require 'cl-lib))
+  (advice-add
+   'tramp-do-copy-or-rename-file-directly :filter-args
+   (my/defun-as-value nadvice/tramp-no-preserve-uid-gid-msdos (args)
+     (cl-destructuring-bind
+         (op filename newname ok-if-already-exists keep-date preserve-uid-gid)
+         args
+       (list op filename newname ok-if-already-exists keep-date
+             (unless (my/msdos-fs (if (tramp-tramp-file-p newname)
+                                      (file-remote-p newname 'localname)
+                                    newname))
+               preserve-uid-gid))))))
+
 ;; =================================
 ;; automatically request root access
 ;; =================================

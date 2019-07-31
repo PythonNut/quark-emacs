@@ -191,6 +191,21 @@ response as a no."
                                           temp-path
                                         (expand-file-name temp-path))))))))))
 
+(defun my/detect-fs-stat (fname)
+  (string-trim-right
+   (with-output-to-string
+     (with-current-buffer
+         standard-output
+       (call-process "stat" nil '(t nil) nil "-f" "-c" "%T" fname)))))
+
+(defun my/msdos-fs (fname)
+  (cond ((eq system-type 'gnu/linux)
+         (let* ((dir (my/file-name-first-existing-parent
+                      (expand-file-name fname)
+                      t))
+                (fs (my/detect-fs-stat dir)))
+           (member fs '("msdos"))))))
+
 (defun my/slow-fs (dir &optional exclude-remote)
   (cond ((and (file-remote-p dir) (not exclude-remote))
          t)
@@ -198,10 +213,7 @@ response as a no."
          (let* ((dir (my/file-name-first-existing-parent
                       (expand-file-name dir)
                       t))
-                (fs (with-output-to-string
-                      (with-current-buffer
-                          standard-output
-                        (call-process "stat" nil '(t nil) nil "-f" "-c" "%T" dir)))))
+                (fs (my/detect-fs-stat dir)))
            (member fs '("fuse.sshfs"))))
         ((eq system-type 'darwin)
          (let* ((dir (my/file-name-first-existing-parent
