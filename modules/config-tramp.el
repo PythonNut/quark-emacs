@@ -111,6 +111,39 @@
       (advice-remove 'find-file-noselect-1
                      #'su--nadvice-find-file-noselect-1)))
 
-  (su-mode +1))
+  (su-mode +1)
+
+  :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
+
+  (el-patch-feature su)
+
+  (defun nadvice/su-disable-maybe-setup (flag)
+    (if (and (not flag) (bound-and-true-p su-auto-save-mode))
+        (su-auto-save-mode -1)))
+
+  (el-patch-define-minor-mode su-auto-save-mode
+    "Automatically save buffer as root"
+    :lighter su-auto-save-mode-lighter
+    (if su-auto-save-mode
+        ;; Ensure that su-auto-save-mode is visible by moving it to the
+        ;; beginning of the minor mode list
+        (progn
+          (el-patch-add
+            (advice-add 'set-buffer-modified-p :before
+                        #'nadvice/su-disable-maybe-setup))
+          (let ((su-auto-save-mode-alist-entry
+                 (assoc 'su-auto-save-mode minor-mode-alist)))
+            (setq minor-mode-alist
+                  (delete su-auto-save-mode-alist-entry minor-mode-alist))
+            (push su-auto-save-mode-alist-entry minor-mode-alist))
+          (add-hook 'before-save-hook #'su--before-save-hook nil t))
+
+      (el-patch-add
+        (advice-remove 'set-buffer-modified-p
+                       #'nadvice/su-disable-maybe-setup))
+      (remove-hook 'before-save-hook #'su--before-save-hook t))))
 
 (provide 'config-tramp)
