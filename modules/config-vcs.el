@@ -537,6 +537,7 @@ Otherwise behave as if called interactively.
       (ad-deactivate 'delete-file))))
 
   :init
+  (setq projectile-mode-line-prefix (if (display-graphic-p) " ↠" " /"))
   (projectile-mode +1)
 
   :config
@@ -551,8 +552,7 @@ Otherwise behave as if called interactively.
         projectile-cache-file
         (locate-user-emacs-file "data/.projectile.cache")
         projectile-completion-system 'ivy
-        projectile-mode-line
-        '(:eval (format (if (display-graphic-p) " ↠" " /"))))
+        projectile-dynamic-mode-line nil)
 
   ;; Enable the mode again now that we have all the supporting hooks
   ;; and stuff defined.
