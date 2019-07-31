@@ -441,14 +441,6 @@
         (bufs (list (buffer-name (current-buffer))))
         (projectile-root (ignore-errors (projectile-project-p))))
 
-    (helm-attrset 'moccur-buffers bufs helm-source-occur)
-    (helm-set-local-variable 'helm-multi-occur-buffer-list bufs)
-    (helm-set-local-variable 'helm-multi-occur-buffer-tick
-                             (mapcar (lambda (buf)
-                                       (buffer-chars-modified-tick
-                                        (get-buffer buf)))
-                                     bufs))
-
     (helm :sources
           (append
            (if (and (featurep 'semantic)
