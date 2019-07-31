@@ -77,7 +77,10 @@ Return either a string or nil."
     (use-package lsp-python-ms
       :init
       (require 'lsp-python-ms)
-      (add-hook 'python-mode-hook #'lsp-deferred)
+      (add-hook 'python-mode-hook
+                (my/defun-as-value my/maybe-lsp (&rest _)
+                  (unless (file-remote-p buffer-file-name)
+                    (lsp-deferred))))
 
       :config
       ;; when on arch, check if we can use the system ls
