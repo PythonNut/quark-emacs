@@ -143,7 +143,8 @@ extra indent = 2
   (ws-butler-global-mode +1))
 
 (use-package dtrt-indent
-  :init (add-hook 'find-file-hook #'dtrt-indent-mode))
+  :init (add-hook 'find-file-hook #'dtrt-indent-mode)
+  :config (diminish 'dtrt-indent-mode))
 
 ;; ws-butler also loads highlight-changes-mode
 (add-hook
