@@ -1540,7 +1540,9 @@
   (use-package lsp-ui
     :commands lsp-ui-mode
     :init
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode)))
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+    (when (memq window-system '(mac ns))
+      (setq lsp-ui-doc-use-childframe nil))))
 
 (use-package company-lsp :commands company-lsp)
 
