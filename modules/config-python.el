@@ -5,6 +5,33 @@
 ;; Python ======================================================================
 ;; =============================================================================
 
+(defun my/python-find-virtualenv (&optional dir)
+  "Find a virtualenv corresponding to the current buffer.
+Return either a string or nil."
+  (let ((default-directory (or dir default-directory)))
+    ;; Stolen from raxod502/radian
+    (cl-block nil
+      (when (and (executable-find "poetry")
+                 (locate-dominating-file default-directory "pyproject.toml"))
+        (with-temp-buffer
+          ;; May create virtualenv, but whatever.
+          (when (= 0 (call-process
+                      "poetry" nil '(t nil) nil "run" "which" "python"))
+            (goto-char (point-min))
+            (when (looking-at "\\(.+\\)/bin/python\n")
+              (let ((venv (match-string 1)))
+                (when (file-directory-p venv)
+                  (cl-return venv)))))))
+      (when (and (executable-find "pipenv")
+                 (locate-dominating-file default-directory "Pipfile"))
+        (with-temp-buffer
+          ;; May create virtualenv, but whatever.
+          (when (= 0 (call-process "pipenv" nil '(t nil) nil "--venv"))
+            (goto-char (point-min))
+            (let ((venv (string-trim (buffer-string))))
+              (when (file-directory-p venv)
+                (cl-return venv)))))))))
+
 (with-eval-after-load 'pythonic
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -35,6 +62,17 @@
 
   (advice-add 'pythonic-remote-host :override #'nadvice/pythonic-remote-host))
 
+(use-package pyvenv
+  :config
+  (defun nadvice/pyvenv-activate (&optional arg)
+    (interactive "P")
+    (let ((default-venv (my/python-find-virtualenv)))
+      (if (or (not default-venv) (consp (car arg)))
+          (list (read-directory-name "Activate venv: "))
+        (list default-venv))))
+
+  (advice-add 'pyvenv-activate :filter-args #'nadvice/pyvenv-activate))
+
 (use-package python
   :ensure nil
   :config
@@ -45,33 +83,6 @@
               (setq mode-name "Py")))
 
   (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
-
-  (defun my/python-find-virtualenv (&optional dir)
-    "Find a virtualenv corresponding to the current buffer.
-Return either a string or nil."
-    (let ((default-directory (or dir default-directory)))
-      ;; Stolen from raxod502/radian
-      (cl-block nil
-        (when (and (executable-find "poetry")
-                   (locate-dominating-file default-directory "pyproject.toml"))
-          (with-temp-buffer
-            ;; May create virtualenv, but whatever.
-            (when (= 0 (call-process
-                        "poetry" nil '(t nil) nil "run" "which" "python"))
-              (goto-char (point-min))
-              (when (looking-at "\\(.+\\)/bin/python\n")
-                (let ((venv (match-string 1)))
-                  (when (file-directory-p venv)
-                    (cl-return venv)))))))
-        (when (and (executable-find "pipenv")
-                   (locate-dominating-file default-directory "Pipfile"))
-          (with-temp-buffer
-            ;; May create virtualenv, but whatever.
-            (when (= 0 (call-process "pipenv" nil '(t nil) nil "--venv"))
-              (goto-char (point-min))
-              (let ((venv (string-trim (buffer-string))))
-                (when (file-directory-p venv)
-                  (cl-return venv)))))))))
 
   ;; Use the Microsoft python ls if we can
   (when (executable-find "dotnet")
