@@ -330,11 +330,16 @@ of (command, word) to be used by `flyspell-do-correct'."))
         yas-alias-to-yas/prefix-p nil
         yas-use-menu nil)
 
+  (defun my/yas-init ()
+    (yas-global-mode +1))
+
   (my/onetime-setup yasnippet
     :hook 'first-change-hook
     :after-hook 'emacs-startup-hook
     :condition (get-buffer-window)
-    (yas-global-mode +1))
+    (my/yas-init))
+
+
 
   :config
   (set-face-attribute 'yas-field-highlight-face nil
@@ -361,8 +366,6 @@ of (command, word) to be used by `flyspell-do-correct'."))
   (define-key yas-keymap (kbd "<tab>") 'yas-company-complete-or-next-field)
   (define-key yas-keymap (kbd "TAB") 'yas-company-complete-or-next-field)
 
-  (yas-reload-all)
-
   (add-to-list
    'yas-prompt-functions
    (my/defun-as-value my/ivy-yasnippet (_prompt choices &optional display-fn)
@@ -374,8 +377,11 @@ of (command, word) to be used by `flyspell-do-correct'."))
            (if (null result)
                (signal 'quit "user quit!")
              (cdr (assoc result cands))))
-       nil)))
+       nil))))
 
+(use-package autoinsert
+  :ensure nil
+  :init
   ;; also use yasnippets for new file templates
   (defvar my/yas-template-dir (locate-user-emacs-file "data/templates"))
 
@@ -401,21 +407,20 @@ of (command, word) to be used by `flyspell-do-correct'."))
         (when file-regex
           (push (cons (intern file-regex)
                       (vector filename #'my/yatemplate-expand-yas-buffer))
-                auto-insert-alist))))))
+                auto-insert-alist)))))
 
-(use-package autoinsert
-  :ensure nil
-  :init
+  (defvar auto-insert-alist nil)
+  (my/yatemplate-fill-alist)
+
   (add-hook
    'after-change-major-mode-hook
    (my/defun-as-value my/maybe-auto-insert ()
-     (when (= (point-min) (point-max))
+     (when (and (= (point-min) (point-max))
+                (assq major-mode auto-insert-alist))
        (auto-insert))))
 
   :config
-  (require 'yasnippet)
-  (setq auto-insert-alist nil)
-  (my/yatemplate-fill-alist))
+  (my/yas-init))
 
 
 ;;; ==================================
