@@ -120,6 +120,11 @@ when `auto-save-mode' is invoked manually.")
      (save-some-buffers t))))
 
 (use-package autorevert
+  :init
+  (my/onetime-setup auto-revert
+    :hook 'find-file-hook
+    (global-auto-revert-mode +1))
+
   :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -129,10 +134,6 @@ when `auto-save-mode' is invoked manually.")
         auto-revert-remote-files t
         auto-revert-verbose nil
         auto-revert-mode-text nil))
-
-(my/onetime-setup auto-revert
-  :hook 'find-file-hook
-  (global-auto-revert-mode +1))
 
 (use-package backup-walker
   :defer-install t
