@@ -282,7 +282,9 @@ is 'toggle."
 
   (flyspell-lazy-mode +1)
   :config
-  (setq flyspell-lazy-idle-seconds 1))
+  (setq flyspell-lazy-idle-seconds 1
+        flyspell-lazy-window-idle-seconds 10
+        flyspell-lazy-disallow-buffers nil))
 
 (use-package flyspell
   :ensure nil
@@ -294,9 +296,6 @@ is 'toggle."
     (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
   :config
-  (setq flyspell-lazy-window-idle-seconds 10
-        flyspell-lazy-disallow-buffers nil)
-
   (define-key flyspell-mode-map (kbd "C-.") nil)
   (define-key flyspell-mode-map (kbd "C-,") nil)
 
