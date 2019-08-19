@@ -53,39 +53,192 @@ second, floating-point values are rounded down to the nearest integer.)"
 
 (defun idle-job-run-next ()
   "Load symbols from `idle-require-symbols' until input occurs."
-  (let (symbol)
-    (while (and idle-jobs
-                (not (input-pending-p)))
-      (cl-letf* ((old-load (symbol-function #'load))
-                 ((symbol-function #'load)
-                  (lambda (file &optional noerror _nomessage &rest args)
-                    (apply old-load
-                           file
-                           noerror
-                           (not (eq debug-on-error 'startup))
-                           args))))
-        (with-demoted-errors "Idle job error: %s"
-          (funcall (pop idle-jobs))))
-      (my/sit-for 0.1))))
+  (while (and idle-jobs
+              (not (input-pending-p)))
+    (cl-letf* ((old-load (symbol-function #'load))
+               ((symbol-function #'load)
+                (lambda (file &optional noerror _nomessage &rest args)
+                  (apply old-load
+                         file
+                         noerror
+                         (not (eq debug-on-error 'startup))
+                         args))))
+      (with-demoted-errors "Idle job error: %s"
+        (funcall (pop idle-jobs))))))
 
-(defun idle-job-add-require (sym)
-  (push (lambda ()
-          (require sym nil t))
-        idle-jobs))
+(defun idle-job-add-require (sym &optional append)
+  (cl-letf ((fun (lambda ()
+                   (let ((start-time (current-time))
+                         (verbose my/flag-debug-init))
+                     (unless (require sym nil t)
+                       (message "failed to load %s" sym))
 
-(defun idle-job-add-function (sym)
-  (push sym idle-jobs))
+                     (when verbose
+                       (message "%.3f loaded %s"
+                                (float-time (time-subtract
+                                             (current-time)
+                                             start-time))
+                                sym))))))
+    (if append
+        (setq idle-jobs (append idle-jobs (list fun)))
+      (push fun idle-jobs))))
+
+(defun idle-job-add-function (sym &optional append)
+  (cl-letf ((fun (lambda ()
+                   (let ((start-time (current-time))
+                         (verbose my/flag-debug-init))
+                     (funcall sym)
+                     (when verbose
+                       (message "%.3f ran %S"
+                                (float-time (time-subtract
+                                             (current-time)
+                                             start-time))
+                                sym))))))
+    (if append
+        (setq idle-jobs (append idle-jobs (list fun)))
+      (push fun idle-jobs))))
+
+(idle-job-add-function (my/defun-as-value my/ws-butler-init ()
+                         (ws-butler-global-mode +1)))
+
+(idle-job-add-require 'magit)
+
+(defmacro my/load-magit-submodule (sym)
+  `(idle-job-add-function
+    (my/defun-as-value
+        ,(intern (format "my/lazy-load-%s" (symbol-name (cadr sym)))) ()
+      (cl-letf* ((old-require (symbol-function #'require))
+                 ((symbol-function #'require)
+                  (lambda (feature &optional filename noerror)
+                    (unless (eq feature 'magit)
+                      (funcall old-require
+                               feature
+                               filename
+                               noerror)))))
+        (unless (require ,sym nil t)
+          (message "failed to load %s" ,sym))))))
+
+(my/load-magit-submodule 'magit-bookmark)
+(my/load-magit-submodule 'magit-submodule)
+(my/load-magit-submodule 'magit-obsolete)
+(my/load-magit-submodule 'magit-blame)
+(my/load-magit-submodule 'magit-stash)
+(my/load-magit-submodule 'magit-bisect)
+(my/load-magit-submodule 'magit-push)
+(my/load-magit-submodule 'magit-pull)
+(my/load-magit-submodule 'magit-fetch)
+(my/load-magit-submodule 'magit-clone)
+(my/load-magit-submodule 'magit-remote)
+(my/load-magit-submodule 'magit-commit)
+(my/load-magit-submodule 'magit-sequence)
+(my/load-magit-submodule 'magit-notes)
+(my/load-magit-submodule 'magit-worktree)
+(my/load-magit-submodule 'magit-tag)
+(my/load-magit-submodule 'magit-merge)
+(my/load-magit-submodule 'magit-branch)
+(my/load-magit-submodule 'magit-reset)
+(my/load-magit-submodule 'magit-files)
+(my/load-magit-submodule 'magit-refs)
+(my/load-magit-submodule 'magit-status)
+
+(idle-job-add-require 'package)
+(idle-job-add-require 'magit-repos)
+(idle-job-add-require 'magit-apply)
+(idle-job-add-require 'magit-wip)
+(idle-job-add-require 'magit-log)
+(idle-job-add-require 'magit-diff)
+(idle-job-add-require 'magit-core)
+(idle-job-add-require 'magit-autorevert)
+(idle-job-add-require 'magit-margin)
+(idle-job-add-require 'magit-mode)
+(idle-job-add-require 'transient)
+(idle-job-add-require 'git-commit)
+(idle-job-add-require 'log-edit)
+(idle-job-add-require 'message)
+(idle-job-add-require 'rmc)
+(idle-job-add-require 'puny)
+(idle-job-add-require 'rfc822)
+(idle-job-add-require 'mml)
+(idle-job-add-require 'mml-sec)
+(idle-job-add-require 'epa)
+(idle-job-add-require 'epg)
+(idle-job-add-require 'gnus-util)
+(idle-job-add-require 'mm-decode)
+(idle-job-add-require 'mm-bodies)
+(idle-job-add-require 'mail-parse)
+(idle-job-add-require 'mailabbrev)
+(idle-job-add-require 'mail-utils)
+(idle-job-add-require 'gmm-utils)
+(idle-job-add-require 'mailheader)
+(idle-job-add-require 'add-log)
+(idle-job-add-require 'pcvs-util)
+(idle-job-add-require 'with-editor)
+
+(idle-job-add-require 'volatile-highlights)
+
+(idle-job-add-function #'my/yas-init)
+(idle-job-add-require 'yasnippet)
+
+(idle-job-add-require 'company)
+
+(idle-job-add-require 'multiple-cursors)
+(idle-job-add-require 'multiple-cursors-core)
+
+(idle-job-add-require 'ace-jump-helm-line)
+(idle-job-add-require 'avy)
+
+(idle-job-add-require 'expand-region)
+(idle-job-add-require 'er-basic-expansions)
+(idle-job-add-require 'expand-region-core)
+(idle-job-add-require 'expand-region-custom)
+(idle-job-add-require 'evil-snipe)
+
+(idle-job-add-require 'counsel)
+(idle-job-add-require 'swiper)
+(idle-job-add-require 'ivy)
+(idle-job-add-require 'ffap)
+(idle-job-add-require 'dired)
+(idle-job-add-require 'dired-loaddefs)
+
+(idle-job-add-require 'helm-projectile)
+(idle-job-add-require 'projectile)
+(idle-job-add-require 'grep)
+(idle-job-add-require 'compile)
+(idle-job-add-require 'ibuf-ext)
+(idle-job-add-require 'ibuffer)
+
+(idle-job-add-require 'helm-semantic)
+
+(idle-job-add-require 'helm-for-files)
+(idle-job-add-require 'helm-bookmark)
+(idle-job-add-require 'bookmark)
+(idle-job-add-require 'browse-url)
+(idle-job-add-require 'xml)
+
+(idle-job-add-require 'url)
+(idle-job-add-require 'url-privacy)
+(idle-job-add-require 'url-expand)
+(idle-job-add-require 'url-history)
+
+(idle-job-add-require 'helm-ring)
+(idle-job-add-require 'helm-elisp)
+(idle-job-add-require 'helm-eval)
+(idle-job-add-require 'edebug)
+(idle-job-add-require 'helm-info)
 
 (idle-job-add-require 'helm-files)
-(idle-job-add-require 'helm-ring)
-(idle-job-add-require 'helm-projectile)
-(idle-job-add-require 'helm-semantic)
-(idle-job-add-require 'counsel)
-(idle-job-add-require 'which-key)
-(idle-job-add-require 'evil-snipe)
-(idle-job-add-require 'avy)
-(idle-job-add-require 'ace-jump-helm-line)
-(idle-job-add-require 'multiple-cursors)
+(idle-job-add-require 'helm-buffers)
+(idle-job-add-require 'helm-occur)
+(idle-job-add-require 'helm-tags)
+(idle-job-add-require 'helm-locate)
+(idle-job-add-require 'helm-grep)
+(idle-job-add-require 'helm-types)
+(idle-job-add-require 'helm-utils)
+(idle-job-add-require 'helm-help)
+
+(idle-job-add-require 'helm)
+(idle-job-add-require 'helm-source)
+(idle-job-add-require 'helm-lib)
 
 (straight-use-package '(use-package
                          :type git

@@ -32,6 +32,7 @@
       mode-line-end-spaces nil
       mouse-autoselect-window 0.3
       mouse-drag-copy-region nil
+      my/flag-debug-init (eq debug-on-error 'startup)
       right-margin-width 0
       ring-bell-function 'ignore
       save-interprogram-paste-before-kill t

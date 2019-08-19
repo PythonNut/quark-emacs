@@ -487,7 +487,7 @@ where it was when you previously visited the same file."
     (add-hook 'emacs-startup-hook #'send-all-files-to-server))
 
   (when (display-graphic-p)
-    (idle-job-add-function #'server-start))
+    (idle-job-add-function #'server-start 'append))
 
   :config
   (defun nadvice/server-mode (old-fun &rest args)
@@ -508,7 +508,7 @@ where it was when you previously visited the same file."
              atomic-chrome-stop-server)
   :init
   (when (display-graphic-p)
-    (idle-job-add-function #'atomic-chrome-start-server))
+    (idle-job-add-function #'atomic-chrome-start-server 'append))
 
   :config
   ;; This makes sense because the browser is in "insert" state, so
