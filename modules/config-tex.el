@@ -137,6 +137,25 @@
                             t))))))
         count)))
 
+  (el-patch-defun TeX-process-check (name)
+    "Check if a process for the TeX document NAME already exist.
+If so, give the user the choice of aborting the process or the current
+command."
+    (let (process)
+      (while (and (setq process (TeX-process name))
+                  (eq (process-status process) 'run))
+        (el-patch-swap
+          (cond
+           ((yes-or-no-p (concat "Process `"
+                                 (process-name process)
+                                 "' for document `"
+                                 name
+                                 "' running, kill it? "))
+            (delete-process process))
+           ((eq (process-status process) 'run)
+            (error "Cannot have two processes for the same document")))
+          (delete-process process)))))
+
   (use-package magic-latex-buffer
     :defer-install t
     :commands (magic-latex-buffer)
