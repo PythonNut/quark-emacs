@@ -514,13 +514,14 @@ where it was when you previously visited the same file."
   (add-hook
    'atomic-chrome-edit-done-hook
    (my/defun-as-value my/atomic-chrome-focus-browser ()
-     (when-let* ((srv (websocket-server-conn
-                       (atomic-chrome-get-websocket (current-buffer))))
-                 (srv-ghost (bound-and-true-p atomic-chrome-server-ghost-text))
-                 (srv-atomic (bound-and-true-p atomic-chrome-server-atomic-chrome))
-                 (window-name (cond
-                               ((eq srv srv-ghost) "Firefox")
-                               ((eq srv srv-atomic) "Google Chrome"))))
+     (when-let*
+         ((srv (websocket-server-conn
+                (atomic-chrome-get-websocket (current-buffer))))
+          (window-name
+           (cond ((eq srv (bound-and-true-p atomic-chrome-server-ghost-text))
+                  "Firefox")
+                 ((eq srv (bound-and-true-p atomic-chrome-server-atomic-chrome))
+                  "Google Chrome"))))
        (cond ((memq window-system '(mac ns))
               (call-process "open" nil nil nil "-a" window-name))
              ((and (eq window-system 'x) (executable-find "wmctrl"))
