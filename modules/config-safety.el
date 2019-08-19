@@ -145,6 +145,16 @@ when `auto-save-mode' is invoked manually.")
   :defer-install t
   :commands (real-auto-save-mode)
   :config
-  (setq real-auto-save-interval 1))
+  (setq real-auto-save-interval 0.3)
+  (defun nadvice/real-auto-save-start-timer ()
+    "Start real-auto-save-timer."
+    (setq real-auto-save-timer
+          (run-with-idle-timer real-auto-save-interval
+                               t
+                               'real-auto-save-buffers)))
+
+  (advice-add
+   'real-auto-save-start-timer :override
+   #'nadvice/real-auto-save-start-timer))
 
 (provide 'config-safety)
