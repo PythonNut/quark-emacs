@@ -31,7 +31,7 @@
                        (not (eq debug-on-error 'startup))
                        args))))
 
-    (message "[                ]")
+    (message "[               ]")
 
     (defvar my/slow-device nil)
 
