@@ -511,20 +511,78 @@ where it was when you previously visited the same file."
     (idle-job-add-function #'atomic-chrome-start-server))
 
   :config
+  ;; At some point, this should go somewhere more general
+  (defun my/get-active-window-id ()
+    (cond ((executable-find "xprop")
+           (let ((output
+                  (with-output-to-string
+                    (with-current-buffer
+                        standard-output
+                      (call-process "xprop" nil t nil
+                                    "-root"
+                                    "_NET_ACTIVE_WINDOW")))))
+             (when (string-match (rx space "0x" (group (one-or-more hex)) "\n")
+                                 output)
+               (string-to-number (match-string 1 output) 16))))
+          ((executable-find "xdotool")
+           (string-to-number
+            (string-trim
+             (with-output-to-string
+               (with-current-buffer
+                   standard-output
+                 (call-process "xdotool" nil t nil
+                               "getactivewindow"))))))))
+
+  (defun my/get-emacs-window-id ()
+    (string-to-number (frame-parameter (window-frame) 'outer-window-id)))
+
+  (defun my/activate-window-by-id (wid)
+    (cond ((executable-find "wmctrl")
+           (call-process "wmctrl" nil nil nil
+                         "-i"
+                         "-a"
+                         (format "0x%08X" wid)))
+          ((executable-find "xdotool")
+           (call-process "xdotool" nil nil nil
+                         "windowactivate"
+                         (number-to-string wid)))))
+
+  (defun my/activate-emacs ()
+    ;; TODO: support more windowing systems, although x-focus-frame is
+    ;; likely enough elsewhere
+    (cond ((eq window-system 'x)
+           (let ((target-wid (my/get-emacs-window-id))
+                 (active-wid (my/get-active-window-id)))
+             (unless (eq target-wid active-wid)
+               (my/activate-window-by-id target-wid))))))
+
+  ;; Sometimes, the standard x-focus-frame is not enough
+  (add-hook 'atomic-chrome-edit-mode-hook #'my/activate-emacs)
+
+  (defvar my/atomic-chrome-browser-wid nil)
+  (advice-add 'atomic-chrome-show-edit-buffer :before
+              (my/defun-as-value my/atomic-chrome-stash-browser-wid (&rest _)
+                (setq my/atomic-chrome-browser-wid (my/get-active-window-id))))
+
   (add-hook
    'atomic-chrome-edit-done-hook
    (my/defun-as-value my/atomic-chrome-focus-browser ()
-     (when-let*
-         ((srv (websocket-server-conn
-                (atomic-chrome-get-websocket (current-buffer))))
-          (window-name
-           (cond ((eq srv (bound-and-true-p atomic-chrome-server-ghost-text))
-                  "Firefox")
-                 ((eq srv (bound-and-true-p atomic-chrome-server-atomic-chrome))
-                  "Google Chrome"))))
-       (cond ((memq window-system '(mac ns))
-              (call-process "open" nil nil nil "-a" window-name))
-             ((and (eq window-system 'x) (executable-find "wmctrl"))
-              (call-process "wmctrl" nil nil nil "-a" window-name)))))))
+     (if my/atomic-chrome-browser-wid
+         (my/activate-window-by-id my/atomic-chrome-browser-wid)
+       ;; Fall back to heuristic using window names
+       (when-let*
+           ((srv (websocket-server-conn
+                  (atomic-chrome-get-websocket (current-buffer))))
+            (window-name
+             (cond ((eq srv (bound-and-true-p
+                             atomic-chrome-server-ghost-text))
+                    "Firefox")
+                   ((eq srv (bound-and-true-p
+                             atomic-chrome-server-atomic-chrome))
+                    "Google Chrome"))))
+         (cond ((memq window-system '(mac ns))
+                (call-process "open" nil nil nil "-a" window-name))
+               ((and (eq window-system 'x) (executable-find "wmctrl"))
+                (call-process "wmctrl" nil nil nil "-a" window-name))))))))
 
 (provide 'config-desktop)
