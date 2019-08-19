@@ -511,6 +511,10 @@ where it was when you previously visited the same file."
     (idle-job-add-function #'atomic-chrome-start-server))
 
   :config
+  ;; This makes sense because the browser is in "insert" state, so
+  ;; this keeps things consistent.
+  (evil-set-initial-state 'atomic-chrome-edit-mode 'insert)
+
   ;; At some point, this should go somewhere more general
   (defun my/get-active-window-id ()
     (cond ((executable-find "xprop")
