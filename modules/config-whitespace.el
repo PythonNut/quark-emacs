@@ -135,12 +135,12 @@ extra indent = 2
   (set-buffer-file-coding-system 'utf-8))
 
 (use-package ws-butler
-  :diminish (ws-butler-mode ." β"))
-
-;; autoload ws-butler on file open
-(my/onetime-setup ws-butler
-  :hook 'find-file-hook
-  (ws-butler-global-mode +1))
+  :diminish (ws-butler-mode ." β")
+  :init
+  ;; autoload ws-butler on file open
+  (my/onetime-setup ws-butler
+    :hook 'find-file-hook
+    (ws-butler-global-mode +1)))
 
 (use-package dtrt-indent
   :init (add-hook 'find-file-hook #'dtrt-indent-mode)
