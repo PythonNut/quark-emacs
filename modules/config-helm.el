@@ -31,6 +31,12 @@
         helm-candidate-separator (make-string 20 ?─)
         helm-inherit-input-method nil))
 
+(use-package helm-info
+  :ensure nil
+  :init
+  (setq helm-default-info-index-list
+        (eval-when-compile (helm-get-info-files))))
+
 (use-package helm-mode
   :ensure nil
   :config
