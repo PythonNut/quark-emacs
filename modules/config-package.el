@@ -228,6 +228,7 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'url-privacy)
 (idle-job-add-require 'url-expand)
 (idle-job-add-require 'url-history)
+(idle-job-add-require 'mailcap)
 
 (idle-job-add-require 'helm-ring)
 (idle-job-add-require 'helm-elisp)
