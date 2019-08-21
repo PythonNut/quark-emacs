@@ -339,9 +339,13 @@ second, floating-point values are rounded down to the nearest integer.)"
           (funcall use-package-ensure-function
                    name ensure state :byte-compile)))
        ;;  or else wait until runtime.
-       (t (push `(,use-package-ensure-function
-                  ',name ',ensure ',state :ensure)
-                body)))
+       (t (el-patch-wrap 2
+            (unless (and (not ensure)
+                         (eq use-package-ensure-function
+                             'straight-use-package-ensure-function))
+              (push `(,use-package-ensure-function
+                      ',name ',ensure ',state :ensure)
+                    body)))))
       body)))
 
 (autoload 'use-package-install-deferred-package "use-package"
