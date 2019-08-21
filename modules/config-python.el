@@ -230,4 +230,10 @@ Return either a string or nil."
            (funcall old-fun "sage"))))
      (funcall old-fun arg))))
 
+(use-package hy-mode
+  :defer-install t
+  :commands (hy-mode)
+  :mode ("\\.hy\\'" . hy-mode)
+  :interpreter ("hy" . hy-mode))
+
 (provide 'config-python)
