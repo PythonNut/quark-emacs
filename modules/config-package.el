@@ -182,6 +182,13 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'company)
 
 (idle-job-add-require 'multiple-cursors)
+(idle-job-add-require 'mc-hide-unmatched-lines-mode)
+(idle-job-add-require 'mc-separate-operations)
+(idle-job-add-require 'rectangular-region-mode)
+(idle-job-add-require 'mc-mark-pop)
+(idle-job-add-require 'mc-mark-more)
+(idle-job-add-require 'mc-cycle-cursors)
+(idle-job-add-require 'mc-edit-lines)
 (idle-job-add-require 'multiple-cursors-core)
 
 (idle-job-add-require 'ace-jump-helm-line)
