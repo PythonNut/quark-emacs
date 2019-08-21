@@ -35,7 +35,9 @@
   :ensure nil
   :init
   (setq helm-default-info-index-list
-        (eval-when-compile (helm-get-info-files))))
+        (eval-when-compile
+          (require 'helm-info)
+          (helm-get-info-files))))
 
 (use-package helm-mode
   :ensure nil
