@@ -196,6 +196,8 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'counsel)
 (idle-job-add-require 'swiper)
 (idle-job-add-require 'ivy)
+(idle-job-add-require 'colir)
+(idle-job-add-require 'ivy-overlay)
 (idle-job-add-require 'ffap)
 (idle-job-add-require 'dired)
 (idle-job-add-require 'dired-loaddefs)
