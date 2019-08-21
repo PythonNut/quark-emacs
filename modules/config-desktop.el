@@ -508,6 +508,10 @@ where it was when you previously visited the same file."
              atomic-chrome-stop-server)
   :init
   (when (display-graphic-p)
+    (my/onetime-setup atomic-chrome
+      :hook 'focus-out-hook
+      (atomic-chrome-start-server))
+
     (idle-job-add-function #'atomic-chrome-start-server 'append))
 
   :config
