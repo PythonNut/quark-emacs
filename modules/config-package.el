@@ -163,6 +163,8 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'epa)
 (idle-job-add-require 'epg)
 (idle-job-add-require 'gnus-util)
+(idle-job-add-require 'rmail)
+(idle-job-add-require 'rmail-loaddefs)
 (idle-job-add-require 'mm-decode)
 (idle-job-add-require 'mm-bodies)
 (idle-job-add-require 'mail-parse)
