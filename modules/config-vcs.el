@@ -334,7 +334,13 @@ if ARG is omitted or nil.
   (add-hook 'find-file-hook #'smerge-mode)
 
   :config
-  (diminish 'smerge-mode))
+  (diminish 'smerge-mode)
+  (set-face-attribute 'smerge-refined-added nil
+                      :background nil
+                      :inherit 'magit-diff-added-highlight)
+  (set-face-attribute 'smerge-refined-removed nil
+                      :background nil
+                      :inherit 'magit-diff-removed-highlight))
 
 (use-package projectile
   :init
