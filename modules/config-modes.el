@@ -1534,6 +1534,7 @@
   ;; :hook (python-mode . lsp-deferred)
   :commands (lsp-mode)
   :config
+  (require 'yasnippet)
   (setq lsp-prefer-flymake nil
         lsp-auto-guess-root t)
 
