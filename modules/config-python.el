@@ -5,32 +5,57 @@
 ;; Python ======================================================================
 ;; =============================================================================
 
+(defun my/local-executable-find (name)
+  ;; TODO: This should be moved out of config-python
+  (if (tramp-tramp-file-p default-directory)
+      (with-parsed-tramp-file-name default-directory vec
+        (tramp-find-executable
+         vec "poetry" (tramp-get-remote-path vec) t t))
+    (executable-find name)))
+
+(defun my/tramp-build-name-from-localname (localname)
+  (with-parsed-tramp-file-name default-directory parsed
+    (tramp-make-tramp-file-name
+     parsed-method
+     parsed-user
+     parsed-domain
+     parsed-host
+     parsed-port
+     localname
+     parsed-hop)))
+
 (defun my/python-find-virtualenv (&optional dir)
   "Find a virtualenv corresponding to the current buffer.
 Return either a string or nil."
   (let ((default-directory (or dir default-directory)))
     ;; Stolen from raxod502/radian
     (cl-block nil
-      (when (and (executable-find "poetry")
+      (when (and (my/local-executable-find "poetry")
                  (locate-dominating-file default-directory "pyproject.toml"))
         (with-temp-buffer
           ;; May create virtualenv, but whatever.
-          (when (= 0 (call-process
+          (when (= 0 (process-file
                       "poetry" nil '(t nil) nil "run" "which" "python"))
             (goto-char (point-min))
             (when (looking-at "\\(.+\\)/bin/python\n")
-              (let ((venv (match-string 1)))
-                (when (file-directory-p venv)
-                  (cl-return venv)))))))
-      (when (and (executable-find "pipenv")
+              (let* ((path (match-string 1))
+                     (universal-path (if (tramp-tramp-file-p default-directory)
+                                         (my/tramp-build-name-from-localname path)
+                                       path)))
+                (when (file-directory-p universal-path)
+                  (cl-return universal-path)))))))
+      (when (and (my/local-executable-find "pipenv")
                  (locate-dominating-file default-directory "Pipfile"))
         (with-temp-buffer
           ;; May create virtualenv, but whatever.
-          (when (= 0 (call-process "pipenv" nil '(t nil) nil "--venv"))
+          (when (= 0 (process-file "pipenv" nil '(t nil) nil "--venv"))
             (goto-char (point-min))
-            (let ((venv (string-trim (buffer-string))))
-              (when (file-directory-p venv)
-                (cl-return venv)))))))))
+            (let* ((path (string-trim (buffer-string)))
+                   (universal-path (if (tramp-tramp-file-p default-directory)
+                                       (my/tramp-build-name-from-localname path)
+                                     path)))
+              (when (file-directory-p universal-path)
+                (cl-return universal-path)))))))))
 
 (with-eval-after-load 'pythonic
   (eval-when-compile
