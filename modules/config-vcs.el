@@ -197,7 +197,7 @@
 
   (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
     "
-_p_ ← → _n_ Keep _a_ll _b_ase _m_ine _o_ther | _C_ombine _E_diff _R_efine _r_esolve
+_p_ ← → _n_ Keep _a_ll _b_ase _m_ine _o_ther _u_ndo | _C_ombine _E_diff _R_efine _r_esolve
 Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 "
     ("C" smerge-combine-with-next)
@@ -213,6 +213,8 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
 
     ("n" smerge-next :color red)
     ("p" smerge-prev :color red)
+
+    ("u" undo :color red)
 
     ("=<" smerge-diff-base-mine)
     ("==" smerge-diff-mine-other)
