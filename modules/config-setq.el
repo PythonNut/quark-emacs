@@ -26,6 +26,7 @@
       jit-lock-stealth-nice 0.1
       jit-lock-stealth-time 0.2
       jit-lock-stealth-verbose nil
+      jka-compr-use-shell nil
       left-margin-width 0
       max-lisp-eval-depth 5000
       max-specpdl-size 10000
