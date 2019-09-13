@@ -19,19 +19,28 @@ PARAMS progress report notification data."
     ;; Minimal implementation - we could show the progress as well.
     (lsp-log (gethash "title" params)))
 
-  (lsp-register-client
-   (make-lsp-client :new-connection
-                    (lsp-stdio-connection
-                     (list "env" "PATH=/Library/TeX/texbin/" (expand-file-name (locate-user-emacs-file "data/lsp/texlab/target/debug/texlab"))))
-                    :major-modes '(tex-mode yatex-mode latex-mode)
-                    :server-id 'texlab
-                    :notification-handlers
-                    (lsp-ht
-                     ("window/progress"
-                      'lsp-latex-window-progress))))
+  (let* ((local-texlab-path (locate-user-emacs-file "data/lsp/texlab/target/debug/texlab"))
+         (system-texlab (executable-find "texlab"))
+         (texlab-command (cond ((file-executable-p local-texlab-path)
+                                (let ((path (expand-file-name local-texlab-path)))
+                                  (if (eq system-type 'darwin)
+                                      (list "env" "PATH=/Library/TeX/texbin/" path)
+                                    path)))
+                               (system-texlab system-texlab))))
+    (when texlab-command
+      (lsp-register-client
+       (make-lsp-client :new-connection
+                        (lsp-stdio-connection
+                         texlab-command)
+                        :major-modes '(tex-mode yatex-mode latex-mode)
+                        :server-id 'texlab
+                        :notification-handlers
+                        (lsp-ht
+                         ("window/progress"
+                          'lsp-latex-window-progress))))
 
-  (add-to-list 'lsp-language-id-configuration '(tex-mode . "tex"))
-  (add-to-list 'lsp-language-id-configuration '(latex-mode . "tex")))
+      (add-to-list 'lsp-language-id-configuration '(tex-mode . "tex"))
+      (add-to-list 'lsp-language-id-configuration '(latex-mode . "tex")))))
 
 (use-package tex
   :recipe auctex
