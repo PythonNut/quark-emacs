@@ -23,6 +23,24 @@
 
 (with-eval-after-load 'tramp
   (eval-when-compile (require 'tramp))
+  ;; Define a rsyncx method analogous to scpx
+  (add-to-list 'tramp-methods
+               '("rsyncx"
+                 (tramp-login-program "ssh")
+                 (tramp-login-args (("-l" "%u") ("-p" "%p") ("%c") ("-e" "none")
+                                    ("-t" "-t") ("%h") ("/bin/sh")))
+                 (tramp-async-args (("-q")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-login ("-l"))
+                 (tramp-remote-shell-args ("-c"))
+                 (tramp-copy-program "rsync")
+                 (tramp-copy-args (("-t" "%k") ("-p") ("-r") ("-s") ("-c")))
+                 (tramp-copy-env (("RSYNC_RSH")
+                                  ("ssh" "%c")))
+                 (tramp-copy-keep-date t)
+                 (tramp-copy-keep-tmpfile t)
+                 (tramp-copy-recursive t)))
+
   (setq tramp-backup-directory-alist `((,(rx (zero-or-more anything))
                                         . ,my/tramp-backup-directory))))
 
