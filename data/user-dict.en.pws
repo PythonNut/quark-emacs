@@ -1,11 +1,18 @@
-personal_ws-1.1 en 10 
+personal_ws-1.1 en 17 
+cardinality
 nondecreasing
 durations
 Gaussians
 satisfiable
+Lipschitz
 conjugacy
+surjection
 nonincreasing
+unknotted
+Reidemeister
+integrable
 Hayase
 contrapositive
+pointwise
 bijection
 inequivalent
