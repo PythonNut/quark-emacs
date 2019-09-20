@@ -221,6 +221,7 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'helm-semantic)
 
 (idle-job-add-require 'helm-for-files)
+(idle-job-add-require 'recentf)
 (idle-job-add-require 'helm-bookmark)
 (idle-job-add-require 'bookmark)
 (idle-job-add-require 'browse-url)
