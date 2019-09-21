@@ -1542,6 +1542,9 @@
     :commands lsp-ui-mode
     :init
     (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+    ;; TODO: This is only because texlab compiles on hover, which is
+    ;; very expensive
+    (setq lsp-ui-sideline-show-hover nil)
     (when (memq window-system '(mac ns))
       (setq lsp-ui-doc-use-childframe nil))))
 
