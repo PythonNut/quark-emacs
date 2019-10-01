@@ -1536,7 +1536,8 @@
   :config
   (require 'yasnippet)
   (setq lsp-prefer-flymake nil
-        lsp-auto-guess-root t)
+        lsp-auto-guess-root t
+        lsp-session-file (expand-file-name (locate-user-emacs-file "data/.lsp-session-v1")))
 
   (use-package lsp-ui
     :commands lsp-ui-mode
