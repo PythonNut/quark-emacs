@@ -1,9 +1,12 @@
-personal_ws-1.1 en 17 
+personal_ws-1.1 en 22 
+infimum
 cardinality
 nondecreasing
+colorable
 durations
 Gaussians
 satisfiable
+colorings
 Lipschitz
 conjugacy
 surjection
@@ -12,7 +15,9 @@ unknotted
 Reidemeister
 integrable
 Hayase
+subadditivity
 contrapositive
 pointwise
+nontrivially
 bijection
 inequivalent
