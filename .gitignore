@@ -80,3 +80,4 @@ flycheck_*
 /data/authinfo.gpg
 /data/.lsp-session-v1
 /data/places
+/data/transient
