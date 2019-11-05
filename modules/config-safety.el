@@ -146,15 +146,20 @@ when `auto-save-mode' is invoked manually.")
   :commands (real-auto-save-mode)
   :config
   (setq real-auto-save-interval 0.3)
-  (defun nadvice/real-auto-save-start-timer ()
-    "Start real-auto-save-timer."
-    (setq real-auto-save-timer
-          (run-with-idle-timer real-auto-save-interval
-                               t
-                               'real-auto-save-buffers)))
 
   (advice-add
    'real-auto-save-start-timer :override
-   #'nadvice/real-auto-save-start-timer))
+   (my/defun-as-value nadvice/real-auto-save-start-timer ()
+     "Start real-auto-save-timer."
+     (setq real-auto-save-timer
+           (run-with-idle-timer real-auto-save-interval
+                                t
+                                'real-auto-save-buffers))))
+
+  (advice-add
+   'real-auto-save-buffers :around
+   (my/defun-as-value nadvice/real-auto-save-buffers (old-fun &rest args)
+     (cl-letf* (((symbol-function #'real-auto-save-restart-timer) #'ignore))
+       (apply old-fun args)))))
 
 (provide 'config-safety)
