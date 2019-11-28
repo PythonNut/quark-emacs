@@ -25,7 +25,7 @@
   (eval-when-compile (require 'tramp))
   ;; Define a rsyncx method analogous to scpx
   (add-to-list 'tramp-methods
-               '("rsyncx"
+               `("rsyncx"
                  (tramp-login-program "ssh")
                  (tramp-login-args (("-l" "%u") ("-p" "%p") ("%c") ("-e" "none")
                                     ("-t" "-t") ("%h") ("/bin/sh")))
@@ -33,7 +33,11 @@
                  (tramp-remote-shell "/bin/sh")
                  (tramp-remote-shell-login ("-l"))
                  (tramp-remote-shell-args ("-c"))
-                 (tramp-copy-program "rsync")
+                 (tramp-copy-program
+                  ,(if (and (eq system-type 'darwin)
+                            (file-executable-p "/usr/local/bin/rsync"))
+                       "/usr/local/bin/rsync"
+                     "rsync"))
                  (tramp-copy-args (("-t" "%k") ("-p") ("-r") ("-s") ("-c")))
                  (tramp-copy-env (("RSYNC_RSH")
                                   ("ssh" "%c")))
