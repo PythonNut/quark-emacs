@@ -12,6 +12,10 @@
              company-math-symbols-unicode))
 
 (with-eval-after-load 'lsp-mode
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'lsp-mode)))
+
   ;; Copied from `lsp-clients--rust-window-progress' in `lsp-rust'.
   (defun lsp-latex-window-progress (_workspace params)
     "Progress report handling.
@@ -19,14 +23,21 @@ PARAMS progress report notification data."
     ;; Minimal implementation - we could show the progress as well.
     (lsp-log (gethash "title" params)))
 
-  (let* ((local-texlab-path (locate-user-emacs-file "data/lsp/texlab/target/debug/texlab"))
+  (let* ((local-texlab-debug-path
+          (expand-file-name
+           (locate-user-emacs-file "data/lsp/texlab/target/debug/texlab")))
+         (local-texlab-release-path
+          (expand-file-name
+           (locate-user-emacs-file "data/lsp/texlab/target/release/texlab")))
          (system-texlab (executable-find "texlab"))
-         (texlab-command (cond ((file-executable-p local-texlab-path)
-                                (let ((path (expand-file-name local-texlab-path)))
-                                  (if (eq system-type 'darwin)
-                                      (list "env" "PATH=/Library/TeX/texbin/" path)
-                                    path)))
-                               (system-texlab system-texlab))))
+         (texlab-path (cond ((file-executable-p local-texlab-debug-path)
+                             local-texlab-debug-path)
+                            ((file-executable-p local-texlab-release-path)
+                             local-texlab-release-path)
+                            (system-texlab system-texlab)))
+         (texlab-command (if (and texlab-path (eq system-type 'darwin))
+                             (list "env" "PATH=/Library/TeX/texbin/" texlab-path)
+                           texlab-path)))
     (when texlab-command
       (lsp-register-client
        (make-lsp-client :new-connection
