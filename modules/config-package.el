@@ -394,6 +394,10 @@ these values are used to call `use-package-ensure-function'.")
   (setq exec-path-from-shell-check-startup-files nil)
 
   :init
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'exec-path-from-shell)))
+
   (when (memq window-system '(mac ns))
     (setq exec-path
           (or (eval-when-compile
