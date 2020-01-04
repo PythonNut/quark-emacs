@@ -308,7 +308,7 @@ second, floating-point values are rounded down to the nearest integer.)"
   (advice-add
    'straight-use-package-ensure-function :around
    (my/defun-as-value nadvice/straight-use-package-ensure-function (old-fun &rest args)
-     (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
+     (cl-letf* (((symbol-function #'y-or-n-p) (lambda (_prompt) t)))
        (apply old-fun args))))
 
   (el-patch-defun use-package-handler/:ensure (name keyword ensure rest state)
