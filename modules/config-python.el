@@ -181,6 +181,29 @@ Return either a string or nil."
 
   (add-hook 'python-mode-hook #'eldoc-mode)
 
+  (with-eval-after-load 'lsp-mode
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection
+      (lsp-tramp-connection
+       (my/defun-as-value my/python-find-project-pyls ()
+         (let ((pyls-path (expand-file-name
+                           "bin/pyls"
+                           (my/python-find-virtualenv))))
+           (when (file-executable-p pyls-path)
+             (with-parsed-tramp-file-name pyls-path parsed
+               parsed-localname)))))
+      :major-modes '(python-mode)
+      :remote? t
+      :server-id 'pyls-remote
+      :library-folders-fn
+      (lambda (_workspace)
+        lsp-clients-python-library-directories)
+      :initialized-fn
+      (lambda (workspace)
+        (with-lsp-workspace workspace
+          (lsp--set-configuration (lsp-configuration-section "pyls")))))))
+
   (use-package traad
     :defer-install t
     :commands (traad-open
