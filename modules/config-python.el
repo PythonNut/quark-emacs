@@ -10,7 +10,7 @@
   (if (tramp-tramp-file-p default-directory)
       (with-parsed-tramp-file-name default-directory vec
         (tramp-find-executable
-         vec "poetry" (tramp-get-remote-path vec) t t))
+         vec name (tramp-get-remote-path vec) t t))
     (executable-find name)))
 
 (defun my/tramp-build-name-from-localname (localname)
