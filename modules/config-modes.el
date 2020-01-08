@@ -1097,6 +1097,10 @@
   :commands (pkgbuild-mode)
   :mode (("/PKGBUILD\\'" . pkgbuild-mode)))
 
+(use-package pacfiles-mode
+  :defer-install t
+  :commands (pacfiles))
+
 (use-package dockerfile-mode
   :defer-install t
   :commands (dockerfile-build-buffer
