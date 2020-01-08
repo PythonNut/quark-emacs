@@ -242,12 +242,6 @@ Return either a string or nil."
     :defer-install t
     :commands (live-py-mode))
 
-  (use-package pipenv
-    :init
-    (add-hook 'python-mode-hook #'pipenv-mode)
-    (setq pipenv-projectile-after-switch-function
-          #'pipenv-projectile-after-switch-extended))
-
   (use-package conda)
 
   (use-package blacken
