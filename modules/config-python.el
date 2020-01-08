@@ -204,40 +204,6 @@ Return either a string or nil."
         (with-lsp-workspace workspace
           (lsp--set-configuration (lsp-configuration-section "pyls")))))))
 
-  (use-package traad
-    :defer-install t
-    :commands (traad-open
-               traad-close
-               traad-running?
-               traad-display-task-status
-               traad-display-full-task-status
-               traad-undo
-               traad-redo
-               traad-display-history
-               traad-undo-info
-               traad-redo-info
-               traad-rename-current-file
-               traad-rename
-               traad-normalize-arguments
-               traad-remove-argument
-               traad-extract-method
-               traad-extract-variable
-               traad-organize-imports
-               traad-expand-star-imports
-               traad-froms-to-imports
-               traad-relatives-to-absolutes
-               traad-handle-long-imports
-               traad-imports-super-smackdown
-               traad-display-occurrences
-               traad-display-implementations
-               traad-goto-definition
-               traad-findit
-               traad-code-assist
-               traad-display-calltip
-               traad-popup-calltip
-               traad-display-doc
-               traad-popup-doc))
-
   (use-package live-py-mode
     :defer-install t
     :commands (live-py-mode))
