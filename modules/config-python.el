@@ -28,34 +28,70 @@
   "Find a virtualenv corresponding to the current buffer.
 Return either a string or nil."
   (let ((default-directory (or dir default-directory)))
+    (message "Searching for Python virtual environment at %s" default-directory)
     ;; Stolen from raxod502/radian
-    (cl-block nil
-      (when (and (my/local-executable-find "poetry")
-                 (locate-dominating-file default-directory "pyproject.toml"))
-        (with-temp-buffer
-          ;; May create virtualenv, but whatever.
-          (when (= 0 (process-file
-                      "poetry" nil '(t nil) nil "run" "which" "python"))
-            (goto-char (point-min))
-            (when (looking-at "\\(.+\\)/bin/python\n")
-              (let* ((path (match-string 1))
-                     (universal-path (if (tramp-tramp-file-p default-directory)
-                                         (my/tramp-build-name-from-localname path)
-                                       path)))
-                (when (file-directory-p universal-path)
-                  (cl-return universal-path)))))))
-      (when (and (my/local-executable-find "pipenv")
-                 (locate-dominating-file default-directory "Pipfile"))
-        (with-temp-buffer
-          ;; May create virtualenv, but whatever.
-          (when (= 0 (process-file "pipenv" nil '(t nil) nil "--venv"))
-            (goto-char (point-min))
-            (let* ((path (string-trim (buffer-string)))
-                   (universal-path (if (tramp-tramp-file-p default-directory)
-                                       (my/tramp-build-name-from-localname path)
-                                     path)))
-              (when (file-directory-p universal-path)
-                (cl-return universal-path)))))))))
+    (let* ((path
+            (cl-block nil
+              (when (and (my/local-executable-find "poetry")
+                         (locate-dominating-file default-directory
+                                                 "pyproject.toml"))
+                ;; First, we try poetry debug:info, which is safe and a bit
+                ;; faster, but only works in poetry versions 1.0 and up
+                (let* ((return-code 0)
+                       (output
+                        (with-output-to-string
+                          (with-current-buffer
+                              standard-output
+                            (setq return-code
+                                  (process-file "poetry" nil '(t nil) nil
+                                                "debug:info"
+                                                "-n"
+                                                "--no-ansi"))))))
+                  (when (and (= 0 return-code)
+                             (string-match (rx "\n * Path:           "
+                                               (group (1+ any))
+                                               "\n * Valid:")
+                                           output))
+                    (cl-return (match-string 1 output)))
+                  ;; Fall back to poetry <1.0 check TODO: This code
+                  ;; will become stale over time, so get rid of it
+                  ;; after a while.
+                  ;; Radon: May create virtualenv, but whatever.
+                  (let* ((return-code 0)
+                         (output
+                          (with-output-to-string
+                            (with-current-buffer
+                                standard-output
+                              (setq return-code
+                                    (process-file
+                                     "poetry" nil '(t nil) nil
+                                     "run"
+                                     "which"
+                                     "python"))))))
+                    (when (and (= 0 return-code)
+                               (string-match (rx bol
+                                                 (group (1+ any))
+                                                 "/bin/python\n")
+                                             output))
+                      (cl-return (match-string 1 output))))))
+              (when (and (my/local-executable-find "pipenv")
+                         (locate-dominating-file default-directory
+                                                 "Pipfile"))
+                (let* ((return-code 0)
+                       (output
+                        (with-output-to-string
+                          (with-current-buffer
+                              standard-output
+                            (setq return-code
+                                  (process-file "pipenv" nil '(t nil) nil
+                                                "--venv"))))))
+                  (when (= 0 return-code)
+                    (cl-return (string-trim output)))))))
+           (universal-path (if (tramp-tramp-file-p default-directory)
+                               (my/tramp-build-name-from-localname path)
+                             path)))
+      (when (file-directory-p universal-path)
+        universal-path))))
 
 (with-eval-after-load 'pythonic
   (eval-when-compile
