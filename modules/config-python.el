@@ -182,6 +182,9 @@ Return either a string or nil."
   (add-hook 'python-mode-hook #'eldoc-mode)
 
   (with-eval-after-load 'lsp-mode
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'lsp-mode)))
     (lsp-register-client
      (make-lsp-client
       :new-connection
