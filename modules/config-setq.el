@@ -274,4 +274,14 @@ response as a no."
    (let ((shell-file-name (my/detect-shell)))
      (apply old-fun args))))
 
+(defun my/process-file-to-string (&rest args)
+  (let* ((return-code 0)
+         (output
+          (with-output-to-string
+            (with-current-buffer
+                standard-output
+              (setq return-code
+                    (apply #'process-file args))))))
+    (cons return-code output)))
+
 (provide 'config-setq)
