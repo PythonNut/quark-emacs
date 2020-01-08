@@ -91,8 +91,9 @@ move the yanking point; just return the Nth kill forward."
    'xclip-selection-value :around
    (my/defun-as-value nadvice/xclip-selection-value (old-fun &rest args)
      (let ((default-directory "/"))
-       (unless (string-match-p "^Error: Can't open display: .*\n$"
-                               (shell-command-to-string "xclip -o > /dev/null"))
+       (unless (string-match-p
+                (rx bol "Error: Can't open display: ")
+                (cdr (my/process-file-to-string "xclip" nil t nil "-o")))
          (apply old-fun args))))))
 
 (use-package bracketed-paste
