@@ -216,7 +216,8 @@
    'sh-mode-hook
    (my/defun-as-value my/sh-mode-detect-zsh ()
      (setq mode-name "sh")
-     (if (string-match-p (rx ".zsh" line-end) buffer-file-name)
+     (if (and buffer-file-name
+              (string-match-p (rx ".zsh" line-end) buffer-file-name))
          (sh-set-shell "zsh"))))
 
   (defun my/sh-smart-newline (&optional arg interactive)
