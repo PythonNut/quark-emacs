@@ -284,18 +284,22 @@ second, floating-point values are rounded down to the nearest integer.)"
                               def-body))))
   (el-patch-deftype evil-define-command
     :classify el-patch-classify-function
+    :locate el-patch-locate-function
     :declare ((doc-string 3)
               (indent defun)))
   (el-patch-deftype evil-define-motion
     :classify el-patch-classify-function
+    :locate el-patch-locate-function
     :declare ((doc-string 3)
               (indent defun)))
   (el-patch-deftype evil-define-text-object
     :classify el-patch-classify-function
+    :locate el-patch-locate-function
     :declare ((doc-string 3)
               (indent defun)))
   (el-patch-deftype evil-define-operator
     :classify el-patch-classify-function
+    :locate el-patch-locate-function
     :declare ((doc-string 3)
               (indent defun))))
 
