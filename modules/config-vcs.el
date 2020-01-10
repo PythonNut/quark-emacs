@@ -365,7 +365,7 @@ tramp.")
     :link '(url-link :tag "Online Manual" "https://projectile.readthedocs.io/")
     :link '(emacs-commentary-link :tag "Commentary" "projectile"))
 
-  (el-patch-defcustom projectile-keymap-prefix (kbd "C-c p")
+  (el-patch-defcustom projectile-keymap-prefix nil
     "Projectile keymap prefix."
     :group 'projectile
     :type 'string)
@@ -422,9 +422,13 @@ tramp.")
       (define-key map (kbd "v") #'projectile-vc)
       (define-key map (kbd "V") #'projectile-browse-dirty-projects)
       (define-key map (kbd "x e") #'projectile-run-eshell)
+      (define-key map (kbd "x i") #'projectile-run-ielm)
       (define-key map (kbd "x t") #'projectile-run-term)
       (define-key map (kbd "x s") #'projectile-run-shell)
+      (define-key map (kbd "x v") #'projectile-run-vterm)
       (define-key map (kbd "z") #'projectile-cache-current-file)
+      (define-key map (kbd "<left>") #'projectile-previous-project-buffer)
+      (define-key map (kbd "<right>") #'projectile-next-project-buffer)
       (define-key map (kbd "ESC") #'projectile-project-buffers-other-buffer)
       map)
     "Keymap for Projectile commands after `projectile-keymap-prefix'.")
@@ -432,14 +436,65 @@ tramp.")
 
   (el-patch-defvar projectile-mode-map
     (let ((map (make-sparse-keymap)))
-      (define-key map projectile-keymap-prefix 'projectile-command-map)
+      (when projectile-keymap-prefix
+        (define-key map projectile-keymap-prefix 'projectile-command-map))
+      (easy-menu-define projectile-mode-menu map
+        "Menu for Projectile"
+        '("Projectile"
+          ["Find file" projectile-find-file]
+          ["Find file in known projects" projectile-find-file-in-known-projects]
+          ["Find test file" projectile-find-test-file]
+          ["Find directory" projectile-find-dir]
+          ["Find file in directory" projectile-find-file-in-directory]
+          ["Find other file" projectile-find-other-file]
+          ["Switch to buffer" projectile-switch-to-buffer]
+          ["Jump between implementation file and test file" projectile-toggle-between-implementation-and-test]
+          ["Kill project buffers" projectile-kill-buffers]
+          ["Save project buffers" projectile-save-project-buffers]
+          ["Recent files" projectile-recentf]
+          ["Previous buffer" projectile-previous-project-buffer]
+          ["Next buffer" projectile-next-project-buffer]
+          "--"
+          ["Toggle project wide read-only" projectile-toggle-project-read-only]
+          ["Edit .dir-locals.el" projectile-edit-dir-locals]
+          "--"
+          ["Switch to project" projectile-switch-project]
+          ["Switch to open project" projectile-switch-open-project]
+          ["Discover projects in directory" projectile-discover-projects-in-directory]
+          ["Browse dirty projects" projectile-browse-dirty-projects]
+          ["Open project in dired" projectile-dired]
+          "--"
+          ["Search in project (grep)" projectile-grep]
+          ["Search in project (ag)" projectile-ag]
+          ["Replace in project" projectile-replace]
+          ["Multi-occur in project" projectile-multi-occur]
+          "--"
+          ["Run shell" projectile-run-shell]
+          ["Run eshell" projectile-run-eshell]
+          ["Run ielm" projectile-run-ielm]
+          ["Run term" projectile-run-term]
+          "--"
+          ["Cache current file" projectile-cache-current-file]
+          ["Invalidate cache" projectile-invalidate-cache]
+          ["Regenerate [e|g]tags" projectile-regenerate-tags]
+          "--"
+          ["Configure project" projectile-configure-project]
+          ["Compile project" projectile-compile-project]
+          ["Test project" projectile-test-project]
+          ["Run project" projectile-run-project]
+          ["Repeat last external command" projectile-repeat-last-command]
+          "--"
+          ["Project info" projectile-project-info]
+          ["About" projectile-version]))
       map)
     "Keymap for Projectile mode.")
+
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
   (el-patch-defcustom projectile-indexing-method (if (eq system-type 'windows-nt) 'native 'alien)
     "Specifies the indexing method used by Projectile.
 
-There are two indexing methods - native and alien.
+There are three indexing methods - native, hybrid and alien.
 
 The native method is implemented in Emacs Lisp (therefore it is
 native to Emacs).  Its advantage is that it is portable and will
@@ -447,15 +502,28 @@ work everywhere that Emacs does.  Its disadvantage is that it is a
 bit slow (especially for large projects).  Generally it's a good
 idea to pair the native indexing method with caching.
 
-The alien indexing method uses external tools (e.g. git, find,
-etc) to speed up the indexing process.  The disadvantage of this
-method is that it's not well supported on Windows systems.
+The hybrid indexing method uses external tools (e.g. git, find,
+etc) to speed up the indexing process.  Still, the files will be
+post-processed by Projectile for sorting/filtering purposes.
+In this sense that approach is a hybrid between native indexing
+and alien indexing.
 
-By default alien indexing is the default on all operating
-systems, except Windows."
+The alien indexing method optimizes to the limit the speed
+of the hybrid indexing method.  This means that Projectile will
+not do any processing of the files returned by the external
+commands and you're going to get the maximum performance
+possible.  This behaviour makes a lot of sense for most people,
+as they'd typically be putting ignores in their VCS config and
+won't care about any additional ignores/unignores/sorting that
+Projectile might also provide.
+
+The disadvantage of the hybrid and alien methods is that they are not well
+supported on Windows systems.  That's why by default alien indexing is the
+default on all operating systems, except Windows."
     :group 'projectile
     :type '(radio
             (const :tag "Native" native)
+            (const :tag "Hybrid" hybrid)
             (const :tag "Alien" alien)))
 
   (el-patch-defcustom projectile-enable-caching (eq projectile-indexing-method 'native)
