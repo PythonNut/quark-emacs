@@ -39,7 +39,7 @@ Return either a string or nil."
               ;; faster, but only works in poetry versions 1.0 and up
               (cl-destructuring-bind (return-code . output)
                   (my/process-file-to-string "poetry" nil '(t nil) nil
-                                             "debug:info"
+                                             "debug"
                                              "-n"
                                              "--no-ansi")
                 (when (and (= 0 return-code)
