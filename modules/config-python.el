@@ -35,19 +35,15 @@ Return either a string or nil."
             (when (and (my/local-executable-find "poetry")
                        (locate-dominating-file default-directory
                                                "pyproject.toml"))
-              ;; First, we try poetry debug:info, which is safe and a bit
+              ;; First, we try poetry env, which is safe and a bit
               ;; faster, but only works in poetry versions 1.0 and up
               (cl-destructuring-bind (return-code . output)
                   (my/process-file-to-string "poetry" nil '(t nil) nil
-                                             "debug"
-                                             "-n"
-                                             "--no-ansi")
-                (when (and (= 0 return-code)
-                           (string-match (rx "\n * Path:           "
-                                             (group (1+ any))
-                                             "\n * Valid:")
-                                         output))
-                  (cl-return (match-string 1 output))))
+                                             "env"
+                                             "info"
+                                             "-p")
+                (when (= 0 return-code)
+                  (cl-return output)))
               ;; Fall back to poetry <1.0 check TODO: This code
               ;; will become stale over time, so get rid of it
               ;; after a while.
