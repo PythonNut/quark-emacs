@@ -83,7 +83,11 @@
                              (symbol-name sym-here)))))))
 (use-package macrostep
   :defer-install t
-  :commands (macrostep-mode macrostep-expand))
+  :commands (macrostep-mode macrostep-expand)
+  :init
+  (define-key emacs-lisp-mode-map (kbd "C-c C-e") #'macrostep-expand)
+  :config
+  (evil-make-intercept-map macrostep-keymap))
 
 ;; =============================================================================
 ;; C-like ======================================================================
