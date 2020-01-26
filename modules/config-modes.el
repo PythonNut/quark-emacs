@@ -370,26 +370,6 @@
 ;; Haskell =====================================================================
 ;; =============================================================================
 
-(use-package intero
-  :defer-install t
-  :commands (intero-mode
-             intero-mode-whitelis
-             intero-mode-blacklist
-             intero-global-mode
-             intero-highlight-uses-mode))
-
-(use-package hindent
-  :defer-install t
-  :commands (hindent-mode
-             hindent-reformat-decl
-             hindent-reformat-buffer
-             hindent-reformat-decl-or-fill
-             hindent-reformat-region)
-  :config
-  (unless (executable-find "hindent")
-    (when (file-exists-p (expand-file-name "~/.local/bin/hindent"))
-      (setq hindent-process-path (expand-file-name "~/.local/bin/hindent")))))
-
 (use-package haskell
   :recipe haskell-mode
   :defer-install t
@@ -500,11 +480,16 @@
   :init
   (add-to-list 'completion-ignored-extensions ".hi"))
 
-(use-package haskell-mode
-  :ensure nil
-  :config
-  (add-hook 'haskell-mode-hook #'intero-mode)
-  (add-hook 'haskell-mode-hook #'hindent-mode))
+(use-package lsp-haskell)
+
+(with-eval-after-load 'haskell-mode
+  (require 'lsp-haskell)
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode))
+
+(with-eval-after-load 'haskell-interactive-mode
+  (evil-set-initial-state 'haskell-interactive-mode 'insert)
+  (setq haskell-process-suggest-remove-import-lines t
+        haskell-process-auto-import-loaded-modules t))
 
 ;; =============================================================================
 ;; Web Development =============================================================
