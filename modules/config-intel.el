@@ -313,9 +313,9 @@ Return a selected word to use as a replacement or a tuple
 of (command, word) to be used by `flyspell-do-correct'."))
 
 (use-package flyspell-correct
-  :commands (flyspell-correct-word-generic)
   :init
-  (define-key flyspell-mode-map (kbd "C-M-i") #'flyspell-correct-word-generic)
+  (with-eval-after-load 'flyspell
+    (define-key flyspell-mode-map (kbd "C-M-i") #'flyspell-correct-at-point))
   :config
   (setq flyspell-correct-interface #'flyspell-correct-ivy))
 
