@@ -480,7 +480,14 @@
   :init
   (add-to-list 'completion-ignored-extensions ".hi"))
 
-(use-package lsp-haskell)
+(use-package lsp-haskell
+  :config
+  (lsp-register-client
+   (make-lsp--client
+    :new-connection (lsp-tramp-connection (lambda () (lsp-haskell--hie-command)))
+    :major-modes '(haskell-mode)
+    :server-id 'hie-remote
+    :remote? t)))
 
 (with-eval-after-load 'haskell-mode
   (require 'lsp-haskell)
