@@ -57,5 +57,6 @@
         evil-normal-state
         evil-window-middle
         handle-select-window
+        haskell-process-load-file
         hydra/projectile-tools/body
         ))
