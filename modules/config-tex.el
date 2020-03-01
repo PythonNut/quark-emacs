@@ -122,6 +122,13 @@ PARAMS progress report notification data."
   (when (executable-find "zathura")
     (setf (cadr (assoc 'output-pdf TeX-view-program-selection)) "Zathura"))
 
+  (when (executable-find "evince")
+    (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o")))
+
+  (when (and (eq system-type 'darwin)
+             (file-directory-p "/Applications/Skim.app"))
+    (setf (cadr (assoc 'output-pdf TeX-view-program-selection)) "Skim"))
+
   (defun my/LaTeX-format-name ()
     (save-excursion
       (goto-char (point-min))
@@ -323,7 +330,6 @@ command."
        (magic-latex-buffer))))
   (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  (add-to-list 'TeX-output-view-style '("^pdf$" "." "evince --page-index=%(outpage) %o"))
 
   (use-package auctex-latexmk
     :commands (auctex-latexmk-setup)
