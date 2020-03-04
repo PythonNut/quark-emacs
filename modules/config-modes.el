@@ -1552,59 +1552,7 @@
     (setq lsp-ui-doc-position 'top)
 
     (when (memq window-system '(mac ns))
-      (setq lsp-ui-doc-use-childframe nil)))
-
-  (with-eval-after-load 'lsp-ui-doc
-    (el-patch-feature lsp-ui-doc)
-
-    (el-patch-defun lsp-ui-doc--make-request nil
-      "Request the documentation to the LS."
-      (when (and (not (eq this-command 'lsp-ui-doc-hide))
-                 (not (bound-and-true-p lsp-ui-peek-mode))
-                 (lsp--capability "hoverProvider"))
-        (-if-let (bounds (or (and (symbol-at-point) (bounds-of-thing-at-point 'symbol))
-                             (and (looking-at "[[:graph:]]") (cons (point) (1+ (point))))))
-            (unless (equal lsp-ui-doc--bounds bounds)
-              (el-patch-add (lsp-ui-doc--hide-frame)
-                            (and lsp-ui-doc--timer (cancel-timer lsp-ui-doc--timer)))
-              (el-patch-let
-                  (($request
-                    (lsp--send-request-async
-                     (lsp--make-request "textDocument/hover" (lsp--text-document-position-params))
-                     (lambda (hover) (lsp-ui-doc--callback hover bounds (current-buffer))))))
-                (el-patch-swap
-                  $request
-                  (setq lsp-ui-doc--timer
-                        (run-with-idle-timer
-                         lsp-ui-doc-delay nil
-                         (lambda nil $request))))))
-          (lsp-ui-doc--hide-frame))))
-
-    (el-patch-defun lsp-ui-doc--callback (hover bounds buffer)
-      "Process the received documentation.
-HOVER is the doc returned by the LS.
-BOUNDS are points of the symbol that have been requested.
-BUFFER is the buffer where the request has been made."
-      (if (and hover
-               (>= (point) (car bounds)) (<= (point) (cdr bounds))
-               (eq buffer (current-buffer)))
-          (progn
-            (setq lsp-ui-doc--bounds bounds)
-            (el-patch-remove (and lsp-ui-doc--timer (cancel-timer lsp-ui-doc--timer)))
-            (el-patch-let
-                (($display
-                  (lsp-ui-doc--display
-                   (thing-at-point 'symbol t)
-                   (-some->> (gethash "contents" hover)
-                     lsp-ui-doc--extract
-                     (replace-regexp-in-string "\r" "")))))
-              (el-patch-swap
-                (setq lsp-ui-doc--timer
-                      (run-with-idle-timer
-                       lsp-ui-doc-delay nil
-                       (lambda nil $display)))
-                $display)))
-        (lsp-ui-doc--hide-frame)))))
+      (setq lsp-ui-doc-use-childframe nil))))
 
 (use-package company-lsp :commands company-lsp)
 
