@@ -500,6 +500,37 @@
   (setq haskell-process-suggest-remove-import-lines t
         haskell-process-auto-import-loaded-modules t))
 
+(use-package alex-mode
+  :recipe (alex-mode :host github
+                     :repo "sergv/dotemacs"
+                     :files ("src/haskell/alex-mode.el")
+                     :nonrecursive t)
+  :defer-install t
+  :commands (alex-mode)
+  :init
+
+  (provide 'common)
+
+  (defmacro defparameter (var &optional value doc)
+    "Just like CL's defparameter, sets variable value when evaluated."
+    (let ((tmp-var '#:store))
+      `(progn
+         (setf ,tmp-var ,value)
+         (if (boundp ',var)
+             (setf ,var ,tmp-var)
+           (defvar ,var ,tmp-var ,doc))
+         nil)))
+
+  :mode "\\.x\\'")
+
+(use-package happy-mode
+  :recipe (happy-mode :host github :repo "sergv/happy-mode")
+  :defer-install t
+  :commands (happy-mode)
+  :mode "\\.y\\'"
+  :init
+  (use-package mmm-mode))
+
 ;; =============================================================================
 ;; Web Development =============================================================
 ;; =============================================================================
