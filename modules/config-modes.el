@@ -521,7 +521,9 @@
            (defvar ,var ,tmp-var ,doc))
          nil)))
 
-  :mode "\\.x\\'")
+  :mode "\\.x\\'"
+  :config
+  (defalias 'alex-indent-line #'indent-relative))
 
 (use-package happy-mode
   :recipe (happy-mode :host github :repo "sergv/happy-mode")
