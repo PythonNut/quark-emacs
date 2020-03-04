@@ -359,6 +359,8 @@
                        :repo "non-Jedi/lsp-julia")
 
     :init
+    (setq lsp-julia-package-dir nil
+          lsp-julia-default-environment "~/.julia/environments/v1.3")
     (require 'lsp-julia)
     (add-hook 'julia-mode-hook #'lsp-deferred))
 
