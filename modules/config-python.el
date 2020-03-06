@@ -120,7 +120,8 @@ Return either a string or nil."
   (add-hook 'python-mode-hook
             (lambda ()
               ;; conflicts with `eldoc-mode'
-              (semantic-idle-summary-mode -1)
+              (when (bound-and-true-p semantic-idle-summary-mode)
+                (semantic-idle-summary-mode -1))
               (setq mode-name "Py")))
 
   (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
