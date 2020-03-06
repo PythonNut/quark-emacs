@@ -14,7 +14,7 @@
         ;; It sounds like an interesting feature, but unfortunately
         ;; the implementation is very buggy and regularly causes you
         ;; to lose your undo history.
-        undo-tree-enable-undo-in-region nil
+        undo-tree-enable-undo-in-region t
         undo-tree-history-directory-alist
         `((,(rx (zero-or-more anything))
            . ,(expand-file-name (locate-user-emacs-file "data/undo-backups/")))))
