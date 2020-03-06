@@ -77,9 +77,6 @@ by doing (clear-string STRING)."
 (use-package semantic
   :ensure nil
   :init
-  ;; enable semantic code LALR(1) parser
-  (add-hook 'prog-mode-hook #'semantic-mode)
-
   (with-eval-after-load 'semantic/db-file
     (advice-add
      'semanticdb-file-directory-exists-p :around
@@ -92,10 +89,6 @@ by doing (clear-string STRING)."
         (locate-user-emacs-file "data/semanticdb")
         srecode-map-save-file
         (locate-user-emacs-file "data/srecode-map.el"))
-
-  (global-semanticdb-minor-mode +1)
-  (global-semantic-idle-scheduler-mode +1)
-  (global-semantic-idle-summary-mode +1)
 
   (advice-add
    'semantic-idle-summary-idle-function :around
