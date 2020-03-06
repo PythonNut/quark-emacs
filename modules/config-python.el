@@ -9,9 +9,10 @@
 (defun my/local-executable-find (name)
   ;; TODO: This should be moved out of config-python
   (if (tramp-tramp-file-p default-directory)
-      (with-parsed-tramp-file-name default-directory vec
+      (substring-no-properties
+       (with-parsed-tramp-file-name default-directory vec
         (tramp-find-executable
-         vec name (tramp-get-remote-path vec) t t))
+         vec name (tramp-get-remote-path vec) t t)))
     (executable-find name)))
 
 (defun my/tramp-build-name-from-localname (localname)
@@ -73,6 +74,25 @@ Return either a string or nil."
     (when (file-directory-p universal-path)
       universal-path)))
 
+(defvar my/python-virtualenv-cache nil)
+(add-to-list 'savehist-additional-variables 'my/python-virtualenv-cache)
+(defun my/python-find-virtualenv-cached (&optional dir)
+  (let* ((dir (or dir default-directory))
+         (pyproject (locate-dominating-file dir "pyproject.toml")))
+    (unless my/python-virtualenv-cache
+      (setq my/python-virtualenv-cache (make-hash-table :test #'equal)))
+    (if (and (my/local-executable-find "poetry")
+             dir
+             (not (file-exists-p (expand-file-name ".venv" dir))))
+        (let ((cached (or (gethash dir my/python-virtualenv-cache)
+                          (puthash dir
+                                   (my/python-find-virtualenv dir)
+                                   my/python-virtualenv-cache))))
+          (if (file-exists-p cached)
+              cached
+            (my/python-find-virtualenv dir)))
+      (my/python-find-virtualenv dir))))
+
 (with-eval-after-load 'pythonic
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
@@ -107,7 +127,7 @@ Return either a string or nil."
   :config
   (defun nadvice/pyvenv-activate (&optional arg)
     (interactive "P")
-    (let ((default-venv (my/python-find-virtualenv)))
+    (let ((default-venv (my/python-find-virtualenv-cached)))
       (if (or (not default-venv) (consp (car arg)))
           (list (read-directory-name "Activate venv: "))
         (list default-venv))))
@@ -169,11 +189,31 @@ Return either a string or nil."
     (lsp-register-client
      (make-lsp-client
       :new-connection
+      (lsp-stdio-connection
+       (my/defun-as-value my/python-find-project-pyls ()
+         (let ((pyls-path (expand-file-name
+                           "bin/pyls"
+                           (my/python-find-virtualenv-cached))))
+           (when (file-executable-p pyls-path)
+             pyls-path))))
+      :major-modes '(python-mode)
+      :server-id 'pyls-poetry
+      :library-folders-fn
+      (lambda (_workspace)
+        lsp-clients-python-library-directories)
+      :initialized-fn
+      (lambda (workspace)
+        (with-lsp-workspace workspace
+          (lsp--set-configuration (lsp-configuration-section "pyls"))))))
+
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection
       (lsp-tramp-connection
        (my/defun-as-value my/python-find-project-pyls ()
          (let ((pyls-path (expand-file-name
                            "bin/pyls"
-                           (my/python-find-virtualenv))))
+                           (my/python-find-virtualenv-cached))))
            (when (file-executable-p pyls-path)
              (with-parsed-tramp-file-name pyls-path parsed
                parsed-localname)))))

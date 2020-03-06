@@ -282,6 +282,6 @@ response as a no."
                 standard-output
               (setq return-code
                     (apply #'process-file args))))))
-    (cons return-code output)))
+    (cons return-code (substring-no-properties output))))
 
 (provide 'config-setq)
