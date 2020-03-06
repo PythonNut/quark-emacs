@@ -215,7 +215,32 @@ command."
     (set-face-attribute 'ml/llarge nil :height 1.25)
     (set-face-attribute 'ml/xlarge nil :height 1.3)
     (set-face-attribute 'ml/huge nil :height 1.35)
-    (set-face-attribute 'ml/hhuge nil :height 1.4))
+    (set-face-attribute 'ml/hhuge nil :height 1.4)
+
+    (el-patch-feature magic-latex-buffer)
+    (el-patch-defun ml/search-regexp (regex &optional bound backward point-safe)
+      "Like `search-regexp' but skips escaped chars, comments and
+verbish environments. This function raise an error on
+failure. When POINT-SAFE is non-nil, the point must not be in the
+matching string."
+      (ml/safe-excursion
+       (let ((case-fold-search nil))
+         (if backward
+             (search-backward-regexp regex bound)
+           (search-forward-regexp regex bound)))
+       (or (save-match-data
+             (save-excursion
+               (and (goto-char (match-beginning 0))
+                    (not (and point-safe
+                              (< (point) ml/jit-point)
+                              (< ml/jit-point (match-end 0))))
+                    (looking-back (el-patch-swap
+                                    "\\([^\\\\]\\|^\\)\\(\\\\\\\\\\)*"
+                                    (rx (or (not-char "\\") bol)
+                                        (zero-or-more "\\\\")))
+                                  (el-patch-add (line-beginning-position)))
+                    (not (ml/skip-comments-and-verbs backward)))))
+           (ml/search-regexp regex bound backward point-safe)))))
 
 
   (add-hook 'TeX-mode-hook #'lsp-deferred)
