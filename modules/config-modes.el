@@ -1564,6 +1564,14 @@
              floobits-clear-highlights
              floobits-add-to-workspace))
 
+(use-package llvm-mode
+  :recipe (llvm-mode :host github
+                     :repo "llvm-mirror/llvm"
+                     :files ("utils/emacs/llvm-mode.el"))
+  :defer-install t
+  :commands (llvm-mode)
+  :mode ("\\.ll\\'" . llvm-mode))
+
 ;;; LSP
 
 (use-package lsp-mode
