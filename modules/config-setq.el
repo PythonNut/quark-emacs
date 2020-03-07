@@ -284,4 +284,25 @@ response as a no."
                     (apply #'process-file args))))))
     (cons return-code (substring-no-properties output))))
 
+(defun my/local-executable-find (name)
+  (if (tramp-tramp-file-p default-directory)
+      (let ((response (with-parsed-tramp-file-name default-directory vec
+                        (tramp-find-executable
+                         vec name (tramp-get-remote-path vec) t t))))
+        (if (stringp response)
+            (substring-no-properties response)
+          response))
+    (executable-find name)))
+
+(defun my/tramp-build-name-from-localname (localname)
+  (with-parsed-tramp-file-name default-directory parsed
+    (tramp-make-tramp-file-name
+     parsed-method
+     parsed-user
+     parsed-domain
+     parsed-host
+     parsed-port
+     localname
+     parsed-hop)))
+
 (provide 'config-setq)

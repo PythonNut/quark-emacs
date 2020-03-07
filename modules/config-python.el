@@ -6,26 +6,6 @@
 ;; Python ======================================================================
 ;; =============================================================================
 
-(defun my/local-executable-find (name)
-  ;; TODO: This should be moved out of config-python
-  (if (tramp-tramp-file-p default-directory)
-      (substring-no-properties
-       (with-parsed-tramp-file-name default-directory vec
-        (tramp-find-executable
-         vec name (tramp-get-remote-path vec) t t)))
-    (executable-find name)))
-
-(defun my/tramp-build-name-from-localname (localname)
-  (with-parsed-tramp-file-name default-directory parsed
-    (tramp-make-tramp-file-name
-     parsed-method
-     parsed-user
-     parsed-domain
-     parsed-host
-     parsed-port
-     localname
-     parsed-hop)))
-
 (defun my/python-find-virtualenv (&optional dir)
   "Find a virtualenv corresponding to the current buffer.
 Return either a string or nil."
