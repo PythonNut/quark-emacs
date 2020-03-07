@@ -136,6 +136,29 @@ Return either a string or nil."
                     (lsp-deferred))))
 
       :config
+      (lsp-register-client
+       (make-lsp-client
+        :new-connection (lsp-tramp-connection
+                         (my/defun-as-value my/python-find-mspyls ()
+                           (my/local-executable-find "mspyls")))
+        :major-modes (append '(python-mode) lsp-python-ms-extra-major-modes)
+        :remote? t
+        :server-id 'mspyls-remote
+        :priority -2
+        :initialization-options 'lsp-python-ms--extra-init-params
+        :notification-handlers
+        (lsp-ht ("python/languageServerStarted"
+                 'lsp-python-ms--language-server-started-callback)
+                ("telemetry/event" 'ignore)
+                ("python/reportProgress"
+                 'lsp-python-ms--report-progress-callback)
+                ("python/beginProgress" 'lsp-python-ms--begin-progress-callback)
+                ("python/endProgress" 'lsp-python-ms--end-progress-callback))
+        :initialized-fn
+        (lambda (workspace)
+          (with-lsp-workspace workspace
+            (lsp--set-configuration (lsp-configuration-section "python"))))))
+
       ;; when on arch, check if we can use the system ls
       (let ((system-ls "/usr/lib/microsoft-python-language-server/")
             (system-ls-bin (executable-find "mspyls")))
@@ -153,11 +176,17 @@ Return either a string or nil."
        'lsp-python-ms--extra-init-params :before
        (my/defun-as-value my/lsp-python-ms-discover-virtualenvs (&rest _)
          ;; Stolen from raxod502/radian
-         (when-let ((venv (my/python-find-virtualenv)))
+         (when-let ((venv (my/python-find-virtualenv-cached)))
            (setq-local lsp-python-ms-extra-paths
+                       (mapcar (lambda (path)
+                                 (if (tramp-tramp-file-p path)
+                                     (with-parsed-tramp-file-name path parsed
+                                       parsed-localname)
+                                   path)
+                                 )
                        (file-expand-wildcards
                         (expand-file-name
-                         "lib/python*/site-packages" venv))))))))
+                         "lib/python*/site-packages" venv)))))))))
 
   (add-hook 'python-mode-hook #'eldoc-mode)
 
@@ -198,6 +227,7 @@ Return either a string or nil."
                parsed-localname)))))
       :major-modes '(python-mode)
       :remote? t
+      :priority -3
       :server-id 'pyls-remote
       :library-folders-fn
       (lambda (_workspace)
