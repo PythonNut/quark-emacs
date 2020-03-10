@@ -24,6 +24,7 @@
         end-of-visual-line-or-end
         evil-backward-char
         evil-cycle-spacing
+        evil-delete
         evil-delete-backward-char-and-join
         evil-delete-backward-word-smart
         evil-delete-whole-line
@@ -55,6 +56,7 @@
         evil-goto-line
         evil-mouse-drag-region
         evil-normal-state
+        evil-smart-scroll-page-down
         evil-window-middle
         handle-select-window
         haskell-process-load-file
