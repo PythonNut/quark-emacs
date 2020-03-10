@@ -248,12 +248,6 @@ Return either a string or nil."
     :commands (blacken-buffer
                blacken-mode)))
 
-(use-package django-html-mode
-  :recipe django-mode
-  :defer-install t
-  :commands (django-html-mode)
-  :mode ("\\.djhtml$" . django-html-mode))
-
 (use-package cython-mode
   :defer-install t
   :commands (cython-mode)

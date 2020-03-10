@@ -114,14 +114,6 @@
   :mode (("\\.cu\\'" . cuda-mode)
          ("\\.cuh\\'" . cuda-mode)))
 
-(use-package glsl-mode
-  :defer-install t
-  :commands (glsl-mode)
-  :mode (("\\.vert\\'" . glsl-mode)
-         ("\\.frag\\'" . glsl-mode)
-         ("\\.geom\\'" . glsl-mode)
-         ("\\.glsl\\'" . glsl-mode)))
-
 (use-package asy-mode
   :defer-install t
   :commands (asy-mode)
@@ -297,14 +289,6 @@
              (save-excursion
                (sh-font-lock-quoted-subshell end)))))))
      (point) end)))
-
-(use-package fish-mode
-  :defer-install t
-  :commands (fish_indent-before-save
-             fish-mode)
-  :mode (("\\.fish\\'"           . fish-mode)
-         ("/fish_funced\\..*\\'" . fish-mode))
-  :interpreter ("fish" . fish-mode))
 
 ;; =============================================================================
 ;; PowerShell Scripts ==========================================================
@@ -628,11 +612,6 @@
          ("\\.amk$"           . php-mode))
   :interpreter ("php" . php-mode))
 
-(use-package dart-mode
-  :defer-install t
-  :commands (dart-mode)
-  :mode ("\\.dart\\'" . dart-mode))
-
 (use-package typescript-mode
   :defer-install t
   :commands (typescript-mode)
@@ -646,12 +625,6 @@
     :commands (tide-setup))
 
   (add-hook 'typescript-mode-hook #'tide-setup))
-
-(use-package handlebars-mode
-  :defer-install t
-  :commands (handlebars-mode)
-  :mode (("\\.handlebars$" . handlebars-mode)
-         ("\\.hbs$"        . handlebars-mode)))
 
 (use-package impatient-mode
   :defer-install t
@@ -1198,11 +1171,6 @@
   :commands (yaml-mode)
   :mode (("\\.e?ya?ml$" . yaml-mode)))
 
-(use-package haml-mode
-  :defer-install t
-  :commands (haml-mode)
-  :mode (("\\.haml\\'" . haml-mode)))
-
 (use-package markdown-mode
   :defer-install t
   :commands (markdown-mode gfm-mode)
@@ -1218,11 +1186,6 @@
   :commands (markdown-preview-open-browser
              markdown-preview-cleanup
              markdown-preview-mode))
-
-(use-package bbcode-mode
-  :defer-install t
-  :commands (bbcode-mode)
-  :mode (("\\.bbcode$" . bbcode-mode)))
 
 ;; =============================================================================
 ;; Org mode ====================================================================
@@ -1531,11 +1494,6 @@
   :commands (gap-mode)
   :mode ("\\.\\(g\\(?:ap\\|[di]\\)?\\)\\'" . gap-mode))
 
-(use-package fstar-mode
-  :defer-install t
-  :commands (fstar-mode)
-  :mode ("\\.fsti?\\'" . fstar-mode))
-
 (use-package sml-mode
   :defer-install t
   :commands (run-sml
@@ -1551,11 +1509,6 @@
   :init
   (add-to-list 'completion-ignored-extensions ".cm/")
   (add-to-list 'completion-ignored-extensions "CM/"))
-
-(use-package salt-mode
-  :defer-install t
-  :commands (salt-mode)
-  :mode ("\\.sls\\'" . salt-mode))
 
 (use-package ahk-mode
   :defer-install t
