@@ -1128,7 +1128,20 @@
 (use-package pkgbuild-mode
   :defer-install t
   :commands (pkgbuild-mode)
-  :mode (("/PKGBUILD\\'" . pkgbuild-mode)))
+  :mode (("/PKGBUILD\\'" . pkgbuild-mode))
+  :config
+  (setq pkgbuild-update-sums-on-save nil)
+
+  (el-patch-feature pkgbuild-mode)
+  (el-patch-defun pkgbuild-update-sums-line-hook ()
+    "Update sum lines if the file was modified"
+    (if (and pkgbuild-update-sums-on-save (not pkgbuild-in-hook-recursion))
+        (progn
+          (setq pkgbuild-in-hook-recursion t)
+          (save-buffer)                   ;always save BUFFER 2 times so we get the correct sums in this hook
+          (el-patch-add (message "Recalculating sums..."))
+          (setq pkgbuild-in-hook-recursion nil)
+          (pkgbuild-update-sums-line)))))
 
 (use-package pacfiles-mode
   :defer-install t
