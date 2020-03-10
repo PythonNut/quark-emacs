@@ -360,7 +360,9 @@
 
     :init
     (setq lsp-julia-package-dir nil
-          lsp-julia-default-environment "~/.julia/environments/v1.3")
+          lsp-julia-default-environment
+          (car (last (file-expand-wildcards
+                      (expand-file-name "~/.julia/environments/v*")))))
     (require 'lsp-julia)
     (add-hook 'julia-mode-hook #'lsp-deferred))
 
