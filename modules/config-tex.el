@@ -16,13 +16,6 @@
     (with-demoted-errors "Load error: %s"
       (require 'lsp-mode)))
 
-  ;; Copied from `lsp-clients--rust-window-progress' in `lsp-rust'.
-  (defun lsp-latex-window-progress (_workspace params)
-    "Progress report handling.
-PARAMS progress report notification data."
-    ;; Minimal implementation - we could show the progress as well.
-    (lsp-log (gethash "title" params)))
-
   (let* ((local-texlab-debug-path
           (expand-file-name
            (locate-user-emacs-file "data/lsp/texlab/target/debug/texlab")))
@@ -39,19 +32,7 @@ PARAMS progress report notification data."
                              (list "env" "PATH=/Library/TeX/texbin/" texlab-path)
                            texlab-path)))
     (when texlab-command
-      (lsp-register-client
-       (make-lsp-client :new-connection
-                        (lsp-stdio-connection
-                         texlab-command)
-                        :major-modes '(tex-mode yatex-mode latex-mode)
-                        :server-id 'texlab
-                        :notification-handlers
-                        (lsp-ht
-                         ("window/progress"
-                          'lsp-latex-window-progress))))
-
-      (add-to-list 'lsp-language-id-configuration '(tex-mode . "tex"))
-      (add-to-list 'lsp-language-id-configuration '(latex-mode . "tex")))))
+      (setq lsp-clients-texlab-executable texlab-command))))
 
 (use-package tex
   :recipe auctex
