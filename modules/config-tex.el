@@ -127,7 +127,19 @@ PARAMS progress report notification data."
 
   (when (and (eq system-type 'darwin)
              (file-directory-p "/Applications/Skim.app"))
-    (setf (cadr (assoc 'output-pdf TeX-view-program-selection)) "Skim"))
+    (setf (cadr (assoc 'output-pdf TeX-view-program-selection)) "Skim")
+
+    ;; Due to the way AUCTeX invokes commands, the programs need to be
+    ;; in the PATH, however for some reason on macOS the required
+    ;; directories are only added to exec-path and not PATH, so we
+    ;; correct this here.
+    (advice-add
+     'TeX-run-command :around
+     (my/defun-as-value my/TeX-run-command/add-exec-path (old-fun &rest args)
+       (let ((process-environment process-environment))
+         (setenv "PATH"
+                 (concat "$PATH" (string-join exec-path path-separator)) t)
+         (apply old-fun args)))))
 
   (defun my/LaTeX-format-name ()
     (save-excursion
