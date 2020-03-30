@@ -52,7 +52,7 @@ Return either a string or nil."
                              (my/tramp-build-name-from-localname path)
                            path)))
     (when (file-directory-p universal-path)
-      universal-path)))
+      (substring-no-properties universal-path))))
 
 (defvar my/python-virtualenv-cache nil)
 (add-to-list 'savehist-additional-variables 'my/python-virtualenv-cache)
@@ -126,67 +126,153 @@ Return either a string or nil."
   (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
 
   ;; Use the Microsoft python ls if we can
-  (when (executable-find "dotnet")
-    (use-package lsp-python-ms
-      :init
-      (require 'lsp-python-ms)
-      (add-hook 'python-mode-hook
-                (my/defun-as-value my/maybe-lsp (&rest _)
-                  (unless (file-remote-p buffer-file-name)
-                    (lsp-deferred))))
+  (use-package lsp-python-ms
+    :init
+    (require 'lsp-python-ms)
+    (add-hook 'python-mode-hook
+              (my/defun-as-value my/maybe-lsp (&rest _)
+                (unless (file-remote-p buffer-file-name)
+                  (lsp-deferred))))
 
-      :config
-      (lsp-register-client
-       (make-lsp-client
-        :new-connection (lsp-tramp-connection
-                         (my/defun-as-value my/python-find-mspyls ()
-                           (my/local-executable-find "mspyls")))
-        :major-modes (append '(python-mode) lsp-python-ms-extra-major-modes)
-        :remote? t
-        :server-id 'mspyls-remote
-        :priority -2
-        :initialization-options 'lsp-python-ms--extra-init-params
-        :notification-handlers
-        (lsp-ht ("python/languageServerStarted"
-                 'lsp-python-ms--language-server-started-callback)
-                ("telemetry/event" 'ignore)
-                ("python/reportProgress"
-                 'lsp-python-ms--report-progress-callback)
-                ("python/beginProgress" 'lsp-python-ms--begin-progress-callback)
-                ("python/endProgress" 'lsp-python-ms--end-progress-callback))
-        :initialized-fn
-        (lambda (workspace)
-          (with-lsp-workspace workspace
-            (lsp--set-configuration (lsp-configuration-section "python"))))))
+    :config
+    (lsp-register-client
+     (make-lsp-client
+      :new-connection (lsp-tramp-connection
+                       (my/defun-as-value my/python-find-mspyls ()
+                         (my/local-executable-find "mspyls")))
+      :major-modes (append '(python-mode) lsp-python-ms-extra-major-modes)
+      :remote? t
+      :server-id 'mspyls-remote
+      :priority -2
+      :initialization-options 'lsp-python-ms--extra-init-params
+      :notification-handlers
+      (lsp-ht ("python/languageServerStarted"
+               'lsp-python-ms--language-server-started-callback)
+              ("telemetry/event" 'ignore)
+              ("python/reportProgress"
+               'lsp-python-ms--report-progress-callback)
+              ("python/beginProgress" 'lsp-python-ms--begin-progress-callback)
+              ("python/endProgress" 'lsp-python-ms--end-progress-callback))
+      :initialized-fn
+      (lambda (workspace)
+        (with-lsp-workspace workspace
+          (lsp--set-configuration (lsp-configuration-section "python"))))))
 
-      ;; when on arch, check if we can use the system ls
-      (let ((system-ls "/usr/lib/microsoft-python-language-server/")
-            (system-ls-bin (executable-find "mspyls")))
-        (if (and (file-directory-p system-ls) system-ls-bin)
-            (setq lsp-python-ms-dir system-ls
-                  lsp-python-ms-executable system-ls-bin)
-          (setq lsp-python-ms-dir
-                (locate-user-emacs-file "data/mspyls")
-                lsp-python-ms-executable
-                (concat lsp-python-ms-dir
-                        "Microsoft.Python.LanguageServer"
-                        (and (eq system-type 'windows-nt) ".exe")))))
+    ;; when on arch, check if we can use the system ls
+    (let ((system-ls "/usr/lib/microsoft-python-language-server/")
+          (system-ls-bin (executable-find "mspyls")))
+      (if (and (file-directory-p system-ls) system-ls-bin)
+          (setq lsp-python-ms-dir system-ls
+                lsp-python-ms-executable system-ls-bin)
+        (setq lsp-python-ms-dir
+              (locate-user-emacs-file "data/mspyls")
+              lsp-python-ms-executable
+              (concat lsp-python-ms-dir
+                      "Microsoft.Python.LanguageServer"
+                      (and (eq system-type 'windows-nt) ".exe")))))
 
-      (advice-add
-       'lsp-python-ms--extra-init-params :before
-       (my/defun-as-value my/lsp-python-ms-discover-virtualenvs (&rest _)
-         ;; Stolen from raxod502/radian
-         (when-let ((venv (my/python-find-virtualenv-cached)))
-           (setq-local lsp-python-ms-extra-paths
-                       (mapcar (lambda (path)
-                                 (if (tramp-tramp-file-p path)
-                                     (with-parsed-tramp-file-name path parsed
-                                       parsed-localname)
-                                   path)
-                                 )
-                       (file-expand-wildcards
-                        (expand-file-name
-                         "lib/python*/site-packages" venv)))))))))
+    (el-patch-feature lsp-python-ms)
+
+    (el-patch-defun lsp-python-ms-locate-python ()
+      "Look for virtual environments local to the workspace"
+      (let* ((el-patch-add
+               (virtualenv (my/python-find-virtualenv-cached))
+               (virtualenv-python (f-expand "bin/python" virtualenv)))
+             (venv (locate-dominating-file default-directory "venv/"))
+             (sys-python (executable-find
+                          lsp-python-ms-python-executable-cmd))
+             (venv-python (f-expand "venv/bin/python" venv)))
+        (cond
+         (el-patch-add
+           ((and virtualenv (f-executable? virtualenv-python))
+            (if (tramp-tramp-file-p virtualenv-python) virtualenv-python)))
+         ((and venv (f-executable? venv-python)) venv-python)
+         (sys-python))))
+
+    (el-patch-defun lsp-python-ms--get-python-ver-and-syspath (workspace-root)
+      "Return list with pyver-string and list of python search paths.
+
+The WORKSPACE-ROOT will be prepended to the list of python search
+paths and then the entire list will be json-encoded."
+      (when-let
+          ((python (lsp-python-ms-locate-python))
+           (default-directory workspace-root)
+           (init "from __future__ import print_function; import sys; \
+sys.path = list(filter(lambda p: p != '', sys.path)); import json;")
+           (ver "v=(\"%s.%s\" % (sys.version_info[0], sys.version_info[1]));")
+           (sp (concat "sys.path.insert(0, '" workspace-root "'); p=sys.path;"))
+           (ex "e=sys.executable;")
+           (val "print(json.dumps({\"version\":v,\"paths\":p,\"executable\":e}))"))
+
+        (with-temp-buffer
+          (el-patch-wrap 3
+            (if (tramp-tramp-file-p python)
+                (with-parsed-tramp-file-name python parsed
+                  (let ((default-directory (file-name-directory python)))
+                    (process-file parsed-localname nil t nil "-c"
+                                  (concat init ver sp ex val))))
+              (call-process python nil t nil "-c"
+                            (concat init ver sp ex val))))
+
+
+          (let* ((json-array-type 'vector)
+                 (json-key-type 'string)
+                 (json-object-type 'hash-table)
+                 (json-string (buffer-string))
+                 (json-hash (json-read-from-string json-string)))
+            (list (gethash "version" json-hash)
+                  (gethash "paths" json-hash)
+                  (gethash "executable" json-hash))))))
+
+    (el-patch-defun lsp-python-ms--extra-init-params (&optional workspace)
+      "Return form describing parameters for language server.
+
+Old lsp will pass in a WORKSPACE, new lsp has a global
+lsp-workspace-root function that finds the current buffer's
+workspace root.  If nothing works, default to the current file's
+directory"
+      (let ((workspace-root
+             (if workspace (lsp--workspace-root workspace)
+               (lsp-python-ms--workspace-root))))
+        (when lsp-python-ms-parse-dot-env-enabled
+          (lsp-python-ms--parse-dot-env workspace-root))
+        (cl-destructuring-bind (pyver pysyspath pyintpath)
+            (lsp-python-ms--get-python-ver-and-syspath workspace-root)
+          `(:interpreter
+            (:properties
+             (:InterpreterPath
+              ,(el-patch-wrap 3
+                 (if (tramp-tramp-file-p pyintpath)
+                     (with-parsed-tramp-file-name pyintpath parsed
+                       parsed-localname)
+                   pyintpath))
+              :UseDefaultDatabase t
+              :Version ,pyver))
+            ;; preferredFormat "markdown" or "plaintext" experiment
+            ;; to find what works best -- over here mostly plaintext
+            :displayOptions
+            (:preferredFormat
+             "markdown"
+             :trimDocumentationLines :json-false
+             :maxDocumentationLineLength 0
+             :trimDocumentationText :json-false
+             :maxDocumentationTextLength 0)
+            :searchPaths
+            ,(if lsp-python-ms-extra-paths
+                 (vconcat lsp-python-ms-extra-paths nil)
+               (el-patch-wrap 2
+                 (mapcar (lambda (fname)
+                           (if (tramp-tramp-file-p fname)
+                               (with-parsed-tramp-file-name fname parsed
+                                 parsed-localname)
+                             fname))
+                         pysyspath)))
+            :analysisUpdates t
+            :asyncStartup t
+            :logLevel ,lsp-python-ms-log-level
+            :typeStubSearchPaths
+            ,(vector (expand-file-name
+                      (f-join lsp-python-ms-dir "Typeshed"))))))))
 
   (add-hook 'python-mode-hook #'eldoc-mode)
 
