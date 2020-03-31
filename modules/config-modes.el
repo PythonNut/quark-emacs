@@ -137,19 +137,6 @@
              js2-jsx-mode)
   :interpreter ("node" . js2-mode)
   :config
-  (use-package ac-js2
-    :commands (ac-js2-expand-function
-               ac-js2-completion-function
-               ac-js2-company
-               ac-js2-jump-to-definition
-               ac-js2-mode)
-    :init
-    (add-hook 'js2-mode-hook 'ac-js2-mode)
-    :config
-    ;; I really shouldn't have to do this. :/
-    (require 'cl))
-
-
   (use-package js2-refactor
     :defer-install t
     :commands (js2r-add-keybindings-with-prefix
