@@ -285,10 +285,10 @@ matching string."
                                            (zero-or-more
                                             (or
                                              (and "["
-                                                  (zero-or-more char)
+                                                  (zero-or-more any)
                                                   "]")
                                              (and "{"
-                                                  (zero-or-more char)
+                                                  (zero-or-more any)
                                                   "}")))))))
                  (beg (save-excursion
                         (while (not (or
