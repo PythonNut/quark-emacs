@@ -3,7 +3,9 @@
 (require 'cl-lib)
 (require 'config-tramp)
 
-(define-minor-mode read-passwd-show-hash-mode :init-value t :global t)
+(define-minor-mode read-passwd-show-hash-mode
+  "Show the hashes of passwords read by read-passwd"
+  :init-value t :global t)
 
 (el-patch-defun read-passwd (prompt &optional confirm default)
   "Read a password, prompting with PROMPT, and return it.
