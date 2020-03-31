@@ -449,7 +449,7 @@ is binary, activate `hexl-mode'."
   (advice-add
    'abort-if-file-too-large :around
    (my/defun-as-value nadvice/abort-if-file-too-large (_old-fun &rest args)
-     (cl-destructuring-bind (size op-type filename) args
+     (cl-destructuring-bind (size op-type filename &rest _offer-raw) args
        (when (and size
                   (not (zerop size))
                   large-file-warning-threshold
