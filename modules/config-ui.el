@@ -7,7 +7,6 @@
 (require 'config-undo)
 
 (require 'config-smartparens)
-(require 'config-rainbow-delimiters)
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil
