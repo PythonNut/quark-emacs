@@ -346,6 +346,10 @@ if ARG is omitted or nil.
 
 (use-package projectile
   :init
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'el-patch)))
+
   (autoload #'projectile-find-file-hook-function "projectile"
     "Called by `find-file-hook' when `projectile-mode' is on.
 
@@ -355,6 +359,12 @@ tramp.")
 
   (autoload #'projectile-track-known-projects-find-file-hook "projectile"
     "Function for caching projects with `find-file-hook'.")
+
+  (autoload #'delete-file-projectile-remove-from-cache "projectile")
+
+  (autoload #'compilation-find-file-projectile-find-compilation-buffer "projectile"
+    "Try to find a buffer for FILENAME, if we cannot find it,
+fallback to the original function.")
 
   (el-patch-feature projectile)
   (defgroup projectile nil
@@ -425,6 +435,7 @@ tramp.")
       (define-key map (kbd "x i") #'projectile-run-ielm)
       (define-key map (kbd "x t") #'projectile-run-term)
       (define-key map (kbd "x s") #'projectile-run-shell)
+      (define-key map (kbd "x g") #'projectile-run-gdb)
       (define-key map (kbd "x v") #'projectile-run-vterm)
       (define-key map (kbd "z") #'projectile-cache-current-file)
       (define-key map (kbd "<left>") #'projectile-previous-project-buffer)
@@ -469,6 +480,8 @@ tramp.")
           ["Replace in project" projectile-replace]
           ["Multi-occur in project" projectile-multi-occur]
           "--"
+          ["Run GDB" projectile-run-gdb]
+          "--"
           ["Run shell" projectile-run-shell]
           ["Run eshell" projectile-run-eshell]
           ["Run ielm" projectile-run-ielm]
@@ -491,84 +504,6 @@ tramp.")
 
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-  (el-patch-defcustom projectile-indexing-method (if (eq system-type 'windows-nt) 'native 'alien)
-    "Specifies the indexing method used by Projectile.
-
-There are three indexing methods - native, hybrid and alien.
-
-The native method is implemented in Emacs Lisp (therefore it is
-native to Emacs).  Its advantage is that it is portable and will
-work everywhere that Emacs does.  Its disadvantage is that it is a
-bit slow (especially for large projects).  Generally it's a good
-idea to pair the native indexing method with caching.
-
-The hybrid indexing method uses external tools (e.g. git, find,
-etc) to speed up the indexing process.  Still, the files will be
-post-processed by Projectile for sorting/filtering purposes.
-In this sense that approach is a hybrid between native indexing
-and alien indexing.
-
-The alien indexing method optimizes to the limit the speed
-of the hybrid indexing method.  This means that Projectile will
-not do any processing of the files returned by the external
-commands and you're going to get the maximum performance
-possible.  This behaviour makes a lot of sense for most people,
-as they'd typically be putting ignores in their VCS config and
-won't care about any additional ignores/unignores/sorting that
-Projectile might also provide.
-
-The disadvantage of the hybrid and alien methods is that they are not well
-supported on Windows systems.  That's why by default alien indexing is the
-default on all operating systems, except Windows."
-    :group 'projectile
-    :type '(radio
-            (const :tag "Native" native)
-            (const :tag "Hybrid" hybrid)
-            (const :tag "Alien" alien)))
-
-  (el-patch-defcustom projectile-enable-caching (eq projectile-indexing-method 'native)
-    "When t enables project files caching.
-
-Project caching is automatically enabled by default if you're
-using the native indexing method."
-    :group 'projectile
-    :type 'boolean)
-
-  (el-patch-defadvice delete-file (before purge-from-projectile-cache (filename &optional trash))
-    (if (and projectile-enable-caching (projectile-project-p))
-        (let* ((project-root (projectile-project-root))
-               (true-filename (file-truename filename))
-               (relative-filename (file-relative-name true-filename project-root)))
-          (if (projectile-file-cached-p relative-filename project-root)
-              (projectile-purge-file-from-cache relative-filename)))))
-
-  (el-patch-defadvice compilation-find-file (around projectile-compilation-find-file)
-    "Try to find a buffer for FILENAME, if we cannot find it,
-fallback to the original function."
-    (let ((filename (ad-get-arg 1))
-          full-filename)
-      (ad-set-arg 1
-                  (or
-                   (if (file-exists-p (expand-file-name filename))
-                       filename)
-                   ;; Try to find the filename using projectile
-                   (and (projectile-project-p)
-                        (let ((root (projectile-project-root))
-                              (dirs (cons "" (projectile-current-project-dirs))))
-                          (when (setq full-filename
-                                      (car (cl-remove-if-not
-                                            #'file-exists-p
-                                            (mapcar
-                                             (lambda (f)
-                                               (expand-file-name
-                                                filename
-                                                (expand-file-name f root)))
-                                             dirs))))
-                            full-filename)))
-                   ;; Fall back to the old argument
-                   filename))
-      ad-do-it))
-
   (el-patch-define-minor-mode projectile-mode
     "Minor mode to assist project management and navigation.
 
@@ -581,7 +516,7 @@ nil or positive.  If ARG is `toggle', toggle `projectile-mode'.
 Otherwise behave as if called interactively.
 
 \\{projectile-mode-map}"
-    :lighter projectile-mode-line
+    :lighter projectile--mode-line
     :keymap projectile-mode-map
     :group 'projectile
     :require 'projectile
@@ -589,6 +524,8 @@ Otherwise behave as if called interactively.
     (cond
      (projectile-mode
       (el-patch-remove
+        ;; setup the commander bindings
+        (projectile-commander-bindings)
         ;; initialize the projects cache if needed
         (unless projectile-projects-cache
           (setq projectile-projects-cache
@@ -597,22 +534,22 @@ Otherwise behave as if called interactively.
         (unless projectile-projects-cache-time
           (setq projectile-projects-cache-time
                 (make-hash-table :test 'equal)))
+        ;; load the known projects
+        (projectile-load-known-projects)
         ;; update the list of known projects
-        (projectile-cleanup-known-projects)
+        (projectile--cleanup-known-projects)
         (projectile-discover-projects-in-search-path))
-
       (add-hook 'find-file-hook 'projectile-find-file-hook-function)
       (add-hook 'projectile-find-dir-hook #'projectile-track-known-projects-find-file-hook t)
       (add-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook t t)
-      (ad-activate 'compilation-find-file)
-      (ad-activate 'delete-file))
+      (advice-add 'compilation-find-file :around #'compilation-find-file-projectile-find-compilation-buffer)
+      (advice-add 'delete-file :before #'delete-file-projectile-remove-from-cache))
      (t
       (remove-hook 'find-file-hook #'projectile-find-file-hook-function)
       (remove-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook t)
-      (ad-deactivate 'compilation-find-file)
-      (ad-deactivate 'delete-file))))
+      (advice-remove 'compilation-find-file #'compilation-find-file-projectile-find-compilation-buffer)
+     (advice-remove 'delete-file #'delete-file-projectile-remove-from-cache))))
 
-  :init
   (setq projectile-mode-line-prefix (if (display-graphic-p) " ↠" " /"))
   (projectile-mode +1)
 
@@ -628,12 +565,7 @@ Otherwise behave as if called interactively.
         projectile-cache-file
         (locate-user-emacs-file "data/.projectile.cache")
         projectile-completion-system 'ivy
-        projectile-dynamic-mode-line nil)
-
-  ;; Enable the mode again now that we have all the supporting hooks
-  ;; and stuff defined.
-  (projectile-mode +1))
-
+        projectile-dynamic-mode-line nil))
 
 (use-package diff
   :ensure nil

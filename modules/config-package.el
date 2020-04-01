@@ -269,19 +269,6 @@ second, floating-point values are rounded down to the nearest integer.)"
 (defvar el-patch--patches (make-hash-table))
 
 (with-eval-after-load 'el-patch
-  (el-patch-deftype defadvice
-    :classify el-patch-classify-function
-    :declare ((doc-string 3)
-              (indent 2)
-              (debug (&define name  ;; thing being advised.
-                              (name ;; class is [&or "before" "around" "after"
-                               ;;               "activation" "deactivation"]
-                               name ;; name of advice
-                               &rest sexp ;; optional position and flags
-                               )
-                              [&optional stringp]
-                              [&optional ("interactive" interactive)]
-                              def-body))))
   (el-patch-deftype evil-define-command
     :classify el-patch-classify-function
     :locate el-patch-locate-function
