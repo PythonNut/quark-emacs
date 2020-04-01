@@ -38,14 +38,14 @@ by doing (clear-string STRING)."
          (clear-this-command-keys)
          (setq beg (min end (max (minibuffer-prompt-end)
                                  beg)))
-         (move-overlay ol (point-max) (point-max))
-         (let ((len (- (point-max) (minibuffer-prompt-end)))
-               (hash (md5 (minibuffer-contents-no-properties))))
-           (overlay-put ol 'after-string
-                        (if (and (> len 10) read-passwd-show-hash-mode)
-                            (format "  [%d chars, #%s]"
-                                    len (substring hash 0 4)))))
-
+         (el-patch-add
+           (move-overlay ol (point-max) (point-max))
+           (let ((len (- (point-max) (minibuffer-prompt-end)))
+                 (hash (md5 (minibuffer-contents-no-properties))))
+             (overlay-put ol 'after-string
+                          (if (and (> len 10) read-passwd-show-hash-mode)
+                              (format "  [%d chars, #%s]"
+                                      len (substring hash 0 4))))))
          (dotimes (i (- end beg))
            (put-text-property (+ i beg) (+ 1 i beg)
                               'display (string (or read-hide-char ?.))))))
@@ -59,12 +59,12 @@ by doing (clear-string STRING)."
            (setq-local select-active-regions nil)
            (use-local-map read-passwd-map)
            (setq-local inhibit-modification-hooks nil) ;bug#15501.
-	   (setq-local show-paren-mode nil)		;bug#16091.
+           (setq-local show-paren-mode nil)		;bug#16091.
            (el-patch-add (setq ol (make-overlay (point-max) (point-max) nil t t)))
            (add-hook 'after-change-functions hide-chars-fun nil 'local))
        (unwind-protect
            (let ((enable-recursive-minibuffers t)
-		 (read-hide-char (or read-hide-char ?.)))
+                 (read-hide-char (or read-hide-char ?.)))
              (read-string prompt nil t default)) ; t = "no history"
          (when (buffer-live-p minibuf)
            (with-current-buffer minibuf
