@@ -135,6 +135,10 @@ Return either a string or nil."
                   (lsp-deferred))))
 
     :config
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'lsp)))
+
     (lsp-register-client
      (make-lsp-client
       :new-connection (lsp-tramp-connection
