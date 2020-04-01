@@ -115,6 +115,9 @@ Return either a string or nil."
 
 (use-package python
   :ensure nil
+  :init
+  (el-patch-feature python)
+
   :config
   (add-hook 'python-mode-hook
             (lambda ()
@@ -134,10 +137,13 @@ Return either a string or nil."
                 (unless (file-remote-p buffer-file-name)
                   (lsp-deferred))))
 
+    (el-patch-feature lsp-python-ms)
+
     :config
     (eval-when-compile
       (with-demoted-errors "Load error: %s"
-        (require 'lsp)))
+        (require 'lsp)
+        (require 'el-patch)))
 
     (lsp-register-client
      (make-lsp-client
@@ -174,8 +180,6 @@ Return either a string or nil."
               (concat lsp-python-ms-dir
                       "Microsoft.Python.LanguageServer"
                       (and (eq system-type 'windows-nt) ".exe")))))
-
-    (el-patch-feature lsp-python-ms)
 
     (el-patch-defun lsp-python-ms-locate-python ()
       "Look for virtual environments local to the workspace"

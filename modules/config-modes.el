@@ -69,11 +69,13 @@
   (global-set-key (kbd "C-h f") #'helpful-callable)
   (global-set-key (kbd "C-h k") #'helpful-key)
   (global-set-key (kbd "C-h v") #'helpful-variable)
+
+  (el-patch-feature helpful)
+
   :config
   (define-key helpful-mode-map "J" #'forward-button)
   (define-key helpful-mode-map "K" #'backward-button)
 
-  (el-patch-feature helpful)
   (el-patch-defun helpful--read-symbol (prompt predicate)
   (let ((sym-here (symbol-at-point)))
     (read (completing-read prompt (el-patch-swap obarray

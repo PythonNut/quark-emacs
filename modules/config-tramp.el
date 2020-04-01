@@ -154,8 +154,6 @@
     (with-demoted-errors "Load error: %s"
       (require 'el-patch)))
 
-  (el-patch-feature su)
-
   (defun nadvice/su-disable-maybe-setup (flag)
     (if (and (not flag) (bound-and-true-p su-auto-save-mode))
         (su-auto-save-mode -1)))

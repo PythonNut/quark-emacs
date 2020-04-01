@@ -201,6 +201,8 @@ command."
   (use-package magic-latex-buffer
     :defer-install t
     :commands (magic-latex-buffer)
+    :init
+    (el-patch-feature magic-latex-buffer)
     :config
     (setq magic-latex-enable-block-align nil
           magic-latex-enable-inline-image nil)
@@ -210,7 +212,6 @@ command."
     (set-face-attribute 'ml/huge nil :height 1.35)
     (set-face-attribute 'ml/hhuge nil :height 1.4)
 
-    (el-patch-feature magic-latex-buffer)
     (el-patch-defun ml/search-regexp (regex &optional bound backward point-safe)
       "Like `search-regexp' but skips escaped chars, comments and
 verbish environments. This function raise an error on
