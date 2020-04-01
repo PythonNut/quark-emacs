@@ -78,12 +78,25 @@
   (define-key helpful-mode-map "K" #'backward-button)
 
   (el-patch-defun helpful--read-symbol (prompt predicate)
-  (let ((sym-here (symbol-at-point)))
-    (read (completing-read prompt (el-patch-swap obarray
-                                                 #'help--symbol-completion-table)
-                           predicate t nil nil
-                           (when (funcall predicate sym-here)
-                             (symbol-name sym-here)))))))
+    (let* ((sym-here (symbol-at-point))
+           (default-val
+             (when (funcall predicate sym-here)
+               (symbol-name sym-here))))
+      (when default-val
+        ;; TODO: Only modify the prompt when we don't have ido/ivy/helm,
+        ;; because the default is obvious for them.
+        (setq prompt
+              (replace-regexp-in-string
+               (rx ": " eos)
+               (format " (default: %s): " default-val)
+               prompt)))
+      (intern (completing-read
+               prompt
+               (el-patch-swap obarray
+                              #'help--symbol-completion-table)
+               predicate t nil nil
+               default-val)))))
+
 (use-package macrostep
   :defer-install t
   :commands (macrostep-mode macrostep-expand)
