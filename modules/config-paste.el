@@ -387,7 +387,8 @@ move the yanking point; just return the Nth kill forward."
 (el-patch-evil-define-command evil-visual-paste (count &optional register)
   "Paste over Visual selection."
   :suppress-operator t
-  (interactive "P<x>")
+  (interactive "*P<x>")
+  (setq count (prefix-numeric-value count))
   ;; evil-visual-paste is typically called from evil-paste-before or
   ;; evil-paste-after, but we have to mark that the paste was from
   ;; visual state
