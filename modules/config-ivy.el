@@ -71,7 +71,8 @@ recursion depth in the minibuffer prompt.  This is only useful if
           (if (file-exists-p historian-save-file)
               (with-temp-buffer
                 (insert-file-contents historian-save-file)
-                (read (current-buffer)))
+                (with-demoted-errors "corrupt historian save file: %s"
+                  (read (current-buffer))))
             (make-hash-table))))
 
   (el-patch-define-minor-mode historian-mode
