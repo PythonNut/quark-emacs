@@ -193,7 +193,7 @@ Return either a string or nil."
         (cond
          (el-patch-add
            ((and virtualenv (f-executable? virtualenv-python))
-            (if (tramp-tramp-file-p virtualenv-python) virtualenv-python)))
+            virtualenv-python))
          ((and venv (f-executable? venv-python)) venv-python)
          (sys-python))))
 
@@ -268,8 +268,8 @@ directory"
             :searchPaths
             ,(if lsp-python-ms-extra-paths
                  (vconcat lsp-python-ms-extra-paths nil)
-               (el-patch-wrap 2
-                 (mapcar (lambda (fname)
+               (el-patch-wrap 3
+                 (cl-map 'vector (lambda (fname)
                            (if (tramp-tramp-file-p fname)
                                (with-parsed-tramp-file-name fname parsed
                                  parsed-localname)
