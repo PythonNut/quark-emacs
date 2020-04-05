@@ -2,9 +2,6 @@
 (eval-when-compile (require 'config-macros))
 (require 'cl-lib)
 (require 'config-package)
-(require 'config-tex)
-(require 'config-c)
-(require 'config-python)
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
@@ -1567,5 +1564,9 @@
       (setq lsp-ui-doc-use-childframe nil))))
 
 (use-package company-lsp :commands company-lsp)
+
+(require 'config-tex)
+(require 'config-c)
+(require 'config-python)
 
 (provide 'config-modes)
