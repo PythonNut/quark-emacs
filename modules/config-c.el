@@ -34,78 +34,6 @@
          (newline)
          (indent-according-to-mode)))))
 
-  (use-package irony-eldoc
-    :defer-install t
-    :commands (irony-eldoc))
-
-  (use-package flycheck-irony
-    :defer-install t
-    :commands (flycheck-irony-setup))
-
-  (use-package irony
-    :defer-install t
-    :commands (irony-mode
-               irony-version
-               irony-server-kill
-               irony-cdb-autosetup-compile-options
-               irony-cdb-menu
-               irony-cdb-clang-complete
-               irony-cdb-json
-               irony-cdb-json-add-compile-commands-path
-               irony-cdb-libclang
-               irony-completion-at-point
-               irony-completion-at-point-async)
-    :init
-    (add-to-list 'safe-local-variable-values
-                 '(irony-additional-clang-options . ("-std=c++11")))
-    (add-to-list 'safe-local-variable-values
-                 '(irony-additional-clang-options . ("-std=c++14")))
-    (add-to-list 'safe-local-variable-values
-                 '(irony-additional-clang-options . ("-std=c++17")))
-
-    :config
-    (setq irony-user-dir (locate-user-emacs-file "data/irony")
-          irony-server-install-prefix irony-user-dir)
-    (flycheck-irony-setup)
-    (add-hook 'irony-mode-hook 'irony-eldoc)
-    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-  (use-package company-irony
-    :defer-install t
-    :commands (company-irony
-               company-irony-setup-begin-commands)
-    :config
-    (setq company-irony-ignore-case t)
-
-    (use-package company-irony
-      :defer-install t
-      :config
-      (advice-add
-       'company-irony--filter-candidates :override
-       (my/defun-as-value nadvice/company-irony--filter-candidates (prefix candidates)
-         (let ((regex (concat "\\`"
-                              (mapconcat
-                               (lambda (x)
-                                 (setq x (string x))
-                                 (concat "[^" x "]*" (regexp-quote x)))
-                               prefix
-                               "")))
-               (case-fold-search company-irony-ignore-case))
-           (cl-loop for candidate in candidates
-                    when (string-match-p regex (car candidate))
-                    collect (propertize (car candidate) 'company-irony candidate))))))
-
-    (advice-add
-     'irony-completion-post-complete :around
-     (my/defun-as-value nadvice/irony-completion-post-complete (old-fun &rest args)
-       (unless (irony-eldoc--which-funcall)
-         (apply old-fun args)))))
-
-  (use-package company-irony-c-headers
-    :defer-install t
-    :defer-install t
-    :commands (company-irony-c-headers))
-
   (use-package clang-format
     :defer-install t
     :commands (clang-format
@@ -128,8 +56,7 @@
                          (require 'cl-lib)
                          (let ((old-backends company-backends))
                            (set (make-local-variable 'company-backends)
-                                '((company-irony-c-headers
-                                   company-irony
+                                '((company-lsp
                                    company-yasnippet
                                    company-files)
                                   (company-dabbrev-code)
@@ -146,9 +73,7 @@
         (mode hook)
         `(add-hook ,hook (lambda ()
                            (when (eq major-mode ,mode)
-                             (irony-mode +1)
                              (eldoc-mode +1)
-                             (irony-eldoc +1)
                              (aggressive-indent-mode +1)
                              (helm-gtags-mode +1)
                              (semantic-idle-summary-mode -1))))))
