@@ -126,6 +126,7 @@
   (add-hook 'git-rebase-mode-hook #'my/setup-magit-mode)
 
   (add-hook 'with-editor-mode-hook #'evil-insert-state)
+  (add-hook 'with-editor-mode-hook #'jit-lock-fontify-now)
 
   (advice-add
    'magit-revert-buffers :after
