@@ -150,7 +150,8 @@ Minibuffer bindings:
   :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
-      (require 'historian)))
+      (require 'historian)
+      (require 'ivy)))
 
   (ivy-historian-mode +1)
 
@@ -164,16 +165,7 @@ Minibuffer bindings:
     (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
                                      'ivy-minibuffer-match-face-2)))
 
-  (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'ivy)))
-
   (diminish 'ivy-mode)
-  (with-eval-after-load 'avy
-    (eval-when-compile
-      (require 'avy))
-
-    (setf (cdr (assoc 'ivy-avy avy-styles-alist)) 'at-full))
 
   (setq ivy-display-style 'fancy
         ivy-re-builders-alist '((t . ivy--regex-fuzzy))
