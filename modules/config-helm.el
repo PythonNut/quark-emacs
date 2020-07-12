@@ -166,12 +166,12 @@
 
   (advice-add
    'helm-ff-filter-candidate-one-by-one :around
-   (my/defun-as-value nadvice/helm-ff-filter-candidate-one-by-one (old-fun file)
+   (my/defun-as-value nadvice/helm-ff-filter-candidate-one-by-one (old-fun file &rest args)
      (when (or (not (string-match-p (rx (or "." "..") line-end) file))
                (string-match-p (rx ".")
                                (helm-basename (or (bound-and-true-p helm-input)
                                                   ""))))
-       (funcall old-fun file)))))
+       (funcall old-fun file args)))))
 
 (use-package helm-buffers
   :ensure nil
