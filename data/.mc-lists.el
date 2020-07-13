@@ -57,8 +57,12 @@
         evil-mouse-drag-region
         evil-normal-state
         evil-smart-scroll-page-down
+        evil-visual-block
+        evil-visual-char
+        evil-visual-line
         evil-window-middle
         handle-select-window
         haskell-process-load-file
         hydra/projectile-tools/body
+        keyboard-quit
         ))
