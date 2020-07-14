@@ -59,9 +59,8 @@
     (setenv "SSH_ASKPASS" "magit-askpass"))
 
   (setq magit-push-always-verify nil
-        magit-completing-read-function #'magit-ido-completing-read
         magit-log-format-graph-function #'magit-log-format-unicode-graph
-        magit-completing-read-function 'ivy-completing-read
+        magit-completing-read-function #'ivy-completing-read
         magit-diff-refine-hunk t
         magit-pull-or-fetch t)
 
