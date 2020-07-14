@@ -413,15 +413,15 @@
                (unless slow-fs
                  (append
                   ;; code search
-                  (if my/rg-available
-                      (progn
-                        (setq my/rg-used t)
-                        '(helm-rg-process-source))
-                    (if (and projectile-root
-                             (featurep 'vc-git)
-                             (vc-git-responsible-p projectile-root)
-                             (require 'helm-git-grep))
-                        '(helm-source-git-grep)
+                  (if (and projectile-root
+                           (featurep 'vc-git)
+                           (vc-git-responsible-p projectile-root)
+                           (require 'helm-git-grep))
+                      '(helm-source-git-grep)
+                    (if my/rg-available
+                        (progn
+                          (setq my/rg-used t)
+                          '(helm-rg-process-source))
                       (when my/ag-available
                         '(helm-source-do-ag))))
 
