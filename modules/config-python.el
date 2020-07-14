@@ -235,11 +235,7 @@ directory"
           `(:interpreter
             (:properties
              (:InterpreterPath
-              ,(el-patch-wrap 3
-                 (if (tramp-tramp-file-p pyintpath)
-                     (with-parsed-tramp-file-name pyintpath parsed
-                       parsed-localname)
-                   pyintpath))
+              ,(el-patch-wrap 1 (my/tramp-localname pyintpath))
               :UseDefaultDatabase t
               :Version ,pyver))
             ;; preferredFormat "markdown" or "plaintext" experiment
@@ -252,15 +248,9 @@ directory"
              :trimDocumentationText :json-false
              :maxDocumentationTextLength 0)
             :searchPaths
-            ,(if lsp-python-ms-extra-paths
-                 (vconcat lsp-python-ms-extra-paths nil)
-               (el-patch-wrap 3
-                 (cl-map 'vector (lambda (fname)
-                           (if (tramp-tramp-file-p fname)
-                               (with-parsed-tramp-file-name fname parsed
-                                 parsed-localname)
-                             fname))
-                         pysyspath)))
+            ,(vconcat lsp-python-ms-extra-paths
+                      (el-patch-wrap 3
+                        (cl-map 'vector #'my/tramp-localname pysyspath)))
             :analysisUpdates t
             :asyncStartup t
             :logLevel ,lsp-python-ms-log-level

@@ -305,4 +305,10 @@ response as a no."
      localname
      parsed-hop)))
 
+(defun my/tramp-localname (path)
+  (if (tramp-tramp-file-p path)
+      (with-parsed-tramp-file-name path parsed
+        parsed-localname)
+    path))
+
 (provide 'config-setq)
