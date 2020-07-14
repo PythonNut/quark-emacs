@@ -9,6 +9,7 @@
 (defun my/python-find-virtualenv (&optional dir)
   "Find a virtualenv corresponding to the current buffer.
 Return either a string or nil."
+  (require 's)
   (message "Searching for Python virtual environment at %s" default-directory)
   (let* ((default-directory (or dir default-directory))
          (path
@@ -24,22 +25,7 @@ Return either a string or nil."
                                              "info"
                                              "-p")
                 (when (= 0 return-code)
-                  (cl-return output)))
-              ;; Fall back to poetry <1.0 check TODO: This code
-              ;; will become stale over time, so get rid of it
-              ;; after a while.
-              ;; Radon: May create virtualenv, but whatever.
-              (cl-destructuring-bind (return-code . output)
-                  (my/process-file-to-string "poetry" nil '(t nil) nil
-                                             "run"
-                                             "which"
-                                             "python")
-                (when (and (= 0 return-code)
-                           (string-match (rx bol
-                                             (group (1+ any))
-                                             "/bin/python\n")
-                                         output))
-                  (cl-return (match-string 1 output)))))
+                  (cl-return (s-chop-suffix "\n" output)))))
             (when (and (my/local-executable-find "pipenv")
                        (locate-dominating-file default-directory
                                                "Pipfile"))
@@ -47,7 +33,7 @@ Return either a string or nil."
                   (my/process-file-to-string "pipenv" nil '(t nil) nil
                                              "--venv")
                 (when (= 0 return-code)
-                  (cl-return (string-trim output)))))))
+                  (cl-return (s-chop-suffix "\n" output)))))))
          (universal-path (if (tramp-tramp-file-p default-directory)
                              (my/tramp-build-name-from-localname path)
                            path)))
