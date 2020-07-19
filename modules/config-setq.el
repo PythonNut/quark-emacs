@@ -311,4 +311,13 @@ response as a no."
         parsed-localname)
     path))
 
+(defun hash-buffer (alg)
+  (interactive
+   (list
+    (intern (completing-read "Choose algorithm: "
+                             '(md5 sha1 sha224 sha256 sha384 sha512)))))
+  (let ((result (secure-hash alg (current-buffer))))
+    (message "%s" result)
+    (kill-new result)))
+
 (provide 'config-setq)
