@@ -620,11 +620,37 @@
   (with-eval-after-load 'folding
     (when (fboundp 'folding-add-to-marks-list)
       (folding-add-to-marks-list 'typescript-mode "// {{{" "// }}}" )))
+
   (use-package tide
     :defer-install t
-    :commands (tide-setup))
+    :commands (tide-setup)
+    :config
+    ;; This is because tide is poorly behaved and messes with
+    ;; company-backends on load
+    (cl-delete 'company-tide company-backends))
 
-  (add-hook 'typescript-mode-hook #'tide-setup))
+  (add-hook 'typescript-mode-hook #'tide-setup)
+
+  (eval-and-compile
+    (cl-macrolet
+        ((company-define-specific-modes
+          (mode)
+          `(progn
+             (add-hook ,mode
+                       (lambda ()
+                         (require 'company)
+                         (require 'cl-lib)
+                         (let ((old-backends company-backends))
+                           (set (make-local-variable 'company-backends)
+                                '((company-tide
+                                   company-yasnippet
+                                   company-files)
+                                  (company-dabbrev-code)
+                                  company-dabbrev))))))))
+      (with-no-warnings
+        (my/generate-calls-single
+            'company-define-specific-modes
+          '('typescript-mode-hook))))))
 
 (use-package impatient-mode
   :defer-install t

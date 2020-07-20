@@ -44,7 +44,6 @@
             ('texinfo-mode-hook    '(company-semantic))
             ('python-mode-hook     '(company-lsp))
             ('text-mode-hook       '(company-ispell))
-            ('livescript-mode-hook '(company-tide))
             ('go-mode-hook         '(company-go)))))))
 
   :config

@@ -333,8 +333,6 @@ of (command, word) to be used by `flyspell-do-correct'."))
     :condition (get-buffer-window)
     (my/yas-init))
 
-
-
   :config
   (set-face-attribute 'yas-field-highlight-face nil
                       :foreground nil
