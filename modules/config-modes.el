@@ -1472,30 +1472,12 @@
   :commands (fsharp-mode)
   :mode ("\\.fs[iylx]?$" . fsharp-mode))
 
-(use-package elixir-mode
-  :defer-install t
-  :commands (elixir-mode-open-mode
-             elixir-mode-open-elixir-home
-             elixir-mode-open-docs-master
-             elixir-mode-open-docs-stable
-             elixir-mode-version)
-  :mode (("\\.elixir\\'" . elixir-mode)
-         ("\\.ex\\'"     . elixir-mode)
-         ("\\.exs\\'"    . elixir-mode)))
-
 (use-package gnuplot
   :defer-install t
   :commands (gnuplot-mode
              gnuplot-make-buffer
              run-gnuplot)
   :mode ("\\.gp$" . gnuplot-mode))
-
-(use-package dylan-mode
-  :defer-install t
-  :commands (dylan-mode
-             dylanlid-mode)
-  :mode (("\\.dylan\\'" . dylan-mode)
-         ("\\.lid\\'" . dylanlid-mode)))
 
 (use-package processing-mode
   :defer-install t
