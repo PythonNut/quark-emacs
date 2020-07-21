@@ -50,6 +50,20 @@
 
 (with-eval-after-load 'tramp-sh
   (eval-when-compile (require 'cl-lib))
+  (setq tramp-use-ssh-controlmaster-options
+        (eval-when-compile
+          (not
+           (let ((config
+                  (with-output-to-string
+                    (with-current-buffer
+                        standard-output
+                      (call-process "ssh" nil '(t nil) nil
+                                    "-G"
+                                    "quark-emacs-nonexistent-host")))))
+             (and
+              (string-match-p (rx bol "controlmaster auto" eol) config)
+              (string-match-p (rx bol "controlpersist yes" eol) config))))))
+
   (advice-add
    'tramp-do-copy-or-rename-file-directly :filter-args
    (my/defun-as-value nadvice/tramp-no-preserve-uid-gid-msdos (args)
