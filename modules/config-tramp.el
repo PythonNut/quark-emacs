@@ -60,9 +60,7 @@
                       (call-process "ssh" nil '(t nil) nil
                                     "-G"
                                     "quark-emacs-nonexistent-host")))))
-             (and
-              (string-match-p (rx bol "controlmaster auto" eol) config)
-              (string-match-p (rx bol "controlpersist yes" eol) config))))))
+             (string-match-p (rx bol "controlmaster auto" eol) config)))))
 
   (advice-add
    'tramp-do-copy-or-rename-file-directly :filter-args
