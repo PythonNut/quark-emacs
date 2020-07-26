@@ -927,6 +927,26 @@
 
   (advice-add 'ansi-term :filter-args #'nadvice/ansi-term))
 
+(use-package slurm-script-mode
+  :recipe (slurm-script-mode
+           :type git
+           :host github
+           :repo "PythonNut/slurm.el"
+           :files ("slurm-script-mode.el"))
+  :defer-install t
+  :commands (slurm-script-mode))
+
+(use-package slurm-mode
+  :recipe (slurm-mode
+           :type git
+           :host github
+           :repo "PythonNut/slurm.el"
+           :files ("slurm-mode.el"))
+  :defer-install t
+  :commands (slurm)
+  :config
+  (evil-set-initial-state 'slurm-mode 'insert))
+
 (defun eshell-kill-whole-line ()
   (interactive)
   (eshell-bol)
