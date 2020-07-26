@@ -261,8 +261,7 @@ second, floating-point values are rounded down to the nearest integer.)"
 (straight-use-package '(el-patch
                         :type git
                         :host github
-                        :repo "raxod502/el-patch"
-                        :branch "develop"))
+                        :repo "raxod502/el-patch"))
 
 (eval-when-compile (require 'el-patch))
 (setq el-patch-use-aggressive-defvar t)
