@@ -355,11 +355,6 @@
 (use-package helm-git-grep)
 
 (use-package helm-rg
-  :recipe
-  (helm-rg :type git
-           :host github
-           :repo "braineo/helm-rg"
-           :branch "fix-helm-source")
   :init
   (defvar my/rg-available nil)
 
