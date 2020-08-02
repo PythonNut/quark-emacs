@@ -253,90 +253,10 @@ matching string."
 
   (use-package evil
     :config
-    (use-package evil-latex-textobjects
-      :recipe (evil-latex-textobjects :type git
-                                      :host github
-                                      :repo "hpdeifel/evil-latex-textobjects"
-                                      :files ("evil-latex-textobjects.el"))
-      :commands (evil-latex-textobjects-mode
-                 turn-on-evil-latex-textobjects-mode
-                 turn-off-evil-latex-textobjects-mode)
+    (use-package evil-tex
+      :commands (evil-tex-mode))
 
-      :config
-      (defun my/evil-TeX--expression-range (&optional count exclusive)
-        (cond
-         ((string= (LaTeX-current-environment) "minted")
-          (list (cdr (evil-latex-textobjects-env-beginning))
-                (car (evil-latex-textobjects-env-end))))
-         (t
-          (let* ((terminators (rx (or "&"
-                                      "="
-                                      "\\\\"
-                                      "\\item"
-                                      "%"
-                                      "\\label"
-                                      "\\end"
-                                      "\\]"
-                                      "\\["
-                                      "$"
-                                      (and "\\begin{"
-                                           (zero-or-more
-                                            (or letter "*"))
-                                           "}"
-                                           (zero-or-more
-                                            (or
-                                             (and "["
-                                                  (zero-or-more any)
-                                                  "]")
-                                             (and "{"
-                                                  (zero-or-more any)
-                                                  "}")))))))
-                 (beg (save-excursion
-                        (while (not (or
-                                     (bobp)
-                                     (looking-back (if exclusive
-                                                       (concat (format "\\(%s\\)" terminators)
-                                                               (rx (zero-or-more (or space "\n"))))
-                                                     terminators)
-                                                   (max (point-min)
-                                                        (- (point) 80)))))
-                          (forward-char -1))
-                        (point)))
-                 (end (save-excursion
-                        (while (not (or
-                                     (eobp)
-                                     (looking-at (if exclusive
-                                                     (concat (rx (zero-or-more (or space "\n")))
-                                                             (format "\\(%s\\)" terminators))
-                                                   terminators))))
-                          (forward-char 1))
-                        (point))))
-            (list beg end)))))
-
-      (evil-define-text-object evil-indent-i-TeX-expression (&optional count _beg _end _type)
-        "Text object describing the block with the same indentation as the current line."
-        (cl-destructuring-bind (begin end)
-            (my/evil-TeX--expression-range count t)
-          (evil-range begin end 'char)))
-
-      (evil-define-text-object evil-indent-a-TeX-expression (&optional count _beg _end _type)
-        "Text object describing the block with the same indentation as the current line."
-        (cl-destructuring-bind (begin end)
-            (my/evil-TeX--expression-range count nil)
-          (evil-range begin end 'char)))
-
-      (define-key evil-latex-textobjects-inner-map "=" #'evil-indent-i-TeX-expression)
-      (define-key evil-latex-textobjects-outer-map "=" #'evil-indent-a-TeX-expression))
-
-    (defun my/evil-LaTeX-setup ()
-      (require 'evil-surround)
-      (evil-latex-textobjects-mode +1)
-      (setq evil-surround-pairs-alist
-            (append (list '(?\( . ("\\left( " . " \\right)"))
-                          '(?\[ . ("\\left[ " . " \\right]"))
-                          '(?\{ . ("\\left{ " . " \\right}")))
-                    evil-surround-pairs-alist)))
-
+    (add-hook 'LaTeX-mode-hook #'evil-tex-mode)
     (add-hook 'LaTeX-mode-hook #'my/evil-LaTeX-setup)
     (evil-set-initial-state 'TeX-error-overview-mode 'insert))
 
@@ -385,30 +305,6 @@ matching string."
        (if (texmathp)
            (funcall old-fun string dollar)
          (funcall old-fun string (not dollar))))))
-
-  (defun my/embrace-with-TeX-environment ()
-    (let* ((input (read-string "Environment: "))
-           (newline (if (= (elt input (1- (length input))) ?\n) "\n" ""))
-           (environment (if (or (string-empty-p newline)
-                                (string-empty-p input))
-                            input
-                          (substring input 0 (1- (length input))))))
-      (cons (format "\\begin{%s}%s" (or environment "") newline)
-            (format "%s\\end{%s}" newline (or environment "")))))
-
-  (add-hook
-   'LaTeX-mode-hook
-   (my/defun-as-value my/embrace-TeX-setup ()
-     (require 'embrace)
-     (embrace-add-pair ?= "\\verb|" "|")
-     (embrace-add-pair ?~ "\\texttt{" "}")
-     (embrace-add-pair ?/ "\\(" "\\)")
-     (embrace-add-pair ?* "\\textbf{" "}")
-     (embrace-add-pair ?$ "$" "$")
-     (embrace-add-pair ?\\ "\\[" "\\]")
-     (embrace-add-pair-regexp ?e "\\\\begin{[^\}]*?}" "\\\\end{[^\}]*?}"
-                              'my/embrace-with-TeX-environment
-                              (embrace-build-help "\\begin{env}" "\\end{env}"))))
 
   (add-hook
    'TeX-after-insert-macro-hook
