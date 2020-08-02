@@ -29,6 +29,7 @@
   (set-face-attribute 'helm-selection nil :underline nil)
   (setq helm-case-fold-search 'smart
         helm-candidate-separator (make-string 20 ?─)
+        helm-display-header-line nil
         helm-inherit-input-method nil))
 
 (use-package helm-info
