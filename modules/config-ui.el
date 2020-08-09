@@ -11,7 +11,6 @@
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil
       mouse-wheel-follow-mouse t
-      smooth-scroll-margin 5
       scroll-step 1
       auto-window-vscroll nil
       scroll-conservatively 1000)
@@ -42,10 +41,6 @@
 
 (define-key isearch-mode-map "j" #'isearch-exit-chord)
 (define-key isearch-mode-map "k" #'isearch-exit-chord)
-
-(use-package smooth-scrolling
-  :config
-  (smooth-scrolling-mode +1))
 
 (use-package multiple-cursors
   :commands (mc/mark-lines
