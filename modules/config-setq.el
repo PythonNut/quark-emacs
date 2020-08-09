@@ -2,6 +2,7 @@
 (eval-when-compile (require 'config-macros))
 
 (setq ad-redefinition-action 'accept
+      bidi-inhibit-bpa t
       cursor-type 'box
       create-lockfiles nil
       custom-safe-themes
@@ -11,9 +12,11 @@
       delete-by-moving-to-trash t
       disabled-command-function nil
       echo-keystrokes 0.4
+      fast-but-imprecise-scrolling t
       focus-follows-mouse t
       frame-title-format "ε %b [%m]"
       indent-tabs-mode nil
+      inhibit-compacting-font-caches t
       inhibit-default-init t
       inhibit-startup-echo-area-message t
       inhibit-startup-screen t
@@ -22,9 +25,10 @@
                                      #'x-select-text)
       interprogram-paste-function (and (fboundp #'x-selection-value)
                                        #'x-selection-value)
-      jit-lock-defer-time 0.04
-      jit-lock-stealth-nice 0.1
-      jit-lock-stealth-time 0.2
+      jit-lock-defer-time 0
+      jit-lock-stealth-nice nil
+      jit-lock-stealth-time 0.1
+      jit-lock-chunk-size 500
       jit-lock-stealth-verbose nil
       jka-compr-use-shell nil
       left-margin-width 0
@@ -48,7 +52,9 @@
       x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
       x-stretch-cursor t)
 
-(setq-default buffer-file-coding-system 'utf-8
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right
+              buffer-file-coding-system 'utf-8
               indent-tabs-mode nil
               indicate-buffer-boundaries '((bottom . left)))
 
