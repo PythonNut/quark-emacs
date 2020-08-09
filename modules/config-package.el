@@ -218,8 +218,6 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'ibuf-ext)
 (idle-job-add-require 'ibuffer)
 
-(idle-job-add-require 'helm-semantic)
-
 (idle-job-add-require 'helm-for-files)
 (idle-job-add-require 'recentf)
 (idle-job-add-require 'helm-bookmark)

@@ -188,11 +188,6 @@
   :init
   (setq helm-imenu-fuzzy-match t))
 
-(use-package helm-semantic
-  :ensure nil
-  :init
-  (setq helm-semantic-fuzzy-match t))
-
 (use-package helm-command
   :ensure nil
   :config
@@ -453,12 +448,8 @@
 
     (helm :sources
           (append
-           (if (and (featurep 'semantic)
-                    (semantic-active-p)
-                    (require 'helm-semantic nil t))
-               '(helm-source-semantic)
-             (when (require 'helm-imenu nil t)
-               '(helm-source-imenu)))
+           (when (require 'helm-imenu nil t)
+             '(helm-source-imenu))
 
            '(;; files
              helm-source-occur
