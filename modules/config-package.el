@@ -251,6 +251,8 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'helm-source)
 (idle-job-add-require 'helm-lib)
 
+(idle-job-add-require 'winner)
+
 (straight-use-package '(use-package
                          :type git
                          :host github
