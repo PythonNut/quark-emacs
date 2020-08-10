@@ -252,6 +252,7 @@ second, floating-point values are rounded down to the nearest integer.)"
 (idle-job-add-require 'helm-lib)
 
 (idle-job-add-require 'winner)
+(idle-job-add-function #'gcmh-mode)
 
 (straight-use-package '(use-package
                          :type git
@@ -395,5 +396,11 @@ these values are used to call `use-package-ensure-function'.")
                 (exec-path-from-shell-initialize)
                 (cl-remove-duplicates exec-path :test #'string=))
               exec-path))))
+
+(use-package gcmh
+  :config
+  (diminish 'gcmh-mode)
+  (setq gcmh-idle-delay 2
+        gcmh-high-cons-threshold (* 16 1024 1024)))
 
 (provide 'config-package)
