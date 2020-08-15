@@ -621,6 +621,12 @@
     (when (fboundp 'folding-add-to-marks-list)
       (folding-add-to-marks-list 'typescript-mode "// {{{" "// }}}" )))
 
+  (with-eval-after-load 'smartparens
+    (sp-local-pair 'typescript-mode "{" nil :post-handlers
+                   '(:add
+                     ("||\n[i]" "RET")
+                     ("| " "SPC"))))
+
   (use-package tide
     :defer-install t
     :commands (tide-setup)
