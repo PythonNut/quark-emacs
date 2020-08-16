@@ -126,22 +126,12 @@
         (progn
           (when su-auto-make-directory
             (advice-add 'basic-save-buffer :around
-                        #'su--nadvice-make-directory-auto-root)
-
-            (when su-enable-helm-integration
-              (with-eval-after-load 'helm-files
-                (advice-add 'helm-find-file-or-marked :around
-                            #'su--nadvice-make-directory-auto-root))))
+                        #'su--nadvice-make-directory-auto-root))
 
           (when su-auto-write-file
             (add-hook 'find-file-hook #'su--edit-file-as-root-maybe)
             (advice-add 'find-file-noselect :around
-                        #'su--nadvice-find-file-noselect)
-
-            (when su-enable-semantic-integration
-              (with-eval-after-load 'semantic/fw
-                (advice-add 'semantic-find-file-noselect :around
-                            #'su--nadvice-supress-find-file-hook))))
+                        #'su--nadvice-find-file-noselect))
 
           (when su-auto-read-file
             (advice-add 'find-file-noselect-1 :around
@@ -150,16 +140,29 @@
       (remove-hook 'find-file-hook #'su--edit-file-as-root-maybe)
       (advice-remove 'basic-save-buffer
                      #'su--nadvice-make-directory-auto-root)
-      (advice-remove 'helm-find-file-or-marked
-                     #'su--nadvice-make-directory-auto-root)
       (advice-remove 'find-file-noselect
                      #'su--nadvice-find-file-noselect)
-      (advice-remove 'semantic-find-file-noselect
-                     #'su--nadvice-supress-find-file-hook)
       (advice-remove 'find-file-noselect-1
                      #'su--nadvice-find-file-noselect-1)))
 
+  (el-patch-define-minor-mode su-helm-integration-mode
+    "Enable su-mode integration with helm."
+    :init-value nil
+    :group 'su
+    :global t
+    (if su-helm-integration-mode
+        (advice-add 'helm-find-file-or-marked :around
+                    #'su--nadvice-make-directory-auto-root)
+      (advice-remove 'helm-find-file-or-marked
+                     #'su--nadvice-make-directory-auto-root)))
+
   (su-mode +1)
+
+  (with-eval-after-load 'helm-files
+    (su-helm-integration-mode +1))
+  (with-eval-after-load 'semantic/fw
+    (require 'su)
+    (su-semantic-integration-mode +1))
 
   :config
   (eval-when-compile
