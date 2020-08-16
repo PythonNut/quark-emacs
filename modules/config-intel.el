@@ -540,7 +540,7 @@ is binary, activate `hexl-mode'."
 
 (defun run-file-manager ()
   (interactive)
-  (require 'config-setq)
+  (require 'config-core)
   (when (file-remote-p default-directory)
     (error "Opening file manager with remote directory not implemented!"))
   (let ((dir (my/file-name-first-existing-parent

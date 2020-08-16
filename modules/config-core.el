@@ -320,4 +320,4 @@ response as a no."
     (message "%s" result)
     (kill-new result)))
 
-(provide 'config-setq)
+(provide 'config-core)

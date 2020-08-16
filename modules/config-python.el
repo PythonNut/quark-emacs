@@ -1,6 +1,8 @@
 ;; -*- lexical-binding: t -*-
-(eval-when-compile (require 'config-macros))
-(eval-when-compile (require 'config-setq))
+(eval-when-compile
+  (require 'config-macros)
+  (require 'config-core))
+
 
 ;; =============================================================================
 ;; Python ======================================================================

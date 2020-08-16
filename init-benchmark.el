@@ -32,7 +32,7 @@
     (load custom-file)
   (error (with-temp-file custom-file)))
 
-(require 'config-setq)
+(require 'config-core)
 (message "[=              ] package")
 (require 'config-package)
 (message "[==             ] desktop")

@@ -1,7 +1,7 @@
 (eval-and-compile
   (add-to-list 'load-path (locate-user-emacs-file "modules/")))
 
-(require 'config-setq)
+(require 'config-core)
 
 ;; first subtractive
 (menu-bar-mode -1)
