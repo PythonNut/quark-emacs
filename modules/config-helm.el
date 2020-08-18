@@ -154,7 +154,7 @@
         helm-ff-newfile-prompt-p nil
         helm-ff-skip-boring-files t
         helm-recentf-fuzzy-match t
-
+        helm-ff-keep-cached-candidates nil
         helm-boring-file-regexp-list (append helm-boring-file-regexp-list
                                              (list (rx ".synctex.gz" line-end)
                                                    (rx ".undo.xz" line-end)
