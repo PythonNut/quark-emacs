@@ -23,6 +23,7 @@
 
 (with-eval-after-load 'tramp
   (eval-when-compile (require 'tramp))
+  (setq tramp-completion-use-auth-sources nil)
   ;; Define a rsyncx method analogous to scpx
   (add-to-list 'tramp-methods
                `("rsyncx"
@@ -44,6 +45,11 @@
                  (tramp-copy-keep-date t)
                  (tramp-copy-keep-tmpfile t)
                  (tramp-copy-recursive t)))
+
+  (advice-add 'tramp-read-passwd :around
+              (my/defun-as-value my/tramp-disable-auth-sources (old-fun &rest args)
+                (let ((auth-sources))
+                  (apply old-fun args))))
 
   (setq tramp-backup-directory-alist `((,(rx (zero-or-more anything))
                                         . ,my/tramp-backup-directory))))
