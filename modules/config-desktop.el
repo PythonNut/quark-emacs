@@ -348,6 +348,47 @@ where it was when you previously visited the same file."
   (dolist (hook recentf-used-hooks) (apply #'remove-hook hook))
   (recentf-mode +1)
 
+  (el-patch-defun recentf-save-list ()
+    "Save the recent list.
+Write data into the file specified by `recentf-save-file'."
+    (interactive)
+    (condition-case error
+        (with-temp-buffer
+          (erase-buffer)
+          (set-buffer-file-coding-system recentf-save-file-coding-system)
+          (insert (format-message recentf-save-file-header
+				  (current-time-string)))
+          (recentf-dump-variable 'recentf-list recentf-max-saved-items)
+          (recentf-dump-variable 'recentf-filter-changer-current)
+          (insert "\n\n;; Local Variables:\n"
+                  (format ";; coding: %s\n" recentf-save-file-coding-system)
+                  ";; End:\n")
+          (el-patch-swap
+            (write-file (expand-file-name recentf-save-file))
+            (let ((true-file (expand-file-name recentf-save-file))
+                  (temp-file (make-temp-file "historian")))
+              (write-region nil nil temp-file nil true-file)
+              (rename-file temp-file true-file t)))
+          (when recentf-save-file-modes
+            (set-file-modes recentf-save-file recentf-save-file-modes))
+          nil)
+      (error
+       (warn "recentf mode: %s" (error-message-string error)))))
+
+  (let ((recentf-autosave-timer nil))
+    (defun nadvice/recentf-autosave (&rest _args)
+      (when (timerp recentf-autosave-timer)
+        (cancel-timer recentf-autosave-timer))
+      (setq recentf-autosave-timer
+            (run-with-idle-timer
+             1 nil
+             (lambda ()
+               (let ((inhibit-message t))
+                 (recentf-save-list)))))))
+
+  (advice-add 'recentf-track-opened-file :after
+              #'nadvice/recentf-autosave)
+
   (defun nadvice/recentf-quiet (old-fun &rest args)
     (let ((inhibit-message t))
       (apply old-fun args)))
