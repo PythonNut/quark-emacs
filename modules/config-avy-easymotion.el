@@ -57,6 +57,8 @@
     :config
     (eval-when-compile
       (with-demoted-errors "Load error: %s"
+        (use-package evil)
+        (use-package key-chord)
         (require 'key-chord)
         (require 'evil)))
     (key-chord-define evil-insert-state-map "jk" #'avy-goto-char)
@@ -98,10 +100,9 @@
 (use-package evil-easymotion
   :init
   (eval-when-compile
-    (with-demoted-errors "Load error: %s"
-      (require 'evil)
-      (require 'el-patch)
-      (require 'evil-easymotion)))
+    (use-package evil)
+    (require 'el-patch)
+    (require 'evil-easymotion))
 
   (el-patch-feature evil-easymotion)
 

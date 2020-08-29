@@ -13,12 +13,6 @@
     (advice-add 'evil--check-undo-system :override #'ignore))
 
   :config
-  (eval-when-compile
-    (require 'undo-tree)
-    (require 'evil))
-
-  (evil-set-initial-state 'undo-tree-visualizer-mode 'motion)
-
   (setq undo-tree-mode-lighter nil
         undo-tree-auto-save-history t
         undo-tree-enable-undo-in-region t

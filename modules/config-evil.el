@@ -20,11 +20,13 @@
                      (when args
                        (apply #'format args)))))
          (apply old-fun args)))))
+
   (key-chord-mode +1))
 
 (use-package evil
   :init (evil-mode +1)
   :config
+  (eval-when-compile (require 'evil))
   (setq evil-auto-indent t
         evil-ex-complete-emacs-commands t
         evil-undo-system 'undo-tree
@@ -227,10 +229,7 @@
     (cycle-spacing (or count 1)))
 
   (global-set-key (kbd "<remap> <just-one-space>") #'evil-cycle-spacing)
-  (global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing)
-
-  (require 'config-evil-modules)
-  (require 'config-evil-textobjects))
+  (global-set-key (kbd "<remap> <delete-horizontal-space>") #'evil-cycle-spacing))
 
 (defmacro el-patch-evil-define-command (&rest args)
   "Patch an evil command. The ARGS are the same as for `evil-define-command'."
@@ -255,5 +254,8 @@
   (declare (doc-string 3)
            (indent defun))
   `(el-patch--definition ,(cons #'evil-define-operator args)))
+
+(require 'config-evil-modules)
+(require 'config-evil-textobjects)
 
 (provide 'config-evil)

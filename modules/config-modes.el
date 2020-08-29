@@ -53,8 +53,9 @@
   (define-key emacs-lisp-mode-map (kbd "M-,") #'evil-jump-backward)
 
   (with-eval-after-load 'evil
-    (with-demoted-errors "Load error: %s"
-      (require 'evil))
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'evil)))
     (evil-define-key 'normal emacs-lisp-mode-map "gd"
       #'emacs-lisp-goto-definition)))
 

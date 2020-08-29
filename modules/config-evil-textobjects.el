@@ -1,5 +1,8 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
+(eval-when-compile
+  (use-package evil)
+  (require 'evil))
 
 ;;; === Evil motion section ===
 (use-package hydra
