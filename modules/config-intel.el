@@ -99,12 +99,6 @@ by doing (clear-string STRING)."
                   (flycheck-overlays-at (point)))
        (apply old-fun args)))))
 
-(use-package srefactor
-  :defer-install t
-  :commands (srefactor-refactor-at-point)
-  :config
-  (evil-set-initial-state 'srefactor-ui-menu-mode 'emacs))
-
 (use-package abbrev
   :ensure nil
   :config
