@@ -31,21 +31,6 @@
 
 (add-to-list 'load-path (locate-user-emacs-file "personal/"))
 
-(defun my/sit-for (seconds)
-  "Redisplay, then wait for SECONDS seconds.  Stop when input is available.
-SECONDS may be a floating-point value.
-\(On operating systems that do not support waiting for fractions of a
-second, floating-point values are rounded down to the nearest integer.)"
-  (unless (input-pending-p t)
-    (redisplay)
-    (let ((read (let ((input-method-function nil))
-                  (read-event nil t seconds))))
-      (when read
-        ;; This is from the normal definition of sit-for, but
-        ;; "(cons t read)" has been replaced by "read".
-        ;; This is to avoid nasty "<t> is undefined" errors.
-        (push read unread-command-events)))))
-
 (defvar idle-jobs nil
   "Symbols which need to be autoloaded.")
 
