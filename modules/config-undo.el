@@ -1,9 +1,11 @@
 ;; -*- lexical-binding: t -*-
 (eval-when-compile (require 'config-macros))
 
-(with-eval-after-load 'undo-tree
+(use-package undo-tree
+  :config
   (eval-when-compile
     (require 'undo-tree)
+    (use-package evil)
     (require 'evil))
 
   (evil-set-initial-state 'undo-tree-visualizer-mode 'motion)

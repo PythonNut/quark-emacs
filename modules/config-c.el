@@ -85,8 +85,9 @@
           ('objc-mode 'objc-mode-hook)
           ('c-mode    'c-mode-hook)))))
 
-  (use-package smartparens
-    :config
+  (with-eval-after-load 'smartparens
+    (eval-when-compile
+      (use-package smartparens))
     (sp-with-modes
         '(c++-mode objc-mode c-mode)
       (sp-local-pair "/*" "*/" :post-handlers

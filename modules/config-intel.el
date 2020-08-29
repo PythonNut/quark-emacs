@@ -115,7 +115,9 @@ by doing (clear-string STRING)."
         flycheck-indication-mode nil)
 
   (defun my/display-error-messages-condensed (errors)
-    (require 'dash)
+    (eval-when-compile
+      (use-package dash)
+      (require 'dash))
     (-when-let (messages (-keep #'flycheck-error-message errors))
       (when (flycheck-may-use-echo-area-p)
         (display-message-or-buffer (mapconcat #'identity messages "\n")

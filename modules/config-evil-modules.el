@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t -*-
-(eval-when-compile (require 'config-macros))
+(eval-when-compile
+  (require 'config-macros)
+  (use-package evil))
 
 (require 'evil)
 

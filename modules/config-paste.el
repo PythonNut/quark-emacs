@@ -5,7 +5,8 @@
   (with-demoted-errors "Load error: %s"
     (require 'cua-base)
     (require 'el-patch)
-    (require 'config-evil)))
+    (use-package evil)
+    (require 'evil)))
 
 ;; Bring most recently yank-popped entry to the front of the kill-ring
 

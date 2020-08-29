@@ -145,6 +145,9 @@
     (add-to-list 'texmathp-tex-commands-default '("tableau" env-on))
     (texmathp-compile))
 
+  (eval-when-compile
+    (use-package smartparens))
+
   (require 'smartparens-latex)
   (sp-with-modes '(tex-mode plain-tex-mode latex-mode LaTeX-mode)
     (sp-local-pair "\\[" "\\]"

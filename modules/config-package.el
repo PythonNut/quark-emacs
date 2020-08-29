@@ -300,6 +300,12 @@
       ;; macro is being macro-expanded by elisp completion (see
       ;; `lisp--local-variables'), but still do install packages when
       ;; byte-compiling to avoid requiring `package' at runtime.
+      (el-patch-add
+        (when (and (bound-and-true-p byte-compile-current-file)
+                   (not (plist-get state :defer-install)))
+          ;; Eval when byte-compiling,
+          (funcall use-package-ensure-function
+                   name ensure state :byte-compile)))
       (cond
        ((plist-get state :defer-install)
         (push

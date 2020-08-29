@@ -73,16 +73,23 @@ files with (apparently) up to date bytecodes."
                     (and (integerp arg) (= arg 4))
                   arg))
          (init-el-error
-          (progn
-            (when force
-              (delete-file (locate-user-emacs-file "init.elc")))
-            (not (byte-compile-file (locate-user-emacs-file "init.el")))))
-         (modules-error (string-match-p
-                         (rx "failed")
-                         (byte-recompile-directory
+          (let ((init-elc (locate-user-emacs-file "init.elc"))
+                (init-el (locate-user-emacs-file "init.el")))
+            (when force (delete-file init-elc))
+            (when (or (not (file-exists-p init-elc))
+                      (time-less-p (file-attribute-modification-time
+                                    (file-attributes init-elc))
+                                   (file-attribute-modification-time
+                                    (file-attributes init-el))))
+              (not (byte-compile-file (locate-user-emacs-file "init.el"))))))
+         (modules-result (byte-recompile-directory
                           (locate-user-emacs-file "modules/")
                           0
-                          force))))
+                          force))
+         (modules-error (when (string-match-p
+                               (rx "failed")
+                               modules-result)
+                          modules-result)))
     (or init-el-error modules-error)))
 
 (defun emergency-fix-config ()
