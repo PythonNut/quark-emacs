@@ -169,56 +169,61 @@ Return either a string or nil."
                       "Microsoft.Python.LanguageServer"
                       (and (eq system-type 'windows-nt) ".exe")))))
 
-    (el-patch-defun lsp-python-ms-locate-python ()
-      "Look for virtual environments local to the workspace"
+    (el-patch-defun lsp-python-ms-locate-python (&optional dir)
+      "Look for virtual environments local to the workspace."
       (let* ((el-patch-add
-               (virtualenv (my/python-find-virtualenv-cached))
-               (virtualenv-python (f-expand "bin/python" virtualenv)))
-             (venv (locate-dominating-file default-directory "venv/"))
-             (sys-python (executable-find
-                          lsp-python-ms-python-executable-cmd))
-             (venv-python (f-expand "venv/bin/python" venv)))
-        (cond
-         (el-patch-add
-           ((and virtualenv (f-executable? virtualenv-python))
-            virtualenv-python))
-         ((and venv (f-executable? venv-python)) venv-python)
-         (sys-python))))
+               (virtualenv (my/python-find-virtualenv-cached dir))
+               (virtualenv-python (and virtualenv (f-expand "bin/python" virtualenv))))
+             (pyenv-python (lsp-python-ms--dominating-pyenv-python dir))
+             (venv-python (lsp-python-ms--dominating-venv-python dir))
+             (conda-python (lsp-python-ms--dominating-conda-python dir))
+             (sys-python (if (>= emacs-major-version 27)
+                             (executable-find lsp-python-ms-python-executable-cmd lsp-python-ms-prefer-remote-env)
+                           (executable-find lsp-python-ms-python-executable-cmd))))
+        ;; pythons by preference: local pyenv version, local conda version
 
-    (el-patch-defun lsp-python-ms--get-python-ver-and-syspath (workspace-root)
+        (if lsp-python-ms-guess-env
+            (cond ((lsp-python-ms--valid-python lsp-python-ms-python-executable))
+                  (el-patch-add ((lsp-python-ms--valid-python virtualenv-python)))
+                  ((lsp-python-ms--valid-python venv-python))
+                  ((lsp-python-ms--valid-python pyenv-python))
+                  ((lsp-python-ms--valid-python conda-python))
+                  ((lsp-python-ms--valid-python sys-python)))
+          (cond ((lsp-python-ms--valid-python sys-python))))))
+
+    (el-patch-defun lsp-python-ms--get-python-ver-and-syspath (&optional workspace-root)
       "Return list with pyver-string and list of python search paths.
 
 The WORKSPACE-ROOT will be prepended to the list of python search
 paths and then the entire list will be json-encoded."
-      (when-let
-          ((python (lsp-python-ms-locate-python))
-           (default-directory workspace-root)
-           (init "from __future__ import print_function; import sys; \
-sys.path = list(filter(lambda p: p != '', sys.path)); import json;")
-           (ver "v=(\"%s.%s\" % (sys.version_info[0], sys.version_info[1]));")
-           (sp (concat "sys.path.insert(0, '" workspace-root "'); p=sys.path;"))
-           (ex "e=sys.executable;")
-           (val "print(json.dumps({\"version\":v,\"paths\":p,\"executable\":e}))"))
-
-        (with-temp-buffer
-          (el-patch-wrap 3
-            (if (tramp-tramp-file-p python)
-                (with-parsed-tramp-file-name python parsed
-                  (let ((default-directory (file-name-directory python)))
-                    (process-file parsed-localname nil t nil "-c"
-                                  (concat init ver sp ex val))))
-              (call-process python nil t nil "-c"
-                            (concat init ver sp ex val))))
-
-
-          (let* ((json-array-type 'vector)
-                 (json-key-type 'string)
-                 (json-object-type 'hash-table)
-                 (json-string (buffer-string))
-                 (json-hash (json-read-from-string json-string)))
-            (list (gethash "version" json-hash)
-                  (gethash "paths" json-hash)
-                  (gethash "executable" json-hash))))))
+      (let* ((python (and t (lsp-python-ms-locate-python)))
+             (workspace-root (and python (or workspace-root ".")))
+             (default-directory (and workspace-root workspace-root))
+             (init (and default-directory
+                        "from __future__ import print_function; import sys; sys.path = list(filter(lambda p: p != '', sys.path)); import json;"))
+             (ver (and init "v=(\"%s.%s\" % (sys.version_info[0], sys.version_info[1]));"))
+             (sp (and ver (concat "sys.path.insert(0, '" workspace-root "'); p=sys.path;")))
+             (ex (and sp "e=sys.executable;"))
+             (val (and ex "print(json.dumps({\"version\":v,\"paths\":p,\"executable\":e}))")))
+        (when val
+          (with-temp-buffer
+            (el-patch-wrap 3
+              (if (tramp-tramp-file-p python)
+                  (with-parsed-tramp-file-name python parsed
+                    (let ((default-directory (file-name-directory python)))
+                      (process-file parsed-localname nil t nil "-c"
+                                    (concat init ver sp ex val))))
+                (call-process python nil t nil "-c"
+                              (concat init ver sp ex val))))
+            (let* ((json-array-type 'vector)
+                   (json-key-type 'string)
+                   (json-object-type 'hash-table)
+                   (json-string (buffer-string))
+                   (json-hash (json-read-from-string json-string)))
+              (list
+               (gethash "version" json-hash)
+               (gethash "paths" json-hash)
+               (gethash "executable" json-hash)))))))
 
     (el-patch-defun lsp-python-ms--extra-init-params (&optional workspace)
       "Return form describing parameters for language server.
