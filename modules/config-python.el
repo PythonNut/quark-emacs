@@ -275,7 +275,7 @@ directory"
      (make-lsp-client
       :new-connection
       (lsp-stdio-connection
-       (my/defun-as-value my/python-find-project-pyls ()
+       (my/defun-as-value my/python-find-poetry-pyls ()
          (let ((pyls-path (expand-file-name
                            "bin/pyls"
                            (my/python-find-virtualenv-cached))))
@@ -295,13 +295,12 @@ directory"
      (make-lsp-client
       :new-connection
       (lsp-tramp-connection
-       (my/defun-as-value my/python-find-project-pyls ()
+       (my/defun-as-value my/python-find-remote-pyls ()
          (let ((pyls-path (expand-file-name
                            "bin/pyls"
                            (my/python-find-virtualenv-cached))))
            (when (file-executable-p pyls-path)
-             (with-parsed-tramp-file-name pyls-path parsed
-               parsed-localname)))))
+             (my/tramp-localname pyls-path)))))
       :major-modes '(python-mode)
       :remote? t
       :priority -3

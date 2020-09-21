@@ -1588,6 +1588,22 @@
         lsp-auto-guess-root t
         lsp-session-file (expand-file-name (locate-user-emacs-file "data/.lsp-session-v1")))
 
+  (el-patch-defun lsp-server-present? (final-command)
+    "Check whether FINAL-COMMAND is present."
+    ;; executable-find only gained support for remote checks after 27 release
+    (or (and (cond
+              ((not (file-remote-p default-directory))
+               (executable-find (cl-first final-command)))
+              ((version<= "27.0" emacs-version)
+               (el-patch-wrap 2
+                 (or
+                  (file-executable-p (my/tramp-build-name-from-localname (cl-first final-command)))
+                  (with-no-warnings (executable-find (cl-first final-command) (file-remote-p default-directory))))))
+              (t))
+             (prog1 t
+               (lsp-log "Command \"%s\" is present on the path." (s-join " " final-command))))
+        (ignore (lsp-log "Command \"%s\" is not present on the path." (s-join " " final-command)))))
+
   (use-package lsp-ui
     :commands lsp-ui-mode
     :init
