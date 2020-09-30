@@ -125,13 +125,11 @@ move the yanking point; just return the Nth kill forward."
  'cua-cut-region :around
  (my/defun-as-value nadvice/cua-cut-region (old-fun &optional prefix)
    (interactive "*p")
-   (whole-line-or-region-call-with-region
-    (lambda (_beg _end &optional _prefix)
-      (interactive "rP")
-      (call-interactively
-       old-fun
-       current-prefix-arg))
-    prefix t t prefix)))
+   (whole-line-or-region-wrap-region-kill
+    (lambda (_beg _end &optional _region)
+      (interactive (list (mark) (point) 'region))
+      (funcall old-fun current-prefix-arg))
+    0)))
 
 ;; cua-yank a line if cut as a line
 (advice-add
