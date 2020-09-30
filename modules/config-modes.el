@@ -1588,6 +1588,14 @@
         lsp-auto-guess-root t
         lsp-session-file (expand-file-name (locate-user-emacs-file "data/.lsp-session-v1")))
 
+  (defun my/lsp-before-initialize/stall-for-remote-connections ()
+    (when (lsp--client-remote?
+           (lsp--workspace-client lsp--cur-workspace))
+      (sit-for 0.1)))
+
+  (add-hook 'lsp-before-initialize-hook
+            #'my/lsp-before-initialize/stall-for-remote-connections)
+
   (el-patch-defun lsp-server-present? (final-command)
     "Check whether FINAL-COMMAND is present."
     ;; executable-find only gained support for remote checks after 27 release
