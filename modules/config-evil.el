@@ -82,7 +82,13 @@
   (define-key evil-visual-state-map (kbd "C-M-z") #'evil-emacs-state)
   (define-key evil-motion-state-map (kbd "C-z") nil)
 
-  (define-key evil-visual-state-map (kbd "v") #'er/expand-region)
+  (defun evil-visual-char-or-expand-region (arg)
+    (interactive "p")
+    (if (eq evil-visual-selection 'char)
+        (er/expand-region arg)
+      (evil-visual-char (mark) (point) 'inclusive "-- VISUAL --")))
+
+  (define-key evil-visual-state-map (kbd "v") #'evil-visual-char-or-expand-region)
 
   ;; indent pasted regions in evil
   (defun nadvice/evil-paste-indent (old-fun &rest args)
