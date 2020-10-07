@@ -594,18 +594,6 @@ Returns the symbol."
          ("\\.cson\\'"   . coffee-mode))
   :interpreter ("coffee" . coffee-mode))
 
-(use-package literate-coffee-mode
-  :defer-install t
-  :commands (litcoffee-mode)
-  :mode (("\\.litcoffee\\'" . litcoffee-mode)
-         ("\\.coffee.md\\'" . litcoffee-mode)))
-
-(use-package livescript-mode
-  :defer-install t
-  :commands (livescript-mode)
-  :mode (("\\.ls\\'"     . livescript-mode)
-         ("Slakefile\\'" . livescript-mode)))
-
 (use-package php-mode
   :defer-install t
   :commands (php-mode)
@@ -1198,11 +1186,6 @@ Returns the symbol."
 ;; Qt qmake project files
 (add-to-list 'auto-mode-alist '("\\.pro\\'" . makefile-mode))
 
-(use-package hgignore-mode
-  :defer-install t
-  :commands (hgignore-mode)
-  :mode (("\\.hgignore\\'" . hgignore-mode)))
-
 (use-package nginx-mode
   :defer-install t
   :commands (nginx-mode)
@@ -1364,11 +1347,6 @@ Returns the symbol."
          ("\\.cljs\\'" . clojurescript-mode)
          ("\\(?:build\\|profile\\)\\.boot\\'" . clojure-mode)))
 
-(use-package d-mode
-  :defer-install t
-  :commands (d-mode)
-  :mode ("\\.d[i]?\\'" . d-mode))
-
 (use-package go-mode
   :defer-install t
   :commands (go-mode
@@ -1453,16 +1431,6 @@ Returns the symbol."
              scala-mode)
   :mode ("\\.\\(scala\\|sbt\\)\\'" . scala-mode))
 
-(use-package vala-mode
-  :defer-install t
-  :commands (vala-mode)
-  :mode ("\\.vala$" . vala-mode))
-
-(use-package fsharp-mode
-  :defer-install t
-  :commands (fsharp-mode)
-  :mode ("\\.fs[iylx]?$" . fsharp-mode))
-
 (use-package gnuplot
   :defer-install t
   :commands (gnuplot-mode
@@ -1475,11 +1443,6 @@ Returns the symbol."
   :commands (processing-find-sketch
              processing-mode)
   :mode ("\\.pde$" . processing-mode))
-
-(use-package actionscript-mode
-  :defer-install t
-  :commands (actionscript-mode)
-  :mode ("\\.as\\'" . actionscript-mode))
 
 (use-package puppet-mode
   :defer-install t
@@ -1508,28 +1471,6 @@ Returns the symbol."
   :init
   (add-to-list 'completion-ignored-extensions ".cm/")
   (add-to-list 'completion-ignored-extensions "CM/"))
-
-(use-package ahk-mode
-  :defer-install t
-  :commands (ahk-mode)
-  :mode (("\\.ahk\\'" . ahk-mode)))
-
-(use-package floobits
-  :defer-install t
-  :commands (floobits-debug
-             floobits-summon
-             floobits-follow-mode-toggle
-             floobits-follow-user
-             floobits-leave-workspace
-             floobits-complete-signup
-             floobits-share-dir-public
-             floobits-share-dir-private
-             floobits-join-workspace
-             floobits-workspace-settings
-             floobits-remove-from-workspace
-             floobits-open-workspace-in-browser
-             floobits-clear-highlights
-             floobits-add-to-workspace))
 
 (use-package llvm-mode
   :recipe (llvm-mode :host github
