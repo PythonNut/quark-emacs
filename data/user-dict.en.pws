@@ -1,6 +1,7 @@
-personal_ws-1.1 en 39
+personal_ws-1.1 en 41 
 Gaussians
 Hayase
+Kolmogorov
 Lipschitz
 Reidemeister
 biconditional
@@ -10,9 +11,11 @@ colorable
 colorings
 conjugacy
 contrapositive
+cosets
 durations
 equisatisfiable
 factorizations
+incompressible
 indeterminates
 inequivalent
 infimum
@@ -20,11 +23,9 @@ injective
 integrable
 integrands
 irreducibles
-cosets
-durations
-inequivalent
-infimum
-integrable
+lexicographically
+monomial
+monomials
 nondecreasing
 nonincreasing
 nontrivially
@@ -37,4 +38,5 @@ subrings
 superset
 surjection
 surjective
+unary
 unknotted
