@@ -1331,44 +1331,6 @@ Returns the symbol."
   :commands (R R-mode S)
   :mode (("\\.R$" . R-mode)))
 
-;; =============================================================================
-;; Polymodes ===================================================================
-;; =============================================================================
-
-(use-package polymode
-  :defer-install t
-  :mode (("\\.Snw$" . poly-noweb+r-mode)
-         ("\\.Rnw$" . poly-noweb+r-mode)
-         ("\\.Rmd$" . poly-markdown+r-mode)
-         ("\\.rapport$" . poly-rapport-mode)
-         ("\\.Rhtml$" . poly-html+r-mode)
-         ("\\.Rbrew$" . poly-brew+r-mode)
-         ("\\.Rcpp$" . poly-r+c++-mode)
-         ("\\.cppR$" . poly-c++r-mode)
-         ("\\.js.erb$" . poly-javascript+erb-mode)
-         ("\\.coffee.erb$" . poly-coffee+erb-mode)
-         ("\\.html.erb$" . poly-html+erb-mode)
-         ("\\.slim$" . poly-slim-mode))
-
-  :commands (poly-markdown-mode
-             poly-noweb+r-mode
-             poly-noweb+r-mode
-             poly-markdown+r-mode
-             poly-rapport-mode
-             poly-html+r-mode
-             poly-brew+r-mode
-             poly-r+c++-mode
-             poly-c++r-mode
-             poly-javascript+erb-mode
-             poly-coffee+erb-mode
-             poly-html+erb-mode
-             poly-slim-mode)
-  :config
-  (require 'poly-R)
-  (require 'poly-erb)
-  (require 'poly-markdown)
-  (require 'poly-noweb)
-  (require 'poly-slim))
 
 ;; =============================================================================
 ;; help-mode ===================================================================
