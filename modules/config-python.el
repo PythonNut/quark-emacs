@@ -116,6 +116,52 @@ Return either a string or nil."
 
   (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
 
+  (require 'lsp)
+  (lsp-register-custom-settings
+   `(("python.analysis.typeCheckingMode" "basic")
+     ("python.analysis.diagnosticMode" "openFilesOnly")
+     ("python.analysis.stubPath" "./typings")
+     ("python.analysis.autoSearchPaths" t t)
+     ("python.analysis.extraPaths" nil)
+     ("python.analysis.diagnosticSeverityOverrides" nil)
+     ("python.analysis.useLibraryCodeForTypes" t t)
+     ("python.analysis.autoImportCompletions" t t)
+     ("python.analysis.completeFunctionParens" nil t)
+     ("python.pythonPath" (lambda ()
+                            (when-let ((venv (my/python-find-virtualenv-cached))
+                                       (python-path (expand-file-name
+                                                     "bin/python"
+                                                     venv))
+                                       (is-executable (file-executable-p python-path)))
+                              (my/tramp-localname python-path))))))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection
+                     (executable-find "pylance-language-server"))
+    :major-modes '(python-mode)
+    :multi-root t
+    :server-id 'pylance
+    :priority 3
+    :initialized-fn
+    (lambda (workspace)
+      (with-lsp-workspace workspace
+        (lsp--set-configuration (make-hash-table :test 'equal))))))
+
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-tramp-connection
+                     (executable-find "pylance-language-server" t))
+    :major-modes '(python-mode)
+    :multi-root t
+    :remote? t
+    :server-id 'pylance-remote
+    :priority -1
+    :initialized-fn
+    (lambda (workspace)
+      (with-lsp-workspace workspace
+        (lsp--set-configuration (make-hash-table :test 'equal))))))
+
   ;; Use the Microsoft python ls if we can
   (use-package lsp-python-ms
     :init
