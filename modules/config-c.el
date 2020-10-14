@@ -16,6 +16,10 @@
       (c++-mode))))
 
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c-or-c++-header))
+(add-hook 'c-mode-hook
+          (my/defun-as-value my/c-mode-maybe-lsp (&rest _)
+            (unless (file-remote-p buffer-file-name)
+              (lsp-deferred))))
 
 (use-package cc-mode
   :ensure nil
@@ -74,9 +78,7 @@
         `(add-hook ,hook (lambda ()
                            (when (eq major-mode ,mode)
                              (eldoc-mode +1)
-                             (aggressive-indent-mode +1)
-                             (helm-gtags-mode +1)
-                             (semantic-idle-summary-mode -1))))))
+                             (aggressive-indent-mode +1))))))
 
     (with-no-warnings
       (my/generate-calls
