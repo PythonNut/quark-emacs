@@ -167,7 +167,7 @@ Return either a string or nil."
     :init
     (require 'lsp-python-ms)
     (add-hook 'python-mode-hook
-              (my/defun-as-value my/maybe-lsp (&rest _)
+              (my/defun-as-value my/python-mode-maybe-lsp (&rest _)
                 (unless (file-remote-p buffer-file-name)
                   (lsp-deferred))))
 

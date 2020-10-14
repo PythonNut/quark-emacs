@@ -203,7 +203,7 @@
 
 (defun tramp-switch-method (method &optional file-name)
   (interactive (list
-                (completing-read "Choose algorithm: "
+                (completing-read "Choose method: "
                                  (mapcar #'car tramp-methods))))
   (find-alternate-file
    (with-parsed-tramp-file-name (or file-name buffer-file-name) parsed
