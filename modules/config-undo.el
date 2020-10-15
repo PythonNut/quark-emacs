@@ -1,7 +1,15 @@
 ;; -*- lexical-binding: t -*-
 (eval-when-compile (require 'config-macros))
 
-(with-eval-after-load 'undo-tree
+(use-package undo-tree
+  :init
+  (my/onetime-setup undo-tree
+    :hook 'first-change-hook
+    :after-hook 'emacs-startup-hook
+    :condition (get-buffer-window)
+    (global-undo-tree-mode +1))
+
+  :config
   (eval-when-compile
     (require 'undo-tree)
     (require 'evil))

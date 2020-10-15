@@ -27,6 +27,9 @@
   :config
   (setq evil-auto-indent t
         evil-ex-complete-emacs-commands t
+        evil-undo-system 'undo-tree
+        evil-undo-function 'undo-tree-undo
+        evil-redo-function 'undo-tree-redo
         evil-magic 'very-magic
         evil-search-module 'evil-search
         evil-shift-width 2

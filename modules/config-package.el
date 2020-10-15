@@ -167,6 +167,7 @@
 (idle-job-add-require 'yasnippet)
 
 (idle-job-add-require 'company)
+(idle-job-add-require 'undo-tree)
 
 (idle-job-add-require 'multiple-cursors)
 (idle-job-add-require 'mc-hide-unmatched-lines-mode)
