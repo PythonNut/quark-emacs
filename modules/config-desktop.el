@@ -524,9 +524,10 @@ Write data into the file specified by `recentf-save-file'."
     (idle-job-add-function #'atomic-chrome-start-server 'append))
 
   :config
-  ;; This makes sense because the browser is in "insert" state, so
-  ;; this keeps things consistent.
-  (evil-set-initial-state 'atomic-chrome-edit-mode 'insert)
+  (with-eval-after-load 'evil
+    ;; This makes sense because the browser is in "insert" state, so
+    ;; this keeps things consistent.
+    (evil-set-initial-state 'atomic-chrome-edit-mode 'insert))
 
   ;; At some point, this should go somewhere more general
   (defun my/get-active-window-id ()
