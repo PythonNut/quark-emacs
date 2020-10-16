@@ -77,8 +77,7 @@
         (mode hook)
         `(add-hook ,hook (lambda ()
                            (when (eq major-mode ,mode)
-                             (eldoc-mode +1)
-                             (aggressive-indent-mode +1))))))
+                             (eldoc-mode +1))))))
 
     (with-no-warnings
       (my/generate-calls
