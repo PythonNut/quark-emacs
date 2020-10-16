@@ -485,7 +485,7 @@ split."
                                     (unless (or (eq w window)
                                                 (window-dedicated-p w))
                                       (throw 'done nil)))
-                                  frame)
+                                  frame nil 'nomini)
                 t)))
 	   (not (window-minibuffer-p window))
 	   (let ((split-height-threshold 0))
