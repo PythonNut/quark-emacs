@@ -56,24 +56,19 @@ already exists in the home directory."
   (el-patch-defcustom savehist-file
     (el-patch-swap (locate-user-emacs-file "history" ".emacs-history")
                    (locate-user-emacs-file "data/savehist"))
+
     "File name where minibuffer history is saved to and loaded from.
 The minibuffer history is a series of Lisp expressions loaded
 automatically when Savehist mode is turned on.  See `savehist-mode'
-for more details.
-
-If you want your minibuffer history shared between Emacs and XEmacs,
-customize this value and make sure that `savehist-coding-system' is
-set to a coding system that exists in both emacsen."
-    :type 'file
-    :group 'savehist)
+for more details."
+    :type 'file)
 
   (el-patch-defcustom savehist-autosave-interval
     (* (el-patch-swap 5 2) 60)
     "The interval between autosaves of minibuffer history.
 If set to nil, disables timer-based autosaving."
     :type '(choice (const :tag "Disabled" nil)
-                   (integer :tag "Seconds"))
-    :group 'savehist)
+                   (integer :tag "Seconds")))
 
   (el-patch-defcustom savehist-additional-variables
     (el-patch-swap ()
@@ -93,9 +88,7 @@ non-nil.
 User options should be saved with the Customize interface.  This
 list is useful for saving automatically updated variables that are not
 minibuffer histories, such as `compile-command' or `kill-ring'."
-    :type '(repeat variable)
-    :group 'savehist)
-
+    :type '(repeat variable))
 
   (el-patch-defvar savehist-timer nil)
   (el-patch-defvar savehist-loaded nil
@@ -108,26 +101,19 @@ minibuffer history.")
 Normally invoked by calling `savehist-mode' to set the minor mode.
 Installs `savehist-autosave' in `kill-emacs-hook' and on a timer.
 To undo this, call `savehist-uninstall'."
-    (add-hook 'minibuffer-setup-hook 'savehist-minibuffer-hook)
-    (add-hook 'kill-emacs-hook 'savehist-autosave)
+    (add-hook 'minibuffer-setup-hook #'savehist-minibuffer-hook)
+    (add-hook 'kill-emacs-hook #'savehist-autosave)
     ;; Install an invocation of savehist-autosave on a timer.  This
     ;; should not cause noticeable delays for users -- savehist-autosave
     ;; executes in under 5 ms on my system.
     (when (and savehist-autosave-interval
 	       (null savehist-timer))
       (setq savehist-timer
-	    (if (featurep 'xemacs)
-	        (start-itimer
-	         "savehist" 'savehist-autosave savehist-autosave-interval
-	         savehist-autosave-interval)
-	      (run-with-timer savehist-autosave-interval
-			      savehist-autosave-interval 'savehist-autosave)))))
+	    (run-with-timer savehist-autosave-interval
+			    savehist-autosave-interval #'savehist-autosave))))
 
   (el-patch-define-minor-mode savehist-mode
     "Toggle saving of minibuffer history (Savehist mode).
-With a prefix argument ARG, enable Savehist mode if ARG is
-positive, and disable it otherwise.  If called from Lisp,
-also enable the mode if ARG is omitted or nil.
 
 When Savehist mode is enabled, minibuffer history is saved
 to `savehist-file' periodically and when exiting Emacs.  When
@@ -158,21 +144,21 @@ histories, which is probably undesirable."
     (if (not savehist-mode)
         (savehist-uninstall)
       (when (and (not savehist-loaded)
-                 (file-exists-p savehist-file))
+	         (file-exists-p savehist-file))
         (condition-case errvar
-            (progn
-              ;; Don't set coding-system-for-read -- we rely on the
-              ;; coding cookie to convey that information.  That way, if
-              ;; the user changes the value of savehist-coding-system,
-              ;; we can still correctly load the old file.
-              (load savehist-file nil (not (called-interactively-p 'interactive)))
-              (setq savehist-loaded t))
-          (error
-           ;; Don't install the mode if reading failed.  Doing so would
-           ;; effectively destroy the user's data at the next save.
-           (setq savehist-mode nil)
-           (savehist-uninstall)
-           (signal (car errvar) (cdr errvar)))))
+	    (progn
+	      ;; Don't set coding-system-for-read -- we rely on the
+	      ;; coding cookie to convey that information.  That way, if
+	      ;; the user changes the value of savehist-coding-system,
+	      ;; we can still correctly load the old file.
+	      (load savehist-file nil (not (called-interactively-p 'interactive)))
+	      (setq savehist-loaded t))
+	  (error
+	   ;; Don't install the mode if reading failed.  Doing so would
+	   ;; effectively destroy the user's data at the next save.
+	   (setq savehist-mode nil)
+	   (savehist-uninstall)
+	   (signal (car errvar) (cdr errvar)))))
       (savehist-install)))
 
   (savehist-mode +1)

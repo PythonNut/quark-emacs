@@ -43,7 +43,8 @@ Return either a string or nil."
       (substring-no-properties universal-path))))
 
 (defvar my/python-virtualenv-cache nil)
-(add-to-list 'savehist-additional-variables 'my/python-virtualenv-cache)
+(with-eval-after-load 'savehist
+  (add-to-list 'savehist-additional-variables 'my/python-virtualenv-cache))
 (defun my/python-find-virtualenv-cached (&optional dir)
   (let* ((dir (or dir default-directory))
          (pyproject (locate-dominating-file dir "pyproject.toml")))
