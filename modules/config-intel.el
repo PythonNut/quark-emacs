@@ -12,7 +12,7 @@
 If optional CONFIRM is non-nil, read the password twice to make sure.
 Optional DEFAULT is a default password to use instead of empty input.
 
-This function echoes `.' for each character that the user types.
+This function echoes `*' for each character that the user types.
 You could let-bind `read-hide-char' to another hiding character, though.
 
 Once the caller uses the password, it can erase the password
@@ -32,24 +32,19 @@ by doing (clear-string STRING)."
               (sit-for 1))))
         success)
     ((el-patch-swap let let*)
-     ((el-patch-add ol)
-      (hide-chars-fun
-       (lambda (beg end _len)
-         (clear-this-command-keys)
-         (setq beg (min end (max (minibuffer-prompt-end)
-                                 beg)))
-         (el-patch-add
+     (minibuf
+      (el-patch-add
+        (ol)
+        (hide-chars-fun
+         (lambda (&rest args)
+           (apply #'read-password--hide-password args)
            (move-overlay ol (point-max) (point-max))
            (let ((len (- (point-max) (minibuffer-prompt-end)))
                  (hash (md5 (minibuffer-contents-no-properties))))
              (overlay-put ol 'after-string
                           (if (and (> len 10) read-passwd-show-hash-mode)
                               (format "  [%d chars, #%s]"
-                                      len (substring hash 0 4))))))
-         (dotimes (i (- end beg))
-           (put-text-property (+ i beg) (+ 1 i beg)
-                              'display (string (or read-hide-char ?.))))))
-      minibuf)
+                                      len (substring hash 0 4)))))))))
      (minibuffer-with-setup-hook
          (lambda ()
            (setq minibuf (current-buffer))
@@ -61,17 +56,24 @@ by doing (clear-string STRING)."
            (setq-local inhibit-modification-hooks nil) ;bug#15501.
            (setq-local show-paren-mode nil)		;bug#16091.
            (el-patch-add (setq ol (make-overlay (point-max) (point-max) nil t t)))
-           (add-hook 'after-change-functions hide-chars-fun nil 'local))
+           (add-hook 'post-command-hook
+                     (el-patch-swap 'read-password--hide-password
+                                    hide-chars-fun)
+                     nil t))
        (unwind-protect
            (let ((enable-recursive-minibuffers t)
-                 (read-hide-char (or read-hide-char ?.)))
+                 (read-hide-char (or read-hide-char ?*)))
              (read-string prompt nil t default)) ; t = "no history"
          (when (buffer-live-p minibuf)
            (with-current-buffer minibuf
              ;; Not sure why but it seems that there might be cases where the
              ;; minibuffer is not always properly reset later on, so undo
              ;; whatever we've done here (bug#11392).
-             (remove-hook 'after-change-functions hide-chars-fun 'local)
+             (remove-hook (el-patch-swap 'after-change-functions
+                                         'post-command-hook)
+                          (el-patch-swap 'read-password--hide-password
+                                         hide-chars-fun)
+                          'local)
              (kill-local-variable 'post-self-insert-hook)
              ;; And of course, don't keep the sensitive data around.
              (erase-buffer))))))))
