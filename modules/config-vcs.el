@@ -308,9 +308,7 @@ Point is moved to the end of the conflict."
 
   (el-patch-define-minor-mode smerge-mode
     "Minor mode to simplify editing output from the diff3 program.
-With a prefix argument ARG, enable the mode if ARG is positive,
-and disable it otherwise.  If called from Lisp, enable the mode
-if ARG is omitted or nil.
+
 \\{smerge-mode-map}"
     :group 'smerge :lighter (el-patch-swap " SMerge" nil)
     (when (and (boundp 'font-lock-mode) font-lock-mode)
@@ -331,7 +329,6 @@ if ARG is omitted or nil.
              (concat smerge-parsep-re paragraph-separate))))
     (unless smerge-mode
       (smerge-remove-props (point-min) (point-max))))
-
 
   (add-hook 'find-file-hook #'smerge-mode)
 
