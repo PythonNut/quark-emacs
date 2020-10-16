@@ -3,11 +3,14 @@
 
 (use-package undo-tree
   :init
-  (my/onetime-setup undo-tree
-    :hook 'first-change-hook
-    :after-hook 'emacs-startup-hook
-    :condition (get-buffer-window)
-    (global-undo-tree-mode +1))
+  (autoload 'undo-tree-undo "undo-tree")
+  (autoload 'undo-tree-redo "undo-tree")
+
+  (defalias 'redo #'undo-tree-redo)
+  (defalias 'undo #'undo-tree-undo)
+
+  (with-eval-after-load 'evil
+    (advice-add 'evil--check-undo-system :override #'ignore))
 
   :config
   (eval-when-compile
@@ -27,8 +30,7 @@
         `((,(rx (zero-or-more anything))
            . ,(expand-file-name (locate-user-emacs-file "data/undo-backups/")))))
 
-  (defalias 'redo #'undo-tree-redo)
-  (defalias 'undo #'undo-tree-undo)
+  (global-undo-tree-mode +1)
 
   ;; keep undo-tree from overriding C-x r
   (define-key undo-tree-map (kbd "C-x r u") nil)
@@ -50,7 +52,8 @@
               (setq-local global-hl-line-mode nil)
               (visual-line-mode -1)))
 
-  (evil-set-initial-state 'undo-tree-visualizer-mode 'emacs)
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'undo-tree-visualizer-mode 'emacs))
 
   (define-key undo-tree-visualizer-mode-map
     (kbd "C-g") #'undo-tree-visualizer-quit)
