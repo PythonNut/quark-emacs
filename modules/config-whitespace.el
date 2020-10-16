@@ -46,6 +46,41 @@ extra indent = 2
 
   (make-variable-buffer-local 'adaptive-wrap-extra-indent)
 
+  (el-patch-defun adaptive-wrap--face-extends (face)
+    (if (fboundp 'face-extend-p)
+        (face-extend-p face nil t)
+      ;; Before Emacs 27, faces always extended beyond EOL.  Check for a
+      ;; non-default background.
+      (face-background face nil t)))
+
+  (el-patch-defun adaptive-wrap--prefix-face (fcp beg end)
+    (cond ((get-text-property 0 'face fcp))
+          ;; If the last character is a newline and has a face that
+          ;; extends beyond EOL, assume that this face spans the whole
+          ;; line and apply it to the prefix to preserve the "block"
+          ;; visual effect.
+          ;; NB: the face might not actually span the whole line: see for
+          ;; example removed lines in diff-mode, where the first character
+          ;; has the diff-indicator-removed face, while the rest of the
+          ;; line has the diff-removed face.
+          ((= (char-before end) ?\n)
+           (let ((eol-face (get-text-property (1- end) 'face)))
+             (and eol-face (adaptive-wrap--face-extends eol-face) eol-face)))))
+
+  (el-patch-defun adaptive-wrap--prefix (fcp)
+    (let ((fcp-len (string-width fcp)))
+      (cond
+       ((= 0 adaptive-wrap-extra-indent)
+        fcp)
+       ((< 0 adaptive-wrap-extra-indent)
+        (concat fcp (make-string adaptive-wrap-extra-indent ?\s)))
+       ((< 0 (+ adaptive-wrap-extra-indent fcp-len))
+        (substring fcp
+                   0
+                   (+ adaptive-wrap-extra-indent fcp-len)))
+       (t
+        ""))))
+
   (el-patch-defun adaptive-wrap-fill-context-prefix (beg end)
     "Like `fill-context-prefix', but with length adjusted by `adaptive-wrap-extra-indent'."
     (let* ((fcp
@@ -60,22 +95,11 @@ extra indent = 2
                 ;; Note: fill-context-prefix may return nil; See:
                 ;; http://article.gmane.org/gmane.emacs.devel/156285
                 ""))
-           (fcp-len (string-width fcp))
-           (fill-char (if (< 0 fcp-len)
-                          (string-to-char (substring fcp -1))
-                        ?\ )))
-      (cond
-       ((= 0 adaptive-wrap-extra-indent)
-        fcp)
-       ((< 0 adaptive-wrap-extra-indent)
-        (concat fcp
-                (make-string adaptive-wrap-extra-indent fill-char)))
-       ((< 0 (+ adaptive-wrap-extra-indent fcp-len))
-        (substring fcp
-                   0
-                   (+ adaptive-wrap-extra-indent fcp-len)))
-       (t
-        ""))))
+           (prefix (adaptive-wrap--prefix fcp))
+           (face (adaptive-wrap--prefix-face fcp beg end)))
+      (if face
+          (propertize prefix 'face face)
+        prefix)))
 
   (el-patch-defun adaptive-wrap-prefix-function (beg end)
     "Indent the region between BEG and END with adaptive filling."
