@@ -20,20 +20,21 @@ My personal Emacs config!
    * [Company](https://github.com/company-mode/company-mode) (code autocomplete)
    * [Icicles](https://www.emacswiki.org/emacs/Icicles) (minibuffer completion)
    * [Ivy](https://github.com/abo-abo/swiper) (minibuffer completion)
-   * Isearch
- * Extremely agressive file autoloading, and fast startup times (~1.0s).
+   * [Isearch](https://github.com/PythonNut/flx-isearch/)
+ * Extremely aggressive file lazy loading, and fast startup times (~0.3s).
    * Partly thanks to [`straight.el`](https://github.com/raxod502/straight.el)!
+   * Packages are incrementally loaded during idle time immediately after init.
+     By the time you open a file, most major packages will already have been loaded, but you won't notice the delay!
  * An emphasis on correct code and robustness without the need for explicit configuration.
    * Config should automatically determine system capabilities and adjust.
 
 Portability
 ===========
 
-This config should be pretty portable, as long as your OS is UNIX-y. 
-I currently run it on various Arch Linux, Fedora, and Ubuntu builds, as well as Raspberry Pis, Android phones, and Cygwin installations. 
-Windows should work in theory??
+This config should be pretty portable, as long as your OS is UNIX-y.
+I currently run it on various Arch Linux, Fedora, and Ubuntu builds, as well as Raspberry Pis, Android phones, and WSL.
 
-One thing that it does _not_ support is older versions of Emacs. 
+One thing that it does _not_ support is older versions of Emacs.
 Right now, the minimum version is 25.1.
 
 Supported Languages
@@ -41,13 +42,9 @@ Supported Languages
 
 I actively work in the following languages:
 
+  * Elisp (of course)
   * LaTeX
-  * Python/SAGEmath
+  * Python
   * C/C++
   * JS(X)/HTML/CSS
   * Octave
-  * Elisp (duh)
-
-So expect those languages to be reasonably well supported. 
-Of course, this config supports other languages as well, but not as deeply. 
-Drop by my [major mode support table](https://github.com/PythonNut/emacs-config/wiki/Major-Mode-project) to see what major modes this config supports. 
