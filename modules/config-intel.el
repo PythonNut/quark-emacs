@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t -*-
 (eval-when-compile (require 'config-macros))
 (require 'cl-lib)
-(require 'config-tramp)
+(my/require-config-module 'config-tramp)
 
 (define-minor-mode read-passwd-show-hash-mode
   "Show the hashes of passwords read by read-passwd"

@@ -1530,8 +1530,8 @@ Returns the symbol."
 
 (use-package company-lsp :commands company-lsp)
 
-(require 'config-tex)
-(require 'config-c)
-(require 'config-python)
+(my/require-config-module 'config-tex)
+(my/require-config-module 'config-c)
+(my/require-config-module 'config-python)
 
 (provide 'config-modes)

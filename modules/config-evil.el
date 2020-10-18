@@ -255,7 +255,7 @@
            (indent defun))
   `(el-patch--definition ,(cons #'evil-define-operator args)))
 
-(require 'config-evil-modules)
-(require 'config-evil-textobjects)
+(my/require-config-module 'config-evil-modules)
+(my/require-config-module 'config-evil-textobjects)
 
 (provide 'config-evil)

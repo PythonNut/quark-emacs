@@ -3,10 +3,10 @@
 
 (require 'cl-lib)
 
-(require 'config-avy-easymotion)
-(require 'config-undo)
+(my/require-config-module 'config-avy-easymotion)
+(my/require-config-module 'config-undo)
 
-(require 'config-smartparens)
+(my/require-config-module 'config-smartparens)
 
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 1))
       mouse-wheel-progressive-speed nil

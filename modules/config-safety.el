@@ -139,7 +139,8 @@ when `auto-save-mode' is invoked manually.")
   :defer-install t
   :commands (backup-walker-start)
   :config
-  (evil-set-initial-state 'backup-walker-mode 'motion))
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'backup-walker-mode 'motion)))
 
 (use-package real-auto-save
   :defer-install t

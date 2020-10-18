@@ -1,6 +1,11 @@
 ;; -*- lexical-binding: t -*-
 (eval-when-compile (require 'cl-lib))
 
+(defmacro my/require-config-module (feature)
+  `(if (fboundp 'my/require-config-module-maybe-byte-compile)
+       (my/require-config-module-maybe-byte-compile ,feature)
+     (require ,feature)))
+
 (defmacro my/defun-as-value (name arglist &optional docstring &rest body)
   (declare (doc-string 3) (indent 2))
   `(progn
