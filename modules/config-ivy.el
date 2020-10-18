@@ -21,9 +21,6 @@
   (el-patch-feature mb-depth)
   (el-patch-define-minor-mode minibuffer-depth-indicate-mode
     "Toggle Minibuffer Depth Indication mode.
-With a prefix argument ARG, enable Minibuffer Depth Indication
-mode if ARG is positive, and disable it otherwise.  If called
-from Lisp, enable the mode if ARG is omitted or nil.
 
 Minibuffer Depth Indication mode is a global minor mode.  When
 enabled, any recursive use of the minibuffer will show the
@@ -36,6 +33,7 @@ recursion depth in the minibuffer prompt.  This is only useful if
         (add-hook 'minibuffer-setup-hook 'minibuffer-depth-setup)
       ;; Disable the mode
       (remove-hook 'minibuffer-setup-hook 'minibuffer-depth-setup)))
+
   (minibuffer-depth-indicate-mode +1))
 
 ;; hl-line-mode breaks minibuffer in TTY
