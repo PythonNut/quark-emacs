@@ -29,7 +29,7 @@
                `("rsyncx"
                  (tramp-login-program "ssh")
                  (tramp-login-args (("-l" "%u") ("-p" "%p") ("%c") ("-e" "none")
-                                    ("-t" "-t") ("%h") ("/bin/sh")))
+                                    ("-t" "-t") ("%h") ("%l")))
                  (tramp-async-args (("-q")))
                  (tramp-remote-shell "/bin/sh")
                  (tramp-remote-shell-login ("-l"))
