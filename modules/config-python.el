@@ -109,13 +109,7 @@ Return either a string or nil."
 
   :config
   (add-hook 'python-mode-hook
-            (lambda ()
-              ;; conflicts with `eldoc-mode'
-              (when (bound-and-true-p semantic-idle-summary-mode)
-                (semantic-idle-summary-mode -1))
-              (setq mode-name "Py")))
-
-  (define-key python-mode-map (kbd "M-RET") #'srefactor-refactor-at-point)
+            (lambda () (setq mode-name "Py")))
 
   ;; Use the Microsoft python ls if we can
   (use-package lsp-python-ms
@@ -357,12 +351,6 @@ directory"
 
   (add-hook 'sage-shell-mode-hook #'eldoc-mode)
   (add-hook 'sage-mode-hook #'eldoc-mode)
-
-  (add-hook 'sage-shell-mode-hook
-            (lambda () (semantic-idle-summary-mode -1)))
-
-  (add-hook 'sage-mode-hook
-            (lambda () (semantic-idle-summary-mode -1)))
 
   (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view)
 
