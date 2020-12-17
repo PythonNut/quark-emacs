@@ -463,7 +463,6 @@ is binary, activate `hexl-mode'."
   (add-hook
    'vlf-mode-hook
    (my/defun-as-value my/vlf-hook ()
-     (setq bidi-display-reordering nil)
      (flyspell-mode -1)
      (flycheck-mode -1)
      (ws-butler-mode -1)

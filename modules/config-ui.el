@@ -13,7 +13,10 @@
       mouse-wheel-follow-mouse t
       scroll-step 1
       auto-window-vscroll nil
-      scroll-conservatively 1000)
+      scroll-conservatively 1000
+      fast-but-imprecise-scrolling t
+      frame-inhibit-implied-resize t
+      inhibit-compacting-font-caches t)
 
 (defun isearch-exit-chord-worker ()
   "Exit out of isearch after a chord"

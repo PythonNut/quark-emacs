@@ -4,6 +4,7 @@
   (require 'tramp))
 
 (setq ad-redefinition-action 'accept
+      bidi-inhibit-bpa t
       cursor-type 'box
       create-lockfiles nil
       custom-safe-themes
@@ -50,7 +51,9 @@
       x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
       x-stretch-cursor t)
 
-(setq-default buffer-file-coding-system 'utf-8
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right
+              buffer-file-coding-system 'utf-8
               indent-tabs-mode nil
               indicate-buffer-boundaries '((bottom . left)))
 
