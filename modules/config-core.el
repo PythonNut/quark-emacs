@@ -37,6 +37,7 @@
       mouse-autoselect-window 0.3
       mouse-drag-copy-region nil
       my/flag-debug-init (eq debug-on-error 'startup)
+      read-process-output-max (eval-when-compile (* 1024 1024))
       right-margin-width 0
       ring-bell-function 'ignore
       save-interprogram-paste-before-kill t
