@@ -258,7 +258,6 @@ matching string."
       :commands (evil-tex-mode))
 
     (add-hook 'LaTeX-mode-hook #'evil-tex-mode)
-    (add-hook 'LaTeX-mode-hook #'my/evil-LaTeX-setup)
     (evil-set-initial-state 'TeX-error-overview-mode 'insert))
 
   (add-to-list 'sp-sexp-suffix (list 'latex-mode 'regexp ""))
