@@ -231,14 +231,12 @@ matching string."
                     (not (and point-safe
                               (< (point) ml/jit-point)
                               (< ml/jit-point (match-end 0))))
-                    (looking-back (el-patch-swap
-                                    "\\([^\\\\]\\|^\\)\\(\\\\\\\\\\)*"
-                                    (rx (or (not-char "\\") bol)
-                                        (zero-or-more "\\\\")))
-                                  (el-patch-add (line-beginning-position)))
+                    (looking-back "\\([^\\\\]\\|^\\)\\(\\\\\\\\\\)*"
+                                  (el-patch-swap
+                                    (point-min)
+                                    (line-beginning-position)))
                     (not (ml/skip-comments-and-verbs backward)))))
            (ml/search-regexp regex bound backward point-safe)))))
-
 
   (add-hook 'TeX-mode-hook #'lsp-deferred)
 
