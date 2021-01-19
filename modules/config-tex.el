@@ -334,7 +334,8 @@ matching string."
                                 "circuitikz"
                                 "lstlisting"
                                 "minted"
-                                "verbatim")
+                                "verbatim"
+                                "algorithm")
                             eol)
                         (LaTeX-current-environment))))
 
