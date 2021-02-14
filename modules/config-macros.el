@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t -*-
-(eval-when-compile (require 'cl-lib))
+(eval-when-compile
+  (require 'cl-lib)
+  (require 'nadvice))
 
 (defmacro my/require-config-module (feature)
   `(if (fboundp 'my/require-config-module-maybe-byte-compile)

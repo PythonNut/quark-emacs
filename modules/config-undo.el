@@ -63,46 +63,41 @@
 
   ;; compress undo with xz
   (cond ((executable-find "zstd")
-         (advice-add
-          'undo-tree-make-history-save-file-name :filter-return
-          (my/defun-as-value nadvice/undo-tree/zstd-compress (ret)
-            (concat ret ".zst"))))
+         (define-advice undo-tree-make-history-save-file-name
+             (:filter-return (ret) zstd-compress)
+           (concat ret ".zst")))
         ((executable-find "gzip")
-         (advice-add
-          'undo-tree-make-history-save-file-name :filter-return
-          (my/defun-as-value nadvice/undo-tree/gzip-compress (ret)
-            (concat ret ".gz")))))
+         (define-advice undo-tree-make-history-save-file-name
+             (:filter-return (ret) gzip-compress)
+           (concat ret ".gz"))))
 
-  (advice-add
-   'undo-list-transfer-to-tree :around
-   (my/defun-as-value nadvice/undo-tree-ignore-text-properties (old-fun &rest args)
-     (dolist (item buffer-undo-list)
-       (and (consp item)
-            (stringp (car item))
-            (setcar item (substring-no-properties (car item)))))
-     (apply old-fun args)))
+  (define-advice undo-list-transfer-to-tree
+      (:around (old-fun &rest args) ignore-text-properties)
+    (dolist (item buffer-undo-list)
+      (and (consp item)
+           (stringp (car item))
+           (setcar item (substring-no-properties (car item)))))
+    (apply old-fun args))
 
-  (advice-add
-   'undo-tree-load-history :around
-   (my/defun-as-value nadvice/undo-tree-load-history/quiet (old-fun &rest args)
-     (let ((inhibit-message t)
-           (jka-compr-verbose))
-       (apply old-fun args))))
+  (define-advice undo-tree-load-history
+      (:around (old-fun &rest args) inhibit-message)
+    (let ((inhibit-message t)
+          (jka-compr-verbose))
+       (apply old-fun args)))
 
-  (advice-add
-   'undo-tree-save-history :around
-   (my/defun-as-value nadvice/undo-tree-save-history/quiet (old-fun &rest args)
-     (cl-letf* ((jka-compr-verbose nil)
-                (old-write-region (symbol-function #'write-region))
-                ((symbol-function #'write-region)
-                 (lambda (start end filename &optional append _visit &rest args)
-                   (apply old-write-region
-                          start
-                          end
-                          filename
-                          append
-                          0
-                          args))))
-       (apply old-fun args)))))
+  (define-advice undo-tree-save-history
+      (:around (old-fun &rest args) inhibit-message)
+    (cl-letf* ((jka-compr-verbose)
+               (old-write-region (symbol-function #'write-region))
+               ((symbol-function #'write-region)
+                (lambda (start end filename &optional append _visit &rest args)
+                  (apply old-write-region
+                         start
+                         end
+                         filename
+                         append
+                         0
+                         args))))
+      (apply old-fun args))))
 
 (provide 'config-undo)

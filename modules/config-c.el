@@ -26,17 +26,16 @@
   :config
   (setq c-default-style "k&r")
 
-  (advice-add
-   'c-indent-new-comment-line :after
-   (my/defun-as-value nadvice/c-indent-new-comment-line (&rest _args)
-     (when (and
+  (define-advice c-indent-new-comment-line
+      (:after (&rest _args) smart-extend-comments)
+    (when (and
             (looking-at (rx (zero-or-more (not-char ?\n)) "*/"))
             (not (looking-at (rx (zero-or-more (not-char ?\n)) "/*"))))
        (save-excursion
          (re-search-forward (rx "*/") (line-end-position))
          (forward-char -2)
          (newline)
-         (indent-according-to-mode)))))
+         (indent-according-to-mode))))
 
   (use-package clang-format
     :defer-install t

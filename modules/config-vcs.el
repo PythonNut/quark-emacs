@@ -127,10 +127,9 @@
   (add-hook 'with-editor-mode-hook #'evil-insert-state)
   (add-hook 'with-editor-mode-hook #'jit-lock-fontify-now)
 
-  (advice-add
-   'magit-revert-buffers :after
-   (my/defun-as-value nadvice/magit-revert-buffers (&rest _args)
-     (run-with-timer 1 nil #'message "")))
+  (define-advice magit-revert-buffers
+      (:after (&rest _args) clear-echo-area)
+    (run-with-timer 1 nil #'message ""))
 
   ;; If there is only one stash, operate on it immediately
   (el-patch-defun magit-read-stash (prompt)
@@ -551,11 +550,10 @@ Otherwise behave as if called interactively.
   (projectile-mode +1)
 
   :config
-  (advice-add
-   'projectile-cleanup-known-projects :around
-   (my/defun-as-value nadvice/projectile-cleanup-known-projects/silence (orig-func &rest args)
-     (let ((inhibit-message t))
-       (apply orig-func args))))
+  (define-advice projectile-cleanup-known-projects
+      (:around (orig-func &rest args) inhibit-message)
+    (let ((inhibit-message t))
+      (apply orig-func args)))
 
   (setq projectile-known-projects-file
         (locate-user-emacs-file "data/.projectile-bookmarks.eld")
@@ -596,11 +594,10 @@ Otherwise behave as if called interactively.
     (add-hook 'ediff-quit-hook restore-window-configuration 'append)
     (add-hook 'ediff-suspend-hook restore-window-configuration 'append))
 
-  (advice-add
-   'ediff-setup-keymap :after
-   (my/defun-as-value nadvice/ediff-setup-keymap (&rest _args)
-     (define-key ediff-mode-map "j" #'ediff-next-difference)
-     (define-key ediff-mode-map "k" #'ediff-previous-difference)))
+  (define-advice ediff-setup-keymap
+      (:after (&rest _args) vi-keys)
+    (define-key ediff-mode-map "j" #'ediff-next-difference)
+    (define-key ediff-mode-map "k" #'ediff-previous-difference))
 
   ;; don't start another frame
   (setq ediff-window-setup-function #'ediff-setup-windows-plain))

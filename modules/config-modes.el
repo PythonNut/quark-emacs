@@ -531,10 +531,9 @@ Returns the symbol."
   :ensure nil
   :config
   ;; after deleting a tag, indent properly
-  (defun nadvice/sgml-delete-tag (&rest _args)
-    (indent-region (point-min) (point-max)))
-
-  (advice-add 'sgml-delete-tag :after #'nadvice/sgml-delete-tag))
+  (define-advice sgml-delete-tag (:after (&rest _args) auto-indent)
+    ;; TODO: This is super slow right?
+    (indent-region (point-min) (point-max))))
 
 (use-package css-mode
   :ensure nil
@@ -765,7 +764,8 @@ Returns the symbol."
   :config
   (setq comint-prompt-read-only t)
 
-  (defun nadvice/comint-previous-matching-input-from-input (old-fun &rest args)
+  (define-advice comint-previous-matching-input-from-input
+      (:around (old-fun &rest args) maybe-previous-line)
     (condition-case err
         (apply old-fun args)
       (user-error
@@ -776,10 +776,6 @@ Returns the symbol."
                    (next-line (- n))
                  (previous-line n))))
          (signal (car err) (cdr err))))))
-
-  (advice-add 'comint-previous-matching-input-from-input
-              :around
-              #'nadvice/comint-previous-matching-input-from-input)
 
   (define-key comint-mode-map (kbd "<up>")
     #'comint-previous-matching-input-from-input)
@@ -864,11 +860,15 @@ Returns the symbol."
 
 (use-package term
   :ensure nil
+  :init
+  (el-patch-feature term)
+
   :config
   (require 'with-editor)
   (add-hook 'term-exec-hook 'with-editor-export-editor)
 
-  (defun nadvice/term-sentinel (old-fun &rest args)
+  (define-advice term-sentinel
+      (:around (old-fun &rest args) maybe-cleanup-buffer)
     (cl-destructuring-bind (proc _msg) args
       (if (memq (process-status proc) '(signal exit))
           (let ((buffer (process-buffer proc)))
@@ -877,41 +877,50 @@ Returns the symbol."
             (winner-undo)
             (message ""))
         (apply old-fun args))))
-  (advice-add 'term-sentinel :around #'nadvice/term-sentinel)
 
   (define-key term-raw-map (kbd "<f12>") #'term-kill-subjob)
   (define-key term-raw-map (kbd "<remap> <cua-paste>") #'term-paste)
 
-  (defun nadvice/term-exec-1 (name buffer command switches)
-    (let* ((environment
+  (el-patch-defun term-exec-1 (name buffer command switches)
+    ;; We need to do an extra (fork-less) exec to run stty.
+    ;; (This would not be needed if we had suitable Emacs primitives.)
+    ;; The 'if ...; then shift; fi' hack is because Bourne shell
+    ;; loses one arg when called with -c, and newer shells (bash,  ksh) don't.
+    ;; Thus we add an extra dummy argument "..", and then remove it.
+    (let ((process-environment
+           (nconc
             (list
              (format "TERM=%s" term-term-name)
              (format "TERMINFO=%s" data-directory)
              (format term-termcap-format "TERMCAP="
                      term-term-name term-height term-width)
-             (format "EMACS=%s (term:%s)" emacs-version term-protocol-version)
+
              (format "INSIDE_EMACS=%s,term:%s" emacs-version term-protocol-version)
              (format "LINES=%d" term-height)
-             (format "COLUMNS=%d" term-width)))
-           (process-environment
-            (append environment
-                    process-environment))
-           (tramp-remote-process-environment
-            (append environment
-                    tramp-remote-process-environment))
-           (process-connection-type t)
-           (coding-system-for-read 'binary))
-      (apply 'start-file-process name buffer
+             (format "COLUMNS=%d" term-width))
+            process-environment))
+          (process-connection-type t)
+          ;; We should suppress conversion of end-of-line format.
+          (inhibit-eol-conversion t)
+          ;; The process's output contains not just chars but also binary
+          ;; escape codes, so we need to see the raw output.  We will have to
+          ;; do the decoding by hand on the parts that are made of chars.
+          (coding-system-for-read 'binary))
+      (when (term--bash-needs-EMACSp)
+        (push (format "EMACS=%s (term:%s)" emacs-version term-protocol-version)
+              process-environment))
+      (apply (el-patch-swap #'start-process
+                            #'start-file-process)
+             name buffer
              "/bin/sh" "-c"
              (format "stty -nl echo rows %d columns %d sane 2>/dev/null;\
-    if [ $1 = .. ]; then shift; fi; exec \"$@\""
+if [ $1 = .. ]; then shift; fi; exec \"$@\""
                      term-height term-width)
              ".."
              command switches)))
 
-  (advice-add 'term-exec-1 :override #'nadvice/term-exec-1)
-
-  (defun nadvice/ansi-term (&optional args)
+  (define-advice ansi-term
+      (:filter-args (&optional args) use-default-shell)
     (interactive "P")
     (cl-destructuring-bind (&optional program new-buffer-name) args
       (let ((default-shell (my/detect-shell)))
@@ -921,9 +930,7 @@ Returns the symbol."
               (list (read-from-minibuffer "Run program: "
                                           default-shell)
                     new-buffer-name)
-            (list default-shell new-buffer-name))))))
-
-  (advice-add 'ansi-term :filter-args #'nadvice/ansi-term))
+            (list default-shell new-buffer-name)))))))
 
 (use-package slurm-script-mode
   :recipe (slurm-script-mode
@@ -1237,15 +1244,13 @@ Returns the symbol."
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
   ;; Load languages when needed
-  (defun nadvice/org-babel-execute-src-block (old-fun &rest args)
+  (define-advice org-babel-execute-src-block
+      (:around (old-fun &rest args) lazy-load-languages)
     (let ((language (org-element-property :language (org-element-at-point))))
       (unless (cdr (assoc (intern language) org-babel-load-languages))
         (add-to-list 'org-babel-load-languages (cons (intern language) t))
         (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages))
-      (apply old-fun args)))
-
-  (advice-add 'org-babel-execute-src-block :around
-              #'nadvice/org-babel-execute-src-block))
+      (apply old-fun args))))
 
 (use-package org
   :config
@@ -1256,55 +1261,7 @@ Returns the symbol."
 
   (defvar ob-language-file-alist
     (list '(ob-sage . ob-sagemath))
-    "An alist that resolves discrepancies between language names and file names in org-babel")
-
-  (defvar ob-deferred-install-languages (list 'ob-axiom
-                                              'ob-browser
-                                              'ob-coffee
-                                              'ob-cypher
-                                              'ob-diagrams
-                                              'ob-elixir
-                                              'ob-go
-                                              'ob-http
-                                              'ob-hy
-                                              'ob-ipython
-                                              'ob-kotlin
-                                              'ob-lfe
-                                              'ob-lua
-                                              'ob-mongo
-                                              'ob-ml-marklogic
-                                              'ob-php
-                                              'ob-prolog
-                                              'ob-redis
-                                              'ob-restclient
-                                              'ob-sagemath
-                                              'ob-scala
-                                              'ob-sly
-                                              'ob-sml
-                                              'ob-swift
-                                              'ob-translate
-                                              'ob-typescript)
-    "A list of org-babel backends that can be installed with package.el")
-
-  (defun nadvice/org-babel-do-load-languages (old-fun &rest args)
-    (cl-letf* ((old-require (symbol-function #'require))
-               ((symbol-function #'require)
-                (lambda (symbol &rest iargs)
-                  (let ((symbol
-                         (cdr (or (assoc symbol ob-language-file-alist)
-                                  (cons symbol symbol)))))
-                    (when (and (not (funcall old-require
-                                             symbol
-                                             (car-safe iargs)
-                                             t))
-                               (member symbol
-                                       ob-deferred-install-languages))
-                      (package-install symbol)
-                      (apply old-require symbol iargs))))))
-      (apply old-fun args)))
-
-  (advice-add 'org-babel-do-load-languages :around
-              #'nadvice/org-babel-do-load-languages))
+    "An alist that resolves discrepancies between language names and file names in org-babel"))
 
 ;; =============================================================================
 ;; R ===========================================================================

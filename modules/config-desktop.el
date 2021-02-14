@@ -181,24 +181,23 @@ histories, which is probably undesirable."
 
 
 
-  (advice-add
-   'savehist-save :around
-   (my/defun-as-value nadvice/savehist-save/unpropertize (old-fun &rest args)
-     (let ((vars (append savehist-minibuffer-history-variables
-                         savehist-additional-variables)))
-       (cl-progv vars
-           (mapcar (lambda (sym)
-                     (if (boundp sym)
-                         (let ((value (symbol-value sym)))
-                           (if (and value
-                                    (listp value)
-                                    (stringp (car value)))
-                               (mapcar #'substring-no-properties
-                                       value)
-                             value))
-                       nil))
-                   vars)
-         (apply old-fun args))))))
+  (define-advice savehist-save
+      (:around (old-fun &rest args) remove-text-properties)
+    (let ((vars (append savehist-minibuffer-history-variables
+                        savehist-additional-variables)))
+      (cl-progv vars
+          (mapcar (lambda (sym)
+                    (if (boundp sym)
+                        (let ((value (symbol-value sym)))
+                          (if (and value
+                                   (listp value)
+                                   (stringp (car value)))
+                              (mapcar #'substring-no-properties
+                                      value)
+                            value))
+                      nil))
+                  vars)
+        (apply old-fun args)))))
 
 (use-package saveplace
   :ensure nil
@@ -362,7 +361,8 @@ Write data into the file specified by `recentf-save-file'."
        (warn "recentf mode: %s" (error-message-string error)))))
 
   (let ((recentf-autosave-timer nil))
-    (defun nadvice/recentf-autosave (&rest _args)
+    (define-advice recentf-track-opened-file
+        (:after (&rest _args) autosave)
       (when (timerp recentf-autosave-timer)
         (cancel-timer recentf-autosave-timer))
       (setq recentf-autosave-timer
@@ -372,14 +372,10 @@ Write data into the file specified by `recentf-save-file'."
                (let ((inhibit-message t))
                  (recentf-save-list)))))))
 
-  (advice-add 'recentf-track-opened-file :after
-              #'nadvice/recentf-autosave)
-
-  (defun nadvice/recentf-quiet (old-fun &rest args)
+  (define-advice recentf-cleanup
+       (:around (old-fun &rest args) inhibit-message)
     (let ((inhibit-message t))
-      (apply old-fun args)))
-
-  (advice-add 'recentf-cleanup :around #'nadvice/recentf-quiet))
+      (apply old-fun args))))
 
 (use-package desktop
   :ensure nil
@@ -429,20 +425,18 @@ Write data into the file specified by `recentf-save-file'."
         desktop-base-lock-name "emacs-desktop.lock")
 
   ;; don't let a dead emacs own the lockfile
-  (advice-add
-   'desktop-owner :filter-return
-   (my/defun-as-value nadvice/desktop-owner (pid)
-     (when pid
-       (let* ((attributes (process-attributes pid))
-              (cmd (cdr (assoc 'comm attributes))))
-         (if (and cmd (string-prefix-p "emacs" cmd))
-             pid
-           nil)))))
-  (advice-add
-   'desktop-claim-lock :override
-   (my/defun-as-value nadvice/desktop-claim-lock (&optional dirname)
-     (write-region (number-to-string (emacs-pid)) nil
-                   (desktop-full-lock-name dirname) nil 1))))
+  (define-advice desktop-owner
+      (:filter-return (pid) check-alive)
+    (when pid
+      (let* ((attributes (process-attributes pid))
+             (cmd (cdr (assoc 'comm attributes))))
+        (when (and cmd (string-prefix-p "emacs" cmd))
+          pid))))
+
+  (define-advice desktop-claim-lock
+      (:override (&optional dirname) inhibit-message)
+    (write-region (number-to-string (emacs-pid)) nil
+                   (desktop-full-lock-name dirname) nil 1)))
 
 (use-package server
   :ensure nil
@@ -499,7 +493,8 @@ Write data into the file specified by `recentf-save-file'."
     (idle-job-add-function #'server-start 'append))
 
   :config
-  (defun nadvice/server-mode (old-fun &rest args)
+  (define-advice server-start
+      (:around (old-fun &rest args) auto-server-name)
     (catch 'done
       (let ((count 1))
         (while t
@@ -508,9 +503,7 @@ Write data into the file specified by `recentf-save-file'."
                 (setq server-name (concat "server" (number-to-string count)))
                 (cl-incf count))
             (apply old-fun args)
-            (throw 'done server-name))))))
-
-  (advice-add 'server-start :around #'nadvice/server-mode))
+            (throw 'done server-name)))))))
 
 (use-package atomic-chrome
   :commands (atomic-chrome-start-server
@@ -578,9 +571,9 @@ Write data into the file specified by `recentf-save-file'."
   (add-hook 'atomic-chrome-edit-mode-hook #'my/activate-emacs)
 
   (defvar my/atomic-chrome-browser-wid nil)
-  (advice-add 'atomic-chrome-show-edit-buffer :before
-              (my/defun-as-value my/atomic-chrome-stash-browser-wid (&rest _)
-                (setq my/atomic-chrome-browser-wid (my/get-active-window-id))))
+  (define-advice atomic-chrome-show-edit-buffer
+      (:before (&rest _) stash-browser-wid )
+    (setq my/atomic-chrome-browser-wid (my/get-active-window-id)))
 
   (add-hook
    'atomic-chrome-edit-done-hook

@@ -68,7 +68,8 @@ Return either a string or nil."
       (require 'tramp)))
 
   (defvar my/pythonic-remote-host-cache nil)
-  (defun nadvice/pythonic-remote-host ()
+  (define-advice pythonic-remote-host
+      (:override () smart-ssh-hosts)
     "Get host of the connection to the remote python interpreter."
     (unless my/pythonic-remote-host-cache
       (setq my/pythonic-remote-host-cache (make-hash-table :test #'equal)))
@@ -88,19 +89,17 @@ Return either a string or nil."
                            (search-forward "\nhostname ")
                            (buffer-substring-no-properties (point) (line-end-position)))
                          my/pythonic-remote-host-cache))
-          hostname))))
-  (advice-add 'pythonic-remote-host :override #'nadvice/pythonic-remote-host))
+          hostname)))))
 
 (use-package pyvenv
   :config
-  (defun nadvice/pyvenv-activate (&optional arg)
+  (define-advice pyvenv-activate
+      (:filter-args (&optional arg) auto-find-venv)
     (interactive "P")
     (let ((default-venv (my/python-find-virtualenv-cached)))
       (if (or (not default-venv) (consp (car arg)))
           (list (read-directory-name "Activate venv: "))
-        (list default-venv))))
-
-  (advice-add 'pyvenv-activate :filter-args #'nadvice/pyvenv-activate))
+        (list default-venv)))))
 
 (use-package python
   :ensure nil
@@ -354,17 +353,16 @@ directory"
 
   (add-hook 'sage-shell-after-prompt-hook #'sage-shell-view)
 
-  (advice-add
-   'run-sage :around
-   (my/defun-as-value nadvice/run-sage (old-fun &optional arg)
-     (interactive "P")
-     (if (called-interactively-p 'any)
-         (cond
-          ((consp arg)
-           (call-interactively old-fun))
-          (t
-           (funcall old-fun "sage"))))
-     (funcall old-fun arg))))
+  (define-advice run-sage
+      (:around (old-fun &optional arg) default-sage)
+    (interactive "P")
+    (if (called-interactively-p 'any)
+        (cond
+         ((consp arg)
+          (call-interactively old-fun))
+         (t
+          (funcall old-fun "sage"))))
+    (funcall old-fun arg)))
 
 (use-package hy-mode
   :defer-install t

@@ -3,21 +3,20 @@
 
 (use-package avy
   :init
-  (advice-add
-   'self-insert-command :around
-   (my/defun-as-value nadvice/self-insert-command (old-fun &optional arg)
-     (interactive "P")
-     (cond
-      ;; `C-u a` jumps to `a`.
-      ((consp arg)
-       (avy-goto-char last-command-event))
+  (define-advice self-insert-command
+      (:around (old-fun &optional arg) letters-do-avy-jump)
+    (interactive "P")
+    (cond
+     ;; `C-u a` jumps to `a`.
+     ((consp arg)
+      (avy-goto-char last-command-event))
 
-      ;; `C-- a` jumps to `a` at the beginning of a (sub)word
-      ((eq '- arg)
-       (avy-goto-subword-1 last-command-event))
+     ;; `C-- a` jumps to `a` at the beginning of a (sub)word
+     ((eq '- arg)
+      (avy-goto-subword-1 last-command-event))
 
-      ((or (numberp arg) (not arg))
-       (funcall old-fun (or arg 1))))))
+     ((or (numberp arg) (not arg))
+      (funcall old-fun (or arg 1)))))
 
   (global-set-key (kbd "<remap> <goto-line>") #'evil-avy-goto-line)
   :config

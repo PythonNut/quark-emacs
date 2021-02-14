@@ -395,7 +395,8 @@ has been created."
                                      (show-paren-mode +1)))
 
   :config
-  (defun nadvice/show-paren-mode (old-fun &rest args)
+  (define-advice show-paren-mode
+      (:around (old-fun &rest args) use-idle-timer)
     ;; http://emacs.stackexchange.com/questions/12532/buffer-local-idle-timer
     (cl-letf* ((old-run-with-idle-timer (symbol-function #'run-with-idle-timer))
                ((symbol-function #'run-with-idle-timer)
@@ -412,8 +413,6 @@ has been created."
                                     (cancel-timer ,timer)))))
                       (fset fns fn)
                       timer)))))
-      (apply old-fun args)))
-
-  (advice-add 'show-paren-mode :around #'nadvice/show-paren-mode))
+      (apply old-fun args))))
 
 (provide 'config-smartparens)

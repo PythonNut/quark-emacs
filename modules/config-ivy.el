@@ -252,22 +252,21 @@ Minibuffer bindings:
   (setq smex-save-file (locate-user-emacs-file ".smex-items")))
 
 ;; let M-' intelligently resume whatever completion we were working on
-(let ((my/last-used-completion-system))
+(let ((quark/last-used-completion-system))
   (with-eval-after-load 'ivy
-    (advice-add
-     'ivy--minibuffer-setup :after
-     (my/defun-as-value nadvice/ivy--minibuffer-setup (&rest _args)
-       (setq my/last-used-completion-system 'ivy))))
+    (define-advice ivy--minibuffer-setup
+       (:after (&rest _args) save-completion-system)
+      (setq quark/last-used-completion-system 'ivy)))
 
   (with-eval-after-load 'helm
     (add-hook
      'helm-minibuffer-set-up-hook
      (my/defun-as-value my/helm-last-used-hook ()
-       (setq my/last-used-completion-system 'helm))))
+       (setq quark/last-used-completion-system 'helm))))
 
   (defun minibuffer-completion-resume ()
     (interactive)
-    (pcase my/last-used-completion-system
+    (pcase quark/last-used-completion-system
       (`helm (call-interactively #'helm-resume))
       (`ivy  (call-interactively #'ivy-resume))
       (_ (message "You haven't used a completion system yet.")))))

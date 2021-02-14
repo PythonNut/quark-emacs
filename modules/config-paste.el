@@ -86,20 +86,18 @@ move the yanking point; just return the Nth kill forward."
 
 (use-package xclip
   :config
-  (advice-add
-   'xclip-set-selection :around
-   (my/defun-as-value nadvice/xclip-set-selection (old-fun &rest args)
-     (let ((default-directory "/"))
-       (apply old-fun args))))
+  (define-advice xclip-set-selection
+      (:around (old-fun &rest args) use-local-xclip)
+    (let ((default-directory "/"))
+      (apply old-fun args)))
 
-  (advice-add
-   'xclip-selection-value :around
-   (my/defun-as-value nadvice/xclip-selection-value (old-fun &rest args)
-     (let ((default-directory "/"))
-       (unless (string-match-p
-                (rx bol "Error: Can't open display: ")
-                (cdr (my/process-file-to-string "xclip" nil t nil "-o")))
-         (apply old-fun args))))))
+  (define-advice xclip-selection-value
+      (:around (old-fun &rest args) use-local-xclip)
+    (let ((default-directory "/"))
+      (unless (string-match-p
+               (rx bol "Error: Can't open display: ")
+               (cdr (my/process-file-to-string "xclip" nil t nil "-o")))
+        (apply old-fun args)))))
 
 (use-package bracketed-paste
   :config
@@ -243,14 +241,14 @@ move the yanking point; just return the Nth kill forward."
       (require 'evil)))
 
   ;; make evil respect whole-line-or-region
-  (defun nadvice/evil-paste-line (&rest _args)
+  (defun evil-paste@respect-whole-line-or-region (&rest _args)
     (when (with-demoted-errors "Failed to check text properties for paste. %s"
             (get-text-property 0 'whole-line-or-region (car kill-ring)))
       (setf (car kill-ring)
             (propertize (car kill-ring) 'yank-handler (list 'evil-yank-line-handler)))))
 
-  (advice-add 'evil-paste-before :before #'nadvice/evil-paste-line)
-  (advice-add 'evil-paste-after  :before #'nadvice/evil-paste-line)
+  (advice-add 'evil-paste-before :before #'evil-paste@respect-whole-line-or-region)
+  (advice-add 'evil-paste-after  :before #'evil-paste@respect-whole-line-or-region)
 
   (define-key evil-emacs-state-map (kbd "C-y") nil)
   (define-key evil-insert-state-map (kbd "C-y") nil))

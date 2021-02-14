@@ -46,10 +46,10 @@
                  (tramp-copy-keep-tmpfile t)
                  (tramp-copy-recursive t)))
 
-  (advice-add 'tramp-read-passwd :around
-              (my/defun-as-value my/tramp-disable-auth-sources (old-fun &rest args)
-                (let ((auth-sources))
-                  (apply old-fun args))))
+  (define-advice tramp-read-passwd
+      (:around (old-fun &rest args) disable-auth-sources )
+    (let ((auth-sources))
+      (apply old-fun args)))
 
   (setq tramp-backup-directory-alist `((,(rx (zero-or-more anything))
                                         . ,my/tramp-backup-directory))))
@@ -68,17 +68,16 @@
                                     "quark-emacs-nonexistent-host")))))
              (string-match-p (rx bol "controlmaster auto" eol) config)))))
 
-  (advice-add
-   'tramp-do-copy-or-rename-file-directly :filter-args
-   (my/defun-as-value nadvice/tramp-no-preserve-uid-gid-msdos (args)
-     (cl-destructuring-bind
-         (op filename newname ok-if-already-exists keep-date preserve-uid-gid)
-         args
-       (list op filename newname ok-if-already-exists keep-date
-             (unless (my/msdos-fs (if (tramp-tramp-file-p newname)
-                                      (file-remote-p newname 'localname)
-                                    newname))
-               preserve-uid-gid))))))
+  (define-advice tramp-do-copy-or-rename-file-directly
+      (:filter-args (args) no-preserve-uid-gid-msdos )
+    (cl-destructuring-bind
+        (op filename newname ok-if-already-exists keep-date preserve-uid-gid)
+        args
+      (list op filename newname ok-if-already-exists keep-date
+            (unless (my/msdos-fs (if (tramp-tramp-file-p newname)
+                                     (file-remote-p newname 'localname)
+                                   newname))
+              preserve-uid-gid)))))
 
 ;; =================================
 ;; automatically request root access

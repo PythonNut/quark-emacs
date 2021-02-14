@@ -111,13 +111,12 @@
     ;; in the PATH, however for some reason on macOS the required
     ;; directories are only added to exec-path and not PATH, so we
     ;; correct this here.
-    (advice-add
-     'TeX-run-command :around
-     (my/defun-as-value my/TeX-run-command/add-exec-path (old-fun &rest args)
-       (let ((process-environment process-environment))
+    (define-advice TeX-run-command
+        (:around (old-fun &rest args) add-exec-path)
+      (let ((process-environment process-environment))
          (setenv "PATH"
                  (concat "$PATH" (string-join exec-path path-separator)) t)
-         (apply old-fun args)))))
+         (apply old-fun args))))
 
   (defun my/LaTeX-format-name ()
     (save-excursion
@@ -274,34 +273,31 @@ matching string."
     :config
     (setq auctex-latexmk-inherit-TeX-PDF-mode t))
 
-  (advice-add
-   'TeX-command-master :around
-   (my/defun-as-value nadvice/TeX-command-master (old-fun arg)
-     (interactive "P")
-     (if (called-interactively-p 'any)
-         (if (consp arg)
-             (call-interactively old-fun)
-           (cl-letf* (((symbol-function #'TeX-command-query)
-                       (lambda (name)
-                         (TeX-command-default name)
-                         (car-safe (TeX-assoc "LatexMk" TeX-command-list)))))
-             (call-interactively old-fun)))
-       (apply old-fun args))))
+  (define-advice TeX-command-master
+      (:around (old-fun arg) default-latexmk)
+    (interactive "P")
+    (if (called-interactively-p 'any)
+        (if (consp arg)
+            (call-interactively old-fun)
+          (cl-letf* (((symbol-function #'TeX-command-query)
+                      (lambda (name)
+                        (TeX-command-default name)
+                        (car-safe (TeX-assoc "LatexMk" TeX-command-list)))))
+            (call-interactively old-fun)))
+      (apply old-fun args)))
 
-  (advice-add
-   'TeX-source-correlate-sync-source :after
-   (my/defun-as-value nadvice/TeX-source-correlate-sync-source (&rest args)
-     (recenter)
-     (require 'pulse)
-     (pulse-momentary-highlight-one-line (point))))
+  (define-advice TeX-source-correlate-sync-source
+      (:after (&rest args) do-pulse)
+    (recenter)
+    (require 'pulse)
+    (pulse-momentary-highlight-one-line (point)))
 
-  (advice-add
-   'LaTeX-math-insert :around
-   (my/defun-as-value nadvice/LaTeX-math-insert (old-fun string dollar)
-     (let ((TeX-insert-braces nil))
-       (if (texmathp)
-           (funcall old-fun string dollar)
-         (funcall old-fun string (not dollar))))))
+  (define-advice LaTeX-math-insert
+      (:around (old-fun string dollar) auto-dollar)
+    (let ((TeX-insert-braces nil))
+      (if (texmathp)
+          (funcall old-fun string dollar)
+        (funcall old-fun string (not dollar)))))
 
   (add-hook
    'TeX-after-insert-macro-hook

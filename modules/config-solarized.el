@@ -2,13 +2,14 @@
 (eval-when-compile (require 'config-macros))
 (use-package solarized-theme)
 
-(advice-add
- 'load-theme :around
- (my/defun-as-value nadvice/load-theme (old-fun &rest args)
-   ;; TODO: This is probably a horrible hack
-   (mapc #'disable-theme custom-enabled-themes)
-   (apply old-fun args)
-   (run-hooks 'load-theme-hook)))
+(define-advice load-theme
+    (:before (&rest _args) unload-themes)
+  ;; TODO: This is probably a horrible hack
+  (mapc #'disable-theme custom-enabled-themes))
+
+(define-advice load-theme
+    (:after (&rest _args) run-hook)
+  (run-hooks 'load-theme-hook))
 
 (add-hook
  'load-theme-hook

@@ -244,11 +244,9 @@ response as a no."
              (/= (point) (point-min)))))))
 
 
-(defun nadvice/read-passwd/isolate-kill-ring (old-fun &rest args)
+(define-advice read-passwd (:around (old-fun &rest args) isolate-kill-ring)
   (let ((kill-ring kill-ring))
     (apply old-fun args)))
-
-(advice-add 'read-passwd :around #'nadvice/read-passwd/isolate-kill-ring)
 
 (defun my/detect-shell (&optional dir)
   (require 'tramp)
@@ -281,11 +279,10 @@ response as a no."
                    full-shells)
           (cl-some #'executable-find bare-shells)))))
 
-(advice-add
- 'shell-command-to-string :around
- (my/defun-as-value nadvice/shell-command-to-string (old-fun &rest args)
-   (let ((shell-file-name (my/detect-shell)))
-     (apply old-fun args))))
+(define-advice shell-command-to-string
+    (:around (old-fun &rest args) auto-detect-shell)
+  (let ((shell-file-name (my/detect-shell)))
+    (apply old-fun args)))
 
 (defun my/process-file-to-string (&rest args)
   (let* ((return-code 0)

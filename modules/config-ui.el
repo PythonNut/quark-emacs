@@ -274,10 +274,9 @@
 
   (defvar my/iflipb-first nil)
 
-  (advice-add
-   'iflipb-first-iflipb-buffer-switch-command :override
-   (my/defun-as-value nadvice/iflipb-first-iflipb-buffer-switch-command (&rest _args)
-     my/iflipb-first)))
+  (define-advice iflipb-first-iflipb-buffer-switch-command
+      (:override (&rest _args) return-my/iflipb-first)
+    my/iflipb-first))
 
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
@@ -330,14 +329,13 @@
                       :inverse-video nil
                       :foreground nil)
 
-  (advice-add
-   'whitespace-trailing-regexp :override
-   (my/defun-as-value nadvice/whitespace-trailing-regexp (limit)
-     "Match all trailing spaces. This overloads the definition in whitespace.el."
-     (let ((status t))
-       (while (unless (re-search-forward whitespace-trailing-regexp limit t)
-                (setq status nil)))          ;; end of buffer
-       status))))
+  (define-advice whitespace-trailing-regexp
+      (:override (limit) match-all)
+    "Match all trailing spaces. This overloads the definition in whitespace.el."
+    (let ((status t))
+      (while (unless (re-search-forward whitespace-trailing-regexp limit t)
+               (setq status nil))) ;; end of buffer
+      status)))
 
 ;; ============
 ;; Line numbers

@@ -82,11 +82,10 @@ by doing (clear-string STRING)."
   :ensure nil
   :init
   (with-eval-after-load 'semantic/db-file
-    (advice-add
-     'semanticdb-file-directory-exists-p :around
-     (my/defun-as-value nadvice/semanticdb-file-directory-exists-p (old-fun &rest args)
-       (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
-         (apply old-fun args)))))
+    (define-advice semanticdb-file-directory-exists-p
+        (:around (old-fun &rest args) always-y)
+      (cl-letf* (((symbol-function #'y-or-n-p) (lambda (prompt) t)))
+        (apply old-fun args))))
 
   :config
   (setq semanticdb-default-save-directory
@@ -94,12 +93,11 @@ by doing (clear-string STRING)."
         srecode-map-save-file
         (locate-user-emacs-file "data/srecode-map.el"))
 
-  (advice-add
-   'semantic-idle-summary-idle-function :around
-   (my/defun-as-value nadvice/semantic-idle-summary-idle-function (old-fun &rest args)
-     (unless (and (bound-and-true-p flycheck-mode)
-                  (flycheck-overlays-at (point)))
-       (apply old-fun args)))))
+  (define-advice semantic-idle-summary-idle-function
+      (:around (old-fun &rest args) avoid-flycheck)
+    (unless (and (bound-and-true-p flycheck-mode)
+                 (flycheck-overlays-at (point)))
+      (apply old-fun args))))
 
 (use-package abbrev
   :ensure nil
@@ -145,10 +143,9 @@ by doing (clear-string STRING)."
   ;; please don't give me emacs-lisp stylistic advice
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
-  (advice-add
-   'flycheck-mode-line-status-text :override
-   (my/defun-as-value nadvice/flycheck-mode-line-status-text (&optional status)
-     (let ((text (pcase (or status flycheck-last-status-change)
+  (define-advice flycheck-mode-line-status-text
+      (:override (&optional status) mode-line-symbol)
+    (let ((text (pcase (or status flycheck-last-status-change)
                    (`not-checked "")
                    (`no-checker "-")
                    (`running "*")
@@ -163,7 +160,7 @@ by doing (clear-string STRING)."
                       ""))
                    (`interrupted "-")
                    (`suspicious "?"))))
-       (concat (if (display-graphic-p) " ✓" " Γ") text))))
+      (concat (if (display-graphic-p) " ✓" " Γ") text)))
 
   (defun flycheck-goto-nearest-error ()
     (interactive)
@@ -191,14 +188,13 @@ by doing (clear-string STRING)."
 
   (setq eldoc-idle-delay 0.2)
 
-  (advice-add
-   'eldoc-display-message-no-interference-p :around
-   (my/defun-as-value nadvice/eldoc-display-message-no-interference-p (old-fun &rest args)
-     (and (apply old-fun args)
-          (not (and (bound-and-true-p sp-show-pair-overlays)
-                    (not (minibufferp))))
-          (not (and (bound-and-true-p flycheck-mode)
-                    (flycheck-overlay-errors-at (point))))))))
+  (define-advice eldoc-display-message-no-interference-p
+      (:around (old-fun &rest args) avoid-smartparens-and-flycheck)
+    (and (apply old-fun args)
+         (not (and (bound-and-true-p sp-show-pair-overlays)
+                   (not (minibufferp))))
+         (not (and (bound-and-true-p flycheck-mode)
+                   (flycheck-overlay-errors-at (point)))))))
 
 ;;; =======================================
 ;;; Flyspell - inline real time spell check
@@ -214,11 +210,10 @@ by doing (clear-string STRING)."
         ((executable-find "hunspell")
          (setq ispell-program-name "hunspell")))
 
-  (advice-add
-   'ispell-init-process :around
-   (my/defun-as-value nadvice/ispell-init-process (old-fun &rest args)
-     (let ((inhibit-message t))
-       (apply old-fun args)))))
+  (define-advice ispell-init-process
+      (:around (old-fun &rest args) inhibit-message)
+    (let ((inhibit-message t))
+      (apply old-fun args))))
 
 (use-package flyspell-lazy
   :init
@@ -431,33 +426,32 @@ is binary, activate `hexl-mode'."
   :defer-install t
   :commands (vlf)
   :init
-  (advice-add
-   'abort-if-file-too-large :around
-   (my/defun-as-value nadvice/abort-if-file-too-large (_old-fun &rest args)
-     (cl-destructuring-bind (size op-type filename &rest _offer-raw) args
-       (when (and size
-                  (not (zerop size))
-                  large-file-warning-threshold
-                  (< large-file-warning-threshold size))
-         (let ((char nil))
-           (while (not (memq (setq char
-                                   (read-event
-                                    (propertize
-                                     (format
-                                      "File %s is large (%s): \
+  (define-advice abort-if-file-too-large
+      (:around (_old-fun &rest args) lazy-load-vlf)
+    (cl-destructuring-bind (size op-type filename &rest _offer-raw) args
+      (when (and size
+                 (not (zerop size))
+                 large-file-warning-threshold
+                 (< large-file-warning-threshold size))
+        (let ((char nil))
+          (while (not (memq (setq char
+                                  (read-event
+                                   (propertize
+                                    (format
+                                     "File %s is large (%s): \
 %s normally (o), %s with vlf (v) or abort (a)"
-                                      (if filename
-                                          (file-name-nondirectory filename)
-                                        "")
-                                      (file-size-human-readable size)
-                                      op-type op-type)
-                                     'face 'minibuffer-prompt)))
-                             '(?o ?O ?v ?V ?a ?A))))
-           (cond ((memq char '(?v ?V))
-                  (vlf filename)
-                  (error ""))
-                 ((memq char '(?a ?A))
-                  (error "Aborted"))))))))
+                                     (if filename
+                                         (file-name-nondirectory filename)
+                                       "")
+                                     (file-size-human-readable size)
+                                     op-type op-type)
+                                    'face 'minibuffer-prompt)))
+                            '(?o ?O ?v ?V ?a ?A))))
+          (cond ((memq char '(?v ?V))
+                 (vlf filename)
+                 (error ""))
+                ((memq char '(?a ?A))
+                 (error "Aborted")))))))
 
   :config
   (add-hook
@@ -483,14 +477,12 @@ is binary, activate `hexl-mode'."
   :config
   (setq fasd-enable-initial-prompt nil)
 
-  (advice-add
-   'fasd-find-file :around
-   (my/defun-as-value nadvice/fasd-find-file (old-fun &rest args)
-     (require 'helm-mode)
-     ;; overriding the completion system in emacs-fasd is surprisingly tricky
-     (cl-letf (((symbol-function #'completing-read)
-                #'helm--completing-read-default))
-       (apply old-fun args)))))
+  (define-advice fasd-find-file (:around (old-fun &rest args) use-helm)
+    (require 'helm-mode)
+    ;; overriding the completion system in emacs-fasd is surprisingly tricky
+    (cl-letf (((symbol-function #'completing-read)
+               #'helm--completing-read-default))
+      (apply old-fun args))))
 
 ;;; =================================================
 ;;; dumb-jump an unintelligent goto-definition system

@@ -281,11 +281,10 @@
   (setq use-package-always-ensure t
         use-package-always-defer t)
 
-  (advice-add
-   'straight-use-package-ensure-function :around
-   (my/defun-as-value nadvice/straight-use-package-ensure-function (old-fun &rest args)
-     (cl-letf* (((symbol-function #'y-or-n-p) (lambda (_prompt) t)))
-       (apply old-fun args))))
+  (define-advice straight-use-package-ensure-function
+      (:around (old-fun &rest args) y-or-n-p-always-t)
+    (cl-letf* (((symbol-function #'y-or-n-p) (lambda (_prompt) t)))
+      (apply old-fun args)))
 
   (el-patch-defun use-package-handler/:ensure (name keyword ensure rest state)
     (let* ((body (use-package-process-keywords name rest

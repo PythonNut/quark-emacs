@@ -8,19 +8,6 @@
     (key-chord-mode -1)
     (key-chord-mode +1))
 
-  (require 'key-chord)
-
-  (advice-add
-   'key-chord-mode :around
-   (my/defun-as-value nadvice/key-chord-mode (old-fun &rest args)
-     (if (called-interactively-p 'any)
-         (apply old-fun args)
-       (cl-letf* (((symbol-function #'message)
-                   (lambda (&rest args)
-                     (when args
-                       (apply #'format args)))))
-         (apply old-fun args)))))
-
   (key-chord-mode +1))
 
 (use-package evil
@@ -96,14 +83,16 @@
   (define-key evil-visual-state-map (kbd "v") #'evil-visual-char-or-expand-region)
 
   ;; indent pasted regions in evil
-  (defun nadvice/evil-paste-indent (old-fun &rest args)
-    (indent-region (point) (+ (point) (length (apply old-fun args)))))
+  (defun evil-paste@auto-indent (str)
+    (indent-region (point) (+ (point) (length str))))
 
-  (advice-add 'evil-paste-before :around #'nadvice/evil-paste-indent)
-  (advice-add 'evil-paste-after :around #'nadvice/evil-paste-indent)
+  (advice-add 'evil-paste-before :filter-return #'evil-paste@auto-indent)
+  (advice-add 'evil-paste-after  :filter-return #'evil-paste@auto-indent)
 
-  (let ((my/evil-mode-line-face-cookies))
-    (defun my/evil-set-mode-line-face (&rest _args)
+  ;; Change modeline color by Evil state
+  (let ((quark/evil-mode-line-face-cookies))
+    (define-advice evil-generate-mode-line-tag
+        (:after (&rest _args) set-modeline-faces)
       (cl-destructuring-bind (bg-color fg-color)
           (if (< (display-color-cells) 256)
               (pcase evil-state
@@ -120,18 +109,13 @@
               (`visual  '("#268bd2" "#eee8d5"))
               (`replace '("#dc322f" "#eee8d5"))
               (_        '("grey70"  "black"))))
-        (when my/evil-mode-line-face-cookies
-          (face-remap-remove-relative my/evil-mode-line-face-cookies))
-        (setq my/evil-mode-line-face-cookies
+        (when quark/evil-mode-line-face-cookies
+          (face-remap-remove-relative quark/evil-mode-line-face-cookies))
+        (setq quark/evil-mode-line-face-cookies
               (face-remap-add-relative
                'mode-line
                `((:foreground ,fg-color :background ,bg-color)
                  mode-line))))))
-
-  ;; Change modeline color by Evil state
-  (advice-add 'evil-generate-mode-line-tag
-              :after
-              #'my/evil-set-mode-line-face)
 
   ;; open line and stay in normal mode
   (evil-define-command evil-open-below-normal (arg)
