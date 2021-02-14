@@ -398,7 +398,8 @@
                (if projectile-root
                    (append
                     '(helm-source-projectile-recentf-list
-                      helm-source-non-projectile-recentf-list)
+                      helm-source-non-projectile-recentf-list
+                      helm-source-files-in-current-dir)
                     (unless slow-fs
                       '(helm-source-projectile-files-list)))
                  '(helm-source-recentf
