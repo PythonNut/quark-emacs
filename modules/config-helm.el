@@ -422,10 +422,10 @@
                           '(helm-source-do-ag)))))
 
                   ;; file location, of which projectile is a faster subset
-                  (unless projectile-root
-                    '(helm-source-findutils))
+                  ;; (unless projectile-root
+                  ;;   '(helm-source-findutils))
 
-                  ;; '(helm-source-locate)
+                  '(helm-source-locate)
                   )))
 
               :fuzzy-match t
