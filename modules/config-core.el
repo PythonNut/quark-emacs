@@ -330,4 +330,11 @@ response as a no."
     (message "%s" result)
     (kill-new result)))
 
+(unless (daemonp)
+  (advice-add #'tty-run-terminal-initialization :override #'ignore)
+  (add-hook 'window-setup-hook
+            (my/defun-as-value my/tty-run-terminal-initialization ()
+              (advice-remove #'tty-run-terminal-initialization #'ignore)
+              (tty-run-terminal-initialization (selected-frame) nil t))))
+
 (provide 'config-core)
