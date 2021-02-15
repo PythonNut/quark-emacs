@@ -494,66 +494,6 @@
 (global-set-key (kbd "C-S-p") #'helm-locate)
 (global-set-key (kbd "M-P") #'helm-locate)
 
-(use-package helm-gtags
-  :defer-install t
-  :commands (helm-gtags-clear-all-cache
-             helm-gtags-clear-cache
-             helm-gtags-next-history
-             helm-gtags-previous-history
-             helm-gtags-select
-             helm-gtags-select-path
-             helm-gtags-tags-in-this-function
-             helm-gtags-create-tags
-             helm-gtags-delete-tags
-             helm-gtags-find-tag
-             helm-gtags-find-tag-other-window
-             helm-gtags-find-rtag
-             helm-gtags-find-symbol
-             helm-gtags-find-pattern
-             helm-gtags-find-files
-             helm-gtags-find-tag-from-here
-             helm-gtags-dwim
-             helm-gtags-parse-file
-             helm-gtags-pop-stack
-             helm-gtags-show-stack
-             helm-gtags-clear-stack
-             helm-gtags-clear-all-stacks
-             helm-gtags-update-tags
-             helm-gtags-resume
-             helm-gtags-mode)
-
-  :init
-  ;; Unfortunately, this must be declared at toplevel.
-  (setq helm-gtags-fuzzy-match t)
-
-  :config
-  (require 'el-patch)
-  (setq helm-gtags-auto-update t
-        helm-gtags-ignore-case t
-        helm-gtags-direct-helm-completing t)
-
-  (el-patch-feature helm-gtags)
-  (el-patch-defun helm-gtags--read-tagname (type &optional default-tagname)
-    (let ((tagname (helm-gtags--token-at-point type))
-          (prompt (assoc-default type helm-gtags--prompt-alist))
-          (comp-func (assoc-default type helm-gtags-comp-func-alist)))
-      (if (and tagname helm-gtags-use-input-at-cursor)
-          tagname
-        (when (and (not tagname) default-tagname)
-          (setq tagname default-tagname))
-        (when tagname
-          (setq prompt (format "%s(default \"%s\") " prompt tagname)))
-        (let ((completion-ignore-case helm-gtags-ignore-case)
-              (completing-read-function 'completing-read-default))
-          (if (and helm-gtags-direct-helm-completing (memq type '(tag rtag symbol find-file)))
-              (helm-comp-read prompt comp-func
-                              (el-patch-remove :history 'helm-gtags--completing-history)
-                              :exec-when-only-one t
-                              (el-patch-add :fuzzy t)
-                              :default tagname)
-            (completing-read prompt comp-func nil nil nil
-                             'helm-gtags--completing-history tagname)))))))
-
 (use-package helm-systemd
   :defer-install t
   :commands (helm-systemd))
