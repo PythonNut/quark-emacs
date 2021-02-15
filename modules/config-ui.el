@@ -259,6 +259,9 @@
   (global-set-key (kbd "C-c <backtab>") #'iflipb-previous-buffer-smart)
   (global-set-key (kbd "C-c <C-S-tab>") #'iflipb-previous-buffer-smart)
 
+  (global-set-key (kbd "<mouse-8>") #'iflipb-previous-buffer)
+  (global-set-key (kbd "<mouse-9>") #'iflipb-next-buffer)
+
   :config
   (setq iflipb-ignore-buffers (list (rx line-start " ")
                                     (rx line-start "*helm")
