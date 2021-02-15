@@ -478,8 +478,7 @@
 (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
 (global-set-key (kbd "C-x C-f") #'helm-find-files)
 
-(use-package evil
-  :config
+(with-eval-after-load 'evil
   (define-advice evil-paste-pop
       (:around (old-fun &rest args) maybe-helm-omni)
     (if (memq last-command '(evil-paste-after
@@ -490,9 +489,6 @@
 
   (define-key evil-insert-state-map (kbd "C-p") #'my/helm-interfile-omni)
   (define-key evil-motion-state-map (kbd "C-p") #'my/helm-interfile-omni))
-
-(global-set-key (kbd "C-S-p") #'helm-locate)
-(global-set-key (kbd "M-P") #'helm-locate)
 
 (use-package helm-systemd
   :defer-install t
