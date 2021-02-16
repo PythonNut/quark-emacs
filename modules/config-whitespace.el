@@ -3,6 +3,8 @@
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"
+    (use-package evil)
+    (require 'evil)
     (require 'smie)))
 
 (setq require-final-newline t
@@ -169,12 +171,6 @@ extra indent = 2
    (interactive)
    (set-buffer-file-coding-system 'utf-8)))
 
-(defun cleanup-buffer-unsafe ()
-  (interactive)
-  (untabify (point-min) (point-max))
-  (delete-trailing-whitespace)
-  (set-buffer-file-coding-system 'utf-8))
-
 (use-package ws-butler
   :diminish (ws-butler-mode ." β")
   :init
@@ -205,10 +201,6 @@ extra indent = 2
           (not (eq smie-grammar 'unset)))
      (let ((smie-config--buffer-local nil))
        (smie-config-guess)))))
-
-(eval-when-compile
-  (with-demoted-errors "Load error: %s"
-    (require 'evil)))
 
 (defun back-to-indentation-visual-or-beginning (&optional n)
   (interactive "^p")
