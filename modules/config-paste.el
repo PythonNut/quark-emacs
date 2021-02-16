@@ -8,6 +8,8 @@
     (use-package evil)
     (require 'evil)))
 
+(setq kill-do-not-save-duplicates t)
+
 (use-package xclip
   :config
   (define-advice xclip-set-selection
