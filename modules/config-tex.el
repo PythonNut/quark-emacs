@@ -211,6 +211,8 @@ command."
     (set-face-attribute 'ml/huge nil :height 1.35)
     (set-face-attribute 'ml/hhuge nil :height 1.4)
 
+    (add-hook 'magic-latex-buffer-hook #'rainbow-delimiters-mode-disable)
+
     (el-patch-defun ml/search-regexp (regex &optional bound backward point-safe)
       "Like `search-regexp' but skips escaped chars, comments and
 verbish environments. This function raise an error on
