@@ -509,6 +509,8 @@ Write data into the file specified by `recentf-save-file'."
   :commands (atomic-chrome-start-server
              atomic-chrome-stop-server)
   :init
+  (setq atomic-chrome-default-major-mode 'markdown-mode)
+
   (when (display-graphic-p)
     (my/onetime-setup atomic-chrome
       :hook 'focus-out-hook
