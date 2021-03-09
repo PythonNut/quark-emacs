@@ -337,4 +337,66 @@ response as a no."
               (advice-remove #'tty-run-terminal-initialization #'ignore)
               (tty-run-terminal-initialization (selected-frame) nil t))))
 
+(defvar quark/max-gc-time 0)
+(defvar quark/last-gc-time 0.05)
+(defvar quark/garbage-collect-verbose nil)
+(defvar quark/high-gc-cons-threshold (eval-when-compile (* 1024 1024 16)))
+(defvar quark/low-gc-cons-threshold (eval-when-compile (* 1024 1024)))
+(defvar quark/gc-timer1-delay 2)
+(defvar quark/gc-timer2-delay 5)
+(defvar quark/gc-timer1 nil)
+(defvar quark/gc-timer2 nil)
+
+(defmacro quark/time (&rest body)
+  `(let ((time (current-time))) ,@body (float-time (time-since time))))
+
+(defun quark/garbage-collect ()
+  (unless (active-minibuffer-window)
+    (if quark/garbage-collect-verbose
+        (progn
+          (message "Garbage collecting...")
+          (condition-case-unless-debug err
+              (message "Garbage collecting...done (%.3fs)"
+                       (setq quark/last-gc-time (quark/time (garbage-collect))))
+            (error (message "Garbage collecting...failed")
+                   (signal (car err) (cdr err)))))
+      (setq quark/last-gc-time (quark/time (garbage-collect))))
+    (when (> quark/last-gc-time quark/max-gc-time)
+      (setq quark/max-gc-time quark/last-gc-time))
+    quark/last-gc-time))
+
+(defun quark/set-high-gc-cons-threshold ()
+  (setq gc-cons-threshold quark/high-gc-cons-threshold))
+
+(defun quark/set-low-gc-cons-threshold ()
+  (unless (active-minibuffer-window)
+    (setq gc-cons-threshold quark/low-gc-cons-threshold)))
+
+(define-minor-mode quark-gc-mode
+  "Quark mode for intelligent garbage collection"
+  :global t
+  (if quark-gc-mode
+      (progn
+        (add-hook 'pre-command-hook #'quark/set-high-gc-cons-threshold)
+        (add-hook 'focus-out-hook #'quark/garbage-collect)
+        (add-hook 'minibuffer-exit-hook #'quark/garbage-collect)
+        (setq quark/gc-timer1
+              (run-with-idle-timer quark/gc-timer1-delay
+                                   t
+                                   #'quark/garbage-collect)
+              quark/gc-timer2
+              (run-with-idle-timer quark/gc-timer2-delay
+                                   t
+                                   #'quark/set-low-gc-cons-threshold)))
+    (remove-hook 'pre-command-hook #'quark/set-high-gc-cons-threshold)
+    (remove-hook 'focus-out-hook #'quark/garbage-collect)
+    (remove-hook 'minibuffer-exit-hook #'quark/garbage-collect)
+    (when quark/gc-timer1
+      (cancel-timer quark/gc-timer1))
+    (when quark/gc-timer2
+      (cancel-timer quark/gc-timer2))
+    (setq gc-cons-threshold quark/high-gc-cons-threshold)))
+
+(quark-gc-mode +1)
+
 (provide 'config-core)
