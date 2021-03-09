@@ -140,23 +140,44 @@ when `auto-save-mode' is invoked manually.")
   (with-eval-after-load 'evil
     (evil-set-initial-state 'backup-walker-mode 'motion)))
 
-(use-package real-auto-save
-  :defer-install t
-  :commands (real-auto-save-mode)
-  :config
-  (setq real-auto-save-interval 0.3)
+(defvar quark-flysave--interval 0.3)
+(defvar quark-flysave--timer 0.1)
+(defvar quark-flysave--ticks nil)
+(defvar quark-flysave--buffer-list nil)
 
-  (define-advice real-auto-save-start-timer
-      (:override () use-idle-timer)
-    "Start real-auto-save-timer."
-    (setq real-auto-save-timer
-          (run-with-idle-timer real-auto-save-interval
-                               t
-                               'real-auto-save-buffers)))
+(defun quark-flysave--save-buffers (&rest _args)
+  (save-current-buffer
+    (dolist (buf quark-flysave--buffer-list)
+      (if (and (buffer-live-p buf) (buffer-file-name buf))
+          (with-current-buffer buf
+            (when (and (buffer-modified-p)
+                       (not (equal (gethash (current-buffer) quark-flysave--ticks)
+                                   (buffer-modified-tick))))
+              (let ((message-log-max nil))
+                (with-temp-message (or (current-message) "")
+                  (basic-save-buffer-1))
+                (set-buffer-modified-p t)
+                (puthash (current-buffer) (buffer-modified-tick) quark-flysave--ticks))))
+        (setq quark-flysave--buffer-list
+              (delq buf quark-flysave--buffer-list))))))
 
-  (define-advice real-auto-save-buffers
-      (:around (old-fun &rest args) skip-timer-restart)
-    (cl-letf* (((symbol-function #'real-auto-save-restart-timer) #'ignore))
-       (apply old-fun args))))
+(define-minor-mode quark-flysave-mode
+  "Save your buffers on an idle timer."
+  :lighter " flysave"
+  :keymap nil
+  (if quark-flysave-mode
+      (progn
+        (setq quark-flysave--timer
+              (run-with-idle-timer quark-flysave--interval
+                                   t
+                                   'quark-flysave--save-buffers))
+        (unless quark-flysave--ticks
+          (setq quark-flysave--ticks (make-hash-table :test #'equal)))
+        (push (current-buffer) quark-flysave--buffer-list))
+    (setq quark-flysave--buffer-list
+          (delq (current-buffer) quark-flysave--buffer-list))
+    (unless quark-flysave--buffer-list
+      (cancel-timer quark-flysave--timer)
+      (setq quark-flysave--ticks nil))))
 
 (provide 'config-safety)
