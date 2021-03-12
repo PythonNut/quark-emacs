@@ -238,18 +238,6 @@ matching string."
 
   (add-hook 'TeX-mode-hook #'lsp-deferred)
 
-  (add-hook
-   'TeX-mode-hook
-   (my/defun-as-value my/setup-tex-mode-company-backends ()
-     (let ((old-backends company-backends))
-       (set (make-local-variable 'company-backends)
-            (append (list (append
-                           '(company-lsp
-                             company-dabbrev)
-                           (cdar old-backends)))
-                    '((company-ispell))
-                    (cdr old-backends))))))
-
   (use-package evil
     :config
     (use-package evil-tex

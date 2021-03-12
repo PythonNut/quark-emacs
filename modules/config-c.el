@@ -48,29 +48,6 @@
     :after flycheck
     :config (flycheck-clang-analyzer-setup))
 
-  (eval-and-compile
-    (cl-macrolet
-        ((company-define-specific-modes
-          (mode)
-          `(progn
-             (add-hook ,mode
-                       (lambda ()
-                         (require 'company)
-                         (require 'cl-lib)
-                         (let ((old-backends company-backends))
-                           (set (make-local-variable 'company-backends)
-                                '((company-lsp
-                                   company-yasnippet
-                                   company-files)
-                                  (company-dabbrev-code)
-                                  company-dabbrev))))))))
-      (with-no-warnings
-        (my/generate-calls-single
-            'company-define-specific-modes
-          '('c++-mode-hook
-            'objc-mode-hook
-            'c-mode-hook)))))
-
   (cl-macrolet
       ((my/setup-cc-mode
         (mode hook)

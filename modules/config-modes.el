@@ -1485,8 +1485,6 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
     (when (memq window-system '(mac ns))
       (setq lsp-ui-doc-use-childframe nil))))
 
-(use-package company-lsp :commands company-lsp)
-
 (my/require-config-module 'config-tex)
 (my/require-config-module 'config-c)
 (my/require-config-module 'config-python)
