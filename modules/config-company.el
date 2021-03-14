@@ -42,12 +42,13 @@
             ('text-mode-hook       '(company-ispell))
             ('go-mode-hook         '(company-go)))))))
 
-  (use-package company-box
-    :init
-    (add-hook 'company-mode-hook #'company-box-mode)
-    :config
-    (diminish 'company-box-mode)
-    (setq company-box-enable-icon nil))
+  (unless (memq window-system '(mac ns))
+    (use-package company-box
+      :init
+      (add-hook 'company-mode-hook #'company-box-mode)
+      :config
+      (diminish 'company-box-mode)
+      (setq company-box-enable-icon nil)))
 
   :config
   (diminish 'company-mode (if (display-graphic-p) " ❃" " *"))

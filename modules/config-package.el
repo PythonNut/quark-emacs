@@ -167,7 +167,8 @@
 (idle-job-add-require 'yasnippet)
 
 (idle-job-add-require 'company)
-(idle-job-add-require 'company-box)
+(unless (memq window-system '(mac ns))
+  (idle-job-add-require 'company-box))
 (idle-job-add-require 'undo-tree)
 
 (idle-job-add-require 'multiple-cursors)
