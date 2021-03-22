@@ -578,4 +578,28 @@ outer indentation in case of a commented line.  The symbols
                          TeX-brace-indent-level)
                         (t 0))))))))
 
+(use-package math-symbol-lists
+  :init
+  (add-to-list 'input-method-alist '("math" "UTF-8" quail-use-package "Σ" nil))
+  (with-eval-after-load 'quail
+    (eval-when-compile (require 'quail))
+    (require 'math-symbol-lists)
+    (quail-define-package "math" "UTF-8" "Σ" t)
+    (quail-define-rules
+     ("\\CC" "ℂ")
+     ("\\EE" "𝔼")
+     ("\\NN" "ℕ")
+     ("\\PP" "ℙ")
+     ("\\QQ" "ℚ")
+     ("\\RR" "ℝ")
+     ("\\ZZ" "ℤ"))
+    (mapc (lambda (x)
+            (if (cddr x)
+                (quail-defrule (cadr x) (caddr x))))
+          (nreverse (append math-symbol-list-superscripts
+                            math-symbol-list-subscripts
+                            math-symbol-list-packages
+                            math-symbol-list-extended
+                            math-symbol-list-basic)))))
+
 (provide 'config-tex)
