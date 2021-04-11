@@ -132,6 +132,7 @@
 (idle-job-add-require 'magit-wip)
 (idle-job-add-require 'magit-log)
 (idle-job-add-require 'magit-diff)
+(idle-job-add-require 'smerge-mode)
 (idle-job-add-require 'magit-core)
 (idle-job-add-require 'magit-autorevert)
 (idle-job-add-require 'magit-margin)
@@ -166,9 +167,11 @@
 (idle-job-add-function #'my/yas-init)
 (idle-job-add-require 'yasnippet)
 
-(idle-job-add-require 'company)
 (unless (memq window-system '(mac ns))
-  (idle-job-add-require 'company-box))
+  (idle-job-add-require 'company-box)
+  (idle-job-add-require 'company-box-doc)
+  (idle-job-add-require 'company-box-icons))
+(idle-job-add-require 'company)
 (idle-job-add-require 'undo-tree)
 
 (idle-job-add-require 'evil-mc)
@@ -225,6 +228,7 @@
 (idle-job-add-require 'helm-info)
 
 (idle-job-add-require 'helm-files)
+(idle-job-add-require 'filenotify)
 (idle-job-add-require 'helm-buffers)
 (idle-job-add-require 'helm-occur)
 (idle-job-add-require 'helm-tags)
