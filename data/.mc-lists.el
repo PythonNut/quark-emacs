@@ -34,6 +34,7 @@
         evil-next-visual-line
         evil-previous-line
         evil-previous-visual-line
+        evil-undo
         haskell-indentation-common-electric-command
         indent-for-tab-command
         julia-latexsub-or-indent
@@ -48,6 +49,7 @@
         sp-forward-slurp-sexp
         sp-kill-sexp
         sp-remove-active-pair-overlay
+        whole-line-or-region-kill-region
         ))
 
 (setq mc/cmds-to-run-once
@@ -65,4 +67,5 @@
         haskell-process-load-file
         hydra/projectile-tools/body
         keyboard-quit
+        lsp-ui-doc--handle-mouse-movement
         ))

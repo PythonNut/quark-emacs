@@ -87,14 +87,91 @@
   (define-key mc/keymap (kbd "<return>") nil)
   (define-key mc/keymap (kbd "C-c <return>") 'multiple-cursors-mode))
 
-(global-set-key (kbd "C-c l") #'mc/edit-lines)
-(global-set-key (kbd "C-c a") #'mc/mark-all-dwim)
-(global-set-key (kbd "C->") #'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") #'mc/mark-previous-like-this)
-(global-set-key (kbd "C-?") #'mc/mark-all-dwim)
-(global-set-key (kbd "C-c >") #'mc/mark-next-like-this)
-(global-set-key (kbd "C-c <") #'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c ?") #'mc/mark-all-dwim)
+(use-package evil-mc
+  :commands (evil-mc-make-all-cursors
+             evil-mc-undo-last-added-cursor
+             evil-mc-undo-all-cursors
+             evil-mc-pause-cursors
+             evil-mc-resume-cursors
+             evil-mc-make-and-goto-first-cursor
+             evil-mc-make-and-goto-last-cursor
+             evil-mc-make-cursor-here
+             evil-mc-make-cursor-move-next-line
+             evil-mc-make-cursor-move-prev-line
+             evil-mc-skip-and-goto-next-cursor
+             evil-mc-skip-and-goto-prev-cursor
+             evil-mc-skip-and-goto-next-match
+             evil-mc-skip-and-goto-prev-match
+             evil-mc-make-cursor-in-visual-selection-beg
+             evil-mc-make-cursor-in-visual-selection-end)
+  :init
+  (el-patch-feature evil-mc)
+
+  (el-patch-defvar evil-mc-cursors-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "m") #'evil-mc-make-all-cursors)
+      (define-key map (kbd "u") #'evil-mc-undo-last-added-cursor)
+      (define-key map (kbd "q") #'evil-mc-undo-all-cursors)
+      (define-key map (kbd "s") #'evil-mc-pause-cursors)
+      (define-key map (kbd "r") #'evil-mc-resume-cursors)
+      (define-key map (kbd "f") #'evil-mc-make-and-goto-first-cursor)
+      (define-key map (kbd "l") #'evil-mc-make-and-goto-last-cursor)
+      (define-key map (kbd "h") #'evil-mc-make-cursor-here)
+      (define-key map (kbd "j") #'evil-mc-make-cursor-move-next-line)
+      (define-key map (kbd "k") #'evil-mc-make-cursor-move-prev-line)
+      (define-key map (kbd "N") #'evil-mc-skip-and-goto-next-cursor)
+      (define-key map (kbd "P") #'evil-mc-skip-and-goto-prev-cursor)
+      (define-key map (kbd "n") #'evil-mc-skip-and-goto-next-match)
+      (define-key map (kbd "p") #'evil-mc-skip-and-goto-prev-match)
+      (define-key map (kbd "I") #'evil-mc-make-cursor-in-visual-selection-beg)
+      (define-key map (kbd "A") #'evil-mc-make-cursor-in-visual-selection-end)
+      map))
+
+  (el-patch-defvar evil-mc-key-map
+    (let ((map (make-sparse-keymap)))
+      (evil-define-key* '(normal visual) map
+        (kbd "gr") evil-mc-cursors-map
+        (el-patch-remove
+          (kbd "M-n") 'evil-mc-make-and-goto-next-cursor
+          (kbd "M-p") 'evil-mc-make-and-goto-prev-cursor
+          (kbd "C-n") 'evil-mc-make-and-goto-next-match
+          (kbd "C-t") 'evil-mc-skip-and-goto-next-match
+          (kbd "C-p") 'evil-mc-make-and-goto-prev-match))
+      map))
+
+  (global-set-key (kbd "C->") #'evil-mc-make-cursor-move-next-line)
+  (global-set-key (kbd "C-<") #'evil-mc-make-cursor-move-prev-line)
+  (define-key evil-normal-state-map (kbd "gr") evil-mc-cursors-map)
+
+  :config
+  (global-evil-mc-mode +1)
+
+  (setq evil-mc-custom-known-commands
+        '((evil-delete-backward-word-smart
+           .
+           ((:default . evil-mc-execute-default-call)))
+          (end-of-visual-line-or-end
+           .
+           ((:default . evil-mc-execute-default-call)))
+          (back-to-indentation-visual-or-beginning
+           .
+           ((:default . evil-mc-execute-default-call))))
+        evil-mc-mode-line
+        `(:eval
+          (if (> (length evil-mc-cursor-list) 0)
+              (evil-mc-active-mode-line (concat " " evil-mc-mode-line-prefix))
+            "")))
+
+  (el-patch-defun evil-mc-make-cursor-move-by-line (dir count)
+    "Create COUNT cursors one for each line moving in the direction DIR.
+DIR should be 1 or -1 and COUNT should be a positive integer or nil."
+    (evil-force-normal-state)
+    (setq count (max 0 (or count 1)))
+    (dotimes (i count)
+      (evil-mc-run-cursors-before)
+      (evil-mc-make-cursor-at-pos (point))
+      (let ((line-move-visual (el-patch-swap t nil)))
+        (evil-line-move dir)))))
 
 ;; directional window movement
 (if (display-graphic-p)
