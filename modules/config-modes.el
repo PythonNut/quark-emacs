@@ -1453,7 +1453,8 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
   (require 'yasnippet)
   (setq lsp-prefer-flymake nil
         lsp-auto-guess-root t
-        lsp-session-file (expand-file-name (locate-user-emacs-file "data/.lsp-session-v1")))
+        lsp-session-file (expand-file-name (locate-user-emacs-file "data/.lsp-session-v1"))
+        lsp-headerline-breadcrumb-enable nil)
 
   (defun my/lsp-before-initialize/stall-for-remote-connections ()
     (when (lsp--client-remote?
