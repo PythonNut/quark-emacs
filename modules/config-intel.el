@@ -535,7 +535,7 @@ is binary, activate `hexl-mode'."
   (let ((dir (my/file-name-first-existing-parent
               (expand-file-name default-directory))))
     (cond ((executable-find "nautilus")
-           (call-process "nautilus" nil nil nil dir)))))
+           (call-process "nautilus" nil 0 nil dir)))))
 
 (defun pdf-print-buffer-with-faces (&optional filename)
   "Print file in the current buffer as pdf, including font, color, and
