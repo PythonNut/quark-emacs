@@ -237,6 +237,7 @@ matching string."
            (ml/search-regexp regex bound backward point-safe)))))
 
   (add-hook 'TeX-mode-hook #'lsp-deferred)
+  (add-hook 'TeX-mode-hook #'quark-flysave-mode)
 
   (use-package evil
     :config
