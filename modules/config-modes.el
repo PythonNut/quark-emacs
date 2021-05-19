@@ -473,6 +473,7 @@ Returns the symbol."
   (add-to-list 'completion-ignored-extensions ".hi"))
 
 (use-package lsp-haskell
+  :defer-install t
   :config
   (lsp-register-client
    (make-lsp--client
@@ -498,7 +499,6 @@ Returns the symbol."
   :defer-install t
   :commands (alex-mode)
   :init
-
   (provide 'common)
 
   (defmacro defparameter (var &optional value doc)
