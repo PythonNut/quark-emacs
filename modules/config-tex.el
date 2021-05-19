@@ -305,7 +305,13 @@ matching string."
            "{${}}"
            (substring-no-properties (buffer-substring beg end)))
           beg
-          end))))))
+          end)))))
+
+  (defun sshlatex (host)
+    (interactive (list
+                  (read-string (format "host (localhost): ")
+                               nil nil "localhost")))
+    (compile (concat "sshlatex " host " " buffer-file-name))))
 
 (with-eval-after-load 'latex
   (setq TeX-electric-math (cons "\\\(" "\\\)"))
