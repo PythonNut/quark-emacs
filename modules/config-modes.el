@@ -867,7 +867,6 @@ Returns the symbol."
   (el-patch-feature term)
 
   :config
-  (require 'with-editor)
   (add-hook 'term-exec-hook 'with-editor-export-editor)
 
   (define-advice term-sentinel
