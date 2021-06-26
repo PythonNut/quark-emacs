@@ -107,16 +107,6 @@
     :type 'boolean
     :group 'su)
 
-  (el-patch-defcustom su-enable-helm-integration t
-    "Enable integration with helm"
-    :type 'boolean
-    :group 'su)
-
-  (el-patch-defcustom su-enable-semantic-integration t
-    "Enable integration with semantic"
-    :type 'boolean
-    :group 'su)
-
   (autoload #'su--nadvice-make-directory-auto-root "su")
   (autoload #'su--nadvice-find-file-noselect "su")
   (autoload #'su--nadvice-supress-find-file-hook "su")
@@ -164,6 +154,7 @@
   (su-mode +1)
 
   (with-eval-after-load 'helm-files
+    (require 'su)
     (su-helm-integration-mode +1))
   (with-eval-after-load 'semantic/fw
     (require 'su)
