@@ -5,15 +5,11 @@
   :config
   (setq helm-flx-for-helm-locate t))
 
-(use-package helm-flx-historian
-  :recipe (helm-flx-historian :type git :host github :repo "PythonNut/historian.el"))
-
 (use-package ace-jump-helm-line)
 
 (use-package helm
   :config
   (helm-flx-mode +1)
-  (helm-flx-historian-mode +1)
 
   ;; swap C-z (i.e. accept-and-complete) with tab (i.e. select action)
   (define-key helm-map (kbd "<tab>")     #'helm-execute-persistent-action)
