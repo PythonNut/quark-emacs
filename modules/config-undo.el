@@ -87,7 +87,7 @@
 
   (define-advice undo-tree-save-history
       (:around (old-fun &rest args) inhibit-message)
-    (cl-letf* ((jka-compr-verbose)
+    (cl-letf* ((jka-compr-verbose nil)
                (old-write-region (symbol-function #'write-region))
                ((symbol-function #'write-region)
                 (lambda (start end filename &optional append _visit &rest args)
