@@ -44,7 +44,6 @@
 
   (unless (memq window-system '(mac ns))
     (use-package company-box
-      :recipe (company-box :repo "basil-conto/company-box" :branch "blc/dash")
       :init
       (add-hook 'company-mode-hook #'company-box-mode)
       :config
