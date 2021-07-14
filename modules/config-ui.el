@@ -443,12 +443,12 @@ DIR should be 1 or -1 and COUNT should be a positive integer or nil."
   (setq which-key-sort-order nil
         which-key-side-window-max-height 0.33)
 
-  (add-to-list 'which-key-description-replacement-alist
-               `(,(rx "evil-"
-                      (or "a" "an" "inner")
-                      "-"
-                      (group (zero-or-more not-newline)))
-                 . "\\1")))
+  (add-to-list 'which-key-replacement-alist
+               `((nil . ,(rx "evil-"
+                             (or "a" "an" "inner")
+                             "-"
+                             (group (zero-or-more not-newline))))
+                 . (nil . "\\1"))))
 
 ;; add intelligent buffer renaming
 (defun rename-current-buffer-file ()
