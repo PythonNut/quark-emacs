@@ -352,7 +352,55 @@ Returns the symbol."
           (car (last (file-expand-wildcards
                       (expand-file-name "~/.julia/environments/v*")))))
     (require 'lsp-julia)
-    (add-hook 'julia-mode-hook #'lsp-deferred))
+    (add-hook 'julia-mode-hook #'lsp-deferred)
+
+    (defun lsp-julia--get-root-remote ()
+      "Get the (Julia) project root directory of the current file over TRAMP."
+      (concat "\""
+              (tramp-file-name-localname
+               (tramp-dissect-file-name
+                (expand-file-name
+                 (or (locate-dominating-file default-directory "Project.toml")
+                     (locate-dominating-file default-directory "JuliaProject.toml")
+                     (my/tramp-build-name-from-localname
+                      (car (last (file-expand-wildcards
+                                  (expand-file-name "~/.julia/environments/v*")))))))))
+              "\""))
+
+    (defun lsp-julia--symbol-server-store-path-to-jl-no-expand ()
+      "Convert the variable `lsp-julia-symbol-server-store-path' to a
+    string or \"nothing\" if `nil'"
+      (if lsp-julia-symbol-server-store-path
+          (let ((sssp lsp-julia-symbol-server-store-path))
+            (make-directory sssp t)
+            (concat "\"" sssp "\""))
+        "nothing"))
+
+    (defun lsp-julia--rls-command-remote ()
+      "The command to lauch the Julia Language Server."
+      `(,lsp-julia-command
+        ,@lsp-julia-flags
+        ,(concat "-e "
+                 "'"
+                 "import Pkg; Pkg.instantiate(); "
+                 "using InteractiveUtils, Sockets, SymbolServer, LanguageServer; "
+                 "Union{Int64, String}(x::String) = x; "
+                 "server = LanguageServer.LanguageServerInstance("
+                 "stdin, stdout, "
+                 (lsp-julia--get-root-remote) ", "
+                 (lsp-julia--get-depot-path) ", "
+                 "nothing, "
+                 (lsp-julia--symbol-server-store-path-to-jl-no-expand) "); "
+                 "run(server);"
+                 "'")))
+
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-tramp-connection 'lsp-julia--rls-command-remote)
+                      :major-modes '(julia-mode ess-julia-mode)
+                      :server-id 'julia-ls-remote
+                      :remote? t
+                      :multi-root t
+                      :priority -1)))
 
   (use-package evil
     :config
