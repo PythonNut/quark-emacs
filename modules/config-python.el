@@ -269,14 +269,14 @@ directory"
      (make-lsp-client
       :new-connection
       (lsp-stdio-connection
-       (my/defun-as-value my/python-find-poetry-pyls ()
+       (my/defun-as-value my/python-find-poetry-pylsp ()
          (let ((pyls-path (expand-file-name
-                           "bin/pyls"
+                           "bin/pylsp"
                            (my/python-find-virtualenv-cached))))
            (when (file-executable-p pyls-path)
              pyls-path))))
       :major-modes '(python-mode)
-      :server-id 'pyls-poetry
+      :server-id 'pylsp-poetry
       :library-folders-fn
       (lambda (_workspace)
         lsp-clients-python-library-directories)
@@ -289,16 +289,16 @@ directory"
      (make-lsp-client
       :new-connection
       (lsp-tramp-connection
-       (my/defun-as-value my/python-find-remote-pyls ()
+       (my/defun-as-value my/python-find-remote-pylsp ()
          (let ((pyls-path (expand-file-name
-                           "bin/pyls"
+                           "bin/pylsp"
                            (my/python-find-virtualenv-cached))))
            (when (file-executable-p pyls-path)
              (my/tramp-localname pyls-path)))))
       :major-modes '(python-mode)
       :remote? t
       :priority -3
-      :server-id 'pyls-remote
+      :server-id 'pylsp-remote
       :library-folders-fn
       (lambda (_workspace)
         lsp-clients-python-library-directories)
