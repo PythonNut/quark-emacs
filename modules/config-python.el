@@ -135,7 +135,7 @@ Return either a string or nil."
       :major-modes (append '(python-mode) lsp-python-ms-extra-major-modes)
       :remote? t
       :server-id 'mspyls-remote
-      :priority -2
+      :priority -3
       :initialization-options 'lsp-python-ms--extra-init-params
       :notification-handlers
       (lsp-ht ("python/languageServerStarted"
@@ -297,7 +297,7 @@ directory"
              (my/tramp-localname pyls-path)))))
       :major-modes '(python-mode)
       :remote? t
-      :priority -3
+      :priority -2
       :server-id 'pylsp-remote
       :library-folders-fn
       (lambda (_workspace)
