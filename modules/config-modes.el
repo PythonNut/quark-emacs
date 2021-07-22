@@ -1493,7 +1493,6 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
 ;;; LSP
 
 (use-package lsp-mode
-  ;; :hook (python-mode . lsp-deferred)
   :commands (lsp-mode)
   :config
   (eval-when-compile
@@ -1511,16 +1510,17 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
       (sit-for 0.1)))
 
   (add-hook 'lsp-before-initialize-hook
-            #'my/lsp-before-initialize/stall-for-remote-connections)
+            #'my/lsp-before-initialize/stall-for-remote-connections))
 
-  (use-package lsp-ui
-    :commands lsp-ui-mode
-    :init
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-    (setq lsp-ui-doc-position 'top)
+(use-package lsp-ui
+  :commands lsp-ui-mode
+  :init
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  :config
+  (setq lsp-ui-doc-position 'top)
 
-    (when (memq window-system '(mac ns))
-      (setq lsp-ui-doc-use-childframe nil))))
+  (when (memq window-system '(mac ns))
+    (setq lsp-ui-doc-use-childframe nil)))
 
 (my/require-config-module 'config-tex)
 (my/require-config-module 'config-c)
