@@ -406,7 +406,10 @@ matching string."
 
   (define-key TeX-mode-map (kbd ";")
     `(menu-item "" LaTeX-environment-or-macro
-                :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd))))
+                :filter ,(lambda (cmd)
+                           (unless (or (my/LaTeX-verbatimish-p)
+                                       (looking-back (rx "\\")))
+                             cmd))))
 
   (el-patch-defun LaTeX-indent-calculate (&optional force-type)
     "Return the indentation of a line of LaTeX source.
