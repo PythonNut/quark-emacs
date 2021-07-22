@@ -1110,6 +1110,8 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
 (global-set-key (kbd "<f12>") #'my/popup-ansi-term)
 
 (use-package vterm
+  :commands (vterm)
+  :defer-install t
   :config
   (evil-set-initial-state 'vterm-mode 'emacs)
   (set-face-foreground 'vterm-color-black "#586e75"))
