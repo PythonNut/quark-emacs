@@ -328,7 +328,8 @@ matching string."
                                 "lstlisting"
                                 "minted"
                                 "verbatim"
-                                "algorithm")
+                                "algorithm"
+                                "algorithm2e")
                             eol)
                         (LaTeX-current-environment))))
 
