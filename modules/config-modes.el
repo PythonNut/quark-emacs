@@ -1170,27 +1170,19 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
   :defer-install t
   :commands (pacfiles pacfiles-start))
 
-(use-package gitattributes-mode
+(use-package git-modes
   :defer-install t
-  :commands (gitattributes-mode)
+  :commands (gitattributes-mode gitconfig-mode gitignore-mode)
   :mode (("/\\.gitattributes\\'"       . gitattributes-mode)
          ("/\\.git/info/attributes\\'" . gitattributes-mode)
-         ("/git/attributes\\'"         . gitattributes-mode)))
-
-(use-package gitconfig-mode
-  :defer-install t
-  :commands (gitconfig-mode)
-  :mode (("/\\.gitconfig\\'"  . gitconfig-mode)
-         ("/\\.git/config\\'" . gitconfig-mode)
-         ("/git/config\\'"    . gitconfig-mode)
-         ("/\\.gitmodules\\'" . gitconfig-mode)))
-
-(use-package gitignore-mode
-  :defer-install t
-  :commands (gitignore-mode)
-  :mode (("/\\.gitignore\\'"        . gitignore-mode)
-         ("/\\.git/info/exclude\\'" . gitignore-mode)
-         ("/git/ignore\\'"          . gitignore-mode)))
+         ("/git/attributes\\'"         . gitattributes-mode)
+         ("/\\.gitconfig\\'"           . gitconfig-mode)
+         ("/\\.git/config\\'"          . gitconfig-mode)
+         ("/git/config\\'"             . gitconfig-mode)
+         ("/\\.gitmodules\\'"          . gitconfig-mode)
+         ("/\\.gitignore\\'"           . gitignore-mode)
+         ("/\\.git/info/exclude\\'"    . gitignore-mode)
+         ("/git/ignore\\'"             . gitignore-mode)))
 
 (use-package ssh-config-mode
   :defer-install t
