@@ -126,7 +126,7 @@ Return either a string or nil."
       (with-demoted-errors "Load error: %s"
         (require 'lsp)
         (require 'el-patch)))
-
+    (setq lsp-pylsp-plugins-pydocstyle-enabled nil)
     (lsp-register-client
      (make-lsp-client
       :new-connection (lsp-tramp-connection
