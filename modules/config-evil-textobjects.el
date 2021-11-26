@@ -1,6 +1,7 @@
 ;; -*- lexical-binding: t -*-
 (require 'cl-lib)
 (eval-when-compile
+  (require 'config-package)
   (use-package evil)
   (require 'evil))
 

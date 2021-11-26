@@ -1,7 +1,9 @@
 ;; -*- lexical-binding: t -*-
-(eval-when-compile (require 'config-macros))
+(eval-when-compile
+  (require 'config-macros)
+  (require 'config-package))
 (require 'cl-lib)
-(require 'config-package)
+
 
 (eval-when-compile
   (with-demoted-errors "Load error: %s"

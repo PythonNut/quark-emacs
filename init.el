@@ -85,7 +85,8 @@
     (defun my/maybe-byte-compile-init-el ()
       (let ((init-elc (concat (file-name-sans-extension user-init-file)
                               ".elc")))
-        (when (file-newer-than-file-p user-init-file init-elc)
+        (when (and (file-newer-than-file-p user-init-file init-elc)
+                   (not (equal (file-name-extension user-init-file) "eln"))))
           (byte-compile-file user-init-file)
           (when (and (fboundp 'restart-emacs)
                      (y-or-n-p (format "%s was newer than %s. Restart?"
@@ -127,4 +128,4 @@
     (my/require-config-module 'config-modes)
     (message "[===============] solarized")
     (my/require-config-module 'config-solarized)
-    (message "[===============] done")))
+    (message "[===============] done"))

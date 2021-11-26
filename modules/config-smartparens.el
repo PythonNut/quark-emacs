@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t -*-
-(eval-when-compile (require 'config-macros))
+(eval-when-compile
+  (require 'config-macros)
+  (require 'config-package))
 
 (use-package on-parens
   :commands (;; motion
@@ -30,7 +32,8 @@
   :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
-      (require 'el-patch)))
+      (require 'el-patch)
+      (require 'hydra)))
 
   (setq sp-cancel-autoskip-on-backward-movement nil)
 

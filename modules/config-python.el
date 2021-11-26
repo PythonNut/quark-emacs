@@ -1,7 +1,8 @@
 ;; -*- lexical-binding: t -*-
 (eval-when-compile
   (require 'config-macros)
-  (require 'config-core))
+  (require 'config-core)
+  (require 'config-package))
 
 
 ;; =============================================================================
