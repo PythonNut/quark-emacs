@@ -86,13 +86,13 @@
       (let ((init-elc (concat (file-name-sans-extension user-init-file)
                               ".elc")))
         (when (and (file-newer-than-file-p user-init-file init-elc)
-                   (not (equal (file-name-extension user-init-file) "eln"))))
+                   (not (equal (file-name-extension user-init-file) "eln")))
           (byte-compile-file user-init-file)
           (when (and (fboundp 'restart-emacs)
                      (y-or-n-p (format "%s was newer than %s. Restart?"
                                        user-init-file
-                                       init-elc))))
-          (restart-emacs))))
+                                       init-elc)))
+            (restart-emacs))))))
 
     (add-hook 'after-init-hook #'my/maybe-byte-compile-init-el)
 
