@@ -6,7 +6,7 @@
 (use-package avy
   :init
   (define-advice self-insert-command
-      (:around (old-fun &optional arg) letters-do-avy-jump)
+      (:around (old-fun &optional arg _C) letters-do-avy-jump)
     (interactive "P")
     (cond
      ;; `C-u a` jumps to `a`.
