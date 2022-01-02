@@ -82,3 +82,4 @@ flycheck_*
 /data/places
 /data/transient
 /data/lsp
+/eln-cache
