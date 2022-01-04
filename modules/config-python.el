@@ -109,7 +109,9 @@ Return either a string or nil."
 
   :config
   (add-hook 'python-mode-hook
-            (lambda () (setq mode-name "Py")))
+            (my/defun-as-value my/python-mode-setup ()
+              (setq mode-name "Py")
+              (setq-local tab-width 4)))
 
   ;; Use the Microsoft python ls if we can
   (use-package lsp-python-ms
