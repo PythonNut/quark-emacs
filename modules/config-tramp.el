@@ -30,20 +30,29 @@
   (add-to-list 'tramp-methods
                `("rsyncx"
                  (tramp-login-program "ssh")
-                 (tramp-login-args (("-l" "%u") ("-p" "%p") ("%c") ("-e" "none")
-                                    ("-t" "-t") ("%h") ("%l")))
+                 (tramp-login-args
+                  (("-l" "%u")
+                   ("-p" "%p")
+                   ("%c")
+                   ("-e" "none")
+                   ("-t" "-t")
+                   ("-o" "RemoteCommand=\"%l\"")
+                   ("%h")))
                  (tramp-async-args (("-q")))
                  (tramp-remote-shell "/bin/sh")
                  (tramp-remote-shell-login ("-l"))
                  (tramp-remote-shell-args ("-c"))
                  (tramp-copy-program
-                  ,(if (and (eq system-type 'darwin)
-                            (file-executable-p "/usr/local/bin/rsync"))
-                       "/usr/local/bin/rsync"
-                     "rsync"))
+                  ,(cond
+                    ((and (eq system-type 'darwin)
+                          (file-executable-p "/opt/homebrew/bin/rsync"))
+                     "/opt/homebrew/bin/rsync")
+                    ((and (eq system-type 'darwin)
+                          (file-executable-p "/usr/local/bin/rsync"))
+                     "/usr/local/bin/rsync")
+                    (t "rsync")))
                  (tramp-copy-args (("-t" "%k") ("-p") ("-r") ("-s") ("-c")))
-                 (tramp-copy-env (("RSYNC_RSH")
-                                  ("ssh" "%c")))
+                 (tramp-copy-env (("RSYNC_RSH") ("ssh") ("%c")))
                  (tramp-copy-keep-date t)
                  (tramp-copy-keep-tmpfile t)
                  (tramp-copy-recursive t)))
