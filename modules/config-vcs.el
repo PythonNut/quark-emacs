@@ -135,13 +135,24 @@
 
   ;; If there is only one stash, operate on it immediately
   (el-patch-defun magit-read-stash (prompt)
-    (let ((stashes (magit-list-stashes)))
-      (el-patch-wrap 2 1
-        (if (> (length stashes) 1)
-            (magit-completing-read prompt stashes nil t nil nil
-                                   (magit-stash-at-point)
-                                   (car stashes))
-          (car stashes)))))
+    (let* ((atpoint (magit-stash-at-point))
+           (default (and atpoint
+                         (concat atpoint (magit-rev-format " %s" atpoint))))
+           (choices (mapcar (lambda (c)
+                              (pcase-let ((`(,rev ,msg) (split-string c "\0")))
+                                (concat (propertize rev 'face 'magit-hash)
+                                        " " msg)))
+                            (magit-list-stashes "%gd%x00%s")))
+           (choice (el-patch-wrap 2 1
+                     (if (> (length choices) 1)
+                         (magit-completing-read prompt choices
+                                                nil t nil nil
+                                                default
+                                                (car choices))
+                       (car choices)))))
+      (and choice
+           (string-match "^\\([^ ]+\\) \\(.+\\)" choice)
+           (substring-no-properties (match-string 1 choice)))))
 
   (el-patch-defun magit-process-username-prompt (process string)
     "Forward username prompts to the user."
