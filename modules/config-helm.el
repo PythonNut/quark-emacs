@@ -158,21 +158,21 @@
         helm-ff-keep-cached-candidates nil
         helm-boring-file-regexp-list (append helm-boring-file-regexp-list
                                              (list (rx ".synctex.gz" line-end)
-                                                   (rx ".undo.xz" line-end)
                                                    (rx ".elc" line-end)
                                                    (rx "#" line-end)
                                                    (rx "~" line-end)
-                                                   (rx ".zwc.old" line-end)
-                                                   (rx ".zwc" line-end)
+                                                   (rx ".zwc" (opt ".old") line-end)
                                                    (rx "/.#"))))
 
-  (define-advice helm-ff-filter-candidate-one-by-one
-      (:around (old-fun file &rest args) skip-dots)
-    (when (or (not (string-match-p (rx (or "." "..") line-end) file))
-              (string-match-p (rx ".")
-                              (helm-basename (or (bound-and-true-p helm-input)
-                                                 ""))))
-      (funcall old-fun file args))))
+  (define-advice helm-ff-directory-files
+      (:filter-return (ret) skip-dots)
+    (if (string-match-p (rx (or"."))
+                        (helm-basename (or (bound-and-true-p helm-input)
+                                           "")))
+        ret
+      (cl-remove-if (lambda (f)
+                      (string-match-p (rx (or "." "..") line-end) (car f)))
+                    ret))))
 
 (use-package helm-buffers
   :ensure nil
