@@ -25,6 +25,9 @@
   (define-key helm-map (kbd "M-<right>") #'helm-next-source)
 
   (set-face-attribute 'helm-selection nil :underline nil)
+
+  (autoload 'helm-completion--flex-transform-pattern "helm-mode")
+
   (setq helm-case-fold-search 'smart
         helm-candidate-separator (make-string 20 ?─)
         helm-display-header-line nil

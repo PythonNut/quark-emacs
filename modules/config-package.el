@@ -378,6 +378,7 @@ these values are used to call `use-package-ensure-function'."))
 (idle-job-add-require 'url-history)
 (idle-job-add-require 'mailcap)
 
+(idle-job-add-require 'helm-mode)
 (idle-job-add-require 'helm-ring)
 (idle-job-add-require 'helm-elisp)
 (idle-job-add-require 'helm-eval)
