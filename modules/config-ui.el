@@ -397,19 +397,8 @@ DIR should be 1 or -1 and COUNT should be a positive integer or nil."
 ;; ==================
 
 (with-eval-after-load 'whitespace
-  (setq whitespace-display-mappings '((space-mark 32 [?·]))
-        whitespace-style '(face trailing spaces space-mark))
-
-  (set-face-attribute 'whitespace-space nil
-                      :inherit nil
-                      :foreground (face-background 'default)
-                      :background nil)
-
-  (set-face-attribute 'whitespace-trailing nil
-                      :inherit 'avy-background-face
-                      :background nil
-                      :inverse-video nil
-                      :foreground nil)
+  (setf (alist-get 'space-mark whitespace-display-mappings) '(32 [?·]))
+  (setq whitespace-style '(face trailing tab tab-mark spaces space-mark))
 
   (define-advice whitespace-trailing-regexp
       (:override (limit) match-all)
