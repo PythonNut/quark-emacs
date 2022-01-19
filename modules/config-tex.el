@@ -117,7 +117,10 @@
         (:around (old-fun &rest args) add-exec-path)
       (let ((process-environment process-environment))
          (setenv "PATH"
-                 (concat "$PATH" (string-join exec-path path-separator)) t)
+                 (concat (getenv "PATH")
+                         path-separator
+                         (string-join exec-path path-separator))
+                 t)
          (apply old-fun args))))
 
   (defun my/LaTeX-format-name ()
