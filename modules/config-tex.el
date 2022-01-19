@@ -105,9 +105,12 @@
   (when (executable-find "zathura")
     (setf (cadr (assoc 'output-pdf TeX-view-program-selection)) "Zathura"))
 
-  (when (and (eq system-type 'darwin)
-             (file-directory-p "/Applications/Skim.app"))
-    (setf (cadr (assoc 'output-pdf TeX-view-program-selection)) "Skim")
+  (when (eq system-type 'darwin)
+    ;; AUCTeX doesn't know zathura exists on macOS now!
+    (add-to-list 'TeX-view-program-list
+                 '("Zathura"
+                   "zathura %o"
+                   "zathura"))
 
     ;; Due to the way AUCTeX invokes commands, the programs need to be
     ;; in the PATH, however for some reason on macOS the required
