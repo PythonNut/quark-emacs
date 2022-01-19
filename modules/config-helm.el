@@ -348,7 +348,10 @@
          (setq helm-ag-base-command "ack-grep --nocolor --nogroup"
                my/ag-available t))))
 
-(use-package helm-git-grep)
+(use-package helm-git-grep
+  :recipe (helm-git-grep :type git
+                         :host github
+                         :repo "PythonNut/helm-git-grep"))
 
 (use-package helm-rg
   :init
