@@ -289,87 +289,94 @@ command."
   :init
   (el-patch-feature magic-latex-buffer)
   :config
+
+  (with-eval-after-load 'tex
+    (eval-when-compile
+      (with-demoted-errors "Load error: %s"
+        (require 'tex)))
+    (define-key TeX-mode-map (kbd "C-c m") #'magic-latex-buffer))
+
   (setq magic-latex-enable-block-align nil
         magic-latex-enable-inline-image nil)
 
-    (push '("\\\\EE\\>" . "𝔼") ml/symbols)
-    (push '("\\\\RR\\>" . "ℝ") ml/symbols)
-    (push '("\\\\NN\\>" . "ℕ") ml/symbols)
-    (push '("\\\\QQ\\>" . "ℚ") ml/symbols)
-    (push '("\\\\CC\\>" . "ℂ") ml/symbols)
-    (push '("\\\\sqrt\\>" . "√") ml/symbols)
-    (push '("\\\\ldots\\>" . "…") ml/symbols)
-    (push '("\\\\triangleq\\>" . "≜") ml/symbols)
-    (push '("\\\\coloneqq\\>" . "≔") ml/symbols)
-    (push '("\\\\frac\\>" . "∕") ml/symbols)
+  (push '("\\\\EE\\>" . "𝔼") ml/symbols)
+  (push '("\\\\RR\\>" . "ℝ") ml/symbols)
+  (push '("\\\\NN\\>" . "ℕ") ml/symbols)
+  (push '("\\\\QQ\\>" . "ℚ") ml/symbols)
+  (push '("\\\\CC\\>" . "ℂ") ml/symbols)
+  (push '("\\\\sqrt\\>" . "√") ml/symbols)
+  (push '("\\\\ldots\\>" . "…") ml/symbols)
+  (push '("\\\\triangleq\\>" . "≜") ml/symbols)
+  (push '("\\\\coloneqq\\>" . "≔") ml/symbols)
+  (push '("\\\\frac\\>" . "∕") ml/symbols)
 
-    (defvar ml/wrappers
-      '(
-        ("\\\\del{" "(" . ")")
-        ("\\\\del\\*{" "⦅" . "⦆")
-        ("\\\\sbr{" "[" . "]")
-        ("\\\\sbr\\*{" "〚" . "〛")
-        ("\\\\set{" "{" . "}")
-        ("\\\\set\\*{" "⦃" . "⦄")
-        ("\\\\abs{" "|" . "|")
-        ("\\\\abs\\*{" "¦" . "¦")
-        ("\\\\norm{" "ǁ" . "ǁ")
-        ("\\\\norm\\*{" "⃒¦" . "¦⃒")
-        ("\\\\ceil{" "⌈" . "⌉")
-        ("\\\\floor{" "⌊" . "⌋")
-        ("\\\\inner{" "〈" . "〉")
-        ("\\\\inner\\*{" "《" . "》")))
+  (defvar ml/wrappers
+    '(
+      ("\\\\del{" "(" . ")")
+      ("\\\\del\\*{" "⦅" . "⦆")
+      ("\\\\sbr{" "[" . "]")
+      ("\\\\sbr\\*{" "〚" . "〛")
+      ("\\\\set{" "{" . "}")
+      ("\\\\set\\*{" "⦃" . "⦄")
+      ("\\\\abs{" "|" . "|")
+      ("\\\\abs\\*{" "¦" . "¦")
+      ("\\\\norm{" "ǁ" . "ǁ")
+      ("\\\\norm\\*{" "⃒¦" . "¦⃒")
+      ("\\\\ceil{" "⌈" . "⌉")
+      ("\\\\floor{" "⌊" . "⌋")
+      ("\\\\inner{" "〈" . "〉")
+      ("\\\\inner\\*{" "《" . "》")))
 
-    (define-advice ml/jit-prettifier
-        (:after (beg end) prettify-wrapers)
-      (dolist (wrapper ml/wrappers)
-        (save-excursion
-          (let ((regex (car wrapper)))
-            (while (ignore-errors (ml/search-regexp regex end nil t))
-              (let* ((close (scan-lists (1- (match-end 0)) 1 0))
-                     (oldov (ml/overlay-at (match-beginning 0) 'category 'ml/ov-pretty))
-                     (priority-base (and oldov (or (overlay-get oldov 'priority) 1)))
-                     (oldprop (and oldov (overlay-get oldov 'display))))
-                (unless (stringp oldprop)
-                  (ml/make-pretty-overlay
-                   (match-beginning 0) (match-end 0)
-                   'priority (when oldov (1+ priority-base))
-                   'display (propertize (eval (cadr wrapper)) 'display oldprop))
-                  (ml/make-pretty-overlay
-                   (1- close) close
-                   'priority (when oldov (1+ priority-base))
-                   'display (propertize (eval (cddr wrapper)) 'display oldprop)
-                   'face font-lock-keyword-face))))))))
+  (define-advice ml/jit-prettifier
+      (:after (beg end) prettify-wrapers)
+    (dolist (wrapper ml/wrappers)
+      (save-excursion
+        (let ((regex (car wrapper)))
+          (while (ignore-errors (ml/search-regexp regex end nil t))
+            (let* ((close (scan-lists (1- (match-end 0)) 1 0))
+                   (oldov (ml/overlay-at (match-beginning 0) 'category 'ml/ov-pretty))
+                   (priority-base (and oldov (or (overlay-get oldov 'priority) 1)))
+                   (oldprop (and oldov (overlay-get oldov 'display))))
+              (unless (stringp oldprop)
+                (ml/make-pretty-overlay
+                 (match-beginning 0) (match-end 0)
+                 'priority (when oldov (1+ priority-base))
+                 'display (propertize (eval (cadr wrapper)) 'display oldprop))
+                (ml/make-pretty-overlay
+                 (1- close) close
+                 'priority (when oldov (1+ priority-base))
+                 'display (propertize (eval (cddr wrapper)) 'display oldprop)
+                 'face font-lock-keyword-face))))))))
 
-    (set-face-attribute 'ml/llarge nil :height 1.25)
-    (set-face-attribute 'ml/xlarge nil :height 1.3)
-    (set-face-attribute 'ml/huge nil :height 1.35)
-    (set-face-attribute 'ml/hhuge nil :height 1.4)
+  (set-face-attribute 'ml/llarge nil :height 1.25)
+  (set-face-attribute 'ml/xlarge nil :height 1.3)
+  (set-face-attribute 'ml/huge nil :height 1.35)
+  (set-face-attribute 'ml/hhuge nil :height 1.4)
 
-    (add-hook 'magic-latex-buffer-hook #'rainbow-delimiters-mode-disable)
+  (add-hook 'magic-latex-buffer-hook #'rainbow-delimiters-mode-disable)
 
-    (el-patch-defun ml/search-regexp (regex &optional bound backward point-safe)
-      "Like `search-regexp' but skips escaped chars, comments and
+  (el-patch-defun ml/search-regexp (regex &optional bound backward point-safe)
+    "Like `search-regexp' but skips escaped chars, comments and
 verbish environments. This function raise an error on
 failure. When POINT-SAFE is non-nil, the point must not be in the
 matching string."
-      (ml/safe-excursion
- (let ((case-fold-search nil))
-         (if backward
-             (search-backward-regexp regex bound)
-           (search-forward-regexp regex bound)))
-       (or (save-match-data
-             (save-excursion
-               (and (goto-char (match-beginning 0))
-                    (not (and point-safe
-                              (< (point) ml/jit-point)
-                              (< ml/jit-point (match-end 0))))
-                    (looking-back "\\([^\\\\]\\|^\\)\\(\\\\\\\\\\)*"
-                                  (el-patch-swap
-                                    (point-min)
-                                    (line-beginning-position)))
-                    (not (ml/skip-comments-and-verbs backward)))))
-           (ml/search-regexp regex bound backward point-safe)))))
+    (ml/safe-excursion
+     (let ((case-fold-search nil))
+       (if backward
+           (search-backward-regexp regex bound)
+         (search-forward-regexp regex bound)))
+     (or (save-match-data
+           (save-excursion
+             (and (goto-char (match-beginning 0))
+                  (not (and point-safe
+                            (< (point) ml/jit-point)
+                            (< ml/jit-point (match-end 0))))
+                  (looking-back "\\([^\\\\]\\|^\\)\\(\\\\\\\\\\)*"
+                                (el-patch-swap
+                                  (point-min)
+                                  (line-beginning-position)))
+                  (not (ml/skip-comments-and-verbs backward)))))
+         (ml/search-regexp regex bound backward point-safe)))))
 
 (with-eval-after-load 'latex
   (setq TeX-electric-math (cons "\\\(" "\\\)"))
