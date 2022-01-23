@@ -50,16 +50,21 @@ extra indent = 2
 
   (make-variable-buffer-local 'adaptive-wrap-extra-indent)
 
-  (el-patch-defun adaptive-wrap--face-extends (face)
-    (if (fboundp 'face-extend-p)
-        (face-extend-p face nil t)
-      ;; Before Emacs 27, faces always extended beyond EOL.  Check for a
-      ;; non-default background.
-      (face-background face nil t)))
+  (el-patch-defun adaptive-wrap--face-extend-p (face)
+    ;; Before Emacs 27, faces always extended beyond EOL, so we check for a
+    ;; non-default background instead.
+    (cond
+     ((listp face)
+      (plist-get face (if (fboundp 'face-extend-p) :extend :background)))
+     ((symbolp face)
+      (if (fboundp 'face-extend-p)
+          (face-extend-p face nil t)
+        (face-background face nil t)))))
 
-  (el-patch-defun adaptive-wrap--prefix-face (fcp beg end)
+  (el-patch-defun adaptive-wrap--prefix-face (fcp _beg end)
+    ;; If the fill-context-prefix already specifies a face, just use that.
     (cond ((get-text-property 0 'face fcp))
-          ;; If the last character is a newline and has a face that
+          ;; Else, if the last character is a newline and has a face that
           ;; extends beyond EOL, assume that this face spans the whole
           ;; line and apply it to the prefix to preserve the "block"
           ;; visual effect.
@@ -69,7 +74,14 @@ extra indent = 2
           ;; line has the diff-removed face.
           ((= (char-before end) ?\n)
            (let ((eol-face (get-text-property (1- end) 'face)))
-             (and eol-face (adaptive-wrap--face-extends eol-face) eol-face)))))
+             ;; `eol-face' can be a face, a "face value"
+             ;; (plist of face properties) or a list of one of those.
+             (if (or (not (consp eol-face)) (keywordp (car eol-face)))
+                 ;; A single face.
+                 (if (adaptive-wrap--face-extend-p eol-face) eol-face)
+               ;; A list of faces.  Keep the ones that extend beyond EOL.
+               (delq nil (mapcar (lambda (f) (if (adaptive-wrap--face-extend-p f) f))
+                                 eol-face)))))))
 
   (el-patch-defun adaptive-wrap--prefix (fcp)
     (let ((fcp-len (string-width fcp)))
