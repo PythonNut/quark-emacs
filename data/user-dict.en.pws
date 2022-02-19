@@ -1,9 +1,11 @@
-personal_ws-1.1 en 41 
+personal_ws-1.1 en 45 
+Frobenius
 Gaussians
 Hayase
 Kolmogorov
 Lipschitz
 Reidemeister
+Schatten
 biconditional
 bijection
 cardinality
@@ -22,12 +24,14 @@ infimum
 injective
 integrable
 integrands
+invertible
 irreducibles
 lexicographically
 monomial
 monomials
 nondecreasing
 nonincreasing
+nonnegative
 nontrivially
 pointwise
 satisfiable
