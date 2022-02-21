@@ -116,7 +116,7 @@
     ;; in the PATH, however for some reason on macOS the required
     ;; directories are only added to exec-path and not PATH, so we
     ;; correct this here.
-    (define-advice TeX-run-command
+    (define-advice TeX-run-discard
         (:around (old-fun &rest args) add-exec-path)
       (let ((process-environment process-environment))
          (setenv "PATH"
