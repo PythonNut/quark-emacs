@@ -213,7 +213,38 @@ command."
   (use-package evil
     :config
     (use-package evil-tex
-      :commands (evil-tex-mode))
+      :commands (evil-tex-mode)
+      :config
+      (defun quark/evil-tex-toggle-math ()
+        "Toggle surrounding math between \\(foo\\) and \\=\\[foo\\]."
+        (interactive)
+        (let* ((outer (evil-tex-a-math)) (inner (evil-tex-inner-math))
+               (left-over (make-overlay (car outer) (car inner)))
+               (right-over (make-overlay (cadr inner) (cadr outer))))
+          (save-excursion
+            (goto-char (overlay-start left-over))
+            (cond
+             ((looking-at (regexp-quote "\\("))
+              (evil-tex--overlay-replace left-over  "\\[")
+              (evil-tex--overlay-replace right-over "\\]" )
+              (goto-char (overlay-end right-over))
+              (when (looking-at (rx punct))
+                (let ((match (match-string 0)))
+                  (delete-char 1)
+                  (goto-char (overlay-start right-over))
+                  (insert match))))
+             ((looking-at (regexp-quote "\\["))
+              (evil-tex--overlay-replace left-over  "\\(")
+              (evil-tex--overlay-replace right-over "\\)" )
+              (goto-char (overlay-start right-over))
+              (when (looking-back (rx punct) 1)
+                (let ((match (match-string 0)))
+                  (delete-char -1)
+                  (goto-char (overlay-end right-over))
+                  (insert match))))))
+          (delete-overlay left-over) (delete-overlay right-over)))
+
+      (define-key evil-tex-toggle-map (kbd "m") #'quark/evil-tex-toggle-math))
 
     (add-hook 'LaTeX-mode-hook #'evil-tex-mode)
     (evil-set-initial-state 'TeX-error-overview-mode 'insert))
