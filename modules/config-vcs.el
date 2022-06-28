@@ -49,7 +49,9 @@
   (transient-bind-q-to-quit))
 
 (use-package magit
-  :init (defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
+  :init
+  (use-package compat)
+  (defvar magit-no-message (list "Turning on magit-auto-revert-mode"))
   :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
