@@ -54,6 +54,27 @@ recursion depth in the minibuffer prompt.  This is only useful if
   (global-set-key (kbd "C-M-s") #'flx-isearch-forward)
   (global-set-key (kbd "C-M-r") #'flx-isearch-backward))
 
+(when (string-prefix-p "x86_64" system-configuration)
+  (use-package flx-rs
+    :recipe
+    (flx-rs :type git
+            :host github
+            :repo "PythonNut/flx-rs"
+            :files ("*.el" "bin/*"))
+    :init
+    (with-eval-after-load 'flx
+      (require 'flx-rs)
+      (advice-add 'flx-score :override #'flx-rs-score))
+    :config
+    (setq flx-rs--bin-dir
+          (eval-when-compile
+            (require 'find-func)
+            (file-name-directory (find-library-name "flx-rs"))))
+    (define-advice flx-rs-load-dyn
+        (:around (old-fun &rest args) quiet)
+      (let ((message-log-max))
+        (apply old-fun args)))))
+
 (use-package historian
   :init
   (eval-when-compile
