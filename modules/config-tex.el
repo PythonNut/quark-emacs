@@ -260,6 +260,11 @@ command."
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
 
   (use-package auctex-latexmk
+    :recipe (auctex-latexmk
+             :type git
+             :flavor melpa
+             :host github
+             :repo "wang1zhen/auctex-latexmk")
     :commands (auctex-latexmk-setup)
     :init
     (auctex-latexmk-setup)
