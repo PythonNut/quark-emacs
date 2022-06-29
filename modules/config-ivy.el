@@ -59,14 +59,14 @@ recursion depth in the minibuffer prompt.  This is only useful if
     :recipe
     (flx-rs :type git
             :host github
-            :repo "PythonNut/flx-rs"
+            :repo "jcs-elpa/flx-rs"
             :files ("*.el" "bin/*"))
     :init
     (with-eval-after-load 'flx
       (require 'flx-rs)
       (advice-add 'flx-score :override #'flx-rs-score))
     :config
-    (setq flx-rs--bin-dir
+    (setq flx-rs-bin-dir
           (eval-when-compile
             (require 'find-func)
             (file-name-directory (find-library-name "flx-rs"))))
