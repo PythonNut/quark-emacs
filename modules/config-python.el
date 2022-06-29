@@ -49,17 +49,19 @@ Return either a string or nil."
 (defun my/python-find-virtualenv-cached (&optional dir)
   (let* ((dir (or dir default-directory))
          (pyproject (locate-dominating-file dir "pyproject.toml")))
-    (unless my/python-virtualenv-cache
-      (setq my/python-virtualenv-cache (make-hash-table :test #'equal)))
-    (if (and (my/local-executable-find "poetry")
-             dir
-             (not (file-exists-p (expand-file-name ".venv" dir))))
-        (let ((cached (gethash dir my/python-virtualenv-cache)))
-          (if (and cached (file-exists-p cached))
-              cached
-            (puthash dir
-                     (my/python-find-virtualenv dir)
-                     my/python-virtualenv-cache))))))
+    (when (and dir
+               (my/local-executable-find "poetry")
+               (or (file-remote-p dir)
+                   (not (getenv "CONDA_PREFIX")))
+               (not (file-exists-p (expand-file-name ".venv" dir))))
+      (unless my/python-virtualenv-cache
+        (setq my/python-virtualenv-cache (make-hash-table :test #'equal)))
+      (let ((cached (gethash dir my/python-virtualenv-cache)))
+        (if (and cached (file-exists-p cached))
+            cached
+          (puthash dir
+                   (my/python-find-virtualenv dir)
+                   my/python-virtualenv-cache))))))
 
 (with-eval-after-load 'pythonic
   (eval-when-compile
