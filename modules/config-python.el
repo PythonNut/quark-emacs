@@ -40,7 +40,7 @@ Return either a string or nil."
          (universal-path (if (tramp-tramp-file-p default-directory)
                              (my/tramp-build-name-from-localname path)
                            path)))
-    (when (file-directory-p universal-path)
+    (when (and universal-path (file-directory-p universal-path))
       (substring-no-properties universal-path))))
 
 (defvar my/python-virtualenv-cache nil)
@@ -54,14 +54,12 @@ Return either a string or nil."
     (if (and (my/local-executable-find "poetry")
              dir
              (not (file-exists-p (expand-file-name ".venv" dir))))
-        (let ((cached (or (gethash dir my/python-virtualenv-cache)
-                          (puthash dir
-                                   (my/python-find-virtualenv dir)
-                                   my/python-virtualenv-cache))))
-          (if (file-exists-p cached)
+        (let ((cached (gethash dir my/python-virtualenv-cache)))
+          (if (and cached (file-exists-p cached))
               cached
-            (my/python-find-virtualenv dir)))
-      (my/python-find-virtualenv dir))))
+            (puthash dir
+                     (my/python-find-virtualenv dir)
+                     my/python-virtualenv-cache))))))
 
 (with-eval-after-load 'pythonic
   (eval-when-compile
