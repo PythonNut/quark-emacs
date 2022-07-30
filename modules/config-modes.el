@@ -75,30 +75,7 @@
 
   :config
   (define-key helpful-mode-map "J" #'forward-button)
-  (define-key helpful-mode-map "K" #'backward-button)
-
-  (el-patch-defun helpful--read-symbol (prompt default-val predicate)
-    "Read a symbol from the minibuffer, with completion.
-Returns the symbol."
-    (when (and default-val
-               (not (funcall predicate default-val)))
-      (setq default-val nil))
-    (when default-val
-      ;; `completing-read' expects a string.
-      (setq default-val (symbol-name default-val))
-
-      ;; TODO: Only modify the prompt when we don't have ido/ivy/helm,
-      ;; because the default is obvious for them.
-      (setq prompt
-            (replace-regexp-in-string
-             (rx ": " eos)
-             (format " (default: %s): " default-val)
-             prompt)))
-    (intern (completing-read prompt
-                             (el-patch-swap obarray
-                                            #'help--symbol-completion-table)
-                             predicate t nil nil
-                             default-val))))
+  (define-key helpful-mode-map "K" #'backward-button))
 
 (use-package macrostep
   :defer-install t
