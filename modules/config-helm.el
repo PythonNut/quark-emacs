@@ -263,11 +263,14 @@
       :persistent-action #'helm-ff-kill-or-find-buffer-fname)
     "Helm source definition for recent files not in current project.")
 
+  (el-patch-defvar helm-source-projectile-files-list-before-init-hook
+    (lambda ()
+      (add-hook 'helm-after-update-hook #'helm-projectile--move-to-real)
+      (add-hook 'helm-cleanup-hook #'helm-projectile--remove-move-to-real)))
+
   (el-patch-defvar helm-source-projectile-files-list
     (helm-build-sync-source "Projectile files"
-      :before-init-hook (lambda ()
-                          (add-hook 'helm-after-update-hook #'helm-projectile--move-to-real)
-                          (add-hook 'helm-cleanup-hook #'helm-projectile--remove-move-to-real))
+      :before-init-hook 'helm-source-projectile-files-list-before-init-hook
       :candidates (lambda ()
                     (when (projectile-project-p)
                       (with-helm-current-buffer
