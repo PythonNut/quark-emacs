@@ -54,6 +54,8 @@
             (lambda ()
               (xterm-mouse-mode -1))))
 
+(use-package clipetty)
+
 (defun my/setup-paste (&optional frame)
   (with-selected-frame (or frame (selected-frame))
     (unless (display-graphic-p)
@@ -61,6 +63,8 @@
                  (or (executable-find "xclip")
                      (executable-find "pbcopy")))
         (xclip-mode +1))
+
+      (global-clipetty-mode +1)
 
       ;; just in case the terminal is a failure
       (defvar arrow-keys-brace-map (make-sparse-keymap)
