@@ -1,7 +1,8 @@
 ;; -*- lexical-binding: t -*-
 (eval-when-compile
   (require 'config-macros)
-  (require 'config-package))
+  (require 'config-package)
+  (require 'el-patch))
 
 (use-package helm-flx
   :config
@@ -162,6 +163,7 @@
                                                    (rx "#" line-end)
                                                    (rx "~" line-end)
                                                    (rx ".zwc" (opt ".old") line-end)
+                                                   (rx ".DS_Store" line-end)
                                                    (rx "/.#"))))
 
   (define-advice helm-ff-directory-files
@@ -321,7 +323,7 @@
                helm-locate-command "locate %s -r %s -e -l 100"))
         ((eq system-type 'darwin)
          (setq helm-locate-fuzzy-match nil
-               helm-locate-command "mdfind -name %s %s")))
+               helm-locate-command "mdfind -name %s %s 2> /dev/null")))
 
   (el-patch-defvar helm-source-locate
     (helm-make-source "Locate" 'helm-locate-source
