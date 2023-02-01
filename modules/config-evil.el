@@ -43,6 +43,9 @@
   (define-key evil-motion-state-map (kbd "<down>") #'evil-next-visual-line)
   (define-key evil-normal-state-map (kbd "<up>") #'evil-previous-visual-line)
 
+  (define-key evil-insert-state-map (kbd "S-<left>") nil)
+  (define-key evil-insert-state-map (kbd "S-<right>") nil)
+
   (key-chord-define evil-insert-state-map  "jj" #'evil-normal-state)
   (key-chord-define evil-replace-state-map "jj" #'evil-normal-state)
   (key-chord-define evil-emacs-state-map   "jj" #'evil-normal-state)
