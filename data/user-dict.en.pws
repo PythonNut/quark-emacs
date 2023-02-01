@@ -1,4 +1,4 @@
-personal_ws-1.1 en 45 
+personal_ws-1.1 en 55 
 Frobenius
 Gaussians
 Hayase
@@ -6,6 +6,8 @@ Kolmogorov
 Lipschitz
 Reidemeister
 Schatten
+Schwarz
+adaptively
 biconditional
 bijection
 cardinality
@@ -14,9 +16,12 @@ colorings
 conjugacy
 contrapositive
 cosets
+cyclicity
+disincentivize
 durations
 equisatisfiable
 factorizations
+functionals
 incompressible
 indeterminates
 inequivalent
@@ -33,7 +38,12 @@ nondecreasing
 nonincreasing
 nonnegative
 nontrivially
+orthonormal
 pointwise
+polytope
+preimage
+quartic
+rotationally
 satisfiable
 subadditivity
 subfield
