@@ -525,6 +525,16 @@ is binary, activate `hexl-mode'."
                                      "dpaste.de"
                                      "gist.github.com")))
 
+;;; =============================================
+;;; github copilot - AI code completion for Emacs
+;;; =============================================
+
+(use-package copilot
+  :recipe (copilot :host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :config
+  (evil-define-key 'insert copilot-mode-map (kbd "<backtab>")
+    #'copilot-accept-completion))
+
 ;;; ============================================
 ;;; open a file manager in the current directory
 ;;; ============================================
