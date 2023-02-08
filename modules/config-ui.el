@@ -299,44 +299,13 @@ DIR should be 1 or -1 and COUNT should be a positive integer or nil."
 ;;; ====================================
 (use-package iflipb
   :init
-  (defhydra iflipb-hydra (:pre
-                          (setq hydra-is-helpful nil)
-                          :post
-                          (setq hydra-is-helpful t))
-    ("<C-tab>"
-     (call-interactively #'iflipb-next-buffer))
-    ("TAB"
-     (call-interactively #'iflipb-next-buffer))
-    ("<C-S-iso-lefttab>"
-     (call-interactively #'iflipb-previous-buffer))
-    ("<backtab>"
-     (call-interactively #'iflipb-previous-buffer))
-    ("<C-S-tab>"
-     (call-interactively #'iflipb-previous-buffer)))
+  (global-set-key (kbd "<C-tab>") #'iflipb-next-buffer)
+  (global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer)
+  (global-set-key (kbd "<C-S-tab>") #'iflipb-previous-buffer)
 
-  (defun iflipb-next-buffer-smart ()
-    "A `hydra' enabled next-buffer"
-    (interactive)
-    (require 'iflipb)
-    (let ((my/iflipb-first t))
-      (call-interactively #'iflipb-next-buffer))
-    (iflipb-hydra/body))
-
-  (defun iflipb-previous-buffer-smart ()
-    "A `hydra' enabled previous-buffer"
-    (interactive)
-    (require 'iflipb)
-    (let ((my/iflipb-first t))
-      (call-interactively #'iflipb-previous-buffer))
-    (iflipb-hydra/body))
-
-  (global-set-key (kbd "<C-tab>") #'iflipb-next-buffer-smart)
-  (global-set-key (kbd "C-S-<iso-lefttab>") #'iflipb-previous-buffer-smart)
-  (global-set-key (kbd "<C-S-tab>") #'iflipb-previous-buffer-smart)
-
-  (global-set-key (kbd "C-c TAB") #'iflipb-next-buffer-smart)
-  (global-set-key (kbd "C-c <backtab>") #'iflipb-previous-buffer-smart)
-  (global-set-key (kbd "C-c <C-S-tab>") #'iflipb-previous-buffer-smart)
+  (global-set-key (kbd "C-c TAB") #'iflipb-next-buffer)
+  (global-set-key (kbd "C-c <backtab>") #'iflipb-previous-buffer)
+  (global-set-key (kbd "C-c <C-S-tab>") #'iflipb-previous-buffer)
 
   (global-set-key (kbd "<mouse-8>") #'iflipb-previous-buffer)
   (global-set-key (kbd "<mouse-9>") #'iflipb-next-buffer)
@@ -352,13 +321,7 @@ DIR should be 1 or -1 and COUNT should be a positive integer or nil."
                                     (rx line-start "*anaconda")
                                     (rx line-start "*" (zero-or-more anything) "output*")
                                     (rx line-start "*straight-process*"))
-        iflipb-wrap-around t)
-
-  (defvar my/iflipb-first nil)
-
-  (define-advice iflipb-first-iflipb-buffer-switch-command
-      (:override (&rest _args) return-my/iflipb-first)
-    my/iflipb-first))
+        iflipb-wrap-around t))
 
 ;; also allow undo/redo on window configs
 (add-hook 'window-configuration-change-hook #'winner-mode)
