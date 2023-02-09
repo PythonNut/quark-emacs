@@ -56,7 +56,11 @@
 
 ;; evil NERD commenter, commenting awesomeness!
 (use-package evil-nerd-commenter
-  :init (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines))
+  :commands (evilnc-comment-operator)
+  :init
+  (global-set-key (kbd "M-;") #'evilnc-comment-or-uncomment-lines)
+  (define-key evil-operator-state-map "gc" #'evilnc-comment-operator)
+  (define-key evil-normal-state-map "gc" #'evilnc-comment-operator))
 
 (use-package evil-matchit
   :commands (evilmi-inner-text-object
