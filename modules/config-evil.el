@@ -3,14 +3,7 @@
   (require 'config-macros)
   (require 'config-package))
 
-(use-package key-chord
-  :init
-  (defun fix-key-chords ()
-    (interactive)
-    (key-chord-mode -1)
-    (key-chord-mode +1))
-
-  (key-chord-mode +1))
+(use-package key-chord :init (key-chord-mode +1))
 
 (use-package evil
   :init (evil-mode +1)
