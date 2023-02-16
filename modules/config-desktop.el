@@ -301,18 +301,12 @@ where it was when you previously visited the same file."
              recentf-track-closed-file
              recentf-save-list)
   :init
-  ;; TODO: Why is this necessary?
-  (defun my/recentf-track-closed-file-maybe ()
-    (and buffer-file-name
-         (recentf-track-closed-file)))
-
   (el-patch-feature recentf)
 
   (el-patch-defconst recentf-used-hooks
     '((find-file-hook       recentf-track-opened-file)
       (write-file-functions recentf-track-opened-file)
-      (kill-buffer-hook     (el-patch-swap recentf-track-closed-file
-                                           my/recentf-track-closed-file-maybe))
+      (kill-buffer-hook     recentf-track-closed-file)
       (kill-emacs-hook      recentf-save-list))
     "Hooks used by recentf.")
 
