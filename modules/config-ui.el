@@ -445,7 +445,6 @@ DIR should be 1 or -1 and COUNT should be a positive integer or nil."
 (global-set-key (kbd "C-4") #'find-file-other-window)
 (global-set-key (kbd "C-5") #'make-frame-command)
 (global-set-key (kbd "M-j") #'evil-join)
-(global-set-key (kbd "C-.") #'er/expand-region)
 
 (define-key key-translation-map (kbd "<mouse-21>") (kbd "<C-mouse-5>"))
 (define-key key-translation-map (kbd "<mouse-20>") (kbd "<C-mouse-4>"))
@@ -456,6 +455,10 @@ DIR should be 1 or -1 and COUNT should be a positive integer or nil."
   :ensure t
   :diminish subword-mode
   :init (global-subword-mode +1))
+
+(use-package expand-region
+  :config
+  (global-set-key (kbd "C-.") #'er/expand-region))
 
 ;; ==========================================
 ;; Window splitting that is actually sensible
