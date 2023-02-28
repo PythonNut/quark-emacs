@@ -264,7 +264,7 @@ command."
              :type git
              :flavor melpa
              :host github
-             :repo "wang1zhen/auctex-latexmk")
+             :repo "emacsmirror/auctex-latexmk")
     :commands (auctex-latexmk-setup)
     :init
     (auctex-latexmk-setup)
