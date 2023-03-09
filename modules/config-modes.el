@@ -1201,6 +1201,21 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
              dockerfile-mode)
   :mode (("Dockerfile.*\\'" . dockerfile-mode)))
 
+(use-package singularity-mode
+  :recipe (singularity-mode :type git
+                            :host github
+                            :repo "karljohanw/singularity-mode")
+  :defer-install t
+  :commands (singularity-mode)
+  :mode (("\\.def$" . singularity-mode))
+  :config
+  ;; TODO: major SMIE annoyances here
+  (require 'dtrt-indent)
+  (add-to-list 'dtrt-indent-hook-mapping-list
+               '(singularity-mode default singularity-indent))
+
+  (add-hook 'singularity-mode-hook #'dtrt-indent-adapt))
+
 (use-package cmake-mode
   :defer-install t
   :commands (cmake-mode
