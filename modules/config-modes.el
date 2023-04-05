@@ -1163,6 +1163,11 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
          ("/\\.git/info/exclude\\'"    . gitignore-mode)
          ("/git/ignore\\'"             . gitignore-mode)))
 
+(use-package gitignore-templates
+  :defer-install t
+  :commands (gitignore-templates-insert
+             gitignore-templates-new-file))
+
 (use-package ssh-config-mode
   :defer-install t
   :commands (ssh-config-mode
