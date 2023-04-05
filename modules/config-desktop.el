@@ -316,10 +316,17 @@ where it was when you previously visited the same file."
      (dolist (hook recentf-used-hooks) (apply #'add-hook hook))))
 
   :config
+  (defun quark/recentf-keep-predicate (file)
+    (cond
+     ((file-remote-p file nil t) (file-readable-p file))
+     ((file-remote-p file) t)
+     ((file-readable-p file))))
+
   (setq recentf-save-file (locate-user-emacs-file "data/recentf")
         recentf-max-saved-items 1000
         recentf-max-menu-items 50
-        recentf-auto-cleanup 30)
+        recentf-auto-cleanup 30
+        recentd-keep '(quark/recentf-keep-predicate))
   (add-to-list 'recentf-exclude (eval-when-compile
                                   (concat (rx line-start)
                                           (expand-file-name
