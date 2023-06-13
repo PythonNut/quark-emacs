@@ -267,7 +267,6 @@ these values are used to call `use-package-ensure-function'."))
 
 (my/load-magit-submodule 'magit-bookmark)
 (my/load-magit-submodule 'magit-submodule)
-(my/load-magit-submodule 'magit-obsolete)
 (my/load-magit-submodule 'magit-blame)
 (my/load-magit-submodule 'magit-stash)
 (my/load-magit-submodule 'magit-bisect)
