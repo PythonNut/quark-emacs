@@ -186,6 +186,9 @@ extra indent = 2
    (set-buffer-file-coding-system 'utf-8)))
 
 (use-package ws-butler
+  :recipe (ws-butler :type git
+                     :host github
+                     :repo "hlissner/ws-butler")
   :diminish (ws-butler-mode ." β")
   :init
   ;; autoload ws-butler on file open
