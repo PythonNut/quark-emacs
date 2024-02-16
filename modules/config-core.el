@@ -21,10 +21,6 @@
       inhibit-startup-echo-area-message t
       inhibit-startup-screen t
       inhibit-x-resources t
-      interprogram-cut-function (and (fboundp #'x-select-text)
-                                     #'x-select-text)
-      interprogram-paste-function (and (fboundp #'x-selection-value)
-                                       #'x-selection-value)
       jit-lock-defer-time 0.04
       jit-lock-stealth-nice 0.1
       jit-lock-stealth-time 0.2
@@ -49,7 +45,6 @@
       user-full-name "PythonNut"
       user-mail-address "PythonNut@PythonNut.com"
       visible-cursor nil
-      x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING)
       x-stretch-cursor t)
 
 (setq-default bidi-display-reordering 'left-to-right
