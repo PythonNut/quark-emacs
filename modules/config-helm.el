@@ -32,7 +32,8 @@
   (setq helm-case-fold-search 'smart
         helm-candidate-separator (make-string 20 ?─)
         helm-display-header-line nil
-        helm-inherit-input-method nil))
+        helm-inherit-input-method nil
+        helm-move-to-line-cycle-in-source nil))
 
 (use-package helm-info
   :ensure nil
