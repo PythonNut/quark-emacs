@@ -165,11 +165,7 @@ these values are used to call `use-package-ensure-function'."))
   (autoload 'hydra-default-pre "hydra"))
 
 (use-package s)
-(use-package f
-  :recipe (f
-           :fetcher github
-           :repo "rejeep/f.el"
-           :files ("f.el" "f-shortdoc.el")))
+(use-package f)
 (use-package restart-emacs)
 
 (use-package exec-path-from-shell
