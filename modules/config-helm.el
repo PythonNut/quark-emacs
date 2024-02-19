@@ -434,8 +434,8 @@
                   ;; file location, of which projectile is a faster subset
                   ;; (unless projectile-root
                   ;;   '(helm-source-findutils))
-
-                  '(helm-source-locate)
+                  (when (executable-find (car (split-string-shell-command helm-locate-command)))
+                    '(helm-source-locate))
                   )))
 
               :fuzzy-match t
