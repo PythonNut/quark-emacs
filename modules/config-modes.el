@@ -175,6 +175,7 @@
              json-mode-show-path
              json-mode-beautify)
   :mode (("\\.json$"   . json-mode)
+         ("\\.jsonl$"  . json-mode)
          ("\\.jsonld$" . json-mode)))
 
 ;; =============================================================================
