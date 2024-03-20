@@ -710,33 +710,35 @@
   (defun dired-first-file ()
     (interactive)
     (goto-char (point-min))
-    (dired-next-line 4))
+    (dired-next-line 3))
 
   (defun dired-last-file ()
     (interactive)
     (goto-char (point-max))
     (dired-next-line -1))
 
-  (defun dired-up-directory ()
+  (defun dired-really-do-delete (&optional arg)
+    (interactive "P")
+    (let ((delete-by-moving-to-trash nil))
+      (dired-do-delete arg)))
+
+  (defun quark/dired-up-directory ()
     "Take dired up one directory, but behave like dired-find-alternate-file"
     (interactive)
     (let ((old (current-buffer)))
       (dired-up-directory)
       (kill-buffer old)))
 
-  (defun dired-enable-wdired ()
-    (interactive)
-    (unless (evil-insert-state-p)
-      (evil-insert-state))
-    (wdired-change-to-wdired-mode))
-
   (with-eval-after-load 'evil
-    (evil-define-key 'normal dired-mode-map "h" #'dired-up-directory)
+    (with-eval-after-load 'wdired
+      (remove-hook 'wdired-mode-hook #'evil-change-to-initial-state))
+
+    (evil-define-key 'normal dired-mode-map "h" #'quark/dired-up-directory)
     (evil-define-key 'normal dired-mode-map "l" #'dired-find-alternate-file)
     (evil-define-key 'normal dired-mode-map "j" #'dired-next-line)
     (evil-define-key 'normal dired-mode-map "k" #'dired-previous-line)
 
-    (evil-define-key 'normal dired-mode-map "I" #'dired-enable-wdired)
+    (evil-define-key 'normal dired-mode-map "I" #'wdired-change-to-wdired-mode)
 
     (evil-define-key 'normal dired-mode-map "o" #'dired-sort-toggle-or-edit)
     (evil-define-key 'normal dired-mode-map "m" #'dired-toggle-marks)
@@ -749,32 +751,30 @@
     (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
     (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
     (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer)
+    (evil-define-key 'normal dired-mode-map "gg" #'dired-first-file)
 
-    (defun my/dired-avy-navigate-down ()
+    (defun quark/dired-avy-navigate-down ()
       (interactive)
       (evilem--jump (evilem--collect #'dired-next-line)))
 
-    (defun my/dired-avy-navigate-up ()
+    (defun quark/dired-avy-navigate-up ()
       (interactive)
       (evilem--jump (evilem--collect #'dired-previous-line)))
 
-    (defun my/dired-avy-find-file-down ()
+    (defun quark/dired-avy-find-file-down ()
       (interactive)
-      (my/dired-avy-navigate-down)
+      (quark/dired-avy-navigate-down)
       (dired-find-file))
 
-    (defun my/dired-avy-find-file-up ()
+    (defun quark/dired-avy-find-file-up ()
       (interactive)
-      (my/dired-avy-navigate-up)
+      (quark/dired-avy-navigate-up)
       (dired-find-file))
 
-    (evil-define-key 'normal dired-mode-map (kbd "SPC J") #'my/dired-avy-navigate-down)
-
-    (evil-define-key 'normal dired-mode-map (kbd "SPC K") #'my/dired-avy-navigate-up)
-
-    (evil-define-key 'normal dired-mode-map (kbd "SPC j") #'my/dired-avy-find-file-down)
-
-    (evil-define-key 'normal dired-mode-map (kbd "SPC k") #'my/dired-avy-find-file-up))
+    (evil-define-key 'normal dired-mode-map (kbd "SPC J") #'quark/dired-avy-navigate-down)
+    (evil-define-key 'normal dired-mode-map (kbd "SPC K") #'quark/dired-avy-navigate-up)
+    (evil-define-key 'normal dired-mode-map (kbd "SPC j") #'quark/dired-avy-find-file-down)
+    (evil-define-key 'normal dired-mode-map (kbd "SPC k") #'quark/dired-avy-find-file-up))
 
   (define-key dired-mode-map (kbd "<remap> <beginning-of-buffer>")
     #'dired-first-file)
