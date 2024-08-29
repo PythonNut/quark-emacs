@@ -65,7 +65,10 @@ recursion depth in the minibuffer prompt.  This is only useful if
   (define-advice flx-rs-load-dyn
       (:around (old-fun &rest args) quiet)
     (let ((message-log-max))
-      (apply old-fun args))))
+      (apply old-fun args)))
+
+  (let ((inhibit-message t))
+    (flx-rs-load-dyn)))
 
 (use-package historian
   :init
