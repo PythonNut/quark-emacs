@@ -395,6 +395,11 @@
     (when projectile-root
       (projectile-maybe-invalidate-cache nil))
 
+    (let ((git-dir (expand-file-name ".git" projectile-root)))
+      (when (and (file-exists-p git-dir)
+                 (not (file-readable-p git-dir)))
+        (setq projectile-root nil)))
+
     (unwind-protect
         (helm :sources
               (append
