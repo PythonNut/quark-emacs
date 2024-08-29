@@ -115,7 +115,16 @@ when `auto-save-mode' is invoked manually.")
  'focus-out-hook
  (my/defun-as-value quark/save-buffers-on-focus-out ()
    (let ((inhibit-message t))
-     (save-some-buffers t))))
+     (save-some-buffers
+      t
+      (lambda ()
+        ;; See def'n of files--buffers-needing-to-be-saved. Act as if
+        ;; pred is nil, but also check for su-auto-save-mode
+        (and
+           (or
+            buffer-file-name
+            (eq buffer-offer-save 'always))
+           (not (bound-and-true-p su-auto-save-mode))))))))
 
 (use-package autorevert
   :init
