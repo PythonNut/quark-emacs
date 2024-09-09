@@ -1094,7 +1094,18 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
   :defer-install t
   :config
   (evil-set-initial-state 'vterm-mode 'emacs)
-  (set-face-foreground 'vterm-color-black "#586e75"))
+  (set-face-foreground 'vterm-color-black "#586e75")
+
+  (define-advice vterm--get-shell
+      (:around (old-fun) prefer-zsh)
+    (require 's)
+    (let ((old (funcall old-fun)))
+      (if (not (s-suffix? "/sh" old))
+          old
+        (or
+         (executable-find "zsh" t)
+         (executable-find "bash" t)
+         old)))))
 
 ;; =============================================================================
 ;; Config file modes ===========================================================
