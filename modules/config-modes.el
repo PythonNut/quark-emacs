@@ -717,7 +717,7 @@
     (goto-char (point-max))
     (dired-next-line -1))
 
-  (defun dired-really-do-delete (&optional arg)
+  (defun dired-do-delete-skip-trash (&optional arg)
     (interactive "P")
     (let ((delete-by-moving-to-trash nil))
       (dired-do-delete arg)))
