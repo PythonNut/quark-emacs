@@ -540,4 +540,16 @@ split."
   :commands (digit-groups-global-mode
              digit-groups-mode))
 
+;; =========================================================
+;; transpose-frame - high level window manipulation commands
+;; =========================================================
+
+(use-package transpose-frame
+  :commands (transpose-frame
+             flip-frame
+             flop-frame
+             rotate-frame
+             rotate-frame-clockwise
+             rotate-frame-anticlockwise))
+
 (provide 'config-ui)
