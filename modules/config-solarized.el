@@ -50,4 +50,10 @@
   (set-face-background 'fringe "#022F3A")
   (set-face-background 'mode-line-inactive "#073642"))
 
+(define-advice list-faces-display
+    (:after (&rest _args) turn-off-hl-line-mode)
+  (with-current-buffer (get-buffer "*Faces*")
+    (setq-local global-hl-line-mode nil
+                hl-line-mode nil)))
+
 (provide 'config-solarized)
