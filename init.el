@@ -46,7 +46,8 @@
       (setq my/slow-device t))
 
     (eval-and-compile
-      (add-to-list 'load-path (locate-user-emacs-file "modules/")))
+      (add-to-list 'load-path (locate-user-emacs-file "modules/"))
+      (add-to-list 'custom-theme-load-path (locate-user-emacs-file "themes/")))
 
     ;; suppress the GNU spam
     (fset 'display-startup-echo-area-message #'ignore)
@@ -127,5 +128,5 @@
     (message "[============== ] modes")
     (my/require-config-module 'config-modes)
     (message "[===============] solarized")
-    (my/require-config-module 'config-solarized)
+    (load-theme 'quark-solarized-dark t)
     (message "[===============] done"))

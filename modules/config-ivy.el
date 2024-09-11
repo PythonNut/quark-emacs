@@ -169,18 +169,11 @@ Minibuffer bindings:
       (require 'historian)
       (require 'ivy)))
 
+  (setq ivy-minibuffer-faces
+        (list 'ivy-minibuffer-match-face-1
+              'ivy-minibuffer-match-face-2))
+
   (ivy-historian-mode +1)
-
-  (defun my/ivy-setup-faces ()
-    (set-face-attribute 'ivy-minibuffer-match-face-1 nil
-                        :background nil)
-    (set-face-attribute 'ivy-minibuffer-match-face-2 nil
-                        :background nil
-                        :foreground "#268bd2")
-
-    (setq ivy-minibuffer-faces (list 'ivy-minibuffer-match-face-1
-                                     'ivy-minibuffer-match-face-2)))
-
   (diminish 'ivy-mode)
 
   (setq ivy-display-style 'fancy
@@ -188,10 +181,8 @@ Minibuffer bindings:
         ivy-extra-directories nil
         ivy-count-format ""
         ivy-flx-limit 2000
-        ivy-use-selectable-prompt t)
+        ivy-use-selectable-prompt t))
 
-  (my/ivy-setup-faces)
-  (add-hook 'load-theme-hook #'my/ivy-setup-faces))
 
 (use-package counsel
   :init

@@ -12,8 +12,7 @@
     :hook 'first-change-hook
     :after-hook 'emacs-startup-hook
     :condition (get-buffer-window)
-    (global-company-mode +1)
-    (run-hooks 'load-theme-hook))
+    (global-company-mode +1))
 
   (eval-and-compile
     (cl-macrolet
@@ -109,47 +108,8 @@
       (company-select-next-or-abort arg)))
 
   (define-key company-active-map (kbd "<up>") #'company-select-above)
-  (define-key company-active-map (kbd "<down>") #'company-select-below)
+  (define-key company-active-map (kbd "<down>") #'company-select-below))
 
-  (add-hook
-   'load-theme-hook
-   (my/defun-as-value my/company-setup-tooltip-faces  ()
-     (set-face-attribute 'company-tooltip-common-selection nil
-                         :background "#839496"
-                         :foreground (if (< (display-color-cells) 256)
-                                         "black"
-                                       nil)
-                         :underline nil
-                         :inherit 'region)
-
-     (set-face-attribute 'company-tooltip-selection nil
-                         :background "#586e75"
-                         :foreground nil
-                         :inherit 'region)
-
-     (set-face-attribute 'company-tooltip-common nil
-                         :background nil
-                         :underline nil
-                         :inherit 'company-tooltip
-                         :foreground "#586e75")
-
-     (set-face-attribute 'company-tooltip-annotation nil
-                         :foreground nil
-                         :background nil
-                         :inherit 'company-tooltip)
-
-     (set-face-attribute 'company-tooltip nil
-                         :foreground nil
-                         :inherit 'default))))
-
-(with-eval-after-load 'company-template
-  (add-hook
-   'load-theme-hook
-   (my/defun-as-value my/company-setup-template-faces ()
-     (set-face-attribute 'company-template-field nil
-                         :foreground nil
-                         :background nil
-                         :inherit 'region))))
 
 (with-eval-after-load 'company-dabbrev-code
   (eval-when-compile

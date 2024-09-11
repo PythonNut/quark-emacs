@@ -20,6 +20,16 @@
       frame-inhibit-implied-resize t
       inhibit-compacting-font-caches t)
 
+(define-advice list-faces-display
+    (:after (&rest _args) turn-off-hl-line-mode)
+  (with-current-buffer (get-buffer "*Faces*")
+    (setq-local global-hl-line-mode nil
+                hl-line-mode nil)))
+
+(let ((display-table (or standard-display-table (make-display-table))))
+  (set-display-table-slot display-table 'vertical-border (make-glyph-code ?│))
+  (setq standard-display-table display-table))
+
 (defun isearch-exit-chord-worker ()
   "Exit out of isearch after a chord"
   (interactive)
@@ -237,20 +247,6 @@ DIR should be 1 or -1 and COUNT should be a positive integer or nil."
     "t if rainbow-delimiters are currently punched")
   (defvar-local my/rainbow-delimiters-face-cookies nil
     "a list of face-remap-add-relative cookies to reset")
-
-  (defun my/rainbow-delimiters-setup-faces ()
-    (set-face-foreground 'rainbow-delimiters-depth-1-face "#889899")
-    (set-face-foreground 'rainbow-delimiters-depth-2-face "#9b7b6b")
-    (set-face-foreground 'rainbow-delimiters-depth-3-face "#7b88a5")
-    (set-face-foreground 'rainbow-delimiters-depth-4-face "#889899")
-    (set-face-foreground 'rainbow-delimiters-depth-5-face "#839564")
-    (set-face-foreground 'rainbow-delimiters-depth-6-face "#6391aa")
-    (set-face-foreground 'rainbow-delimiters-depth-7-face "#9d748f")
-    (set-face-foreground 'rainbow-delimiters-depth-8-face "#7b88a5")
-    (set-face-foreground 'rainbow-delimiters-depth-9-face "#659896"))
-
-  (my/rainbow-delimiters-setup-faces)
-  (add-hook 'load-theme-hook #'my/rainbow-delimiters-setup-faces)
 
   (defun my/rainbow-delimiters-focus-on ()
     "Punch the rainbow-delimiters"
