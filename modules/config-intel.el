@@ -532,6 +532,9 @@ is binary, activate `hexl-mode'."
 (use-package copilot
   :recipe (copilot :host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'evil-core)))
   (evil-define-key 'insert copilot-mode-map (kbd "<backtab>")
     #'copilot-accept-completion))
 
