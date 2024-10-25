@@ -17,6 +17,8 @@
       auto-window-vscroll nil
       scroll-conservatively 1000
       fast-but-imprecise-scrolling t
+      redisplay-skip-fontification-on-input t
+      inhibit-compacting-font-caches t
       frame-inhibit-implied-resize t
       inhibit-compacting-font-caches t)
 
