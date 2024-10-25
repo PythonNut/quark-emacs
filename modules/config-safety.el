@@ -138,7 +138,7 @@ when `auto-save-mode' is invoked manually.")
       (require 'autorevert)))
 
   (setq global-auto-revert-non-file-buffers t
-        auto-revert-remote-files t
+        auto-revert-remote-files nil
         auto-revert-notify-exclude-dir-regexp
         (rx bol "/" (or "afs" "media" "mnt" "net" "tmp_mnt") "/")
         auto-revert-verbose nil
