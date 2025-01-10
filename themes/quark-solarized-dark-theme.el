@@ -38,6 +38,7 @@
          `(rainbow-delimiters-depth-7-face ((,class (:foreground "#9d748f"))))
          `(rainbow-delimiters-depth-8-face ((,class (:foreground "#7b88a5"))))
          `(rainbow-delimiters-depth-9-face ((,class (:foreground "#659896"))))
+         `(evil-snipe-matches-face ((,class (:background ,base00 :foreground ,base03))))
          )))
 
 (deftheme quark-solarized-dark "The dark variant of the Solarized colour theme")
