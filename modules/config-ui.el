@@ -32,6 +32,13 @@
   (set-display-table-slot display-table 'vertical-border (make-glyph-code ?│))
   (setq standard-display-table display-table))
 
+(use-package ultra-scroll
+  :recipe (ultra-scroll :type git
+                         :host github
+                         :repo "jdtsmith/ultra-scroll")
+  :config
+  (ultra-scroll-mode +1))
+
 (defun isearch-exit-chord-worker ()
   "Exit out of isearch after a chord"
   (interactive)

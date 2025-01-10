@@ -405,5 +405,6 @@ these values are used to call `use-package-ensure-function'."))
 (idle-job-add-require 'helm-lib)
 
 (idle-job-add-require 'winner)
+(idle-job-add-require 'ultra-scroll)
 
 (provide 'config-package)
