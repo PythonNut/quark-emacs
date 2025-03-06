@@ -1260,6 +1260,12 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
   :commands (terraform-mode)
   :mode (("\\.tf\\(vars\\)?\\'" . terraform-mode)))
 
+(use-package caddyfile-mode
+  :defer-install t
+  :commands (caddyfile-mode)
+  :mode (("Caddyfile\\'" . caddyfile-mode)
+         ("caddy\\.conf\\'" . caddyfile-mode)))
+
 ;; =============================================================================
 ;; Markup modes ================================================================
 ;; =============================================================================
