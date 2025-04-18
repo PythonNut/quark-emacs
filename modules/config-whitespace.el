@@ -188,7 +188,8 @@ extra indent = 2
 (use-package ws-butler
   :recipe (ws-butler :type git
                      :host github
-                     :repo "hlissner/ws-butler")
+                     :branch "master"
+                     :repo "lewang/ws-butler")
   :diminish (ws-butler-mode ." β")
   :init
   ;; autoload ws-butler on file open
