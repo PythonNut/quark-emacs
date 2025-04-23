@@ -459,7 +459,7 @@ matching string."
     (interactive)
     (if (texmathp)
         (my/TeX-escape-from-math)
-      (TeX-insert-dollar)))
+      (call-interactively #'TeX-insert-dollar)))
 
   (defun TeX-math-chord-spaced ()
     (interactive)
@@ -468,7 +468,7 @@ matching string."
       (unless (or (bolp)
                   (looking-back (rx (or space punct)) 1))
         (insert " "))
-      (TeX-insert-dollar)))
+      (call-interactively #'TeX-insert-dollar)))
 
   (key-chord-define TeX-mode-map (kbd "fj")
                     `(menu-item "" TeX-math-chord
