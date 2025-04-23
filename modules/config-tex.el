@@ -470,9 +470,7 @@ matching string."
         (insert " "))
       (call-interactively #'TeX-insert-dollar)))
 
-  (key-chord-define TeX-mode-map (kbd "fj")
-                    `(menu-item "" TeX-math-chord
-                                :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd))))
+  (key-chord-define TeX-mode-map (kbd "fj") #'sp-up-sexp)
   (key-chord-define TeX-mode-map (kbd "SPC SPC")
                     `(menu-item "" TeX-math-chord-spaced
                                 :filter ,(lambda (cmd) (unless (my/LaTeX-verbatimish-p) cmd))))
