@@ -167,6 +167,7 @@ these values are used to call `use-package-ensure-function'."))
 (use-package s)
 (use-package f)
 (use-package restart-emacs)
+(use-package compat)
 
 (use-package exec-path-from-shell
   :config
