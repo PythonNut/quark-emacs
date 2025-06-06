@@ -279,4 +279,33 @@
   (define-key evil-inner-text-objects-map
     evil-textobj-syntax-i-key #'evil-i-syntax))
 
+;; https://emacs.stackexchange.com/questions/74162
+(eval-when-compile (require 'dash))
+(defun quark/evil-paren-range (count beg end type inclusive)
+  (->> '((?\( . ?\))
+         (?\[ . ?\])
+         (?{ . ?})
+         (?< . ?>))
+       (--keep (ignore-errors
+                 (save-excursion
+                   (evil-select-paren (car it) (cdr it)
+                                      beg end type
+                                      count inclusive))))
+       (-min-by (-on #'> (lambda (x)
+                           (abs (- (car x) (point) )))))
+       (-take 2)))
+
+(evil-define-text-object quark/evil-a-paren (count &optional beg end type)
+  "Select a paren."
+  :extend-selection nil
+  (quark/evil-paren-range count beg end type t))
+
+(evil-define-text-object quark/evil-inner-paren (count &optional beg end type)
+  "Select 'inner' paren."
+    :extend-selection nil
+        (quark/evil-paren-range count beg end type nil))
+
+(define-key evil-inner-text-objects-map "d" #'quark/evil-inner-paren)
+(define-key evil-outer-text-objects-map "d" #'quark/evil-a-paren)
+
 (provide 'config-evil-textobjects)
