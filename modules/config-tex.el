@@ -87,6 +87,9 @@
   (advice-add 'doctex-mode :override #'TeX-doctex-mode)
 
   :config
+  (eval-when-compile
+    (with-demoted-errors "Load error: %s"
+      (require 'auctex)))
   (setq TeX-auto-save t
         TeX-save-query nil
         TeX-parse-self t
@@ -97,7 +100,9 @@
                           ("$" "int")
                           ("=" "implies")
                           ("!" "neq")
-                          ("o" "circ"))
+                          ("o" "circ")
+                          ("V" quark/LaTeX-math-vec)
+                          ("B" quark/LaTeX-math-bm))
         TeX-auto-global (locate-user-emacs-file "data/auctex"))
 
   (define-key TeX-mode-map "$" #'self-insert-command)
@@ -290,12 +295,34 @@ command."
     (require 'pulse)
     (pulse-momentary-highlight-one-line (point)))
 
+  (defun quark/LaTeX-math-vec (char dollar)
+    "Insert a {\\cal CHAR}.  If DOLLAR is non-nil, put $'s around it.
+If `TeX-electric-math' is non-nil wrap that symbols around the
+char."
+    (interactive "*c\nP")
+    (if dollar (insert (or (car TeX-electric-math) "$")))
+    (insert "\\vec{" (char-to-string char) "}")
+    (if dollar (insert (or (cdr TeX-electric-math) "$"))))
+
+  (defun quark/LaTeX-math-bm (char dollar)
+    "Insert a {\\bm CHAR}.  If DOLLAR is non-nil, put $'s around it.
+If `TeX-electric-math' is non-nil wrap that symbols around the
+char."
+    (interactive "*c\nP")
+    (if dollar (insert (or (car TeX-electric-math) "$")))
+    (insert "\\bm{" (char-to-string char) "}")
+    (if dollar (insert (or (cdr TeX-electric-math) "$"))))
+
   (define-advice LaTeX-math-insert
       (:around (old-fun string dollar) auto-dollar)
     (let ((TeX-insert-braces nil))
       (if (texmathp)
           (funcall old-fun string dollar)
         (funcall old-fun string (not dollar)))))
+
+  (advice-add 'LaTeX-math-cal :around #'LaTeX-math-insert@auto-dollar)
+  (advice-add 'quark/LaTeX-math-vec :around #'LaTeX-math-insert@auto-dollar)
+  (advice-add 'quark/LaTeX-math-bm :around #'LaTeX-math-insert@auto-dollar)
 
   (add-hook
    'TeX-after-insert-macro-hook
