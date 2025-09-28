@@ -1499,6 +1499,11 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
   :commands (llvm-mode)
   :mode ("\\.ll\\'" . llvm-mode))
 
+(use-package d-mode
+  :defer-install t
+  :commands (d-mode)
+  :mode ("\\.d[i]?\\'" . d-mode))
+
 ;;; LSP
 
 (use-package lsp-mode
