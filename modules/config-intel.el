@@ -9,76 +9,22 @@
   "Show the hashes of passwords read by read-passwd"
   :init-value t :global t)
 
-(el-patch-defun read-passwd (prompt &optional confirm default)
-  "Read a password, prompting with PROMPT, and return it.
-If optional CONFIRM is non-nil, read the password twice to make sure.
-Optional DEFAULT is a default password to use instead of empty input.
-
-This function echoes `*' for each character that the user types.
-You could let-bind `read-hide-char' to another hiding character, though.
-
-Once the caller uses the password, it can erase the password
-by doing (clear-string STRING)."
-  (if confirm
-      (let (success)
-        (while (not success)
-          (let ((first (read-passwd prompt nil default))
-                (second (read-passwd "Confirm password: " nil default)))
-            (if (equal first second)
-                (progn
-                  (and (arrayp second) (not (eq first second)) (clear-string second))
-                  (setq success first))
-              (and (arrayp first) (clear-string first))
-              (and (arrayp second) (clear-string second))
-              (message "Password not repeated accurately; please start over")
-              (sit-for 1))))
-        success)
-    ((el-patch-swap let let*)
-     (minibuf
-      (el-patch-add
-        (ol)
-        (hide-chars-fun
-         (lambda (&rest args)
-           (apply #'read-password--hide-password args)
-           (move-overlay ol (point-max) (point-max))
-           (let ((len (- (point-max) (minibuffer-prompt-end)))
-                 (hash (md5 (minibuffer-contents-no-properties))))
-             (overlay-put ol 'after-string
-                          (if (and (> len 10) read-passwd-show-hash-mode)
-                              (format "  [%d chars, #%s]"
-                                      len (substring hash 0 4)))))))))
-     (minibuffer-with-setup-hook
-         (lambda ()
-           (setq minibuf (current-buffer))
-           ;; Turn off electricity.
-           (setq-local post-self-insert-hook nil)
-           (setq-local buffer-undo-list t)
-           (setq-local select-active-regions nil)
-           (use-local-map read-passwd-map)
-           (setq-local inhibit-modification-hooks nil) ;bug#15501.
-           (setq-local show-paren-mode nil)		;bug#16091.
-           (el-patch-add (setq ol (make-overlay (point-max) (point-max) nil t t)))
-           (add-hook 'post-command-hook
-                     (el-patch-swap 'read-password--hide-password
-                                    hide-chars-fun)
-                     nil t))
-       (unwind-protect
-           (let ((enable-recursive-minibuffers t)
-                 (read-hide-char (or read-hide-char ?*)))
-             (read-string prompt nil t default)) ; t = "no history"
-         (when (buffer-live-p minibuf)
-           (with-current-buffer minibuf
-             ;; Not sure why but it seems that there might be cases where the
-             ;; minibuffer is not always properly reset later on, so undo
-             ;; whatever we've done here (bug#11392).
-             (remove-hook (el-patch-swap 'after-change-functions
-                                         'post-command-hook)
-                          (el-patch-swap 'read-password--hide-password
-                                         hide-chars-fun)
-                          'local)
-             (kill-local-variable 'post-self-insert-hook)
-             ;; And of course, don't keep the sensitive data around.
-             (erase-buffer))))))))
+(define-advice read-passwd (:around (old-fun &rest args) show-passwd-hash)
+  (cl-letf* ((hash-ol nil)
+             (old-hide-passwd (symbol-function #'read-passwd--hide-password))
+             ((symbol-function #'read-passwd--hide-password)
+              (lambda ()
+                (funcall old-hide-passwd)
+                (unless hash-ol
+                  (setq hash-ol (make-overlay (point-max) (point-max) nil t t)))
+                (move-overlay hash-ol (point-max) (point-max))
+                (let ((len (- (point-max) (minibuffer-prompt-end)))
+                      (hash (md5 (minibuffer-contents-no-properties))))
+                  (overlay-put hash-ol 'after-string
+                               (if (and (> len 10) read-passwd-show-hash-mode)
+                                   (format "  [%d chars, #%s]"
+                                           len (substring hash 0 4))))))))
+    (apply old-fun args)))
 
 (use-package semantic
   :ensure nil
