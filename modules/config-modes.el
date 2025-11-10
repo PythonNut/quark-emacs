@@ -677,6 +677,11 @@
             'company-define-specific-modes
           '('typescript-mode-hook))))))
 
+(use-package vue-mode
+  :defer-install t
+  :commands (vue-mode)
+  :mode (("\\.vue\\'" . vue-mode)))
+
 (use-package impatient-mode
   :defer-install t
   :commands (impatient-mode))
