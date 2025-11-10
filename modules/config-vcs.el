@@ -136,37 +136,21 @@
     (run-with-timer 1 nil #'message ""))
 
   ;; If there is only one stash, operate on it immediately
-  (el-patch-defun magit-read-stash (prompt)
-    (let* ((atpoint (magit-stash-at-point))
-           (default (and atpoint
-                         (concat atpoint (magit-rev-format " %s" atpoint))))
-           (choices (mapcar (lambda (c)
-                              (pcase-let ((`(,rev ,msg) (split-string c "\0")))
-                                (concat (propertize rev 'face 'magit-hash)
-                                        " " msg)))
-                            (magit-list-stashes "%gd%x00%s")))
-           (choice (el-patch-wrap 2 1
-                     (if (> (length choices) 1)
-                         (magit-completing-read prompt choices
-                                                nil t nil nil
-                                                default
-                                                (car choices))
-                       (car choices)))))
-      (and choice
-           (string-match "^\\([^ ]+\\) \\(.+\\)" choice)
-           (substring-no-properties (match-string 1 choice)))))
+  (define-advice magit-read-stash (:around (old-fun &rest args) auto-select-single)
+    (cl-letf* ((old-magit-completing-read (symbol-function #'magit-completing-read))
+               ((symbol-function #'magit-completing-read)
+                (lambda (prompt choices &rest args)
+                  (if (= (length choices) 1)
+                        (car choices)
+                      (apply old-magit-completing-read prompt choices args)))))
+      (apply old-fun args)))
 
-  (el-patch-defun magit-process-username-prompt (process string)
-    "Forward username prompts to the user."
-    (--when-let (magit-process-match-prompt
-                 magit-process-username-prompt-regexps string)
-      (process-send-string
-       process (magit-process-kill-on-abort
-                   process
-                 (concat (el-patch-swap
-                           (read-string it nil nil (user-login-name))
-                           (read-passwd it nil (user-login-name)))
-                         "\n"))))))
+  (define-advice magit-process-username-prompt
+      (:around (old-fun &rest args) read-username-as-passwd)
+    (cl-letf* (((symbol-function #'read-string)
+                (lambda (prompt &optional _init _hist default inherit)
+                  (read-passwd prompt nil default))))
+      (apply old-fun args))))
 
 (use-package magit-diff
   :ensure nil
