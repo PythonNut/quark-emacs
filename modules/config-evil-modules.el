@@ -164,4 +164,8 @@
   (define-key evil-normal-state-map (kbd "gL") 'evil-lion-right)
   (define-key evil-visual-state-map (kbd "gL") 'evil-lion-right))
 
+(use-package evil-collection
+  :init
+  (autoload #'evil-collection-init "evil-collection"))
+
 (provide 'config-evil-modules)

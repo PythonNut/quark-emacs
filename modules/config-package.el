@@ -321,7 +321,9 @@ these values are used to call `use-package-ensure-function'."))
 (idle-job-add-require 'add-log)
 (idle-job-add-require 'pcvs-util)
 (idle-job-add-require 'with-editor)
+(idle-job-add-function (lambda () (evil-collection-require 'magit)))
 
+(idle-job-add-require 'evil-collection)
 (idle-job-add-require 'volatile-highlights)
 
 (idle-job-add-function #'my/yas-init)

@@ -6,7 +6,9 @@
 (use-package key-chord :init (key-chord-mode +1))
 
 (use-package evil
-  :init (evil-mode +1)
+  :init
+  (setq evil-want-keybinding nil)
+  (evil-mode +1)
   :config
   (eval-when-compile (require 'evil))
   (setq evil-auto-indent t

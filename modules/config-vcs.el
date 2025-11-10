@@ -68,17 +68,7 @@
         magit-diff-refine-hunk t
         magit-pull-or-fetch t)
 
-  (evil-set-initial-state 'magit-status-mode 'insert)
-  (evil-set-initial-state 'magit-log-mode 'insert)
-  (evil-set-initial-state 'magit-refs-mode 'insert)
-  (evil-set-initial-state 'magit-stash-mode 'insert)
-  (evil-set-initial-state 'magit-revision-mode 'motion)
-  (evil-set-initial-state 'magit-process-mode 'motion)
-  (evil-set-initial-state 'git-rebase-mode 'emacs)
-
-  (define-key magit-log-mode-map "j" #'next-line)
-  (define-key magit-refs-mode-map "j" #'next-line)
-  (define-key magit-status-mode-map "j" #'next-line)
+  (evil-collection-init 'magit)
 
   (transient-suffix-put 'magit-fetch "u" :key "f")
   (transient-suffix-put 'magit-pull "u" :key "F")
@@ -86,36 +76,6 @@
   (transient-suffix-put 'magit-push "p" :key "P")
   (transient-append-suffix 'magit-pull "m"
     '("-a" "Autostash" "--autostash"))
-
-  (cl-macrolet
-      ((magit-setup-section-k
-        (mode &optional command)
-        `(with-demoted-errors "magit setup error: %s"
-           (define-key ,mode (kbd "<C-tab>") nil)
-           (define-key ,mode (kbd "<S-tab>") #'magit-section-cycle)
-           (define-key ,mode (kbd "<backtab>") #'magit-section-cycle)
-           (define-key ,mode (kbd "k") #'previous-line)
-           ,(when command
-              `(define-key ,mode (kbd "K") ,command)))))
-    (with-no-warnings
-      (my/generate-calls
-          'magit-setup-section-k
-        '((magit-branch-section-map #'magit-branch-delete)
-          (magit-commit-section-map)
-          (magit-file-section-map #'magit-discard)
-          (magit-hunk-section-map #'magit-discard)
-          (magit-log-mode-map)
-          (magit-module-commit-section-map)
-          (magit-remote-section-map)
-          (magit-staged-section-map #'magit-discard)
-          (magit-stash-section-map #'magit-stash-drop)
-          (magit-stashes-section-map)
-          (magit-status-mode-map)
-          (magit-tag-section-map #'magit-tag-delete)
-          (magit-unpulled-section-map)
-          (magit-unpushed-section-map)
-          (magit-unstaged-section-map #'magit-discard)
-          (magit-untracked-section-map #'magit-discard)))))
 
   ;; disable regular key chords by switching input methods
   (defun my/setup-magit-mode ()
