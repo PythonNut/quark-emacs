@@ -54,7 +54,11 @@
             (lambda ()
               (xterm-mouse-mode -1))))
 
-(use-package clipetty)
+(use-package clipetty
+  :config
+  (define-advice clipetty--tty
+      (:override (&rest _args) disable-ssh-pty)
+    (terminal-name)))
 
 (defun my/setup-paste (&optional frame)
   (with-selected-frame (or frame (selected-frame))
