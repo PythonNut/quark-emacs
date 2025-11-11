@@ -149,16 +149,17 @@
       map))
 
   (el-patch-defvar evil-mc-key-map
-    (let ((map (make-sparse-keymap)))
-      (evil-define-key* '(normal visual) map
-        (kbd "gr") evil-mc-cursors-map
-        (el-patch-remove
+    (el-patch-swap
+      (let ((map (make-sparse-keymap)))
+        (evil-define-key* '(normal visual) map
+          (kbd evil-mc-cursors-keymap-prefix) evil-mc-cursors-map
           (kbd "M-n") 'evil-mc-make-and-goto-next-cursor
           (kbd "M-p") 'evil-mc-make-and-goto-prev-cursor
           (kbd "C-n") 'evil-mc-make-and-goto-next-match
           (kbd "C-t") 'evil-mc-skip-and-goto-next-match
-          (kbd "C-p") 'evil-mc-make-and-goto-prev-match))
-      map))
+          (kbd "C-p") 'evil-mc-make-and-goto-prev-match)
+        map)
+      nil))
 
   (global-set-key (kbd "C->") #'evil-mc-make-cursor-move-next-line)
   (global-set-key (kbd "C-<") #'evil-mc-make-cursor-move-prev-line)
