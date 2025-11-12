@@ -1090,9 +1090,9 @@ if [ $1 = .. ]; then shift; fi; exec \"$@\""
   :commands (vterm)
   :defer-install t
   :config
-  (evil-set-initial-state 'vterm-mode 'emacs)
   (set-face-foreground 'vterm-color-black "#586e75")
-
+  (evil-collection-init 'vterm)
+  (evil-define-key 'insert vterm-mode-map (kbd "C-p") nil)
   (define-advice vterm--get-shell
       (:around (old-fun) prefer-zsh)
     (require 's)
