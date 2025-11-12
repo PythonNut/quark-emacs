@@ -323,7 +323,6 @@ these values are used to call `use-package-ensure-function'."))
 (idle-job-add-require 'with-editor)
 (idle-job-add-function (lambda () (evil-collection-require 'magit)))
 
-(idle-job-add-require 'evil-collection)
 (idle-job-add-require 'volatile-highlights)
 
 (idle-job-add-function #'my/yas-init)
@@ -364,6 +363,8 @@ these values are used to call `use-package-ensure-function'."))
 (idle-job-add-require 'ffap)
 (idle-job-add-require 'dired)
 (idle-job-add-require 'dired-loaddefs)
+(idle-job-add-function (lambda () (evil-collection-require 'dired)))
+(idle-job-add-require 'evil-collection)
 
 (idle-job-add-require 'helm-projectile)
 (idle-job-add-require 'projectile)

@@ -738,25 +738,14 @@
     (with-eval-after-load 'wdired
       (remove-hook 'wdired-mode-hook #'evil-change-to-initial-state))
 
+    (evil-collection-init 'dired)
     (evil-define-key 'normal dired-mode-map "h" #'quark/dired-up-directory)
     (evil-define-key 'normal dired-mode-map "l" #'dired-find-alternate-file)
-    (evil-define-key 'normal dired-mode-map "j" #'dired-next-line)
-    (evil-define-key 'normal dired-mode-map "k" #'dired-previous-line)
-
-    (evil-define-key 'normal dired-mode-map "I" #'wdired-change-to-wdired-mode)
-
-    (evil-define-key 'normal dired-mode-map "o" #'dired-sort-toggle-or-edit)
     (evil-define-key 'normal dired-mode-map "m" #'dired-toggle-marks)
-    (evil-define-key 'normal dired-mode-map "v" #'dired-mark)
-    (evil-define-key 'normal dired-mode-map "V" #'dired-unmark)
-    (evil-define-key 'normal dired-mode-map (kbd "C-v") #'dired-unmark-all-marks)
     (evil-define-key 'normal dired-mode-map "u" #'dired-undo)
-    (evil-define-key 'normal dired-mode-map "c" #'dired-create-directory)
 
-    (evil-define-key 'normal dired-mode-map "n" #'evil-search-next)
-    (evil-define-key 'normal dired-mode-map "N" #'evil-search-previous)
-    (evil-define-key 'normal dired-mode-map "q" #'kill-this-buffer)
     (evil-define-key 'normal dired-mode-map "gg" #'dired-first-file)
+    (evil-define-key 'normal dired-mode-map "G" #'dired-last-file)
 
     (defun quark/dired-avy-navigate-down ()
       (interactive)
@@ -776,13 +765,16 @@
       (quark/dired-avy-navigate-up)
       (dired-find-file))
 
+    (evil-define-key 'normal dired-mode-map (kbd "SPC") nil)
     (evil-define-key 'normal dired-mode-map (kbd "SPC J") #'quark/dired-avy-navigate-down)
     (evil-define-key 'normal dired-mode-map (kbd "SPC K") #'quark/dired-avy-navigate-up)
     (evil-define-key 'normal dired-mode-map (kbd "SPC j") #'quark/dired-avy-find-file-down)
     (evil-define-key 'normal dired-mode-map (kbd "SPC k") #'quark/dired-avy-find-file-up))
 
   (define-key dired-mode-map (kbd "<remap> <beginning-of-buffer>")
-    #'dired-first-file)
+              #'wdired-change-to-wdired-mode)
+  (define-key dired-mode-map (kbd "<remap> <beginning-of-buffer>")
+              #'dired-first-file)
   (define-key dired-mode-map (kbd "<remap> <end-of-buffer>")
     #'dired-last-file))
 

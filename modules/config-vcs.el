@@ -68,7 +68,8 @@
         magit-diff-refine-hunk t
         magit-pull-or-fetch t)
 
-  (evil-collection-init 'magit)
+  (with-eval-after-load 'evil
+    (evil-collection-init 'magit))
 
   (transient-suffix-put 'magit-fetch "u" :key "f")
   (transient-suffix-put 'magit-pull "u" :key "F")
