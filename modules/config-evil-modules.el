@@ -166,6 +166,8 @@
 
 (use-package evil-collection
   :init
-  (autoload #'evil-collection-init "evil-collection"))
+  (autoload #'evil-collection-init "evil-collection")
+  :config
+  (setq evil-collection-want-unimpaired-p nil))
 
 (provide 'config-evil-modules)
