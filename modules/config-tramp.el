@@ -26,7 +26,8 @@
 (with-eval-after-load 'tramp
   (eval-when-compile (require 'tramp))
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-  (setq tramp-completion-use-auth-sources nil)
+  (setq tramp-completion-use-auth-sources nil
+        tramp-show-ad-hoc-proxies t)
   ;; Define a rsyncx method analogous to scpx
   (add-to-list 'tramp-methods
                `("rsyncx"
