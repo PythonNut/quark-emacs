@@ -49,7 +49,8 @@
   (setq helm-mode-fuzzy-match t
         helm-completion-in-region-fuzzy-match t))
 
-(setq helm-recentf-fuzzy-match t)
+(setq helm-recentf-fuzzy-match t
+      helm-turn-on-recentf nil)
 (use-package helm-files
   :ensure nil
   :config
