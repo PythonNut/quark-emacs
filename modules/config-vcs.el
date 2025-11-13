@@ -145,14 +145,24 @@
 (use-package smerge-mode
   :ensure nil
   :init
+  (with-eval-after-load 'vc-git
+    (define-advice vc-message-unresolved-conflicts
+        (:around (old-fun filename) mention-smerge)
+      (if (not(when buffer-file-name
+                (eq (vc-backend buffer-file-name) 'Git)))
+          (funcall old-fun filename)
+        (require 'smerge-mode)
+        (message
+         "There are unresolved conflicts in %s. Use %s to resolve."
+         filename
+         (key-description smerge-command-prefix)))))
+
+  :config
   (eval-when-compile
     (with-demoted-errors "Load error: %s"
       (require 'hydra)))
 
-  (autoload #'smerge-remove-props "smerge-mode" nil nil)
-  (autoload #'smerge-match-conflict "smerge-mode" nil nil)
-
-  (el-patch-feature smerge-mode)
+  (diminish 'smerge-mode)
 
   (defhydra hydra/smerge-tools (:color blue :hint nil :idle 0.3)
     "
@@ -179,125 +189,13 @@ Diff _=<_ base/mine  _==_ mine/other  _=>_ base/other
     ("==" smerge-diff-mine-other)
     ("=>" smerge-diff-base-other))
 
-  (el-patch-defcustom smerge-command-prefix "\C-c^"
-    "Prefix for `smerge-mode' commands."
-    :type '(choice (const :tag "ESC"   "\e")
-		   (const :tag "C-c ^" "\C-c^" )
-		   (const :tag "none"  "")
-		   string))
-
-  (el-patch-defconst smerge-font-lock-keywords
-    '((smerge-find-conflict
-       (1 smerge-upper-face prepend t)
-       (2 smerge-base-face prepend t)
-       (3 smerge-lower-face prepend t)
-       ;; FIXME: `keep' doesn't work right with syntactic fontification.
-       (0 smerge-markers-face keep)
-       (4 nil t t)
-       (5 nil t t)))
-    "Font lock patterns for `smerge-mode'.")
-
-  ;; TODO: This isn't exactly correct, but the map is defined using a
-  ;; macro that el-patch doesn't understand.
-  (defvar smerge-mode-map (make-sparse-keymap))
   (define-key smerge-mode-map smerge-command-prefix #'hydra/smerge-tools/body)
 
-  (el-patch-defconst smerge-begin-re "^<<<<<<< \\(.*\\)\n")
-  (el-patch-defconst smerge-end-re "^>>>>>>> \\(.*\\)\n")
-  (el-patch-defconst smerge-base-re "^||||||| \\(.*\\)\n")
-  (el-patch-defconst smerge-lower-re "^=======\n")
-  (el-patch-defconst smerge-parsep-re
-    (concat smerge-begin-re "\\|" smerge-end-re "\\|"
-            smerge-base-re "\\|" smerge-lower-re "\\|"))
-
-  (el-patch-defun smerge-conflict-overlay (pos)
-    "Return the conflict overlay at POS if any."
-    (let ((ols (overlays-at pos))
-          conflict)
-      (dolist (ol ols)
-        (if (and (eq (overlay-get ol 'smerge) 'conflict)
-                 (> (overlay-end ol) pos))
-            (setq conflict ol)))
-      conflict))
-
-  (el-patch-defun smerge-find-conflict (&optional limit)
-    "Find and match a conflict region.  Intended as a font-lock MATCHER.
-The submatches are the same as in `smerge-match-conflict'.
-Returns non-nil if a match is found between point and LIMIT.
-Point is moved to the end of the conflict."
-    (let ((found nil)
-          (pos (point))
-          conflict)
-      ;; First check to see if point is already inside a conflict, using
-      ;; the conflict overlays.
-      (while (and (not found) (setq conflict (smerge-conflict-overlay pos)))
-        ;; Check the overlay's validity and kill it if it's out of date.
-        (condition-case nil
-            (progn
-              (goto-char (overlay-start conflict))
-              (smerge-match-conflict)
-              (goto-char (match-end 0))
-              (if (<= (point) pos)
-                  (error "Matching backward!")
-                (setq found t)))
-          (error (smerge-remove-props
-                  (overlay-start conflict) (overlay-end conflict))
-                 (goto-char pos))))
-      ;; If we're not already inside a conflict, look for the next conflict
-      ;; and add/update its overlay.
-      (while (and (not found) (re-search-forward smerge-begin-re limit t))
-        (condition-case nil
-            (progn
-              (smerge-match-conflict)
-              (goto-char (match-end 0))
-              (let ((conflict (smerge-conflict-overlay (1- (point)))))
-                (if conflict
-                    ;; Update its location, just in case it got messed up.
-                    (move-overlay conflict (match-beginning 0) (match-end 0))
-                  (setq conflict (make-overlay (match-beginning 0) (match-end 0)
-                                               nil 'front-advance nil))
-                  (overlay-put conflict 'evaporate t)
-                  (overlay-put conflict 'smerge 'conflict)
-                  (let ((props smerge-text-properties))
-                    (while props
-                      (overlay-put conflict (pop props) (pop props))))))
-              (setq found t))
-          (error nil)))
-      found))
-
-  (el-patch-define-minor-mode smerge-mode
-    "Minor mode to simplify editing output from the diff3 program.
-
-\\{smerge-mode-map}"
-    :group 'smerge :lighter (el-patch-swap " SMerge" nil)
-    (when (and (boundp 'font-lock-mode) font-lock-mode)
-      (save-excursion
-        (if smerge-mode
-	    (font-lock-add-keywords nil smerge-font-lock-keywords 'append)
-	  (font-lock-remove-keywords nil smerge-font-lock-keywords))
-        (goto-char (point-min))
-        (while (smerge-find-conflict)
-	  (save-excursion
-	    (font-lock-fontify-region (match-beginning 0) (match-end 0) nil)))))
-    (if (string-match (regexp-quote smerge-parsep-re) paragraph-separate)
-        (unless smerge-mode
-          (set (make-local-variable 'paragraph-separate)
-               (replace-match "" t t paragraph-separate)))
-      (when smerge-mode
-        (set (make-local-variable 'paragraph-separate)
-             (concat smerge-parsep-re paragraph-separate))))
-    (unless smerge-mode
-      (smerge-remove-props (point-min) (point-max))))
-
-  (add-hook 'find-file-hook #'smerge-mode)
-
-  :config
-  (diminish 'smerge-mode)
   (set-face-attribute 'smerge-refined-added nil
-                      :background nil
+                      :background 'unspecified
                       :inherit 'magit-diff-added-highlight)
   (set-face-attribute 'smerge-refined-removed nil
-                      :background nil
+                      :background 'unspecified
                       :inherit 'magit-diff-removed-highlight))
 
 (use-package projectile
@@ -504,7 +402,7 @@ Otherwise behave as if called interactively.
       (remove-hook 'find-file-hook #'projectile-find-file-hook-function)
       (remove-hook 'dired-before-readin-hook #'projectile-track-known-projects-find-file-hook t)
       (advice-remove 'compilation-find-file #'compilation-find-file-projectile-find-compilation-buffer)
-     (advice-remove 'delete-file #'delete-file-projectile-remove-from-cache))))
+      (advice-remove 'delete-file #'delete-file-projectile-remove-from-cache))))
 
   (setq projectile-mode-line-prefix (if (display-graphic-p) " ↠" " /"))
   (projectile-mode +1)
