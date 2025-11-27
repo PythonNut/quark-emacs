@@ -649,29 +649,27 @@
   (use-package tide
     :defer-install t
     :commands (tide-setup)
-    :config
-    ;; This is because tide is poorly behaved and messes with
-    ;; company-backends on load
-    (cl-delete 'company-tide company-backends))
+    :init
+    (setq tide-completion-setup-company-backend nil))
 
   (add-hook 'typescript-mode-hook #'tide-setup)
 
   (eval-and-compile
     (cl-macrolet
         ((company-define-specific-modes
-          (mode)
-          `(progn
-             (add-hook ,mode
-                       (lambda ()
-                         (require 'company)
-                         (require 'cl-lib)
-                         (let ((old-backends company-backends))
-                           (set (make-local-variable 'company-backends)
-                                '((company-tide
-                                   company-yasnippet
-                                   company-files)
-                                  (company-dabbrev-code)
-                                  company-dabbrev))))))))
+           (mode)
+           `(progn
+              (add-hook ,mode
+                        (lambda ()
+                          (require 'company)
+                          (require 'cl-lib)
+                          (let ((old-backends company-backends))
+                            (set (make-local-variable 'company-backends)
+                                 '((company-tide
+                                    company-yasnippet
+                                    company-files)
+                                   (company-dabbrev-code)
+                                   company-dabbrev))))))))
       (with-no-warnings
         (my/generate-calls-single
             'company-define-specific-modes
