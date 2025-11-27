@@ -70,6 +70,7 @@
 
   (with-eval-after-load 'evil
     (evil-collection-init 'magit))
+  (evil-define-key 'visual magit-mode-map (kbd "o") #'exchange-point-and-mark)
 
   (transient-suffix-put 'magit-fetch "u" :key "f")
   (transient-suffix-put 'magit-pull "u" :key "F")
@@ -102,8 +103,8 @@
                ((symbol-function #'magit-completing-read)
                 (lambda (prompt choices &rest args)
                   (if (= (length choices) 1)
-                        (car choices)
-                      (apply old-magit-completing-read prompt choices args)))))
+                      (car choices)
+                    (apply old-magit-completing-read prompt choices args)))))
       (apply old-fun args)))
 
   (define-advice magit-process-username-prompt
