@@ -71,6 +71,7 @@
   (with-eval-after-load 'evil
     (evil-collection-init 'magit))
   (evil-define-key 'visual magit-mode-map (kbd "o") #'exchange-point-and-mark)
+  (evil-set-initial-state 'git-commit-mode 'insert)
 
   (transient-suffix-put 'magit-fetch "u" :key "f")
   (transient-suffix-put 'magit-pull "u" :key "F")
