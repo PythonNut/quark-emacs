@@ -449,16 +449,13 @@ Otherwise behave as if called interactively.
    (my/defun-as-value my/ediff-save-window-config ()
      (setq ediff-saved-window-configuration (current-window-configuration))))
 
+  (evil-collection-init 'ediff)
+
   (let ((restore-window-configuration
          (lambda ()
            (set-window-configuration ediff-saved-window-configuration))))
     (add-hook 'ediff-quit-hook restore-window-configuration 'append)
     (add-hook 'ediff-suspend-hook restore-window-configuration 'append))
-
-  (define-advice ediff-setup-keymap
-      (:after (&rest _args) vi-keys)
-    (define-key ediff-mode-map "j" #'ediff-next-difference)
-    (define-key ediff-mode-map "k" #'ediff-previous-difference))
 
   ;; don't start another frame
   (setq ediff-window-setup-function #'ediff-setup-windows-plain))
