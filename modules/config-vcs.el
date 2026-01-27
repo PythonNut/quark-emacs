@@ -66,7 +66,8 @@
         magit-log-format-graph-function #'magit-log-format-unicode-graph
         magit-completing-read-function #'ivy-completing-read
         magit-diff-refine-hunk t
-        magit-pull-or-fetch t)
+        magit-pull-or-fetch t
+        magit-diff-visit-prefer-worktree t)
 
   (with-eval-after-load 'evil
     (evil-collection-init 'magit))
