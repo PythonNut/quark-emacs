@@ -90,7 +90,18 @@
             (unless (my/msdos-fs (if (tramp-tramp-file-p newname)
                                      (file-remote-p newname 'localname)
                                    newname))
-              preserve-uid-gid)))))
+              preserve-uid-gid))))
+
+  (define-advice tramp-timeout-session
+      (:around (old-fun vec) keep-password-cache)
+    ;; `sudo' sessions time out after a few minutes.  Keep the shell
+    ;; cleanup, but honor the session-wide password cache configured above.
+    (cl-letf* ((old-cleanup (symbol-function #'tramp-cleanup-connection))
+               ((symbol-function #'tramp-cleanup-connection)
+                (lambda (cleanup-vec &optional keep-debug _keep-password keep-processes)
+                  (funcall old-cleanup cleanup-vec keep-debug
+                           'keep-password keep-processes))))
+      (funcall old-fun vec))))
 
 ;; =================================
 ;; automatically request root access
